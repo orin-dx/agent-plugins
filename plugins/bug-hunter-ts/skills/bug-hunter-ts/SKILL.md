@@ -1,52 +1,61 @@
 ---
 name: bug-hunter-ts
 description: >-
-  TypeScript/JavaScript bug hunting framework. Finds type assertion traps, unhandled floating promises, SSR hydration mismatches, truthiness traps, and memory leaks across any TS/JS codebase.
+  Trigger this skill when the user requests a code audit, bug hunt, type soundness review, or async verification in a TypeScript or JavaScript codebase. Use when inspecting for as any type assertion bypasses, non-null assertions, unhandled floating promises, missing AbortController fetch timeouts, direct React or global state mutations, SSR hydration mismatches caused by window or Date.now access, loose falsy truthiness traps, phantom monorepo dependencies missing from package.json, or unhandled addEventListener and setInterval memory leaks. Also activate when auditing Node.js, Bun, Deno, React, Next.js, Vite, or pnpm/yarn workspace codebases.
 ---
 
 # Universal TypeScript Bug-Hunter Skill
 
-## Core Laws & Verification Framework
-Before auditing, review the shared debugging laws and evaluation standards:
+<overview>
+This skill provides a self-contained, outcome-driven framework for auditing TypeScript and JavaScript codebases across 6 universal hazard taxonomies. It dynamically adapts to any TS/JS workspace structure (Node.js, Bun, Deno, Next.js, Vite, npm/pnpm/yarn monorepos) and automatically detects available workspace test runners (`vitest`, `jest`, `bun test`, `npm test`).
+</overview>
+
+---
+
+<framework_references>
+Review shared framework standards prior to executing an audit:
 - [General Debugging Laws](../../../shared/debugging-laws.md)
 - [Evaluation Report Template](../../../shared/report-template.md)
+</framework_references>
 
 ---
 
-## The 6 Universal TypeScript Hazard Taxonomies & Regex Heuristics
-
-When auditing any TS/JS repository, scan all code paths using ripgrep against these 6 hazard categories:
+<hazard_taxonomies>
 
 ### 1. Type Assertion & Any-Casting Traps
-- **Search Pattern**: `\bas\s+any\b|\bas\s+unknown\b|!\.|\bassertNever\b`
-- Overriding TypeScript's type checker using `val as any` or non-null assertions (`val!`), masking runtime `undefined` / `null` crashes. Missing exhaustive `switch` checks on discriminated unions.
+- **Search Heuristic**: `\bas\s+any\b|\bas\s+unknown\b|!\.|\bassertNever\b`
+- **Pattern**: Overriding TypeScript's type checker using `val as any` or non-null assertions (`val!`), masking runtime `undefined` / `null` crashes. Missing exhaustive `switch` checks on discriminated unions.
 
 ### 2. Async / Promise Concurrency & Floating Promises
-- **Search Pattern**: `async\s+function|const\s+\w+\s*=\s*async|\.then\(`
-- Calling `async` functions without `await`, `.catch()`, or `void` (floating promises), causing silent unhandled rejections. Using `Promise.all` instead of `Promise.allSettled` when partial failures should be recovered. Missing `AbortController` timeouts on fetch requests.
+- **Search Heuristic**: `async\s+function|const\s+\w+\s*=\s*async|\.then\(`
+- **Pattern**: Calling `async` functions without `await`, `.catch()`, or `void` (floating promises), causing silent unhandled rejections. Using `Promise.all` instead of `Promise.allSettled` when partial failures should be recovered. Missing `AbortController` timeouts on fetch requests.
 
 ### 3. React / Framework Hydration & State Mutation Hazards
-- **Search Pattern**: `state\.\w+\.push\(|setState\(|useEffect\(`
-- Mutating state objects directly (e.g. `state.items.push(x)`) instead of immutably updating state. SSR/hydration mismatches caused by `Date.now()`, `Math.random()`, or `window` access during initial render. Stale closures in `useEffect` / `useCallback` missing reactive dependencies.
+- **Search Heuristic**: `state\.\w+\.push\(|setState\(|useEffect\(`
+- **Pattern**: Mutating state objects directly (e.g. `state.items.push(x)`) instead of immutably updating state. SSR/hydration mismatches caused by `Date.now()`, `Math.random()`, or `window` access during initial render. Stale closures in `useEffect` / `useCallback` missing reactive dependencies.
 
 ### 4. Truthiness & Loose Equality Traps
-- **Search Pattern**: `if\s*\([^!=]+?\)|==\s*null|Object\.assign\(`
-- Loose falsy checks (`if (val)` instead of `if (val !== undefined && val !== null)`), misinterpreting `0`, `""`, or `false` as missing values. Prototype pollution when merging untrusted objects with `Object.assign`.
+- **Search Heuristic**: `if\s*\([^!=]+?\)|==\s*null|Object\.assign\(`
+- **Pattern**: Loose falsy checks (`if (val)` instead of `if (val !== undefined && val !== null)`), misinterpreting `0`, `""`, or `false` as missing values. Prototype pollution when merging untrusted objects with `Object.assign`.
 
 ### 5. Monorepo Dependency Resolution Hazards
-- **Search Pattern**: `import\s+.*?from\s+['"]([^'"]+)['"]`
-- "Phantom dependencies"—importing packages available in root `node_modules` that are missing from the sub-package's `package.json`. Mismatched peer dependencies across workspace packages.
+- **Search Heuristic**: `import\s+.*?from\s+['"]([^'"]+)['"]`
+- **Pattern**: "Phantom dependencies"—importing packages available in root `node_modules` that are missing from the sub-package's `package.json`. Mismatched peer dependencies across workspace packages.
 
 ### 6. Memory Leaks & Event Listener Cleanups
-- **Search Pattern**: `addEventListener|setInterval|EventEmitter`
-- Registering global listeners or intervals inside components/effects without returning a cleanup function (`removeEventListener` / `clearInterval`), leading to memory leaks.
+- **Search Heuristic**: `addEventListener|setInterval|EventEmitter`
+- **Pattern**: Registering global listeners or intervals inside components/effects without returning a cleanup function (`removeEventListener` / `clearInterval`), leading to memory leaks.
+
+</hazard_taxonomies>
 
 ---
 
-## Subagent Dispatch Matrix
+<subagent_dispatch_matrix>
 
-| Agent Role | Target Taxonomies | Objective |
+| Agent Role | Target Taxonomies | Delegation Scenario |
 | :--- | :--- | :--- |
-| **`bug-hunter-scanner-ts`** | Taxonomies 1 & 4 | Audit for `as any`, non-null assertions, and falsy truthiness traps. |
-| **`bug-hunter-adversary-ts`** | Taxonomies 2 & 3 | Audit floating promises, state mutations, and SSR hydration mismatches. |
-| **`bug-hunter-remediator-ts`** | Taxonomies 5 & 6 | Audit phantom monorepo deps, event listener memory leaks, and run test suite (`npm test` / `vitest`). |
+| **`bug-hunter-scanner-ts`** | Taxonomies 1 & 4 | Delegate to scan workspace for `as any`, non-null assertions, and falsy truthiness traps. Returns structured candidate signals. |
+| **`bug-hunter-adversary-ts`** | Taxonomies 2 & 3 | Delegate to trace execution paths end-to-end, disprove candidate signals, and check floating promises, state mutations, and SSR hydration. Returns confirmed findings with failing scenarios. |
+| **`bug-hunter-remediator-ts`** | Taxonomies 5 & 6 | Delegate to audit phantom monorepo dependencies, event listener memory leaks, write failing regression tests (red), apply fixes, and verify clean test suite execution (green). |
+
+</subagent_dispatch_matrix>
