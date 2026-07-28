@@ -46,12 +46,10 @@ plugins/<plugin-id>/
 
 ## 3. Skill & Subagent Authoring Rules
 
-- **`plugin.json` Manifest**:
-  Must include `"id"`, `"name"`, `"version"`, `"description"`, `"skills": [...]`, and `"agents": [...]`.
-- **`SKILL.md` Frontmatter**:
-  Must include `name` and `description` in YAML frontmatter.
-- **Subagent Prompts (`.md`)**:
-  Must include `name`, `role`, and `description` in YAML frontmatter. Subagent prompt bodies must give clear, goal-driven instructions without micromanaging line-by-line steps.
+- **Cross-Platform Compatibility**: See Section 7 of [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md) for full Antigravity (`agy`) vs Claude Code operational guidance.
+- **`plugin.json` Manifest**: Must include `"id"`, `"name"`, `"version"`, `"description"`, `"skills": [...]`, and `"agents": [...]`.
+- **`SKILL.md` Frontmatter (CSO User Intent Focus)**: Must include 100–200 word CSO description focused on user intent, request phrasing, adjacent domains, and boundary edge cases.
+- **Subagent Prompts (`.md`)**: Must follow the Superpowers 5-Section Framework (`<context>`, `<role>`, `<goal>`, `<execution_strategy>`, `<success_criteria>`). Frontmatter must include 100–200 word CSO description focused on delegation scenarios.
 
 ---
 

@@ -1,83 +1,187 @@
-# Advanced AI Context Engineering & Agent Best Practices
+# Universal AI Context Engineering & Agent Authoring Manual
 
-This reference documents industry best practices for Context Engineering, Skill Authoring, and Multi-Agent Orchestration derived from Google Antigravity, Anthropic Claude, and production AI engineering.
+This document is the authoritative reference for Context Engineering, Skill Authoring, Subagent Prompting, and Multi-Agent Orchestration across Google Antigravity (AGY) and Anthropic Claude Code.
 
 ---
 
-<context_engineering_vs_prompt_engineering>
+<table_of_contents>
 
-## 1. Context Engineering over Prompt Engineering
+1. Core Context Engineering Philosophy
+2. CSO Trigger Description Writing Guide
+3. The 3-Tier Progressive Disclosure Architecture
+4. Tool-Agnostic Dynamic Discovery Matrix
+5. The 4-Stage Agentic Lifecycle Loop
+6. Superpowers 5-Section Subagent Framework
+7. Google Antigravity (`agy`) vs Claude Code Operational Guide
+8. LLM Prompt Quality & Formatting Directives
 
-High-performing AI agents do not rely on massive, monolithic system prompts. They rely on **Dynamic Context Engineering**—providing the exact context required at the right moment while keeping baseline token footprints minimal.
+</table_of_contents>
 
-### The 3-Tier Hierarchy
+---
 
-1. **Tier 1: Global Invariants (`AGENTS.md` / `CLAUDE.md`)**:
-   Persistent memory defining workspace build systems, core architectural rules, dual-licensing constraints, and testing command standards.
-2. **Tier 2: Triggered Metadata (CSO Skill Descriptions)**:
-   CSO-formatted descriptions (100–200 words) defining user intent and delegation scenarios. Loaded into active skill registries.
-3. **Tier 3: On-Demand References (`references/` Subdocuments)**:
-   Detailed domain guides, hazard taxonomies, and schema definitions. Inspected via `view_file` on demand only when executing active tasks.
+<context_engineering_philosophy>
 
-</context_engineering_vs_prompt_engineering>
+## 1. Core Context Engineering Philosophy
+
+High-performing AI agents do not rely on massive, static system prompts. They rely on **Dynamic Context Engineering**—delivering the precise context required for a task at the exact moment it is needed while keeping baseline context windows lean.
+
+### The 6 Foundational Rules
+
+1. **Outcome & Pattern Focus**: Specify *what outcome to achieve and how to verify success*, rather than micromanaging step-by-step scripts or hardcoding file paths.
+2. **Tool-Agnostic Dynamic Discovery**: Instruct agents to discover workspace tools, test runners, and package managers before executing commands.
+3. **CSO Trigger Descriptions**: Write metadata descriptions aimed at model routing evaluators (100–200 words) rather than human documentation.
+4. **Progressive Disclosure**: Divide context into 3 layers (Metadata ➔ Body ➔ References).
+5. **Positive Framing & XML Sectioning**: Direct behavior positively using `<xml_tags>` for structural attention.
+6. **Empirical Verification**: Gated by the Red-to-Green Law (verify test fails red pre-fix, passes green post-fix).
+
+</context_engineering_philosophy>
+
+---
+
+<cso_trigger_guide>
+
+## 2. CSO Trigger Description Writing Guide
+
+Descriptions in `SKILL.md` and subagent `.md` files are **trigger mechanisms** for model routing evaluators. They dictate when the agentic system activates a skill or delegates a task to a subagent.
+
+### Target Length & Budget
+Aim for **100 to 200 words** per description using Context-Specific Optimization (CSO).
+
+### Skill Description vs Subagent Description
+
+| Type | Focus | Key Content to Include |
+| :--- | :--- | :--- |
+| **Skill Description** | **User Intent Focus** | User prompt triggers, request phrasing, target file types, adjacent engineering domains, boundary edge cases. |
+| **Subagent Description** | **Delegation Scenario Focus** | When the orchestrator should delegate to this subagent, input payload format, specialist tasks, and returned structured result. |
+
+### CSO Skill Description Template (User Intent Focus)
+
+```yaml
+description: >-
+  Trigger this skill when the user asks to perform a bug hunt, code audit, spec verification, or defect search in a <Language/Framework> codebase. Use when checking for <Hazard 1>, <Hazard 2>, <Hazard 3>, <Hazard 4>, <Hazard 5>, or <Hazard 6>. Also activate when the user requests an adversarial audit across <Framework> components, monorepo dependencies, or CI/CD pipelines.
+```
+
+### CSO Subagent Description Template (Delegation Scenario Focus)
+
+```yaml
+description: >-
+  Delegate to this subagent when <Orchestrator Trigger Condition> across a <Language/Framework> workspace to identify candidate defects in <Target Domain>. Specialized for auditing <Taxonomy A>, <Taxonomy B>, and <Taxonomy C>. Returns a structured markdown report detailing candidate defect signals with exact file:line citations for adversarial verification.
+```
+
+</cso_trigger_guide>
+
+---
+
+<progressive_disclosure>
+
+## 3. The 3-Tier Progressive Disclosure Architecture
+
+Structure plugin knowledge into 3 distinct layers to maintain prompt hygiene (~1,200 to 1,800 tokens max) and prevent U-shaped context attention degradation:
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                   PROGRESSIVE DISCLOSURE ARCHITECTURE                  │
+├───────────────────┬────────────────────────────────────────────────────┤
+│ LAYER             │ SCOPE, CONTENTS & RETRIEVAL MECHANISM              │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Tier 1: Metadata  │ Frontmatter YAML (CSO descriptions, 100-200 words).│
+│ (Always Active)   │ Always loaded in context registry for routing.     │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Tier 2: Body      │ SKILL.md or Subagent prompt loaded into session    │
+│ (On Trigger)      │ upon skill activation or subagent invocation.      │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Tier 3: Subdocs   │ Detailed domain guides in shared/ or references/.  │
+│ (On Demand)       │ Inspected via view_file only when running tasks.   │
+└───────────────────┴────────────────────────────────────────────────────┘
+```
+
+</progressive_disclosure>
+
+---
+
+<dynamic_discovery_matrix>
+
+## 4. Tool-Agnostic Dynamic Discovery Matrix
+
+Prompts must remain tool-agnostic, instructing agents to **discover existing environment tools before taking action**:
+
+```markdown
+<execution_strategy>
+1. **Tool Discovery**:
+   - Detect test runners: Check for `cargo nextest` vs `cargo test`, `vitest` vs `jest` vs `npm test` vs `bun test` vs `pytest`.
+   - Detect package managers: Check for `pnpm-lock.yaml` vs `yarn.lock` vs `package-lock.json` vs `Cargo.lock`.
+   - Detect build runners: Check for `justfile` vs `moon.yml` vs `Makefile` vs native CLI commands.
+2. **Execute Verification**:
+   - Use the detected workspace-native tool to execute test suites and verification checks.
+</execution_strategy>
+```
+
+</dynamic_discovery_matrix>
 
 ---
 
 <agentic_loop>
 
-## 2. The 4-Stage Agentic Lifecycle Loop
+## 5. The 4-Stage Agentic Lifecycle Loop
 
-All task execution and subagent operations follow a strict 4-stage lifecycle loop:
+All task execution follows a strict 4-stage lifecycle loop:
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        THE AGENTIC LIFECYCLE                           │
-├──────────────┬─────────────────────────────────────────────────────────┤
-│ STAGE        │ OBJECTIVE & TOOL RESTRICTIONS                           │
-├──────────────┼─────────────────────────────────────────────────────────┤
-│ 1. EXPLORE   │ Read-only inspection. Trace call sites, read logs,      │
-│              │ inspect design specs. Zero code mutations allowed.      │
-├──────────────┼─────────────────────────────────────────────────────────┤
-│ 2. PLAN      │ Formulate explicit hypotheses, test strategies, and     │
-│              │ success criteria before writing code.                   │
-├──────────────┼─────────────────────────────────────────────────────────┤
-│ 3. CODE      │ Implement minimal, robust code modifications.           │
-├──────────────┼─────────────────────────────────────────────────────────┤
-│ 4. VERIFY    │ Execute empirical test commands. Confirm red-to-green   │
-│              │ test pass and zero workspace regressions.               │
-└──────────────┴─────────────────────────────────────────────────────────┘
-```
+1. **Stage 1: Explore (Read-Only Inspection)**: Trace call sites, read logs, inspect design specs. Zero code mutations allowed.
+2. **Stage 2: Plan & Trace**: Formulate explicit hypotheses, test strategies, and success criteria before writing code.
+3. **Stage 3: Code & Remediate**: Implement minimal, robust code modifications.
+4. **Stage 4: Verify & Reset**: Execute empirical test commands. Confirm red-to-green test pass and zero workspace regressions.
 
 </agentic_loop>
 
 ---
 
-<reasoning_directives>
+<superpowers_framework>
 
-## 3. Interleaved Thinking & Reasoning Blocks
+## 6. Superpowers 5-Section Subagent Framework
 
-Encourage subagents to output structured `<thinking>` or `<hypothesis>` reasoning blocks before executing destructive code modifications or terminal commands.
+All subagent prompt definitions (`.md`) MUST be structured into 5 goal-driven sections:
 
-### Benefits of Interleaved Reasoning
+```markdown
+# <Subagent Name>
 
-- **Catches Logic Errors Early**: Reasoning aloud exposes invalid assumptions before modifying files.
-- **Reduces Hallucinated Refactors**: Prevents agents from making sweeping, unrequested changes across unrelated files.
-- **Enhances Traceability**: Provides a transparent audit trail of the agent's decision-making process.
+<context>Workspace environment, tech stack, and boundary constraints.</context>
+<role>Specialized expert persona (e.g. Static Scanner, Adversarial Verifier).</role>
+<goal>Singular, outcome-focused objective.</goal>
+<execution_strategy>Dynamic tool detection heuristics and search rules.</execution_strategy>
+<success_criteria>Explicit, verifiable completion checklist.</success_criteria>
+```
 
-</reasoning_directives>
+</superpowers_framework>
 
 ---
 
-<context_hygiene>
+<platform_matrix>
 
-## 4. Context Window Hygiene & Subagent Isolation
+## 7. Google Antigravity (`agy`) vs Claude Code Operational Guide
 
-Long-running single-session agent conversations accumulate token pollution, degrading reasoning performance over time (U-shaped attention curve).
+When authoring plugins for cross-platform deployment across Google Antigravity and Claude Code, adhere to this operational matrix:
 
-### Subagent Isolation Strategy
+| Feature / Aspect | Google Antigravity (`agy`) | Anthropic Claude Code (`claude`) | Cross-Platform Authoring Rule |
+| :--- | :--- | :--- | :--- |
+| **Plugin Directory** | `~/.gemini/config/plugins/` or `.agents/plugins/` | `~/.claude/plugins/` or `.claude/plugins/` | Author plugins under `./plugins/<plugin-id>/`. Symlink or copy to target CLI paths. |
+| **Marketplace Index** | `marketplace.json` (`$schema: antigravity.google/...`) | `marketplace.json` or directory scan | Maintain root `marketplace.json` listing plugin IDs, paths, and descriptions. |
+| **Subagent Folder** | `subagents/` or `agents/` | `agents/` or `subagents/` | Place prompt files in `subagents/`. Both engines resolve this path natively. |
+| **Tool Referencing** | `run_command`, `view_file`, `grep_search`, `replace_file_content` | `Bash`, `View`, `Edit`, `Grep` | Refer to abstract tool categories ("file viewing tool", "grep search tool", "test execution tool"). |
+| **Rich Artifacts** | Auxiliary Pane (`.md` artifacts, Mermaid, Carousels) | Terminal Markdown Output | Use standard GitHub Flavored Markdown (GFM) and alerts (`> [!NOTE]`, `> [!TIP]`) readable on both surfaces. |
+| **Subagent Invocation** | Native `invoke_subagent` / `define_subagent` APIs | Multi-agent subprocess execution | Author subagent prompts with YAML frontmatter (`name`, `role`, `description`). |
 
-- **Delegate and Reclaim**: Spawn specialized subagents (`bug-hunter-scanner-*`, `bug-hunter-adversary-*`, `bug-hunter-remediator-*`) with single-responsibility roles.
-- **Structured Return Payloads**: Subagents report structured markdown results back to the main orchestrator and terminate cleanly.
-- **Context Resets**: The parent orchestrator maintains a clean context window, relying on subagent reports and persistent ledgers (`FINDINGS.md`).
+</platform_matrix>
 
-</context_hygiene>
+---
+
+<prompt_directives>
+
+## 8. LLM Prompt Quality & Formatting Directives
+
+1. **Positive Framing**: Direct the model toward desired resolution behaviors rather than over-indexing on negative prohibitions.
+2. **XML Sectioning**: Enclose logical directives inside `<xml_tags>` to focus model structural attention.
+3. **Reserved ALL CAPS**: Reserve ALL CAPS (`ALWAYS`, `NEVER`) strictly for genuinely dangerous mistakes (data loss, security vulnerabilities, state corruption). Treat ALL CAPS as yelling.
+4. **No Linter Duplication**: Do not waste agent context on basic syntax formatting handled by compilers and linters. Focus on logic, data flow, crash safety, and spec compliance.
+5. **U-Shaped Attention Positioning**: Place core goals and critical invariants at the absolute top and bottom of prompts.
+
+</prompt_directives>
