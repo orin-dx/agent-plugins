@@ -1,0 +1,22 @@
+{
+  "$schema": "https://antigravity.google/schemas/marketplace.json",
+  "name": "orin-dx-agent-plugins",
+  "version": "1.0.0",
+  "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
+  "plugins": [
+    {
+      "id": "bug-hunter-rust",
+      "name": "Rust Bug Hunter",
+      "version": "1.0.0",
+      "path": "./plugins/bug-hunter-rust",
+      "description": "Rust Bug Hunter plugin with 6 Rust Hazard Taxonomies & Multi-Agent Orchestration."
+    },
+    {
+      "id": "bug-hunter-ts",
+      "name": "TypeScript Bug Hunter",
+      "version": "1.0.0",
+      "path": "./plugins/bug-hunter-ts",
+      "description": "TypeScript/JavaScript Bug Hunter plugin with 6 TS Hazard Taxonomies & Multi-Agent Orchestration."
+    }
+  ]
+}
