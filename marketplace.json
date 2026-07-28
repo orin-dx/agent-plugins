@@ -5,6 +5,13 @@
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
+      "id": "agent-plugin-builder",
+      "name": "Agent Plugin Builder",
+      "version": "1.0.0",
+      "path": "./plugins/agent-plugin-builder",
+      "description": "Meta-skill for scaffolding and generating new AI agent plugins, skills, and subagents adhering to Orin DX authoring specifications."
+    },
+    {
       "id": "bug-hunter-rust",
       "name": "Rust Bug Hunter",
       "version": "1.0.0",

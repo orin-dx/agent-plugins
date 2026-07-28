@@ -25,10 +25,11 @@
 
 ## Available Plugins
 
-| Plugin ID | Domain / Category | Description | Manifest |
+| Plugin ID | Target Stack | Description | Manifest |
 | :--- | :--- | :--- | :--- |
-| **`bug-hunter-rust`** | Language (Rust) | 6 Rust Hazard Taxonomies (Unused flags, fixpoint staleness, UTF-8 BOM, crash-safety `.sync_all()`). | [`plugin.json`](./plugins/bug-hunter-rust/plugin.json) |
-| **`bug-hunter-ts`** | Language (TypeScript) | 6 TS Hazard Taxonomies (`as any` casting, floating promises, SSR hydration, falsy traps, event leak cleanups). | [`plugin.json`](./plugins/bug-hunter-ts/plugin.json) |
+| **`agent-plugin-builder`** | Meta / Scaffolding | Meta-skill for scaffolding and generating new AI agent plugins, skills, and subagents. | [`plugin.json`](./plugins/agent-plugin-builder/plugin.json) |
+| **`bug-hunter-rust`** | **Rust** (Cargo, Monorepos, CLI, WASM) | 6 Rust Hazard Taxonomies (Unused flags, fixpoint staleness, UTF-8 BOM, crash-safety `.sync_all()`). | [`plugin.json`](./plugins/bug-hunter-rust/plugin.json) |
+| **`bug-hunter-ts`** | **TypeScript / JavaScript** (Node, Bun, React, Next) | 6 TS Hazard Taxonomies (`as any` casting, floating promises, SSR hydration, falsy traps, event leak cleanups). | [`plugin.json`](./plugins/bug-hunter-ts/plugin.json) |
 
 ---
 
