@@ -12,8 +12,9 @@ AI agents and skills must be outcome-focused, tool-agnostic, and dynamically ada
 
 ## 1. The 7 Core Authoring Principles
 
-### 1. Outcome & Pattern Focus (Adapt Across Repositories)
-Focus on intent, architectural invariants, and verification goals rather than hardcoded commands or specific file paths. 
+### 1. Outcome & Pattern Focus (The Non-Prescriptive Audit Test)
+Focus on intent, architectural invariants, and verification goals rather than hardcoded commands, rigid step-by-step scripts, or forced file paths.
+- **The Non-Prescriptive Test**: Ask *"Does this prompt dictate step-by-step actions that might fail on a different repository layout, or does it specify the goal, patterns to search for, and how to verify success?"*
 - *Dynamic Detection*: Instruct agents to detect existing project tools (e.g. `cargo nextest` vs `cargo test`, `vitest` vs `jest` vs `npm test`, `pnpm` vs `yarn` vs `bun`) before executing verification steps.
 - *Pattern Discovery*: "Discover existing project conventions before acting."
 
