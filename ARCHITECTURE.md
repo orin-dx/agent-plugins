@@ -1,16 +1,39 @@
 # Architecture Specification (`ARCHITECTURE.md`)
 
-This document specifies the technical architecture, subagent orchestration pipeline, and token-window optimization strategies of `orin-dx/agent-plugins`.
+This document specifies the technical architecture, subagent orchestration pipeline, context engineering model, and token-window optimization strategies of `orin-dx/agent-plugins`.
 
 ---
 
-## 1. Multi-Agent Orchestration Loop (Plan ➔ Execute ➔ Validate)
+## 1. Context Engineering & Progressive Disclosure
+
+`orin-dx/agent-plugins` enforces **Dynamic Context Engineering** to prevent context window bloat:
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                   PROGRESSIVE DISCLOSURE ARCHITECTURE                  │
+├───────────────────┬────────────────────────────────────────────────────┤
+│ LAYER             │ SCOPE & RETRIEVAL MECHANISM                        │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Tier 1: Metadata  │ Frontmatter metadata (CSO descriptions, 100-200    │
+│ (Always Active)   │ words). Used by model router for skill/agent match.│
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Tier 2: Body      │ SKILL.md or Subagent prompt loaded into session    │
+│ (On Trigger)      │ upon skill activation or subagent invocation.      │
+├───────────────────┼────────────────────────────────────────────────────┤
+│ Tier 3: Subdocs   │ Detailed domain guides in shared/ or references/.  │
+│ (On Demand)       │ Inspected via view_file only when running tasks.   │
+└───────────────────┴────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Multi-Agent Orchestration Loop (4-Stage Lifecycle)
 
 The Bug Hunter framework uses a 4-phase multi-agent loop to discover, verify, and remediate defects across any repository:
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   BUG HUNTER ORCHESTRATION PIPELINE                    │
+│                   THE 4-STAGE AGENTIC LIFECYCLE                        │
 ├────────────────────────────────────────────────────────────────────────┤
 │                                                                        │
 │                      ┌──────────────────────┐                          │
@@ -22,32 +45,33 @@ The Bug Hunter framework uses a 4-phase multi-agent loop to discover, verify, an
 │        ▼                        ▼                        ▼             │
 │ ┌──────────────┐       ┌─────────────────┐      ┌─────────────────┐    │
 │ │   SCANNER    │ ─────►│   ADVERSARY     │ ────►│   REMEDIATOR    │    │
-│ │ (Static RegEx│ Signal│ (Trace/Disprove)│Confirmed│ (Red-to-Green) │    │
+│ │(1. EXPLORE)  │ Signal│ (2. PLAN/TRACE) │Confirmed│ (3. CODE/VERIFY)│    │
 │ └──────────────┘       └─────────────────┘      └─────────────────┘    │
 │                                                                        │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Phase Roles
+### Stage Roles
 
-1. **Orchestrator**: Inspects workspace stack, identifies target languages, and launches language-specific scanner subagents.
-2. **Scanner Subagents** (`bug-hunter-scanner-*`): Executes ripgrep regex patterns against language hazard taxonomies (Taxonomies 1 & 4). Emits candidate defect signals.
-3. **Adversary Subagents** (`bug-hunter-adversary-*`): Attempts to disprove signals. Traces execution paths end-to-end and constructs concrete failing payloads or state conditions (Taxonomies 2 & 3).
-4. **Remediator Subagents** (`bug-hunter-remediator-*`): Implements Red-to-Green verification: writes a failing unit test first (red), applies the fix, and runs test runners to verify clean pass (green) (Taxonomies 5 & 6).
-
----
-
-## 2. Context Window Optimization & Token Footprints
-
-To prevent context window bloat during long coding sessions, the architecture enforces strict prompt isolation:
-
-- **Monolithic Polyglot Risk**: Loading Rust, TypeScript, Python, and Go rules simultaneously consumes ~10,000+ tokens per request turn, sifting model attention.
-- **Language-Scoped Plugin Solution**: Repositories load *only* their target language plugin (`bug-hunter-rust` or `bug-hunter-ts`). Prompt footprint is capped at **~1,200 to 1,800 tokens**, achieving an **~80% reduction in token overhead**.
-- **On-Demand Reference Loading**: Shared laws in `shared/debugging-laws.md` are not inlined in primary skill prompts. AI agents inspect shared files via `view_file` only when an audit task is actively running.
+1. **Stage 1: Explore (Scanner Subagents)**: Read-only inspection. Executes ripgrep regex patterns against language hazard taxonomies (Taxonomies 1 & 4). Emits candidate defect signals without modifying code.
+2. **Stage 2: Plan & Trace (Adversary Subagents)**: Traces execution paths end-to-end and evaluates disproofs. Constructs concrete failing payloads or state conditions (Taxonomies 2 & 3).
+3. **Stage 3: Code & Remediate (Remediator Subagents)**: Implements Red-to-Green verification: writes a failing unit test first (red), applies minimal code fix.
+4. **Stage 4: Verify & Reset (Orchestrator)**: Runs project test runners to verify green pass with zero regressions. Collects subagent reports and resets context windows.
 
 ---
 
-## 3. Compatibility Standard
+## 3. Superpowers Subagent Specification
+
+All subagents implement the **Superpowers 5-Section Framework**:
+- `<context>`: Workspace boundaries and stack parameters.
+- `<role>`: Specialized expert persona.
+- `<goal>`: Singular outcome-driven objective.
+- `<execution_strategy>`: Dynamic detection heuristics and search rules.
+- `<success_criteria>`: Explicit completion checklist.
+
+---
+
+## 4. Compatibility Standard
 
 Plugins adhere to the open Agent Plugin format supported natively by:
 - **Google Antigravity (`agy`)**: Discovers plugins in `.agents/plugins/` or `~/.gemini/config/plugins/`.

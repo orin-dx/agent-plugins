@@ -28,19 +28,19 @@ jq . plugins/*/plugin.json > /dev/null
 
 ---
 
-## 2. Authoring a New Language Plugin
+## 2. Plugin Authoring Specification
 
-To add a new language plugin (e.g. `bug-hunter-python` or `bug-hunter-go`):
+To add a new plugin (e.g. `bug-hunter-python`, `github-actions-auditor`, `docker-security-audit`):
 
-### Step 1: Create Plugin Directory Structure
+### Step 1: Create Directory Structure
 
 ```bash
-mkdir -p plugins/bug-hunter-python/skills/bug-hunter-python plugins/bug-hunter-python/subagents
+mkdir -p plugins/<plugin-id>/skills/<plugin-id> plugins/<plugin-id>/subagents
 ```
 
 ### Step 2: Define `plugin.json` Manifest
 
-Create `plugins/bug-hunter-python/plugin.json`:
+Create `plugins/<plugin-id>/plugin.json`:
 
 ```json
 {
@@ -48,7 +48,7 @@ Create `plugins/bug-hunter-python/plugin.json`:
   "name": "bug-hunter-python",
   "version": "1.0.0",
   "description": "Python Bug Hunter plugin with 6 Python Hazard Taxonomies & Multi-Agent Orchestration.",
-  "author": "Orin DX",
+  "author": "Gabriel Castro (Orin DX)",
   "skills": ["bug-hunter-python"],
   "agents": [
     "bug-hunter-scanner-python",
@@ -58,18 +58,26 @@ Create `plugins/bug-hunter-python/plugin.json`:
 }
 ```
 
-### Step 3: Define Language Skill (`SKILL.md`)
+### Step 3: Define Skill (`SKILL.md`) with CSO Intent Trigger
 
-Create `plugins/bug-hunter-python/skills/bug-hunter-python/SKILL.md`:
-- Include relative Markdown links to shared debugging laws: `[General Debugging Laws](../../../shared/debugging-laws.md)` and `[Evaluation Report Template](../../../shared/report-template.md)`.
-- Define 6 language-specific hazard taxonomies with exact ripgrep regex search patterns.
+Create `plugins/<plugin-id>/skills/<plugin-id>/SKILL.md`:
+- **CSO Frontmatter Description (100–200 Words)**: Write description focused on **User Intent** (what user requests or goals trigger this skill), including adjacent domains and boundary edge cases.
+- **Progressive Disclosure**: Include relative Markdown links to shared framework guides (`[General Debugging Laws](../../../shared/debugging-laws.md)` and `[Agent Best Practices](../../../shared/agent-best-practices.md)`).
+- **XML Directives**: Use positive framing inside `<overview>`, `<hazard_taxonomies>`, and `<subagent_dispatch_matrix>` tags.
 
-### Step 4: Define Subagents (`subagents/*.md`)
+### Step 4: Define Subagents (`subagents/*.md`) with Superpowers Framework
 
-Create 3 subagent prompt files under `plugins/bug-hunter-python/subagents/`:
-- `bug-hunter-scanner-python.md`: Static ripgrep regex scanner (Taxonomies 1 & 4).
-- `bug-hunter-adversary-python.md`: Execution path tracer & adversary (Taxonomies 2 & 3).
-- `bug-hunter-remediator-python.md`: Red-to-Green test engineer (Taxonomies 5 & 6).
+Create subagent prompt files under `plugins/<plugin-id>/subagents/`:
+- **CSO Frontmatter Description (100–200 Words)**: Write description focused on **Delegation Scenarios** (when orchestrator should delegate to this subagent and what structured payload it returns).
+- **Superpowers 5-Section Structure**:
+  ```markdown
+  # <Subagent Name>
+  <context>Workspace environment and stack boundaries.</context>
+  <role>Specialized expert persona.</role>
+  <goal>Singular, outcome-driven objective.</goal>
+  <execution_strategy>Dynamic detection heuristics and search rules.</execution_strategy>
+  <success_criteria>Explicit, verifiable completion checklist.</success_criteria>
+  ```
 
 ### Step 5: Register in `marketplace.json`
 
@@ -89,8 +97,10 @@ Add an entry under the `"plugins"` array in `marketplace.json`:
 
 ## 3. Engineering Invariants & PR Rules
 
-1. **Self-Contained Plugin Scoping**: Keep language rules isolated within `plugins/<plugin-id>/`. Do not mix rules for multiple languages in a single plugin.
-2. **On-Demand Context**: Reference `shared/debugging-laws.md` via relative Markdown links instead of duplicating general debugging text.
-3. **No Hardcoded Absolute Paths**: All paths in `SKILL.md` and prompt files must be relative.
-4. **Clean Technical Writing**: Avoid emojis, marketing fluff, or AI filler phrases in documentation, skill descriptions, and commit messages.
-5. **Conventional Commits**: Commit messages follow `feat:`, `fix:`, `docs:`, or `refactor:`.
+1. **Tool-Agnostic Dynamic Discovery**: Prompts must instruct agents to discover project tools (`cargo nextest` vs `test`, `vitest` vs `jest`, `pnpm` vs `npm`) before executing verification commands.
+2. **Self-Contained Plugin Scoping**: Keep domain rules isolated within `plugins/<plugin-id>/`.
+3. **On-Demand Context**: Reference shared files in `shared/` via relative Markdown links instead of duplicating context.
+4. **No Hardcoded Absolute Paths**: All paths in `SKILL.md` and prompt files must be relative.
+5. **Reserved ALL CAPS**: Reserve ALL CAPS (`ALWAYS`/`NEVER`) strictly for genuinely dangerous mistakes (data loss, security holes).
+6. **Clean Technical Writing**: Avoid emojis, marketing fluff, or AI filler phrases.
+7. **Conventional Commits**: Commit messages follow `feat:`, `fix:`, `docs:`, `legal:`, or `refactor:`.
