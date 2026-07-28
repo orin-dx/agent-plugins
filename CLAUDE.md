@@ -1,6 +1,6 @@
 # Claude Code Guidelines (`CLAUDE.md`)
 
-This guide provides instructions for Claude Code CLI and Claude AI agents interacting with the `orin-dx/agent-plugins` repository.
+Quick reference guide for Claude Code CLI and Claude AI agents interacting with `orin-dx/agent-plugins`.
 
 ---
 
@@ -16,48 +16,30 @@ This guide provides instructions for Claude Code CLI and Claude AI agents intera
   agy plugin add orin-dx/agent-plugins/bug-hunter-rust
   agy plugin add orin-dx/agent-plugins/bug-hunter-ts
   ```
-- **Local Dev Copy**:
+- **Local Manifest Validation**:
   ```bash
-  # Copy to local AGY plugin directory
-  cp -r plugins/bug-hunter-rust ~/.gemini/config/plugins/
-  # Copy to local Claude plugin directory
-  cp -r plugins/bug-hunter-rust ~/.claude/plugins/
+  jq . marketplace.json > /dev/null
+  jq . plugins/*/plugin.json > /dev/null
   ```
 
 ---
 
-## 2. Directory Layout Standard
+## 2. Authoring Guidelines & Single Source of Truth
 
-Claude Code and AGY both parse the open Agent Plugin format. Ensure directory layouts adhere to:
+All prompt engineering standards, CSO frontmatter specifications, and cross-platform CLI operational guidance are centralized in:
+
+- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Section 7 details the complete Antigravity (`agy`) vs Claude Code Operational Matrix.
+- [**`AGENTS.md`**](./AGENTS.md): Repository standards and directory layout specification.
+
+---
+
+## 3. Directory Conventions
+
+Ensure new plugins conform to the open format:
 
 ```text
 plugins/<plugin-id>/
-├── plugin.json                 <-- Plugin Manifest (JSON)
-├── skills/
-│   └── <plugin-id>/
-│       └── SKILL.md            <-- Primary Skill Definition
-└── subagents/
-    ├── <plugin-id>-scanner.md  <-- Scanner Subagent Prompt
-    ├── <plugin-id>-adversary.md<-- Adversary Subagent Prompt
-    └── <plugin-id>-remediator.md<-- Remediator Subagent Prompt
+├── plugin.json                 <-- Plugin Manifest
+├── skills/<plugin-id>/SKILL.md <-- Skill Definition
+└── subagents/*.md              <-- Subagent Prompt Files
 ```
-
----
-
-## 3. Skill & Subagent Authoring Rules
-
-- **Cross-Platform Compatibility**: See Section 7 of [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md) for full Antigravity (`agy`) vs Claude Code operational guidance.
-- **`plugin.json` Manifest**: Must include `"id"`, `"name"`, `"version"`, `"description"`, `"skills": [...]`, and `"agents": [...]`.
-- **`SKILL.md` Frontmatter (CSO User Intent Focus)**: Must include 100–200 word CSO description focused on user intent, request phrasing, adjacent domains, and boundary edge cases.
-- **Subagent Prompts (`.md`)**: Must follow the Superpowers 5-Section Framework (`<context>`, `<role>`, `<goal>`, `<execution_strategy>`, `<success_criteria>`). Frontmatter must include 100–200 word CSO description focused on delegation scenarios.
-
----
-
-## 4. Git Workflow & Quality Checks
-
-- Always update `marketplace.json` when adding or updating a plugin.
-- Validate JSON files (`marketplace.json`, `plugin.json`) with `jq` before committing:
-  ```bash
-  jq . marketplace.json > /dev/null
-  ```
-- Commit messages follow Conventional Commits format (`feat: ...`, `fix: ...`, `docs: ...`).
