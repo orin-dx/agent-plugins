@@ -7,13 +7,13 @@ description: >-
 # Agent Plugin Builder Meta-Skill
 
 <overview>
-This meta-skill automates the scaffolding and generation of self-contained AI agent plugins, skills, and subagent prompts adhering to the Orin DX prompt authoring specification. It ensures all generated plugins follow CSO trigger descriptions (100–200 words), 3-layer progressive disclosure, tool-agnostic dynamic tool discovery, and the Superpowers 5-section subagent framework.
+This meta-skill provides adaptable guidance for scaffolding new AI agent plugins, skills, and subagent prompts. It enforces Orin DX context engineering principles—CSO trigger descriptions (100–200 words), 3-layer progressive disclosure, and tool-agnostic discovery—while allowing the agent to adapt directory layouts, subagent counts, and domain rules to the specific plugin being created.
 </overview>
 
 ---
 
 <framework_references>
-Review authoritative authoring standards before scaffolding a new plugin:
+Review core guidelines before scaffolding:
 - [Agent Authoring Specification](../../../AGENTS.md)
 - [Universal Agent Best Practices](../../../shared/agent-best-practices.md)
 - [Plugin Architecture Specification](../../../ARCHITECTURE.md)
@@ -21,45 +21,23 @@ Review authoritative authoring standards before scaffolding a new plugin:
 
 ---
 
-<scaffolding_pipeline>
+<authoring_guidelines>
 
-### Step 1: Create Plugin Directory Hierarchy
-Create target plugin directories under `plugins/<plugin-id>/`:
-```bash
-mkdir -p plugins/<plugin-id>/skills/<plugin-id> plugins/<plugin-id>/subagents
-```
+### 1. Adaptable Plugin Structure
+Determine the optimal layout for the target domain:
+- **Simple / Tool Plugins**: May contain only a `plugin.json` and a single `SKILL.md`.
+- **Complex / Multi-Agent Plugins**: May contain `plugin.json`, `SKILL.md`, and 1 to 3 specialized subagents (`subagents/*.md`).
 
-### Step 2: Generate `plugin.json` Manifest
-Create `plugins/<plugin-id>/plugin.json`:
-```json
-{
-  "id": "<plugin-id>",
-  "name": "<plugin-id>",
-  "version": "1.0.0",
-  "description": "<Concise 1-sentence description>",
-  "author": "Gabriel Castro (Orin DX)",
-  "skills": ["<plugin-id>"],
-  "agents": [
-    "<plugin-id>-scanner",
-    "<plugin-id>-adversary",
-    "<plugin-id>-remediator"
-  ]
-}
-```
+### 2. Generate `plugin.json` Manifest
+Ensure `plugin.json` contains valid JSON with `"id"`, `"name"`, `"version"`, `"description"`, `"author": "Gabriel Castro (Orin DX)"`, `"skills": [...]`, and optional `"agents": [...]`.
 
-### Step 3: Generate `SKILL.md` (CSO User Intent Focus)
-Create `plugins/<plugin-id>/skills/<plugin-id>/SKILL.md`:
-- **CSO Frontmatter**: 100–200 words focusing on **User Intent** (request triggers, user phrasing, target file types, adjacent domains, boundary edge cases).
-- **Progressive Disclosure**: Include relative links to `shared/debugging-laws.md` and `shared/agent-best-practices.md`.
-- **XML Directives**: Enclose overview, taxonomies/directives, and subagent dispatch matrices inside positive `<xml_tags>`.
+### 3. Generate `SKILL.md` (CSO User Intent Focus)
+- **CSO Frontmatter (100–200 Words)**: Describe user intent triggers, request phrasing, target file types, adjacent domains, and boundary edge cases.
+- **Progressive Disclosure**: Link to relevant shared framework guides (`shared/debugging-laws.md` or `shared/agent-best-practices.md`) via relative Markdown links.
+- **Positive Framing**: Structure behavioral directives inside logical `<xml_tags>`.
 
-### Step 4: Generate 3 Subagent Prompts (Superpowers Framework)
-Create subagent prompt files under `plugins/<plugin-id>/subagents/`:
-1. `<plugin-id>-scanner.md`: CSO Delegation description (100–200 words) for static analysis.
-2. `<plugin-id>-adversary.md`: CSO Delegation description (100–200 words) for end-to-end tracing.
-3. `<plugin-id>-remediator.md`: CSO Delegation description (100–200 words) for Red-to-Green fixes.
-
-Structure each subagent using the Superpowers 5-Section Framework:
+### 4. Generate Subagent Prompts (Superpowers Framework, If Applicable)
+If the plugin requires subagents, tailor subagent roles to the domain and format prompt files using the Superpowers 5-Section Framework:
 ```markdown
 # <Subagent Name>
 <context>Workspace environment and stack boundaries.</context>
@@ -69,26 +47,17 @@ Structure each subagent using the Superpowers 5-Section Framework:
 <success_criteria>Explicit, verifiable completion checklist.</success_criteria>
 ```
 
-### Step 5: Register Entry in `marketplace.json`
-Append the new plugin entry under `"plugins"` in root `marketplace.json`:
-```json
-{
-  "id": "<plugin-id>",
-  "name": "<Human Readable Name>",
-  "version": "1.0.0",
-  "path": "./plugins/<plugin-id>",
-  "description": "<Concise description>"
-}
-```
+### 5. Register in `marketplace.json`
+Append the new plugin entry under `"plugins"` in root `marketplace.json` and validate JSON syntax (`jq . marketplace.json`).
 
-</scaffolding_pipeline>
+</authoring_guidelines>
 
 ---
 
 <success_criteria>
-- [ ] Directory hierarchy created under `plugins/<plugin-id>/`.
-- [ ] `plugin.json` generated with valid JSON syntax (`jq . plugins/<plugin-id>/plugin.json`).
-- [ ] `SKILL.md` generated with 100–200 word CSO user intent description and relative `shared/` links.
-- [ ] 3 subagents generated using the Superpowers 5-section framework and CSO delegation descriptions.
-- [ ] Root `marketplace.json` updated and validated with `jq . marketplace.json`.
+- [ ] Plugin files created under `plugins/<plugin-id>/`.
+- [ ] Validated `plugin.json` schema.
+- [ ] `SKILL.md` generated with 100–200 word CSO user intent description.
+- [ ] Subagents (if created) follow Superpowers 5-section framework and CSO delegation descriptions.
+- [ ] Root `marketplace.json` updated and validated.
 </success_criteria>
