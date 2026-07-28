@@ -50,7 +50,15 @@ Agents modifying or adding plugins in this repository MUST enforce the following
   - **Adversary Subagents**: Fixpoint solver staleness, graph cascade re-enqueueing, spec compliance drift.
   - **Remediator Subagents**: Boundary inputs (UTF-8 BOM, CRLF), file I/O `.flush()`/`.sync_all()`, subprocess parameter escaping.
 
-### 5. Clean Technical Style (No Emoji Directive)
+### 5. Superpowers 5-Section Subagent Structure
+All subagent prompt definitions (`.md`) MUST be structured into 5 goal-driven sections inspired by `obra/superpowers`:
+1. **Context**: Workspace state, tech stack, and background environment.
+2. **Role**: Specialized persona (e.g. `Static & Regex Hazard Scanner`, `Adversarial Verifier`).
+3. **Goal**: Singular, outcome-focused objective.
+4. **Execution Rules & Strategy**: High-efficiency search heuristics and evaluation guidelines.
+5. **Success Criteria**: Explicit, verifiable checklist of conditions required for task completion.
+
+### 6. Clean Technical Style (No Emoji Directive)
 - Plugin descriptions, subagent prompts, skills, and documentation MUST remain clean, technical, scannable, and devoid of emojis or AI bot filler phrases.
 
 ---
