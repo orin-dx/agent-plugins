@@ -34,9 +34,10 @@
 
 ## Shared Framework Files (Non-Plugin Context)
 
-Shared debugging laws and report evaluation standards are stored centrally in `shared/` and referenced by plugins on demand:
+Shared debugging laws, context engineering principles, and report evaluation standards are stored centrally in `shared/` and referenced by plugins on demand:
 
 - [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core debugging principles, proof requirements, and red-to-green verification steps.
+- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Context engineering, 4-stage agentic loop (Explore ➔ Plan ➔ Code ➔ Verify), and subagent context resets.
 - [**`shared/report-template.md`**](./shared/report-template.md): Technical report evaluation format for confirmed findings.
 
 ---
