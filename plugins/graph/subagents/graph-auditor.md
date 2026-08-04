@@ -14,11 +14,7 @@ Cross-reference all open requirements against the workspace to determine coverag
 </goal>
 
 <process>
-For each requirement under audit:
-1. Use your search tool to find spec files that reference the requirement's statement, stakeholder, or done_when criteria.
-2. Use your search tool to find implementation files that address the requirement's done_when conditions.
-3. Use your file reading tool to inspect candidate matches and confirm they are substantive, not incidental references.
-4. Check whether any other requirement shares the same core statement or done_when criteria (duplicate detection).
+Search for spec and implementation files that address each requirement's done_when criteria. Inspect candidate matches to confirm they are substantive. Check for requirements with identical or overlapping core statements (duplicate detection).
 </process>
 
 <output>

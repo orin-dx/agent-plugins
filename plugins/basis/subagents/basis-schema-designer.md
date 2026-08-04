@@ -25,17 +25,7 @@ Given a description of a new inter-agent artifact, produce a JSON Schema that is
 List existing files in `shared/schemas/` to understand the naming pattern and check for overlap. Design the schema with `$schema`, `$id` (format: `name@version`), `title`, `description`, all properties documented with `description` fields, `required` array, `additionalProperties: false`, and the mandatory `reasoning` property. Return the schema and recommended filename.
 </execution_strategy>
 
-<success_criteria>
-- [ ] Schema uses JSON Schema draft 2020-12.
-- [ ] `$id` follows `name@version` convention.
-- [ ] All properties have `description` fields.
-- [ ] `reasoning: { type: "string" }` is present and in `required`.
-- [ ] `additionalProperties: false` is set.
-- [ ] `conflicts` lists any existing schemas with overlapping scope.
-- [ ] Output includes top-level `reasoning` field.
-</success_criteria>
-
-Output shape:
+Output:
 ```json
 {
   "schema": {},

@@ -10,6 +10,7 @@ To prevent rule duplication and context drift, all authoring principles, context
 
 - [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Authoritative manual for Context Engineering, CSO trigger frontmatter (100–200 words), 3-tier progressive disclosure, dynamic tool discovery, 4-stage agentic loop (Explore ➔ Plan ➔ Code ➔ Verify), Superpowers subagent framework, and Google Antigravity (`agy`) vs Claude Code operational guidance.
 - [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, and Red-to-Green test verification standards.
+- [**`shared/references/modern-cli-tools.md`**](./shared/references/modern-cli-tools.md): Global preference directive for modern CLI tools (`bat`, `zoxide`, `ripgrep`, `fd`, `eza`, `delta`, `jq`, `fzf`, `gh`).
 
 ---
 
@@ -23,9 +24,10 @@ plugins/<plugin-id>/
 │       ├── SKILL.md            <-- Primary Skill (CSO User Intent Frontmatter)
 │       └── references/         <-- On-Demand Subdocuments (Tier 3)
 └── subagents/
-    ├── <plugin-id>-scanner.md  <-- Scanner Subagent (Superpowers Framework)
-    ├── <plugin-id>-adversary.md<-- Adversary Subagent (Superpowers Framework)
-    └── <plugin-id>-remediator.md<-- Remediator Subagent (Superpowers Framework)
+    ├── <plugin>-scanner-<lang>.md   <-- Scanner Subagent (Superpowers Framework)
+    ├── <plugin>-adversary-<lang>.md <-- Adversary Subagent (Superpowers Framework)
+    ├── <plugin>-remediator-<lang>.md<-- Remediator Subagent (Superpowers Framework)
+    └── <subagent-name>.md           <-- Additional Domain Subagents
 ```
 
 ---

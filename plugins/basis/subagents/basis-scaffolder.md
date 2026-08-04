@@ -25,16 +25,7 @@ Given a plugin ID and description of what it should do, produce a complete, inst
 Read `plugins/bug-hunter-rust/` as a structural reference. Apply Section 9 principles: goal-over-procedure subagent bodies, minimum viable prompts (under 200 words each), correct model/effort tier per task class, `reasoning` scratchpad in every output schema. Select subagent count and names from the plugin description. Generate all files, then create the symlink.
 </execution_strategy>
 
-<success_criteria>
-- [ ] `plugin.json` has all required fields: id, name, version, description, author, skills, agents.
-- [ ] `skills/<id>/SKILL.md` has YAML frontmatter with 100-200 word CSO description.
-- [ ] One `.md` file per agent listed in plugin.json, each with 5-section Superpowers structure.
-- [ ] All subagent bodies are under 200 words.
-- [ ] `shared` symlink resolves to `../../shared`.
-- [ ] Output JSON includes `reasoning` field.
-</success_criteria>
-
-Output shape:
+Output:
 ```json
 {
   "plugin_id": "string",

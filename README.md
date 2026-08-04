@@ -28,7 +28,7 @@
 | Plugin ID | Target Stack | Description | Manifest |
 | :--- | :--- | :--- | :--- |
 | **`agent-plugin-builder`** | Meta / Scaffolding | Meta-skill for scaffolding and generating new AI agent plugins, skills, and subagents. | [`plugin.json`](./plugins/agent-plugin-builder/plugin.json) |
-| **`bug-hunter-rust`** | **Rust** (Cargo, Monorepos, CLI, WASM) | 6 Rust Hazard Taxonomies (Unused flags, fixpoint staleness, UTF-8 BOM, crash-safety `.sync_all()`). | [`plugin.json`](./plugins/bug-hunter-rust/plugin.json) |
+| **`bug-hunter-rust`** | **Rust** (Cargo, Monorepos, CLI, WASM) | 6 Rust Hazard Taxonomies & 6 Code Smell Sweeps (Unused flags, fixpoint staleness, UTF-8 BOM, atomic disk write `.sync_all()`, lossy CST, raw string IDs). | [`plugin.json`](./plugins/bug-hunter-rust/plugin.json) |
 | **`bug-hunter-ts`** | **TypeScript / JavaScript** (Node, Bun, React, Next) | 6 TS Hazard Taxonomies (`as any` casting, floating promises, SSR hydration, falsy traps, event leak cleanups). | [`plugin.json`](./plugins/bug-hunter-ts/plugin.json) |
 
 ---
@@ -86,16 +86,22 @@ agent-plugins/
 ├── CONTRIBUTING.md                         <-- Plugin Authoring & PR Guide
 ├── ARCHITECTURE.md                         <-- Multi-Agent Pipeline & Token Rationale
 ├── shared/                                 <-- SHARED CONTEXT (NOT PLUGINS)
+│   ├── agent-best-practices.md             <-- Context Engineering & Platform Matrix
 │   ├── debugging-laws.md                   <-- Universal Debugging Principles
 │   └── report-template.md                  <-- Technical Report Standard
 └── plugins/
+    ├── agent-plugin-builder/               <-- Meta-Skill Scaffolding Plugin
+    │   ├── plugin.json
+    │   └── skills/agent-plugin-builder/SKILL.md
     ├── bug-hunter-rust/                    <-- Rust Bug Hunter Plugin
     │   ├── plugin.json
     │   ├── skills/bug-hunter-rust/SKILL.md
     │   └── subagents/
     │       ├── bug-hunter-scanner-rust.md
     │       ├── bug-hunter-adversary-rust.md
-    │       └── bug-hunter-remediator-rust.md
+    │       ├── bug-hunter-remediator-rust.md
+    │       ├── bug-hunter-architect-rust.md
+    │       └── bug-hunter-mutator-rust.md
     └── bug-hunter-ts/                      <-- TS Bug Hunter Plugin
         ├── plugin.json
         ├── skills/bug-hunter-ts/SKILL.md

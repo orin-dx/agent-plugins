@@ -53,5 +53,17 @@ Review shared framework standards prior to executing an audit:
 <execution_guidance>
 Adapt execution to workspace scale:
 - **Direct Execution**: For quick checks or targeted file audits, inspect and verify findings directly.
-- **Parallel Subagent Delegation**: For large monorepo sweeps, optionally delegate work to specialized subagents (`bug-hunter-scanner-ts`, `bug-hunter-adversary-ts`, `bug-hunter-remediator-ts`).
+- **Parallel Subagent Delegation**: For large monorepo sweeps, delegate work to specialized subagents (`bug-hunter-scanner-ts`, `bug-hunter-adversary-ts`, `bug-hunter-remediator-ts`).
 </execution_guidance>
+
+---
+
+<subagent_dispatch_matrix>
+
+| Agent Role | Target Taxonomies / Scope | Delegation Scenario |
+| :--- | :--- | :--- |
+| **`bug-hunter-scanner-ts`** | Taxonomies 1 & 4 | Delegate to scan workspace for `as any` type bypasses, non-null assertions, loose falsy truthiness traps, and `Object.assign` prototype pollution. Returns candidate defect signals. |
+| **`bug-hunter-adversary-ts`** | Taxonomies 2 & 3 | Delegate to trace async execution paths, inspect unhandled floating promises, missing `AbortController` timeouts, direct state mutations, and SSR hydration mismatches (`window`/`Date.now()`). Returns confirmed findings. |
+| **`bug-hunter-remediator-ts`** | Taxonomies 5 & 6 | Delegate to audit phantom monorepo dependencies, resolve `addEventListener`/`setInterval` memory leaks, write failing regression tests (red), apply type-sound fixes, and verify clean test suite execution (green). |
+
+</subagent_dispatch_matrix>
