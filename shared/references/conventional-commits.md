@@ -50,4 +50,3 @@ Don't describe what the code does (the diff shows that). Write what a reviewer n
 | `lambda` | lambda plugin and subagents |
 | `basis` | basis plugin and subagents |
 | `shared` | shared schemas, references, agent-best-practices |
-| `torii` | MCP framework |

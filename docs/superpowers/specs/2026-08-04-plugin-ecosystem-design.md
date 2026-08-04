@@ -12,7 +12,7 @@ A set of nine cooperating plugins covering the full software development lifecyc
 
 Each plugin has a clear goal, a defined output artifact, and a success criterion. Agents inside each plugin pull context from the workspace — they are not pre-stuffed with context by the orchestrator.
 
-**Framework:** `torii` — an MCP server toolkit for publishing these plugins as discoverable services. Named for the gate (torii) at the end of the path (michi).
+**Host runtime:** Claude Code and AGY. Plugins are structured prompts, skills, subagents, and schemas — no custom server framework required.
 
 ---
 
@@ -367,24 +367,6 @@ The host resolves which plugin runs each stage at wiring time. If a user has a J
 | shipping | delta | singleton | changeset@1 | release-artifact@1 |
 | bug-hunting | proof | additive | workspace | finding-report@1 |
 | meta | basis | singleton | user intent | plugin |
-
----
-
-## `torii` — MCP Framework
-
-`torii` is the framework for publishing these plugins as MCP servers, discoverable across Claude Code and ADK/AGY.
-
-**What it provides:**
-- Plugin manifest loading and capability graph construction
-- Schema validation at wiring time (Haystack-style typed sockets)
-- Axiom gate protocol (interrupt → retry → escalate)
-- `/.well-known/agent.json` AgentCard generation from plugin.json
-- Model and effort routing based on agent declarations
-- Cross-platform subagent invocation (Claude `--subagent` and AGY dispatch)
-
-**What it is NOT:** a runtime execution environment. `torii` handles wiring and verification. The agents do the work.
-
-**Tech stack:** `michi` (output formatting) + TS MCP SDK. The framework is a thin shim — plugins do not depend on `torii` for their logic.
 
 ---
 
