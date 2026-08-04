@@ -11,23 +11,23 @@ description: >-
 
 Given a `requirement@1` and optionally a `research-report@1`, produce a `spec@1` — an unambiguous, testable specification that gives a developer everything they need to implement without asking a clarifying question.
 
-Required fields: `purpose` (why this spec exists), `scope` (what is covered), `non_goals` (what is explicitly excluded), `api_surface` (if the feature has a callable interface), and `acceptance_criteria`. Every acceptance criterion must be a testable proposition — confirmable true or false from the outside. Error cases must have their own criteria with `is_error_case: true`. If something is genuinely unknown, do not write a TBD — put it in `non_goals` or surface it as an open question in your `reasoning` field.
+Required fields: `id` (match the requirement's id prefixed SPEC-, e.g. `SPEC-001`), `purpose`, `scope`, `non_goals` (minItems: 1), `acceptance_criteria` (minItems: 1). Every acceptance criterion must be a testable proposition. Error cases must have `is_error_case: true`. If something is genuinely unknown, put it in `non_goals` or surface it in `reasoning` — no TBDs.
+
+`api_surface` is an array — omit it entirely if the feature has no callable interface. If present, each entry requires `name`, `signature`, and `description`.
+
+Return spec@1 JSON conforming to `shared/schemas/spec@1.json`:
 
 ```json
 {
-  "schema": "spec@1",
+  "id": "SPEC-001",
   "purpose": "string",
   "scope": "string",
   "non_goals": ["string"],
-  "api_surface": {},
+  "api_surface": [{ "name": "string", "signature": "string", "description": "string" }],
   "acceptance_criteria": [
-    {
-      "id": "string",
-      "criterion": "string",
-      "is_error_case": false,
-      "judgment_call": false
-    }
+    { "id": "AC-001", "criterion": "string", "is_error_case": false }
   ],
+  "linked_requirement": "REQ-001",
   "reasoning": "string"
 }
 ```

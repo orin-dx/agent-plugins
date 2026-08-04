@@ -2,7 +2,7 @@
 name: vector-estimator
 role: Effort Estimator
 model: sonnet
-effort: low
+effort: medium
 description: >-
   Delegate to this subagent when a plan@1 exists and the user needs a rough effort estimate. Returns per-task time estimates in minutes, identifies parallelizable tasks and blocking dependencies, and produces a total estimate with explicit assumptions.
 ---
