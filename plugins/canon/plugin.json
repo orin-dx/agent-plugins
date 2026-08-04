@@ -1,0 +1,9 @@
+{
+  "id": "canon",
+  "name": "canon",
+  "version": "1.0.0",
+  "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Every acceptance criterion is a testable proposition. Detects spec drift against actual code. Skills: draft, review, verify, changeset.",
+  "author": "Gabriel Castro (Orin DX)",
+  "skills": ["canon"],
+  "agents": ["canon-drafter", "canon-auditor", "canon-verifier", "canon-exit-gate"]
+}

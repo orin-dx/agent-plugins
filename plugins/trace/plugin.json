@@ -1,0 +1,9 @@
+{
+  "id": "trace",
+  "name": "trace",
+  "version": "1.0.0",
+  "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Distinguishes confirmed findings from assumptions. Produces research-report@1 for consumption by canon (spec).",
+  "author": "Gabriel Castro (Orin DX)",
+  "skills": ["trace"],
+  "agents": ["trace-recon", "trace-reader", "trace-synthesizer", "trace-risk-assessor"]
+}

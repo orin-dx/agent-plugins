@@ -1,0 +1,9 @@
+{
+  "id": "axiom",
+  "name": "axiom",
+  "version": "1.0.0",
+  "description": "Cross-cutting verification gate. Confirms any stage artifact meets its criteria before the next stage begins. Implements the axiom protocol: recon → verify → exit-gate with retry-with-feedback.",
+  "author": "Gabriel Castro (Orin DX)",
+  "skills": ["axiom"],
+  "agents": ["axiom-recon", "axiom-verifier", "axiom-exit-gate"]
+}

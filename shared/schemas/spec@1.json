@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "spec@1",
+  "title": "Spec",
+  "description": "An unambiguous, testable specification. Every claim is verifiable or explicitly marked as a judgment call.",
+  "type": "object",
+  "required": ["id", "purpose", "scope", "non_goals", "acceptance_criteria"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (e.g. SPEC-001)"
+    },
+    "purpose": {
+      "type": "string",
+      "description": "One paragraph: what this spec defines and why it exists"
+    },
+    "scope": {
+      "type": "string",
+      "description": "What is covered by this spec"
+    },
+    "non_goals": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Explicitly excluded from this spec"
+    },
+    "api_surface": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "signature", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "signature": { "type": "string" },
+          "description": { "type": "string" },
+          "error_conditions": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "criterion"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "criterion": {
+            "type": "string",
+            "description": "A testable proposition — something that can be confirmed true or false"
+          },
+          "is_error_case": {
+            "type": "boolean",
+            "default": false,
+            "description": "True if this criterion describes behavior under an error condition"
+          },
+          "judgment_call": {
+            "type": "boolean",
+            "default": false,
+            "description": "True if this criterion requires human judgment to evaluate. Must include rationale."
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Required when judgment_call is true"
+          }
+        }
+      }
+    },
+    "linked_requirement": {
+      "type": "string",
+      "description": "ID of the requirement@1 this spec implements"
+    },
+    "linked_research": {
+      "type": "string",
+      "description": "ID of the research-report@1 that informed this spec"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "changeset@1",
+  "title": "Changeset",
+  "description": "Describes what was changed in an implementation and why. Produced by lambda, consumed by delta and axiom.",
+  "type": "object",
+  "required": ["summary", "files_changed", "acceptance_criteria_met"],
+  "additionalProperties": false,
+  "properties": {
+    "summary": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "One sentence describing what changed. Under 200 characters."
+    },
+    "files_changed": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Paths of files added, modified, or deleted"
+    },
+    "tests_added": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paths of test files added or modified"
+    },
+    "acceptance_criteria_met": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "IDs from spec@1.acceptance_criteria that this changeset satisfies"
+    },
+    "breaking_changes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Public API or behavior changes that break existing callers"
+    },
+    "commits": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Git SHAs of commits in this changeset"
+    },
+    "linked_spec": { "type": "string" },
+    "linked_plan": { "type": "string" },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

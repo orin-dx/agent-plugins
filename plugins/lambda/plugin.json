@@ -1,0 +1,9 @@
+{
+  "id": "lambda",
+  "name": "lambda",
+  "version": "1.0.0",
+  "description": "Implementation plugin. Executes plans via TDD cycle — write failing test, write minimal code, confirm passing, commit. Produces committed, tested code verified by the axiom exit gate.",
+  "author": "Gabriel Castro (Orin DX)",
+  "skills": ["lambda"],
+  "agents": ["lambda-recon", "lambda-implementer", "lambda-reviewer", "lambda-exit-gate"]
+}
