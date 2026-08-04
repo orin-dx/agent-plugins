@@ -14,6 +14,7 @@ This document is the authoritative reference for Context Engineering, Skill Auth
 6. Superpowers 5-Section Subagent Framework
 7. Google Antigravity (`agy`) vs Claude Code Operational Guide
 8. LLM Prompt Quality & Formatting Directives
+9. Plugin Ecosystem Authoring Principles
 
 </table_of_contents>
 
@@ -185,3 +186,71 @@ When authoring plugins for cross-platform deployment across Google Antigravity a
 5. **U-Shaped Attention Positioning**: Place core goals and critical invariants at the absolute top and bottom of prompts.
 
 </prompt_directives>
+
+---
+
+<ecosystem_principles>
+
+## 9. Plugin Ecosystem Authoring Principles
+
+These principles apply to all plugins in the ecosystem. Read this section before writing any new plugin, skill, or subagent.
+
+### Pull Over Inject
+
+Agents receive a workspace path and a goal. They use available tools (file reading, grep, shell) to discover what they need. The orchestrator does not pre-stuff context. This keeps baseline context windows lean and makes agents work from current state, not stale injections.
+
+Inject only what the agent cannot pull: the goal, the output schema, and a small set of heuristics for where to look first.
+
+### Goal Over Procedure
+
+Subagent prompts specify *what outcome to achieve and how to verify success* — not step-by-step scripts. The agent decides the approach. `<execution_strategy>` provides high-level heuristics (prefer reading compiled artifacts over inferring from directory layout), not numbered steps.
+
+If a subagent prompt reads like a recipe, it is over-specified. Trim until it reads like a mission brief.
+
+### Minimum Viable Prompt
+
+A subagent prompt is: role + goal + output shape + a few heuristics. Target under 200 words for the body. Longer prompts are not more capable — they are more brittle. Every word that can be removed without losing a constraint should be removed.
+
+**Body length signal:** if the prompt is over 300 words, audit it for procedure masquerading as guidance.
+
+### Self-Contained Prompts (Cross-Platform)
+
+Subagent prompts make no runtime filesystem references to `shared/`. Shared principles are read by the human or orchestrating agent at authoring time and relevant excerpts baked in. This ensures prompts work identically on Claude Code and AGY regardless of execution environment.
+
+**Exception:** `shared/references/*.md` files (language guides, protocol references) are runtime resources — agents may pull them with their file-reading tool when language-specific heuristics are needed. Reference them by relative path: `shared/references/rust.md`.
+
+### Model and Effort Tiering
+
+| Task class | Model | Effort |
+|---|---|---|
+| Mechanical — manifest building, file enumeration, schema validation | haiku | low |
+| Analysis — finding bugs, cross-referencing, evaluating findings | sonnet | medium |
+| Judgment — exit gate verdicts, architectural review, adversarial verification | opus | high |
+
+Apply the cheapest tier that can do the job. Escalate only when judgment is genuinely required. A haiku recon agent followed by a sonnet analyzer costs a fraction of running everything at opus.
+
+### Schema as Inter-Agent Contract
+
+Agents communicate via schema-constrained structured output. Every handoff schema includes a `reasoning: str` field (scratchpad — the agent's chain-of-thought, unconstrained) alongside the typed output fields. The `reasoning` field travels with the artifact for debugging but is **never consumed** by the next stage.
+
+Output type is enforced at generation where possible (structured output / JSON schema mode). If validation fails, the agent retries with the specific failure message — not a silent rejection. Retry budget: 3 attempts before escalation to the user.
+
+### Authoring-Time vs Runtime Resources
+
+`shared/agent-best-practices.md` is an **authoring-time** resource. Authors read it when writing plugins; agents do not load it at runtime.
+
+`shared/references/*.md` files are **runtime** resources — agents may load them on demand when they need language or tool-specific detail.
+
+`shared/schemas/*.json` files are **wiring-time** resources — the host validates `produces` and `consumes` schema compatibility before any execution begins.
+
+This three-way split is what makes cross-platform compatibility unconditional.
+
+### Tool Count Limit
+
+Design plugin agents with 8–15 tools each. Above 20 tools, selection accuracy degrades on both Claude and Gemini. Narrow, specialized agents outperform wide, general-purpose ones. When a plugin needs more than 15 tools, split it into focused subagents with clean handoffs.
+
+### Public Agent Description
+
+Every subagent's YAML frontmatter `description` is the public routing key — it is what the orchestrator reads to decide whether to delegate. Write it for *two audiences simultaneously*: concrete enough for LLM routing, accurate enough for human discovery. The system prompt body is private implementation detail; the description is the public contract.
+
+</ecosystem_principles>
