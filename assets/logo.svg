@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 220" width="100%" height="100%" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 220" width="100%" height="100%" fill="none">
   <defs>
-    <!-- High-Contrast Dark Mode Gradient -->
-    <linearGradient id="callistoTitleGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="50%" stop-color="#7DD3FC" />
-      <stop offset="100%" stop-color="#0284C7" />
+    <!-- Rich Saturated Title Gradient (Vibrant Cyan/Blue) -->
+    <linearGradient id="richTitleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="60%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#0369A1" />
     </linearGradient>
 
     <!-- Plugin Accent Gradient -->
@@ -34,20 +34,20 @@
   </defs>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&amp;display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;900&amp;display=swap');
     .title-text {
       font-family: 'Outfit', -apple-system, sans-serif;
       font-weight: 900;
       font-size: 68px;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      fill: url(#callistoTitleGradientDark);
+      fill: url(#richTitleGradient);
     }
     .subtitle-text {
       font-family: 'Outfit', -apple-system, sans-serif;
-      font-weight: 700;
-      font-size: 19px;
-      letter-spacing: 0.42em;
+      font-weight: 600;
+      font-size: 26px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       fill: #38BDF8;
     }
@@ -56,16 +56,16 @@
   <!-- Modular Syntax + AI Emblem -->
   <g transform="translate(35, 30)">
     <!-- Soft Glow Aura behind central node -->
-    <circle cx="85" cy="80" r="35" fill="#0284C7" opacity="0.25" filter="url(#neonGlow)" />
+    <circle cx="85" cy="80" r="35" fill="#0284C7" opacity="0.3" filter="url(#neonGlow)" />
 
     <!-- Signal Bus Track -->
     <line x1="10" y1="80" x2="155" y2="80" stroke="#475569" stroke-width="4" stroke-dasharray="4 6" opacity="0.6" />
 
-    <!-- Left Agent Bracket (Brightened White to Cyan) -->
+    <!-- Left Agent Bracket -->
     <path d="M 30 35 L 75 80 L 30 125"
-          stroke="url(#callistoTitleGradientDark)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+          stroke="url(#richTitleGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
 
-    <!-- Right Plugin Socket Prong (Electric Cyan) -->
+    <!-- Right Plugin Socket Prong -->
     <path d="M 95 35 L 140 80 L 95 125"
           stroke="url(#cyanAccent)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
 
@@ -74,7 +74,7 @@
     <circle cx="140" cy="80" r="7" fill="#38BDF8" />
     <circle cx="15" cy="80" r="4" fill="#64748B" />
 
-    <!-- AI Sparkle 1 (Primary - Top Right) -->
+    <!-- AI Sparkle 1 (Top Right) -->
     <path d="M 148 20 Q 148 32 160 32 Q 148 32 148 44 Q 148 32 136 32 Q 148 32 148 20 Z"
           fill="url(#aiMagicGradient)" />
 
@@ -87,8 +87,8 @@
   </g>
 
   <!-- Wordmark: Orin DX / Agent Plugins -->
-  <g transform="translate(215, 96)">
+  <g transform="translate(215, 92)">
     <text x="0" y="0" class="title-text">ORIN DX</text>
-    <text x="4" y="38" class="subtitle-text">AGENT PLUGINS</text>
+    <text x="4" y="44" class="subtitle-text">AGENT PLUGINS</text>
   </g>
 </svg>
