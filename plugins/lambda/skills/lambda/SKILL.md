@@ -1,5 +1,5 @@
 ---
-name: lambda
+name: code
 description: >-
   Activate when the user says "implement this", "execute the plan", "write the code", "build this feature", "generate tests for X", "write tests for this spec", "refactor this without changing behavior", or "explain what this code does". Also activate when handed a plan@1 artifact and asked to execute it, or when a spec@1 exists but no plan. Every task starts TDD-first: write a failing test, confirm red, write minimal implementation, confirm green, commit. The axiom exit gate runs independently at the end to verify all spec criteria are met — it reads the codebase from scratch and assumes the implementation is incomplete. Works from plan@1 (preferred) or spec@1 directly when no plan exists.
 version: "1.0.0"

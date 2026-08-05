@@ -1,5 +1,5 @@
 ---
-name: delta
+name: ship
 description: >-
   Trigger this skill when the user asks to commit code, write a commit message, open a PR, create a pull request, write the PR description, review a PR, address feedback, respond to review comments, add a changeset, cut a release, summarize what's in a release, or document a change. Activate when the user says "commit this", "write a commit message", "open a PR", "create a pull request", "write the PR description", "review this PR", "address the feedback", "add a changeset", "cut a release", "what's in this release", or "document this change". This skill reads the staged diff, linked spec, and linked requirement to produce meaningful, context-aware output — not mechanical templates. It coordinates five subagents that each handle one phase of the shipping lifecycle: commit authoring, PR narration, changeset extraction, review preprocessing, and release summarization.
 version: "1.0.0"

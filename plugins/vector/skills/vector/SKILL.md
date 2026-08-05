@@ -1,5 +1,5 @@
 ---
-name: vector
+name: plan
 description: >-
   Trigger this skill when the user says "write a plan for X", "how do we implement this spec", "break this down into tasks", "what are the implementation steps", "create an implementation plan", or "plan this out". Also activate when a spec (spec@1) exists and the user is ready to move to implementation but hasn't broken it down yet. Produces a plan@1 artifact where every task includes exact file paths, TDD steps with failing test first, exact implementation code, expected test output, and a conventional commit message. No TBDs. No "implement as appropriate." Every step is mechanically executable by a developer with zero domain context.
 version: "1.0.0"

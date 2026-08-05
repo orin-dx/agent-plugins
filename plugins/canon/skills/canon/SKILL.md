@@ -1,5 +1,5 @@
 ---
-name: canon
+name: spec
 description: >-
   Trigger this skill when the user asks to write or draft a spec, says "spec this out", wants to check whether a spec is complete or unambiguous, says "review this spec", asks whether a spec matches the code ("has this drifted?", "is the spec still accurate?"), or has a PR and wants to know if the spec needs updating. Also activate when converting a requirement or research report into a structured specification document. This skill produces spec@1 artifacts where every acceptance criterion is a testable proposition — no TBDs, no ambiguous language. Criteria must be confirmable true or false from the outside; error cases carry their own dedicated criteria. Use canon to catch untestable language ("the system should be responsive"), ambiguous scope, missing error cases, and drift between a written spec and the actual implementation.
 version: "1.0.0"

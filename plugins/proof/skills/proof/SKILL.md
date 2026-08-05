@@ -1,5 +1,5 @@
 ---
-name: proof
+name: audit
 description: >-
   Trigger this skill when the user asks to perform a bug hunt, code audit, find bugs, security audit, defect scan, vulnerability scan, code review for bugs, or asks "what's wrong with this code." Activate for any codebase language — Rust, TypeScript, or JavaScript. This skill runs a 4-phase pipeline: (1) recon builds a verified module manifest and detects the primary language from Cargo.toml or package.json; (2) scanner reads language-specific hazard taxonomies from shared/references/rust.md or shared/references/typescript.md and identifies candidate bugs in live files only; (3) adversary attempts to refute each candidate by tracing control flow and trigger conditions — only unrebutted findings survive; (4) exit-gate independently verifies that all confirmed findings are resolved after remediation, checks for sibling gaps, and confirms the workspace still compiles and tests pass. Proof never reports bugs in dead or unreachable code. Output follows the finding-report@1 schema.
 version: "2.0.0"

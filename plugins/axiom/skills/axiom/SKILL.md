@@ -1,5 +1,5 @@
 ---
-name: axiom
+name: gate
 description: >-
   Trigger this skill when the user says "verify this", "check this spec", "check this plan", "check this requirement", "check this PR", "is this done?", "review this for completeness", "does this meet the criteria?", "gate this", or "quality check". Also activate before stage transitions: before starting implementation from a spec, before shipping from an implementation, before opening a PR from a branch. Applies to any stage artifact: requirements documents, design specs, implementation plans, code implementations, and pull requests. Do not activate for general question answering, code explanation, or exploratory work where no artifact boundary is being crossed. Activate when a defined artifact should be verified against stated criteria before downstream work proceeds. The axiom gate is the formal checkpoint: it either clears the artifact for the next stage or returns specific actionable blockers to the producing agent.
 version: "1.0.0"
