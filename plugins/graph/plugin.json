@@ -3,7 +3,14 @@
   "name": "graph",
   "version": "1.0.0",
   "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to any issue tracker that produces the requirement@1 schema.",
-  "author": "Gabriel Castro (Orin DX)",
-  "skills": ["graph"],
-  "agents": ["graph-intake", "graph-clarifier", "graph-auditor"]
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "agents": [
+    "./subagents/graph-intake.md",
+    "./subagents/graph-clarifier.md",
+    "./subagents/graph-auditor.md"
+  ]
 }

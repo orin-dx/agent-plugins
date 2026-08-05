@@ -86,7 +86,7 @@ Runtime-pullable guides in `shared/references/`. Subagents pull these themselves
 Add this repo as a marketplace, then install the plugins you need:
 
 ```
-/plugin marketplace add orin-axi/agent-plugins
+/plugin marketplace add orin-dx/agent-plugins
 /plugin install graph
 /plugin install trace
 /plugin install canon
@@ -105,22 +105,24 @@ Install `proof` and `basis` as needed:
 
 ### Antigravity (AGY)
 
-Install individual plugins directly:
+Install individual plugins via the native CLI (uses a Git URL):
 
 ```bash
-agy plugin install graph
-agy plugin install trace
-agy plugin install canon
-# etc.
+agy plugin install https://github.com/orin-dx/agent-plugins.git
 ```
 
-Or use [`agy-plugins-cli`](https://github.com/ZaunEkko/agy-plugins-cli) for full marketplace management:
+Or use [`agy-plugins-cli`](https://github.com/ZaunEkko/agy-plugins-cli) for an interactive TUI with update tracking:
 
 ```bash
 npm install -g agy-plugins-cli
-agy-plugin marketplace add orin-axi/agent-plugins
-agy-plugin add graph@orin-axi
-agy-plugin add trace@orin-axi
+agy-plugin marketplace add orin-dx/agent-plugins
+agy-plugin add graph@orin-dx
+agy-plugin add trace@orin-dx
+agy-plugin add canon@orin-dx
+agy-plugin add vector@orin-dx
+agy-plugin add lambda@orin-dx
+agy-plugin add axiom@orin-dx
+agy-plugin add delta@orin-dx
 ```
 
 ---
