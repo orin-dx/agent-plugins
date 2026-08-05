@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 220" width="100%" height="100%" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 220" width="100%" height="100%" fill="none">
   <defs>
-    <!-- Primary Title Gradient (Callisto DNA) -->
-    <linearGradient id="callistoTitleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1E293B" />
-      <stop offset="45%" stop-color="#0F172A" />
+    <!-- High-Contrast Dark Mode Gradient -->
+    <linearGradient id="callistoTitleGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#7DD3FC" />
       <stop offset="100%" stop-color="#0284C7" />
     </linearGradient>
 
@@ -13,11 +13,24 @@
       <stop offset="100%" stop-color="#0284C7" />
     </linearGradient>
 
-    <!-- Glowing Node Gradient -->
+    <!-- AI Magic Sparkle Gradient -->
+    <linearGradient id="aiMagicGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#818CF8" />
+    </linearGradient>
+
+    <!-- Glowing Node Radial -->
     <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#38BDF8" />
       <stop offset="100%" stop-color="#0284C7" />
     </radialGradient>
+
+    <!-- Soft Ambient Neon Glow Filter -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
   </defs>
 
   <style>
@@ -25,29 +38,32 @@
     .title-text {
       font-family: 'Outfit', -apple-system, sans-serif;
       font-weight: 900;
-      font-size: 64px;
-      letter-spacing: 0.14em;
+      font-size: 68px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      fill: url(#callistoTitleGradient);
+      fill: url(#callistoTitleGradientDark);
     }
     .subtitle-text {
       font-family: 'Outfit', -apple-system, sans-serif;
       font-weight: 700;
-      font-size: 18px;
-      letter-spacing: 0.45em;
+      font-size: 19px;
+      letter-spacing: 0.42em;
       text-transform: uppercase;
-      fill: #0284C7;
+      fill: #38BDF8;
     }
   </style>
 
-  <!-- Modular Syntax & Socket Emblem -->
+  <!-- Modular Syntax + AI Emblem -->
   <g transform="translate(35, 30)">
-    <!-- Signal Bus Track -->
-    <line x1="15" y1="80" x2="145" y2="80" stroke="#1E293B" stroke-width="4" stroke-dasharray="4 6" opacity="0.6" />
+    <!-- Soft Glow Aura behind central node -->
+    <circle cx="85" cy="80" r="35" fill="#0284C7" opacity="0.25" filter="url(#neonGlow)" />
 
-    <!-- Left Agent Bracket (Slate/Midnight) -->
+    <!-- Signal Bus Track -->
+    <line x1="10" y1="80" x2="155" y2="80" stroke="#475569" stroke-width="4" stroke-dasharray="4 6" opacity="0.6" />
+
+    <!-- Left Agent Bracket (Brightened White to Cyan) -->
     <path d="M 30 35 L 75 80 L 30 125"
-          stroke="url(#callistoTitleGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+          stroke="url(#callistoTitleGradientDark)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
 
     <!-- Right Plugin Socket Prong (Electric Cyan) -->
     <path d="M 95 35 L 140 80 L 95 125"
@@ -56,12 +72,23 @@
     <!-- Connected Skill Node Points -->
     <circle cx="75" cy="80" r="10" fill="url(#nodeGlow)" stroke="#0F172A" stroke-width="3" />
     <circle cx="140" cy="80" r="7" fill="#38BDF8" />
-    <circle cx="20" cy="80" r="5" fill="#1E293B" />
+    <circle cx="15" cy="80" r="4" fill="#64748B" />
+
+    <!-- AI Sparkle 1 (Primary - Top Right) -->
+    <path d="M 148 20 Q 148 32 160 32 Q 148 32 148 44 Q 148 32 136 32 Q 148 32 148 20 Z"
+          fill="url(#aiMagicGradient)" />
+
+    <!-- AI Sparkle 2 (Micro - Near Connector Core) -->
+    <path d="M 78 48 Q 78 54 84 54 Q 78 54 78 60 Q 78 54 72 54 Q 78 54 78 48 Z"
+          fill="#38BDF8" opacity="0.9" />
+
+    <!-- Orbiting Micro Data Particle -->
+    <circle cx="122" cy="50" r="2.5" fill="#A5F3FC" />
   </g>
 
-  <!-- Wordmark: Orin / Agent Plugins -->
-  <g transform="translate(205, 96)">
-    <text x="0" y="0" class="title-text">ORIN</text>
+  <!-- Wordmark: Orin DX / Agent Plugins -->
+  <g transform="translate(215, 96)">
+    <text x="0" y="0" class="title-text">ORIN DX</text>
     <text x="4" y="38" class="subtitle-text">AGENT PLUGINS</text>
   </g>
 </svg>
