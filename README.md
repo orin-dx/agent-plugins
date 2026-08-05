@@ -1,124 +1,132 @@
 <h1 align="center">Orin DX Agent Plugins</h1>
 
 <p align="center">
-  <b>Official AI Agent Plugins & Skills Marketplace for Antigravity (AGY), Claude Code, and Cursor.</b><br />
-  <i>Self-contained, domain-focused AI agent plugins for bug hunting, infrastructure, web guidance, security, and release engineering.</i>
+  <b>A structured plugin ecosystem for AI-assisted software development.</b><br />
+  <i>Nine cooperating plugins covering the full development lifecycle, connected by shared JSON schemas and a common verification gate.</i>
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Schema-marketplace.json%20v1.0-success.svg" alt="Schema" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Schema-marketplace.json%20v2.0.0-success.svg" alt="Schema" /></a>
 </p>
 
 ---
 
-## Plugin Categories
+## The Lifecycle Ecosystem
 
-`orin-dx/agent-plugins` hosts modular plugins across 4 core engineering domains:
+Nine plugins cover the complete path from raw idea to shipped release. Each plugin has a defined input schema, output schema, and success criterion. They are composable — install only the stages you need.
 
-1. **Language & Framework Bug Hunters**: `bug-hunter-rust`, `bug-hunter-ts`, `bug-hunter-python`, `bug-hunter-go`
-2. **Infrastructure & CI/CD Pipelines**: `github-actions-auditor`, `docker-security-audit`, `terraform-gcp-architect`
-3. **Web, Accessibility & UX**: `a11y-auditor`, `modern-web-guidance`, `chrome-devtools`
-4. **Security & Release Engineering**: `sec-audit-owasp`, `release-engineering`
+```
+graph (need) → trace (research) → canon (spec) → vector (plan) → lambda (code)
+     ↑                                                                  ↓
+     └──────────────────── delta (ship) ← axiom (gate) ────────────────┘
+```
 
----
+**Cross-cutting:** `proof` (adversarial bug hunting) · `basis` (plugin authoring)
 
-## Available Plugins
-
-| Plugin ID | Target Stack | Description | Manifest |
+| Plugin | Stage | Purpose | Output Schema |
 | :--- | :--- | :--- | :--- |
-| **`agent-plugin-builder`** | Meta / Scaffolding | Meta-skill for scaffolding and generating new AI agent plugins, skills, and subagents. | [`plugin.json`](./plugins/agent-plugin-builder/plugin.json) |
-| **`bug-hunter-rust`** | **Rust** (Cargo, Monorepos, CLI, WASM) | 6 Rust Hazard Taxonomies & 6 Code Smell Sweeps (Unused flags, fixpoint staleness, UTF-8 BOM, atomic disk write `.sync_all()`, lossy CST, raw string IDs). | [`plugin.json`](./plugins/bug-hunter-rust/plugin.json) |
-| **`bug-hunter-ts`** | **TypeScript / JavaScript** (Node, Bun, React, Next) | 6 TS Hazard Taxonomies (`as any` casting, floating promises, SSR hydration, falsy traps, event leak cleanups). | [`plugin.json`](./plugins/bug-hunter-ts/plugin.json) |
+| [`graph`](./plugins/graph/) | Need | Captures and structures requirements | `requirement@1` |
+| [`trace`](./plugins/trace/) | Research | Surveys prior art, risks, and patterns | `research-report@1` |
+| [`canon`](./plugins/canon/) | Spec | Drafts and gates unambiguous specifications | `spec@1` |
+| [`vector`](./plugins/vector/) | Plan | Decomposes specs into sequenced, testable tasks | `plan@1` |
+| [`lambda`](./plugins/lambda/) | Code | Implements tasks via TDD, gates on exit | `changeset@1` |
+| [`axiom`](./plugins/axiom/) | Gate | Cross-artifact verification gate (reusable) | `verdict@1` |
+| [`delta`](./plugins/delta/) | Ship | Commits, PRs, changelogs, and release notes | `release-artifact@1` |
+| [`proof`](./plugins/proof/) | Audit | Adversarial bug hunting on live code | `finding-report@1` |
+| [`basis`](./plugins/basis/) | Meta | Scaffolds and audits new plugins | — |
 
 ---
 
-## Shared Framework Files (Non-Plugin Context)
+## Shared Schema Contract
 
-Shared debugging laws, context engineering principles, and report evaluation standards are stored centrally in `shared/` and referenced by plugins on demand:
+All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use JSON Schema draft-2020-12 with `additionalProperties: false`. A schema version is immutable — a breaking change requires a new file (e.g. `requirement@2.json`).
 
-- [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core debugging principles, proof requirements, and red-to-green verification steps.
-- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Context engineering, 4-stage agentic loop (Explore ➔ Plan ➔ Code ➔ Verify), and subagent context resets.
-- [**`shared/report-template.md`**](./shared/report-template.md): Technical report evaluation format for confirmed findings.
+| Schema | Produced by | Consumed by |
+| :--- | :--- | :--- |
+| `requirement@1` | graph | canon, trace |
+| `research-report@1` | trace | canon |
+| `spec@1` | canon | vector, axiom |
+| `plan@1` | vector | lambda |
+| `changeset@1` | lambda | delta, axiom |
+| `verdict@1` | axiom | any gate consumer |
+| `finding-report@1` | proof | delta, humans |
+| `release-artifact@1` | delta | humans |
 
----
-
-## Quick Start (3 Setup Options)
-
-### Option 1: Antigravity CLI (`agy`)
-
-#### Global Installation (All Local Projects)
-```bash
-git clone https://github.com/orin-dx/agent-plugins.git ~/.gemini/config/plugins/agent-plugins
-```
-
-#### CLI Marketplace Command
-```bash
-agy plugin add orin-dx/agent-plugins/bug-hunter-rust
-agy plugin add orin-dx/agent-plugins/bug-hunter-ts
-```
-
-#### Workspace Project Submodule
-Add directly into a specific repository (e.g., `callisto`):
-```bash
-git submodule add https://github.com/orin-dx/agent-plugins.git .agents/plugins/agent-plugins
-```
+Every schema includes a `reasoning` scratchpad field — unconstrained chain-of-thought that is never forwarded downstream.
 
 ---
 
-### Option 2: Claude Code
+## Shared References
+
+Runtime-pullable guides in `shared/references/`. Subagents read these on demand during task execution — they are not loaded into context at startup.
+
+| File | Purpose |
+| :--- | :--- |
+| `agent-best-practices.md` | Authoring-time only. Section 9: context engineering principles. |
+| `rust.md` | Rust hazard taxonomies, NAPI boundary rules, non-negotiables |
+| `typescript.md` | TS hazard taxonomies, unhandled promise patterns |
+| `conventional-commits.md` | Type/scope conventions, scope table |
+| `github.md` | PR template, `gh` CLI commands, labels |
+| `changesets.md` | Changeset vs commit distinction, semver decision guide |
+| `mcp-protocol.md` | MCP server lifecycle, tool definition format, A2A AgentCard |
+| `modern-cli-tools.md` | ripgrep, fd, bat, jq, delta, fzf usage patterns |
+
+---
+
+## Quick Start
+
+### Antigravity (AGY)
 
 ```bash
-claude plugin add orin-dx/agent-plugins/bug-hunter-rust
-claude plugin add orin-dx/agent-plugins/bug-hunter-ts
+# Global install
+git clone https://github.com/orin-axi/agent-plugins.git ~/.gemini/config/plugins/agent-plugins
+
+# Workspace submodule
+git submodule add https://github.com/orin-axi/agent-plugins.git .agents/plugins/agent-plugins
+```
+
+### Claude Code
+
+```bash
+git submodule add https://github.com/orin-axi/agent-plugins.git .claude/plugins/agent-plugins
 ```
 
 ---
 
-## Repository Architecture
+## Repository Structure
 
-```text
+```
 agent-plugins/
-├── marketplace.json                        <-- Marketplace Index (AGY & Claude Code)
-├── AGENTS.md                               <-- AI Agent Rules & Invariants
-├── CLAUDE.md                               <-- Claude Code Specific Guidelines
-├── README.md                               <-- Marketplace Home Page & Sitemap
-├── CONTRIBUTING.md                         <-- Plugin Authoring & PR Guide
-├── ARCHITECTURE.md                         <-- Multi-Agent Pipeline & Token Rationale
-├── shared/                                 <-- SHARED CONTEXT (NOT PLUGINS)
-│   ├── agent-best-practices.md             <-- Context Engineering & Platform Matrix
-│   ├── debugging-laws.md                   <-- Universal Debugging Principles
-│   └── report-template.md                  <-- Technical Report Standard
+├── marketplace.json              ← Plugin registry (v2.0.0)
+├── AGENTS.md                     ← Cross-platform agent rules
+├── ARCHITECTURE.md               ← System architecture
+├── CONTRIBUTING.md               ← Plugin authoring guide
+├── shared/
+│   ├── schemas/                  ← Versioned inter-agent JSON schemas
+│   │   ├── requirement@1.json
+│   │   ├── research-report@1.json
+│   │   ├── spec@1.json
+│   │   ├── plan@1.json
+│   │   ├── changeset@1.json
+│   │   ├── verdict@1.json
+│   │   ├── finding-report@1.json
+│   │   └── release-artifact@1.json
+│   ├── references/               ← Runtime-pullable domain guides
+│   └── agent-best-practices.md  ← Authoring-time principles (Section 9)
 └── plugins/
-    ├── agent-plugin-builder/               <-- Meta-Skill Scaffolding Plugin
-    │   ├── plugin.json
-    │   └── skills/agent-plugin-builder/SKILL.md
-    ├── bug-hunter-rust/                    <-- Rust Bug Hunter Plugin
-    │   ├── plugin.json
-    │   ├── skills/bug-hunter-rust/SKILL.md
-    │   └── subagents/
-    │       ├── bug-hunter-scanner-rust.md
-    │       ├── bug-hunter-adversary-rust.md
-    │       ├── bug-hunter-remediator-rust.md
-    │       ├── bug-hunter-architect-rust.md
-    │       └── bug-hunter-mutator-rust.md
-    └── bug-hunter-ts/                      <-- TS Bug Hunter Plugin
-        ├── plugin.json
-        ├── skills/bug-hunter-ts/SKILL.md
-        └── subagents/
-            ├── bug-hunter-scanner-ts.md
-            ├── bug-hunter-adversary-ts.md
-            └── bug-hunter-remediator-ts.md
+    ├── graph/                    ← Requirement capture
+    ├── trace/                    ← Research synthesis
+    ├── canon/                    ← Specification drafting and gating
+    ├── vector/                   ← Implementation planning
+    ├── lambda/                   ← TDD implementation
+    ├── axiom/                    ← Verification gate
+    ├── delta/                    ← Ship tooling
+    ├── proof/                    ← Adversarial bug hunting
+    ├── basis/                    ← Plugin scaffolding
+    ├── bug-hunter-rust/          ← Rust-specific bug hunting
+    └── bug-hunter-ts/            ← TypeScript-specific bug hunting
 ```
-
----
-
-## Key Architectural Principles
-
-1. **Domain-Scoped Plugins**: Plugins are focused on specific stacks or tasks (Rust, TS, GitHub Actions, Web Accessibility). Repositories load only the plugins required for their domain, reducing prompt token overhead by ~80%.
-2. **On-Demand Context References**: Shared principles live in `shared/`. Plugins link to shared files using relative Markdown links, keeping prompt turns token-lean until a task is executed.
-3. **Hazard-Taxonomy Partitioning**: Multi-agent audits partition subagents by failure category (Scanner ➔ Adversary ➔ Remediator) across the target codebase.
-4. **Red-to-Green Verification Law**: Remediator subagents write a failing regression test first (red) before applying minimal code fixes (green).
 
 ---
 
