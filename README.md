@@ -1,7 +1,8 @@
-<h1 align="center">Orin DX Agent Plugins</h1>
+<p align="center">
+  <img src="./assets/logo.svg" alt="Agent Plugins Engine" width="820" />
+</p>
 
 <p align="center">
-  <b>A structured plugin ecosystem for AI-assisted software development.</b><br />
   <i>Nine cooperating plugins covering the full development lifecycle, connected by shared JSON schemas and a common verification gate.</i>
 </p>
 
