@@ -1,0 +1,19 @@
+[Image #1]
+
+This is a bit weird based on our names right?
+
+---
+
+Any other similar redundant naming in our plugins?
+
+---
+
+What should we consider for names to fix this?
+
+---
+
+we should superseeded plugins right?
+
+---
+
+go with option 1 + 2

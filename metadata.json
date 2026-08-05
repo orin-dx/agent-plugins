@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.9.1-nightly.202608050700.76dff6a81",
+  "checkpoint_id": "01KZ9GC6AB82YR0VB7SCANFAGH",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 6,
+  "files_touched": [
+    "plugins/agent-plugin-builder/plugin.json",
+    "plugins/bug-hunter-rust/plugin.json",
+    "plugins/bug-hunter-ts/plugin.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 21,
+    "cache_creation_tokens": 9625,
+    "cache_read_tokens": 799205,
+    "output_tokens": 3988,
+    "api_call_count": 11
+  }
+}
