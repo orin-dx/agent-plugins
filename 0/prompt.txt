@@ -1,0 +1,29 @@
+I got an error trying to install the plugins from our agent-plugins repo (locally at ~/Projects/agent-plugins):
+
+Failed to install: Plugin temp_subdir_1785948316037_jx8yr7 has an invalid manifest file at /Users/gabe/.claude/plugins/cache/temp_subdir_1785948316037_jx8yr7/plugin.json.
+
+Validation errors: author: Invalid input: expected object, received string, agents: Invalid input, skills: Invalid input
+
+---
+
+Is this compatible with agy?
+
+---
+
+Are you sure about the marketplace.claude.json not being there??
+
+---
+
+FYI the instructions have the repo name incorrectly right? Also are you sure about the agy-plugins-cli and the format?
+
+---
+
+The readme was saying orin-axi
+
+---
+
+https://www.npmjs.com/package/agy-plugins-cli
+
+---
+
+Pushed up?
