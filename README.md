@@ -1,6 +1,6 @@
-<p align="center">
-  <img src="./assets/logo.svg" alt="Orin Agent Plugins" width="100%" />
-</p>
+<div style="margin: auto">
+  <img src="./assets/logo.svg" alt="Orin Agent Plugins" width="500px" />
+</div>
 
 <p align="center">
   <i>Nine cooperating plugins covering the full development lifecycle, connected by shared JSON schemas and a common verification gate.</i>
