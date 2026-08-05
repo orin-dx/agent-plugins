@@ -80,20 +80,46 @@ Runtime-pullable guides in `shared/references/`. Subagents pull these themselves
 
 ## Quick Start
 
-### Antigravity (AGY)
-
-```bash
-# Global install
-git clone https://github.com/orin-axi/agent-plugins.git ~/.gemini/config/plugins/agent-plugins
-
-# Workspace submodule
-git submodule add https://github.com/orin-axi/agent-plugins.git .agents/plugins/agent-plugins
-```
-
 ### Claude Code
 
+Add this repo as a marketplace, then install the plugins you need:
+
+```
+/plugin marketplace add orin-axi/agent-plugins
+/plugin install graph
+/plugin install trace
+/plugin install canon
+/plugin install vector
+/plugin install lambda
+/plugin install axiom
+/plugin install delta
+```
+
+Install `proof` and `basis` as needed:
+
+```
+/plugin install proof
+/plugin install basis
+```
+
+### Antigravity (AGY)
+
+Install individual plugins directly:
+
 ```bash
-git submodule add https://github.com/orin-axi/agent-plugins.git .claude/plugins/agent-plugins
+agy plugin install graph
+agy plugin install trace
+agy plugin install canon
+# etc.
+```
+
+Or use [`agy-plugins-cli`](https://github.com/ZaunEkko/agy-plugins-cli) for full marketplace management:
+
+```bash
+npm install -g agy-plugins-cli
+agy-plugin marketplace add orin-axi/agent-plugins
+agy-plugin add graph@orin-axi
+agy-plugin add trace@orin-axi
 ```
 
 ---
