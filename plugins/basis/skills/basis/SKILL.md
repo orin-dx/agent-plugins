@@ -73,7 +73,7 @@ plugins/<id>/
 ├── skills/
 │   └── <id>/
 │       └── SKILL.md             # YAML frontmatter + body (sub-skills, conventions, dispatch)
-└── subagents/
+└── agents/
     └── <agent-name>.md          # one file per agent declared in plugin.json
 ```
 

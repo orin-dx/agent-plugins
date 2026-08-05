@@ -1,7 +1,7 @@
 {
   "id": "bug-hunter-ts",
   "name": "bug-hunter-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Self-contained TypeScript/JavaScript Bug Hunter plugin with 6 TS Hazard Taxonomies & Multi-Agent Orchestration.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,8 +9,8 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./subagents/bug-hunter-scanner-ts.md",
-    "./subagents/bug-hunter-adversary-ts.md",
-    "./subagents/bug-hunter-remediator-ts.md"
+    "./agents/bug-hunter-adversary-ts.md",
+    "./agents/bug-hunter-remediator-ts.md",
+    "./agents/bug-hunter-scanner-ts.md"
   ]
 }

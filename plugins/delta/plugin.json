@@ -1,7 +1,7 @@
 {
   "id": "delta",
   "name": "delta",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shipping plugin. Shepherds completed, verified code through commit, PR creation, review response, and changeset documentation. Produces release-artifact@1 from changeset@1 inputs.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,10 +9,10 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./subagents/delta-commit-analyzer.md",
-    "./subagents/delta-pr-narrator.md",
-    "./subagents/delta-changeset-analyzer.md",
-    "./subagents/delta-review-preprocessor.md",
-    "./subagents/delta-release-summarizer.md"
+    "./agents/delta-changeset-analyzer.md",
+    "./agents/delta-commit-analyzer.md",
+    "./agents/delta-pr-narrator.md",
+    "./agents/delta-release-summarizer.md",
+    "./agents/delta-review-preprocessor.md"
   ]
 }

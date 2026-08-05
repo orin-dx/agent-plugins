@@ -1,7 +1,7 @@
 {
   "id": "agent-plugin-builder",
   "name": "agent-plugin-builder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Meta-skill for scaffolding and generating new AI agent plugins, skills, and subagents adhering to Orin DX authoring specifications.",
   "author": {
     "name": "Gabriel Castro",

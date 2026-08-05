@@ -41,5 +41,5 @@ Ensure new plugins conform to the open format:
 plugins/<plugin-id>/
 ├── plugin.json                 <-- Plugin Manifest
 ├── skills/<plugin-id>/SKILL.md <-- Skill Definition
-└── subagents/*.md              <-- Subagent Prompt Files
+└── agents/*.md                 <-- Agent Prompt Files
 ```

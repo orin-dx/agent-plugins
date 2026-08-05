@@ -26,7 +26,7 @@ Review core guidelines before scaffolding:
 ### 1. Adaptable Plugin Structure
 Determine the optimal layout for the target domain:
 - **Simple / Tool Plugins**: May contain only a `plugin.json` and a single `SKILL.md`.
-- **Complex / Multi-Agent Plugins**: May contain `plugin.json`, `SKILL.md`, and 1 to 3 specialized subagents (`subagents/*.md`).
+- **Complex / Multi-Agent Plugins**: May contain `plugin.json`, `SKILL.md`, and 1 to 3 specialized agents (`agents/*.md`).
 
 ### 2. Generate `plugin.json` Manifest
 Ensure `plugin.json` contains valid JSON with `"id"`, `"name"`, `"version"`, `"description"`, `"author": "Gabriel Castro (Orin DX)"`, `"skills": [...]`, and optional `"agents": [...]`.

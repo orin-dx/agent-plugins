@@ -23,7 +23,7 @@ plugins/<plugin-id>/
 │   └── <plugin-id>/
 │       ├── SKILL.md            <-- Primary Skill (CSO User Intent Frontmatter)
 │       └── references/         <-- On-Demand Subdocuments (Tier 3)
-└── subagents/
+└── agents/
     ├── <plugin>-scanner-<lang>.md   <-- Scanner Subagent (Superpowers Framework)
     ├── <plugin>-adversary-<lang>.md <-- Adversary Subagent (Superpowers Framework)
     ├── <plugin>-remediator-<lang>.md<-- Remediator Subagent (Superpowers Framework)

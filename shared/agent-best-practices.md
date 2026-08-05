@@ -166,7 +166,7 @@ When authoring plugins for cross-platform deployment across Google Antigravity a
 | :--- | :--- | :--- | :--- |
 | **Plugin Directory** | `~/.gemini/config/plugins/` or `.agents/plugins/` | `~/.claude/plugins/` or `.claude/plugins/` | Author plugins under `./plugins/<plugin-id>/`. Symlink or copy to target CLI paths. |
 | **Marketplace Index** | `marketplace.json` (`$schema: antigravity.google/...`) | `marketplace.json` or directory scan | Maintain root `marketplace.json` listing plugin IDs, paths, and descriptions. |
-| **Subagent Folder** | `subagents/` or `agents/` | `agents/` or `subagents/` | Place prompt files in `subagents/`. Both engines resolve this path natively. |
+| **Agent Folder** | `agents/` | `agents/` | Place prompt files in `agents/`. Both engines resolve this canonical path natively (`plugin.json` specifies `"agents": "./agents/"`). |
 | **Tool Referencing** | `run_command`, `view_file`, `grep_search`, `replace_file_content` | `Bash`, `View`, `Edit`, `Grep` | Refer to abstract tool categories ("file viewing tool", "grep search tool", "test execution tool"). |
 | **Rich Artifacts** | Auxiliary Pane (`.md` artifacts, Mermaid, Carousels) | Terminal Markdown Output | Use standard GitHub Flavored Markdown (GFM) and alerts (`> [!NOTE]`, `> [!TIP]`) readable on both surfaces. |
 | **Subagent Invocation** | Native `invoke_subagent` / `define_subagent` APIs | Multi-agent subprocess execution | Author subagent prompts with YAML frontmatter (`name`, `role`, `description`). |
