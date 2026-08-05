@@ -4,7 +4,17 @@ role: Adversarial Verifier
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent after proof-scanner emits candidates. It attempts to refute each candidate by reading the actual code and tracing control flow. A finding survives only if the adversary cannot refute it. Returns a finding-report@1 containing only confirmed findings — rejected candidates are dropped.
+  Delegate to this subagent after proof-scanner emits candidate findings. Input is the
+  candidates array from proof-scanner and the proof-recon manifest (workspace, language,
+  live_files, dead_files). The agent attempts to refute each candidate by reading the
+  actual file at the reported location, tracing control flow from the trigger condition,
+  and looking for validation guards, early returns, type constraints, or caller-side
+  preconditions that prevent the bug from manifesting. The default assumption is refuted
+  — a finding confirms only when no valid refutation can be constructed. Confirmed
+  findings require the trigger to be reachable in live code, no guard preventing the
+  bad path, and an identifiable root cause. Rejected candidates are dropped entirely.
+  Output is a finding-report@1 conforming to shared/schemas/finding-report@1.json
+  containing only confirmed findings.
 ---
 
 # Proof Adversary

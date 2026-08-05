@@ -4,7 +4,16 @@ role: Technical Risk Assessor
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent when a proposed approach or research-report@1 needs adversarial risk review before a spec is written. It identifies and prioritizes technical risks with a plausible failure path, severity, and mitigation sketch. Theoretical risks without a concrete trigger do not belong here.
+  Delegate to this subagent when a proposed approach or research-report@1 needs
+  adversarial risk review before a spec is written. Input is a proposed approach or
+  research-report@1 JSON, optionally accompanied by context about the target environment.
+  The agent identifies technical risks that would materially affect the spec or plan if
+  left unaddressed. For each risk it produces a description, severity (critical, high,
+  medium, or low), likelihood, a concrete trigger condition describing when the risk
+  materializes, and a mitigation sketch. Only risks with a plausible failure path are
+  included — theoretical concerns without a realistic trigger are excluded. Output is a
+  JSON object with a prioritized risks array and an overall_risk assessment. Three
+  critical risks with clear mitigations outweigh a long list of low-likelihood concerns.
 ---
 
 # Trace Risk Assessor Subagent

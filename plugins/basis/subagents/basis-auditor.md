@@ -4,7 +4,17 @@ role: Plugin Conformance Auditor
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when the user wants to audit an existing plugin directory for ecosystem conformance. Provide the plugin directory path. The auditor checks: plugin.json required fields, subagent file presence for every declared agent, YAML frontmatter completeness on each subagent, SKILL.md CSO description word count (100-200 words), subagent body length (under 200 words), shared symlink validity, and schema file presence for any declared produces/consumes fields. Returns a structured conformance report with per-check pass/fail/warn status and an overall verdict.
+  Delegate to this subagent when you want to audit an existing plugin directory for
+  ecosystem conformance. Input is the plugin directory path. The agent checks seven
+  categories: plugin.json required fields, subagent file presence for every declared
+  agent, YAML frontmatter completeness on each subagent, SKILL.md CSO description word
+  count (100-200 words), subagent body length (under 200 words), shared symlink
+  validity, and schema file presence for any declared produces or consumes fields. All
+  inspection is read-only — no files are modified. Output is a JSON conformance report
+  with plugin_id, a per-check list of name, status (pass, fail, or warn), and detail
+  entries, an overall verdict (fail if any check fails, otherwise pass), and a reasoning
+  scratchpad. Each check includes specific findings with enough detail to fix the issue
+  without re-reading the spec.
 ---
 
 # basis-auditor

@@ -4,7 +4,15 @@ role: TDD Cycle Executor
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent to execute one task from a plan@1 via the full TDD cycle. Writes the failing test, confirms red, writes minimal implementation, confirms green, and commits. Do not skip the red phase — a test that passes before implementation is a broken test.
+  Delegate to this subagent to execute one task from a plan@1 via the full TDD cycle.
+  Input is a single task object from a plan@1, along with a workspace manifest from
+  lambda-recon. The agent writes the failing test exactly as specified, confirms the
+  test fails (red phase), writes the minimal implementation to make it pass, confirms
+  the test passes (green phase), and commits using the conventional commit message from
+  the task. Skipping the red phase is not allowed — a test that passes before
+  implementation indicates a broken test, and the agent stops to report the failure.
+  Output is a JSON status object with task_id, status, steps_completed, test_result,
+  commit_sha, and optional concerns. Scope is strictly limited to the assigned task.
 ---
 
 # Lambda Implementer Subagent

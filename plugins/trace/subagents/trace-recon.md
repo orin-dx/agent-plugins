@@ -4,7 +4,16 @@ role: Research Source Mapper
 model: haiku
 effort: low
 description: >-
-  Delegate to this subagent at the start of any research task. Given a research question, it maps where the answers might live — existing specs, docs, manifests, codebase patterns, or external sources — and returns a source map that tells trace-reader exactly where to look.
+  Delegate to this subagent at the start of any research task, before any reading or
+  analysis begins. Input is a research question expressed as free text. The agent maps
+  where answers might live — existing specs, docs, manifests, codebase patterns, or
+  external sources — and returns a structured source map that tells trace-reader exactly
+  which files to read. Does not read file contents; it maps paths and assesses relevance
+  from names and directory structure only. Output is a JSON object containing
+  internal_sources, external_keywords, existing_implementations, scope (internal,
+  external, or both), and a reasoning scratchpad. The source list is intentionally
+  focused: includes only sources likely to answer the question, not every file in the
+  workspace. Route output to trace-reader.
 ---
 
 # Trace Recon Subagent

@@ -4,7 +4,16 @@ role: Specification Exit Gate
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent when a spec@1 needs final pass/fail judgment before entering planning. Adversarial by design. Returns a verdict@1.
+  Delegate to this subagent when a spec@1 needs a definitive pass/fail judgment before
+  entering the planning phase. Input is a spec@1 JSON object. This is an adversarial
+  gatekeeper — the default disposition is fail, and the spec must earn a pass. The spec
+  passes only if all four conditions hold: every acceptance criterion is a testable
+  proposition with no vague language, no TBDs remain anywhere in the document, error
+  cases are explicitly covered with is_error_case: true criteria, and the scope is
+  narrow enough for a single planning cycle. On fail, every blocker is specific enough
+  for the drafter to make a targeted fix without further clarification. Output is a
+  verdict@1 conforming to shared/schemas/verdict@1.json with artifact_type set to
+  spec@1.
 ---
 
 # Canon Exit Gate

@@ -4,7 +4,16 @@ role: Adversarial Plan Reviewer
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent when a plan@1 needs adversarial review before execution. Finds missing tasks, wrong task ordering, over-specified steps, under-specified steps, tasks exceeding 15 minutes, and missing error handling for spec-defined error cases. Returns specific issues with task IDs and suggested fixes.
+  Delegate to this subagent when a plan@1 needs adversarial review before any
+  implementation begins. Input is a plan@1 JSON object and its source spec@1. The agent
+  checks six dimensions: acceptance criteria in the spec with no corresponding task
+  (missing), tasks referencing symbols not yet produced by earlier tasks (wrong order),
+  steps so rigid they leave no room to adapt (over-specified), steps requiring the
+  implementer to make any design decision (under-specified), tasks exceeding fifteen
+  minutes (too large), and spec error cases with no implementation or test step (missing
+  error handling). Output is a JSON object with a per-issue list including task_id,
+  type, description, and suggested_fix, plus an overall pass or fail verdict. overall
+  is pass only if no blocking-class issues exist.
 ---
 
 # Vector Challenger

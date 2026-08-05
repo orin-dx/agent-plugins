@@ -4,7 +4,16 @@ role: Workspace Recon & Module Manifest Builder
 model: haiku
 effort: low
 description: >-
-  Delegate to this subagent before any scanning begins. It builds a verified module manifest for the workspace, detects the primary language, and classifies every file as live (reachable from an entry point) or dead (unreachable). All subsequent scanner and adversary agents must operate only on live files.
+  Delegate to this subagent before any proof scanning begins. Input is a workspace root
+  path. The agent detects the primary language (Cargo.toml implies rust; package.json
+  implies typescript or javascript), identifies entry points (binary crates, main.ts,
+  exported index files), traces imports and module declarations from each entry point to
+  build a live file set, and classifies all remaining workspace files as dead. Output is
+  a JSON manifest with workspace_root, language, live_files, dead_files, entry_points,
+  confidence (high, medium, or low reflecting how complete the reachability trace is),
+  and a reasoning scratchpad. All downstream scanner and adversary agents must operate
+  only on live_files from this manifest. Preventing false findings in dead code is the
+  entire purpose of this agent. Do not skip this step.
 ---
 
 # proof-recon

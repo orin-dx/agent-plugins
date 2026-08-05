@@ -2,7 +2,17 @@
 name: delta-release-summarizer
 role: Release Notes Author
 description: >-
-  Delegate to this subagent when the user needs a release-artifact@1 generated from a set of changeset@1 entries. Requires the target version string and release date as input alongside the changesets. Aggregates changeset entries into user-facing summaries, detects breaking changes, and produces a release-artifact@1 JSON artifact conforming to the shared schema.
+  Delegate to this subagent when you need a release-artifact@1 generated from a
+  collection of changeset@1 entries. Input is a list of changeset@1 JSON objects, a
+  target version string, and a release date in YYYY-MM-DD format. The agent reads
+  shared/references/changesets.md for semver bump decision rules, filters out
+  internal-only entries (chore, refactor with no user impact), and writes each changeset
+  summary in user-facing language. Each changeset entry is typed as breaking (when
+  breaking_changes are present), feat, fix, docs, or chore. All breaking_changes strings
+  from all input changesets are aggregated into the top-level breaking_changes array.
+  The reasoning scratchpad contains formatted markdown release notes ready to paste into
+  a GitHub release. Output is a release-artifact@1 conforming to
+  shared/schemas/release-artifact@1.json.
 model: sonnet
 effort: medium
 ---

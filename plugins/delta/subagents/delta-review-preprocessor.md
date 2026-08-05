@@ -2,7 +2,16 @@
 name: delta-review-preprocessor
 role: Review Comment Categorizer
 description: >-
-  Delegate to this subagent when the user has received PR review comments and needs them parsed and prioritized. Categorizes each comment as must-fix, suggestion, or question. Groups by file. Identifies exact locations and required changes for must-fix items. Returns a prioritized response plan as structured JSON.
+  Delegate to this subagent when the user has received pull request review comments and
+  needs them parsed, categorized, and turned into a prioritized action plan. Input is
+  the raw PR review comment text. The agent categorizes each comment as must-fix (blocks
+  merge), suggestion (optional improvement), or question (needs clarification before
+  anything can proceed). Results are grouped by file. For must-fix items, the agent
+  identifies the exact file location and the specific change required — concrete, not
+  vague. Output is a JSON object with must_fix (file, location, comment,
+  required_change), suggestions (file, location, comment), questions (file, comment),
+  a summary string, and a reasoning scratchpad. The goal is a prioritized response plan
+  the implementer can act on immediately without re-reading the original comments.
 model: sonnet
 effort: medium
 ---

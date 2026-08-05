@@ -4,7 +4,16 @@ role: Requirement Coverage Auditor
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when cross-referencing open requirements against existing specs, plans, and implementation files. Returns a structured audit report identifying which requirements are covered, partially addressed, missing implementation, or duplicated by another requirement.
+  Delegate to this subagent when you need to cross-reference all open requirements
+  against existing specs, plans, and implementation files in the workspace. Input is a
+  list of open requirement@1 objects and access to the workspace. The agent searches for
+  spec and implementation files that address each requirement's done_when criteria,
+  inspects candidate matches for substance, and detects requirements with overlapping or
+  identical core statements. Output is a structured audit report with a per-requirement
+  status (covered, partial, missing, or duplicate), evidence supporting each
+  determination, duplicate_of references where applicable, and a one-paragraph summary
+  of overall backlog health. Does not modify any files — read-only inspection only.
+  Use this before planning to prevent duplicate or redundant work.
 ---
 
 # Graph Auditor Subagent

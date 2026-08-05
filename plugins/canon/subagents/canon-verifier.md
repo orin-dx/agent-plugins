@@ -4,7 +4,15 @@ role: Spec-Drift Detector
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when checking whether a spec@1 still matches actual code in a workspace. Searches for evidence of each acceptance criterion, reports confirmed matches, mismatches, and unverifiable claims.
+  Delegate to this subagent when you need to verify whether a spec@1 still accurately
+  describes the current code in a workspace — that is, to detect spec drift. Input is a
+  spec@1 JSON object and a workspace path. For each acceptance criterion, the agent
+  searches the codebase for executable evidence that it is implemented. Each criterion
+  is classified as verified (evidence found with file and line citation), mismatch (spec
+  says X, code does Y), or unverifiable (requires runtime or external system access).
+  Inference from variable names or comments is not accepted — only executable evidence
+  counts. Output is a JSON object containing verified, mismatches, and unverifiable
+  arrays plus a reasoning scratchpad. Does not produce a pass/fail verdict.
 ---
 
 # Canon Verifier

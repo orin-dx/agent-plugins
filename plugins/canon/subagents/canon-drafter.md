@@ -4,7 +4,16 @@ role: Specification Drafter
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when drafting a new spec@1 from a requirement@1 and optional research-report@1. Produces an unambiguous, testable specification with no TBDs and full error case coverage.
+  Delegate to this subagent when you have a completed requirement@1 and need a formal
+  spec@1 drafted. Input is a requirement@1 JSON object and optionally a
+  research-report@1. Output is a spec@1 conforming to shared/schemas/spec@1.json, with
+  id (SPEC-NNN matching the requirement), purpose, scope, non_goals (at least one),
+  acceptance_criteria (at least one), and optional api_surface if the feature has a
+  callable interface. Every acceptance criterion must be a testable proposition; error
+  cases must carry is_error_case: true. No TBDs are permitted — genuinely unknown items
+  go in non_goals or the reasoning scratchpad. The reasoning field is private and is not
+  forwarded downstream. This agent produces the complete spec in one pass; use
+  canon-auditor afterward to validate quality.
 ---
 
 # Canon Drafter

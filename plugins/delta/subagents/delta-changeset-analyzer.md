@@ -2,7 +2,16 @@
 name: delta-changeset-analyzer
 role: Changeset Extractor
 description: >-
-  Delegate to this subagent when the user needs a changeset@1 produced from a git diff. Extracts files changed, maps addressed acceptance criteria from the linked spec (if provided), detects breaking changes, and produces a changeset@1 artifact conforming to the shared schema.
+  Delegate to this subagent when you need a changeset@1 artifact produced from a git
+  diff. Input is a git diff (readable via the git diff tool) and optionally a linked
+  spec@1. The agent identifies files changed, detects breaking changes (public API
+  removals, signature changes, behavior inversions), and maps which acceptance_criteria
+  IDs from the linked spec are addressed by this diff. If no spec is linked,
+  acceptance_criteria_met is set to unlinked. The summary is written in user-facing
+  language (max 200 characters) describing what changed for a user, not an implementer.
+  The agent reads shared/references/changesets.md for additional conventions and puts
+  semver impact analysis in the reasoning scratchpad. Output is a changeset@1 conforming
+  to shared/schemas/changeset@1.json.
 model: sonnet
 effort: medium
 ---

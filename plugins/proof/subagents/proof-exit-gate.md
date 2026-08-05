@@ -4,7 +4,17 @@ role: Exit Gate Verifier
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent after remediation is applied. It independently verifies that all confirmed findings are resolved, checks for sibling gaps (same pattern in adjacent functions), and confirms the workspace still compiles and tests pass. Does not inherit context from the remediator — reads current code from scratch.
+  Delegate to this subagent after remediation has been applied to confirmed findings
+  from proof-adversary. Input is a finding-report@1 conforming to
+  shared/schemas/finding-report@1.json. The agent reads the current code state from
+  scratch without inheriting any context from the remediator. For each confirmed finding,
+  it re-reads the file at the reported location and verifies the bug is no longer
+  present. It also scans each affected file for sibling functions or adjacent code
+  exhibiting the same pattern — a sibling gap counts as a new finding in the verdict.
+  The agent then runs compile and test commands to confirm the workspace builds cleanly
+  and tests pass. Output is a verdict@1 conforming to shared/schemas/verdict@1.json.
+  The disposition is adversarial: approve only when all criteria are met and no sibling
+  gaps remain.
 ---
 
 # proof-exit-gate

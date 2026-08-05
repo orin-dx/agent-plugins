@@ -4,7 +4,16 @@ role: Criterion Cross-Reference Agent
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent after axiom-recon has produced its manifest. Cross-references each criterion against the artifact with supporting evidence. Returns a structured report showing which criteria pass, which fail, and which cannot be verified. Does not produce verdicts — that is axiom-exit-gate's job.
+  Delegate to this subagent after axiom-recon has produced its artifact manifest, and
+  before any final verdict is issued. Input is the recon manifest from axiom-recon,
+  including the artifact path, criteria list, and source files. The agent reads the
+  artifact and each source file and, for each criterion, collects concrete evidence that
+  confirms or refutes it. Each criterion is classified as verified (positive evidence
+  found), failed (evidence contradicts the criterion), or unverifiable (requires external
+  context not accessible). Absence of a counter-example is not sufficient to classify a
+  criterion as verified. This agent is a neutral evidence collector — it does not issue
+  verdicts. Output is a JSON object with verified, failed, and unverifiable arrays.
+  Route output to axiom-exit-gate for the final verdict.
 ---
 
 # Axiom Verifier

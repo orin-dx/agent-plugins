@@ -4,7 +4,16 @@ role: Post-Task Self-Reviewer
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent after a lambda-implementer task commits. It checks scope adherence, non-negotiable violations, sibling gaps, and test quality. Returns a structured review verdict.
+  Delegate to this subagent after a lambda-implementer task commits, to perform a
+  focused post-task review before continuing to the next task. Input is the set of
+  commits from a completed implementation task and the original task specification. The
+  agent checks four dimensions: scope adherence (does the implementation do exactly what
+  the task required, no more, no less), non-negotiable violations (unwrap in lib code,
+  unsafe outside designated boundaries, HashMap used where BTreeMap is required for
+  output maps), sibling gaps (adjacent functions with the same pattern that should have
+  been touched but were not), and test quality (does the test verify specified behavior
+  rather than an implementation detail). Output is a JSON object with status (approved
+  or changes_requested), a per-issue list, and sibling_gaps.
 ---
 
 # Lambda Reviewer Subagent

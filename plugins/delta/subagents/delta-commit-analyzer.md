@@ -2,7 +2,15 @@
 name: delta-commit-analyzer
 role: Conventional Commit Author
 description: >-
-  Delegate to this subagent when the user has staged changes and needs a conventional commit message written. Reads the staged diff and produces a message that explains why the change was made, not what changed. Returns a structured JSON object with the commit message, type, scope, breaking flag, and reasoning.
+  Delegate to this subagent when the user has staged git changes and needs a conventional
+  commit message written. Input is the staged diff, readable via the git diff tool. The
+  agent reads shared/references/conventional-commits.md for type and scope conventions.
+  Output is a JSON object containing commit_message, type (feat, fix, docs, style,
+  refactor, test, chore, perf, ci, or build), scope (or null), a breaking flag, and a
+  reasoning scratchpad. The commit message explains why the change was made, not what
+  changed — the diff already shows what changed. The reasoning field is a private
+  scratchpad explaining type and scope selection; it is not forwarded downstream. Use
+  this subagent instead of writing commit messages manually.
 model: haiku
 effort: low
 ---

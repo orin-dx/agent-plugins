@@ -4,7 +4,15 @@ role: Adversarial Exit Verifier
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent after all implementation tasks are complete. It independently verifies that every acceptance criterion from the spec is implemented and tested, all tests pass, no sibling functions were missed, and no regressions were introduced. Returns a verdict@1. This agent does not inherit context from the implementer — it reads the current code state from scratch.
+  Delegate to this subagent after all implementation tasks in a plan@1 are complete and
+  before the work is declared done. Input is the spec@1 used to drive the
+  implementation. This is an adversarial verifier — it reads the current code state
+  from scratch and does not inherit any context from the implementer. It verifies that
+  every acceptance criterion from the spec is implemented and covered by tests, that all
+  tests pass, that no sibling functions with the same pattern were missed, and that no
+  regressions were introduced. A clean verdict means the agent looked hard and found
+  nothing, not that it assumed the work was done. Output is a verdict@1 conforming to
+  shared/schemas/verdict@1.json.
 ---
 
 # Lambda Exit Gate

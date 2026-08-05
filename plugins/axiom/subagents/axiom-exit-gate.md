@@ -4,7 +4,16 @@ role: Final Verdict Agent
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent as the final step of the axiom gate protocol, after axiom-verifier has produced its verification report. Use when you need a definitive pass or fail verdict on whether an artifact meets all its criteria. Returns a verdict@1 object: verdict (pass/fail), confidence, blockers on failure, and a verdict_summary. Each blocker must be specific and actionable enough for the producing agent to make a targeted fix without further clarification. Activate for any artifact type at the conclusion of the axiom protocol.
+  Delegate to this subagent as the final step of the axiom gate protocol, after
+  axiom-verifier has produced its verification report. Input is the verification report
+  from axiom-verifier. The agent issues a definitive pass or fail verdict on whether the
+  artifact meets all its criteria. Pass requires zero unresolved failures — unverifiable
+  criteria are treated as failures unless the caller explicitly waives them. On fail,
+  each blocker must be specific and actionable enough for the producing agent to make a
+  targeted fix without further clarification. The agent increments retry_count by one if
+  provided in input. Output is a verdict@1 conforming to shared/schemas/verdict@1.json,
+  including verdict, confidence, blockers, verdict_summary (max 300 characters),
+  artifact_type, and retry_count.
 ---
 
 # Axiom Exit Gate

@@ -4,7 +4,15 @@ role: Effort Estimator
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when a plan@1 exists and the user needs a rough effort estimate. Returns per-task time estimates in minutes, identifies parallelizable tasks and blocking dependencies, and produces a total estimate with explicit assumptions.
+  Delegate to this subagent when a plan@1 exists and you need a rough effort estimate
+  before committing to execution. Input is a plan@1 JSON object. The agent produces a
+  per-task time estimate in minutes, marks each task as parallelizable or sequential,
+  lists blocking dependencies by task ID, and produces a total_minutes sum with explicit
+  assumptions. The implementer is assumed to have full codebase context but no domain
+  knowledge of the feature being built. A task is marked parallelizable only if it has
+  no dependency on any other task in the current plan. All assumptions affecting the
+  estimate are listed explicitly in an assumptions array. Output is a JSON object with
+  total_minutes, a tasks array, and assumptions.
 ---
 
 # Vector Estimator

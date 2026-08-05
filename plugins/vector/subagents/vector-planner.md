@@ -4,7 +4,16 @@ role: Implementation Plan Author
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when the user has a spec@1 and needs a sequenced implementation plan. Produces a plan@1 where every task includes exact file paths, a failing test written before any implementation, minimal implementation code, the command to verify the test passes, and a conventional commit message. No task exceeds 15 minutes. No TBDs.
+  Delegate to this subagent when you have a completed spec@1 and need a sequenced,
+  executable implementation plan. Input is a spec@1 JSON object. Output is a plan@1
+  conforming to shared/schemas/plan@1.json, decomposed into tasks ordered by dependency
+  — foundational types first, then logic, then integration. Every task includes exact
+  file paths to create or modify, a failing test written before implementation, the
+  command to run the test with expected failure output, the minimal implementation that
+  makes the test pass, the verification command, and a conventional commit message. No
+  task should exceed fifteen minutes for a competent developer. No TBDs are permitted
+  — the agent picks an approach and states it explicitly. The plan reader requires zero
+  domain context.
 ---
 
 # Vector Planner

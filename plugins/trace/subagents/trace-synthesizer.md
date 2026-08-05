@@ -4,7 +4,16 @@ role: Research Synthesizer
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent after trace-reader produces a findings list. It synthesizes findings into a recommendation, surfaces contradictions and open questions, and produces a complete research-report@1 that a spec writer can act on directly.
+  Delegate to this subagent after trace-reader produces a findings list. Input is the
+  findings array and reasoning from trace-reader, along with the original research
+  question. The agent synthesizes findings into a single recommendation, surfaces
+  contradictions between sources, identifies patterns across findings, and lists open
+  questions that remain unanswered. Output is a complete research-report@1 conforming to
+  shared/schemas/research-report@1.json. The recommendation includes an explicit
+  confidence level (high, medium, or low), the rationale, a list of open questions, and
+  any contradictions called out explicitly. Does not resolve contradictions by choosing
+  a side without evidence — accuracy over tidiness. A spec writer who reads this report
+  should not be surprised by implementation reality.
 ---
 
 # Trace Synthesizer Subagent

@@ -4,7 +4,17 @@ role: Hazard Scanner
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent after proof-recon completes. Given a workspace manifest, it scans live files for bugs in a specific hazard category using language-appropriate heuristics. Returns candidate findings with exact file:line locations and trigger conditions. Candidates are not confirmed findings — the adversary confirms.
+  Delegate to this subagent after proof-recon completes and has produced a workspace
+  manifest. Input is the workspace manifest from proof-recon (including the live_files
+  list and language) and optionally a specific hazard focus category. The agent reads
+  the language-appropriate hazard reference (shared/references/rust.md for Rust,
+  shared/references/typescript.md for TypeScript or JavaScript), applies hazard
+  taxonomies and search patterns, and scans only live files from the manifest. Dead
+  files are never scanned. For each pattern match, the agent reads surrounding code to
+  assess plausibility before emitting a candidate. Output is a JSON object with
+  hazard_category and a candidates array. Each candidate includes id, description, file,
+  line, severity, trigger_condition, and search_pattern. Candidates are not confirmed
+  findings — route output to proof-adversary for confirmation.
 ---
 
 # proof-scanner
