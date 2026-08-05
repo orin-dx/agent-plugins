@@ -2,6 +2,8 @@
   "id": "bug-hunter-rust",
   "name": "bug-hunter-rust",
   "version": "1.1.1",
+  "deprecated": true,
+  "supersededBy": "proof",
   "description": "Self-contained Rust Bug Hunter plugin with 6 Rust Hazard Taxonomies, 6 Code Smell Sweeps, and 5 Specialized Subagents.",
   "author": {
     "name": "Gabriel Castro",

@@ -2,6 +2,8 @@
   "id": "bug-hunter-ts",
   "name": "bug-hunter-ts",
   "version": "1.0.1",
+  "deprecated": true,
+  "supersededBy": "proof",
   "description": "Self-contained TypeScript/JavaScript Bug Hunter plugin with 6 TS Hazard Taxonomies & Multi-Agent Orchestration.",
   "author": {
     "name": "Gabriel Castro",
