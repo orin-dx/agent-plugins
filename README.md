@@ -20,15 +20,15 @@ Nine plugins cover the complete path from raw idea to shipped release. Each plug
 
 ```mermaid
 flowchart LR
-    gr[graph\nneed] -->|requirement@1| tr[trace\nresearch]
-    tr -->|research-report@1| ca[canon\nspec]
-    ca -->|spec@1| ve[vector\nplan]
-    ve -->|plan@1| la[lambda\ncode]
-    la -->|changeset@1| ax[axiom\ngate]
-    ax -->|verdict@1| de[delta\nship]
+    gr[graph\nneed] -->|"requirement@1"| tr[trace\nresearch]
+    tr -->|"research-report@1"| ca[canon\nspec]
+    ca -->|"spec@1"| ve[vector\nplan]
+    ve -->|"plan@1"| la[lambda\ncode]
+    la -->|"changeset@1"| ax[axiom\ngate]
+    ax -->|"verdict@1"| de[delta\nship]
     de -. iterate .-> gr
 
-    pr([proof\naudit]) -. finding-report@1 .-> de
+    pr([proof\naudit]) -.->|"finding-report@1"| de
     ba([basis\nmeta]) -. scaffold .-> gr
 ```
 
