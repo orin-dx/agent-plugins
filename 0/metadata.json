@@ -1,0 +1,57 @@
+{
+  "cli_version": "0.9.1-nightly.202608050700.76dff6a81",
+  "checkpoint_id": "01KZ9K40FSKGNG842QAPRDKCV1",
+  "session_id": "e6348507-6aff-43a4-9c2e-b79df7c1bf99",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-05T18:31:39.866574Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "plugins/axiom/skills/axiom/SKILL.md",
+    "plugins/basis/skills/basis/SKILL.md",
+    "plugins/canon/skills/canon/SKILL.md",
+    "plugins/delta/skills/delta/SKILL.md",
+    "plugins/graph/skills/graph/SKILL.md",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/proof/skills/proof/SKILL.md",
+    "plugins/trace/skills/trace/SKILL.md",
+    "plugins/vector/skills/vector/SKILL.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-4-6",
+  "turn_id": "dcdb4da72f24",
+  "checkpoint_transcript_start": 504,
+  "transcript_lines_at_start": 504,
+  "compact_transcript_start": 102,
+  "token_usage": {
+    "input_tokens": 5,
+    "cache_creation_tokens": 53173,
+    "cache_read_tokens": 183039,
+    "output_tokens": 1552,
+    "api_call_count": 3
+  },
+  "session_metrics": {
+    "turn_count": 14
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-05T18:31:39.825312Z",
+    "agent_lines": 9,
+    "agent_removed": 9,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 9,
+    "total_lines_changed": 18,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

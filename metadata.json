@@ -1,0 +1,34 @@
+{
+  "cli_version": "0.9.1-nightly.202608050700.76dff6a81",
+  "checkpoint_id": "01KZ9K40FSKGNG842QAPRDKCV1",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "plugins/axiom/skills/axiom/SKILL.md",
+    "plugins/basis/skills/basis/SKILL.md",
+    "plugins/canon/skills/canon/SKILL.md",
+    "plugins/delta/skills/delta/SKILL.md",
+    "plugins/graph/skills/graph/SKILL.md",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/proof/skills/proof/SKILL.md",
+    "plugins/trace/skills/trace/SKILL.md",
+    "plugins/vector/skills/vector/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 5,
+    "cache_creation_tokens": 53173,
+    "cache_read_tokens": 183039,
+    "output_tokens": 1552,
+    "api_call_count": 3
+  }
+}
