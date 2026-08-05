@@ -1,0 +1,34 @@
+{
+  "cli_version": "0.9.1-nightly.202608050700.76dff6a81",
+  "checkpoint_id": "01KZA24NF404TYW7SEMNEWHW42",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "plugins/axiom/README.md",
+    "plugins/basis/README.md",
+    "plugins/canon/README.md",
+    "plugins/delta/README.md",
+    "plugins/graph/README.md",
+    "plugins/lambda/README.md",
+    "plugins/proof/README.md",
+    "plugins/trace/README.md",
+    "plugins/vector/README.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 36,
+    "cache_creation_tokens": 67394,
+    "cache_read_tokens": 1651302,
+    "output_tokens": 16729,
+    "api_call_count": 30
+  }
+}
