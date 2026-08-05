@@ -1,0 +1,101 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "orin-dx-agent-plugins",
+  "description": "Nine cooperating plugins covering the full development lifecycle — from requirement capture through spec, plan, implementation, verification, and shipping.",
+  "owner": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "plugins": [
+    {
+      "name": "basis",
+      "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure and validates conformance to ecosystem schemas.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/basis",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "proof",
+      "description": "Cross-language bug hunting. Finds real bugs in live code through recon, hazard scanning, adversarial verification, and exit-gate verdict. Supersedes bug-hunter-rust and bug-hunter-ts.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/proof",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "axiom",
+      "description": "Cross-cutting verification gate. Confirms that any stage artifact meets its criteria before the next stage begins. Skills: verify-requirement, verify-spec, verify-plan, verify-implementation, verify-pr, exit-gate.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/axiom",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "graph",
+      "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/graph",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "trace",
+      "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Produces research-report@1.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/trace",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "canon",
+      "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/canon",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "vector",
+      "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with TDD steps, exact code, and commit messages. No TBDs.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/vector",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "lambda",
+      "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the axiom exit gate.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/lambda",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "delta",
+      "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation.",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/orin-dx/agent-plugins.git",
+        "path": "plugins/delta",
+        "ref": "main"
+      }
+    }
+  ]
+}
