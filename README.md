@@ -7,24 +7,31 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Schema-marketplace.json%20v2.0.0-success.svg" alt="Schema" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v2.0.0-success.svg" alt="Marketplace v2.0.0" /></a>
+  <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
 ---
 
 ## The Lifecycle Ecosystem
 
-Nine plugins cover the complete path from raw idea to shipped release. Each plugin has a defined input schema, output schema, and success criterion. They are composable — install only the stages you need.
+Nine plugins cover the complete path from raw idea to shipped release. Each plugin produces a typed output schema consumed by the next stage. They are composable — install only the stages your workflow needs.
 
+```mermaid
+flowchart LR
+    gr[graph\nneed] -->|requirement@1| tr[trace\nresearch]
+    tr -->|research-report@1| ca[canon\nspec]
+    ca -->|spec@1| ve[vector\nplan]
+    ve -->|plan@1| la[lambda\ncode]
+    la -->|changeset@1| ax[axiom\ngate]
+    ax -->|verdict@1| de[delta\nship]
+    de -. iterate .-> gr
+
+    pr([proof\naudit]) -. finding-report@1 .-> de
+    ba([basis\nmeta]) -. scaffold .-> gr
 ```
-graph (need) → trace (research) → canon (spec) → vector (plan) → lambda (code)
-     ↑                                                                  ↓
-     └──────────────────── delta (ship) ← axiom (gate) ────────────────┘
-```
 
-**Cross-cutting:** `proof` (adversarial bug hunting) · `basis` (plugin authoring)
-
-| Plugin | Stage | Purpose | Output Schema |
+| Plugin | Stage | Purpose | Output |
 | :--- | :--- | :--- | :--- |
 | [`graph`](./plugins/graph/) | Need | Captures and structures requirements | `requirement@1` |
 | [`trace`](./plugins/trace/) | Research | Surveys prior art, risks, and patterns | `research-report@1` |
@@ -40,11 +47,11 @@ graph (need) → trace (research) → canon (spec) → vector (plan) → lambda 
 
 ## Shared Schema Contract
 
-All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use JSON Schema draft-2020-12 with `additionalProperties: false`. A schema version is immutable — a breaking change requires a new file (e.g. `requirement@2.json`).
+All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use JSON Schema draft-2020-12 with `additionalProperties: false`. Schema versions are immutable — a breaking change requires a new file (e.g. `requirement@2.json`). Every schema includes a `reasoning` scratchpad field that is never forwarded downstream.
 
 | Schema | Produced by | Consumed by |
 | :--- | :--- | :--- |
-| `requirement@1` | graph | canon, trace |
+| `requirement@1` | graph | trace, canon |
 | `research-report@1` | trace | canon |
 | `spec@1` | canon | vector, axiom |
 | `plan@1` | vector | lambda |
@@ -53,20 +60,17 @@ All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use J
 | `finding-report@1` | proof | delta, humans |
 | `release-artifact@1` | delta | humans |
 
-Every schema includes a `reasoning` scratchpad field — unconstrained chain-of-thought that is never forwarded downstream.
-
 ---
 
 ## Shared References
 
-Runtime-pullable guides in `shared/references/`. Subagents read these on demand during task execution — they are not loaded into context at startup.
+Runtime-pullable guides in `shared/references/`. Subagents pull these themselves during task execution — they are not loaded into context at startup.
 
 | File | Purpose |
 | :--- | :--- |
-| `agent-best-practices.md` | Authoring-time only. Section 9: context engineering principles. |
 | `rust.md` | Rust hazard taxonomies, NAPI boundary rules, non-negotiables |
 | `typescript.md` | TS hazard taxonomies, unhandled promise patterns |
-| `conventional-commits.md` | Type/scope conventions, scope table |
+| `conventional-commits.md` | Type/scope conventions and scope table |
 | `github.md` | PR template, `gh` CLI commands, labels |
 | `changesets.md` | Changeset vs commit distinction, semver decision guide |
 | `mcp-protocol.md` | MCP server lifecycle, tool definition format, A2A AgentCard |
@@ -99,7 +103,6 @@ git submodule add https://github.com/orin-axi/agent-plugins.git .claude/plugins/
 ```
 agent-plugins/
 ├── marketplace.json              ← Plugin registry (v2.0.0)
-├── AGENTS.md                     ← Cross-platform agent rules
 ├── ARCHITECTURE.md               ← System architecture
 ├── CONTRIBUTING.md               ← Plugin authoring guide
 ├── shared/
@@ -123,9 +126,7 @@ agent-plugins/
     ├── axiom/                    ← Verification gate
     ├── delta/                    ← Ship tooling
     ├── proof/                    ← Adversarial bug hunting
-    ├── basis/                    ← Plugin scaffolding
-    ├── bug-hunter-rust/          ← Rust-specific bug hunting
-    └── bug-hunter-ts/            ← TypeScript-specific bug hunting
+    └── basis/                    ← Plugin scaffolding
 ```
 
 ---
