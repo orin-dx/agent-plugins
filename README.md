@@ -1,5 +1,5 @@
-<div style="margin: auto">
-  <img src="./assets/logo.svg" alt="Orin Agent Plugins" width="500px" />
+<div align="center">
+  <img src="./assets/logo.svg" alt="Orin Agent Plugins" width="400px" />
 </div>
 
 <p align="center">
