@@ -1,0 +1,53 @@
+Do we describe things well in the readme? Out SDD and EARS focus? Where should we delve into the details?
+
+---
+
+Should we expand the documentation further?
+
+---
+
+Yes
+
+---
+
+Push to main?
+
+---
+
+Did we need to update the mermaid diagrams?
+
+---
+
+Anything else we should research to improve our agents and skills?
+
+---
+
+Let’s run some long term research on the topics you called out.
+
+---
+
+<task-notification>
+<task-id>wyj2eln38</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a/tasks/wyj2eln38.output</output-file>
+<status>completed</status>
+<summary>Dynamic workflow "Deep research on four gaps in orin-dx/agent-plugins: few-shot examples, schema manifest declarations, long-context handling, and prompt injection resistance" completed</summary>
+<result>{"topics":[{"topic":"Few-Shot Examples in proof-scanner and proof-adversary Agent Prompts","key_findings":[{"finding":"The hazard reference files already function as runtime few-shot material for the scanner — adding duplicate examples to the system prompt is non-additive","evidence":"Research (2024) shows 'the interaction between few-shot examples and contextual information is non-additive, with the gap between rich and poor prompts shrinking monotonically as the number of examples increases.' The rust-hazards.md and typescript-hazards.md files loaded at runtime via &lt;load_first&gt; already contain before/after code blocks for every taxonomy (T1-T10). These ARE the scanner's few-shot signal for pattern shape.","relevance_to_repo":"proof-scanner already loads shared/references/rust-hazards.md or typescript-hazards.md at runtime. That file contains fenced code blocks showing the bad pattern and a corrected version for T7, T8, and T10. Adding the same examples to the proof-scanner prompt body wastes context budget and risks teaching the scanner to pre-filter based on pattern similarity — exactly the failure mode its backstory explicitly warns against ('scanners that tried to be clever')."},{"finding":"Few-shot examples improve LLM vulnerability detection measurably, but only when they demonstrate the agent's DECISION output, not just what the hazard looks like in code","evidence":"The CMU SEI paper 'Using LLMs to Adjudicate Static-Analysis Alerts' found that LLMs show 'promising initial results in adjudicating static analysis alerts and providing rationales,' with hybrid LLM+static approaches eliminating 94-98% of false positives. The ZeroFalse framework achieves F1-scores of 0.912-0.955 by enriching alerts with 'flow-sensitive traces, contextual evidence, and CWE-specific knowledge before adjudication by an LLM.' The key: examples must be tailored to the adjudication decision, not just the code pattern.","relevance_to_repo":"proof-adversary is the adjudication agent. The distinction between 'what T7 looks like in code' (covered by the hazard reference) and 'what a correctly confirmed vs. correctly dismissed T7 verdict looks like as JSON output with the decisive evidence sentence' is NOT currently covered anywhere. This gap is where few-shot examples add unique value."},{"finding":"Contrastive examples (confirmed + dismissed pair) outperform positive-only examples for binary classification judgment tasks","evidence":"Research on Contrastive In-Context Learning (AAAI 2024, arxiv 2401.17390) shows that 'for each few-shot example, providing both a positive and a negative example significantly improves performance of LLMs in generating desirable responses.' The negative example defines the boundary. For an adversarial agent whose key failure mode is 'shallow reading — confirming based on the candidate's location without tracing actual paths,' a dismissed example showing the decisive refutation evidence is more calibrating than a confirmed example alone.","relevance_to_repo":"proof-adversary's &lt;judgment&gt; section already names its failure mode as shallow reading. A contrastive pair — one confirmed finding with a populated trigger_condition, one dismissed finding with its refutation_evidence — anchors what 'concrete evidence' means in this repo's specific output schema. The dismissed example is more important than the confirmed one here because proof-adversary defaults to skepticism."},{"finding":"T7 and T10 have the highest false-positive risk and benefit most from clarifying examples; T3, T1, and T3 have high noise but are self-filtering by structural grep patterns","evidence":"Research on 'On the Difficulty of Selecting Few-Shot Examples for Effective LLM-based Vulnerability Detection' (NDSS 2024, arxiv 2510.27675) shows that few-shot example impact is highest for categories with ambiguous boundaries — those requiring contextual reasoning rather than syntactic matching. T7/T8 (intent-capture-to-execution discard) and T10 (error suppression) are the categories in this repo that require multi-step control flow reasoning to adjudicate. T1 (type assertion bypass), T3 (any propagation), T4 (discarded parameters by leading underscore) resolve via local syntactic context that the grep pattern already captures.","relevance_to_repo":"In rust-hazards.md, T7's false positive check is 'Is the field intentionally unused with a documented reason?' — a judgment call. T10's distinguisher from T4 ('T10 is intentional-but-lossy') is a subtle semantic distinction that the hazard reference explains but doesn't demonstrate as a verdict. typescript-hazards.md repeats this same pattern. These two are the categories where an adjudication example genuinely changes the quality of proof-adversary's verdict."},{"finding":"Token cost for 2 compact examples in proof-adversary is justified; adding examples to proof-scanner is not justified","evidence":"Anthropic's context engineering guidance (2025) establishes that 'context rot' is real — as tokens increase, recall degrades. The adversary runs on opus/high, one candidate at a time. Its per-invocation context is: system prompt + hazard reference (~3-4KB) + one candidate + code snippets read by tool calls. Adding 2 targeted examples at ~400-600 tokens represents roughly a 10-15% context overhead — acceptable for a judgment agent on Opus. The scanner runs on sonnet/medium over all live files. Its context is consumed by grep output volume; adding examples would compete with the match data it needs.","relevance_to_repo":"The cognitive mode table in shared/agent-best-practices.md section 3 assigns 'Adversarial: default-to-skepticism, requires concrete failing scenario' to proof-adversary and 'Enumeration: mechanical completeness, no judgment' to proof-scanner. Examples calibrate judgment; they do not help enumeration. Applying them only to proof-adversary is consistent with the repo's own cognitive mode framework."},{"finding":"XML-wrapped examples outperform plain text in Claude prompts for structured output tasks; placement at the end of &lt;output&gt; sections leverages the recency attention effect","evidence":"Research on structured prompting confirms 'XML prompts organizing information into clearly defined tags help the model distinguish between instructions, input content, and output expectations — especially effective in models like Claude, which are trained to interpret tag-delimited content more reliably.' Separately, the 'lost in the middle' finding establishes that LLMs 'assign higher importance to items near the start and end and less to those in the middle' of long contexts.","relevance_to_repo":"The proof-adversary prompt already uses XML section tags (&lt;backstory&gt;, &lt;goal&gt;, &lt;judgment&gt;, &lt;output&gt;) matching the repo's 4-part agent structure. Examples should be placed as the final content inside the &lt;output&gt; section, after all EARS contracts, wrapped in &lt;example&gt; sub-tags that mirror the repo's existing XML conventions. This matches Claude's training signal and leverages recency for the material most likely to influence the verdict JSON shape."}],"specific_recommendations":[{"recommendation":"Do not add few-shot examples to proof-scanner. The hazard reference files loaded via &lt;load_first&gt; already serve as the scanner's pattern exemplars. Adding examples to the scanner prompt would teach it to pre-filter by pattern similarity, violating its core invariant ('emit everything, let the adversary decide'). The scanner's EARS rule 'THE SYSTEM SHALL NEVER filter out a match based on surrounding context' is the correct design — no examples needed.","where_to_apply":"plugins/proof/agents/proof-scanner.md — take no action","effort":"low","expected_impact":"Preserves scanner exhaustiveness. Prevents context budget erosion on sonnet/medium where grep output volume is the primary context consumer."},{"recommendation":"Add two contrastive verdict examples to proof-adversary's &lt;output&gt; secti
+... (truncated 80046 chars, full result in /private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a/tasks/wyj2eln38.output)</result>
+<diagnostics>Per-agent results: /Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a/subagents/workflows/wf_13b91d84-652/journal.jsonl — one {"type":"result",...} line per completed agent with its full return value.
+If the result above is empty or unexpected, Read this file BEFORE diagnosing — do not assume agents returned non-empty results.
+To re-run with edited post-processing: Workflow({scriptPath: '/Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a/workflows/scripts/REDACTED.js', resumeFromRunId: 'wf_13b91d84-652'}) — agents whose (prompt, opts) are unchanged replay from cache.</diagnostics>
+<usage><agent_count>5</agent_count><agents_done>5</agents_done><agents_error>0</agents_error><agents_skipped>0</agents_skipped><agents_empty_result>0</agents_empty_result><subagent_tokens>200538</subagent_tokens><tool_uses>116</tool_uses><duration_ms>562946</duration_ms></usage>
+</task-notification>
+
+---
+
+Are we still following guidance in sizing, tone and language or our files?
+
+---
+
+Are you completely sure?
+
+---
+
+You’re not being comprehensive, you’re doing surface grep analysis
