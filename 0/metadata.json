@@ -1,0 +1,456 @@
+{
+  "cli_version": "0.9.1-nightly.202608050700.76dff6a81",
+  "checkpoint_id": "01KZGDMKZFDT9N1523GME17ZJA",
+  "session_id": "876031dc-e253-4b55-afac-580ba4ee097a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-08T10:10:33.504968Z",
+  "branch": "main",
+  "checkpoints_count": 33,
+  "save_step_count": 33,
+  "files_touched": [
+    ".claude-plugin/marketplace.json",
+    "AGENTS.md",
+    "ARCHITECTURE.md",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "plugins/agent-plugin-builder/CHANGELOG.md",
+    "plugins/agent-plugin-builder/plugin.json",
+    "plugins/agent-plugin-builder/skills/agent-plugin-builder/SKILL.md",
+    "plugins/axiom/agents/axiom-exit-gate.md",
+    "plugins/axiom/agents/axiom-recon.md",
+    "plugins/axiom/agents/axiom-verifier.md",
+    "plugins/axiom/skills/axiom/SKILL.md",
+    "plugins/basis/README.md",
+    "plugins/basis/agents/basis-auditor.md",
+    "plugins/basis/agents/basis-scaffolder.md",
+    "plugins/basis/agents/basis-schema-designer.md",
+    "plugins/basis/skills/basis/SKILL.md",
+    "plugins/bug-hunter-rust/CHANGELOG.md",
+    "plugins/bug-hunter-rust/agents/bug-hunter-adversary-rust.md",
+    "plugins/bug-hunter-rust/agents/bug-hunter-architect-rust.md",
+    "plugins/bug-hunter-rust/agents/bug-hunter-mutator-rust.md",
+    "plugins/bug-hunter-rust/agents/bug-hunter-remediator-rust.md",
+    "plugins/bug-hunter-rust/agents/bug-hunter-scanner-rust.md",
+    "plugins/bug-hunter-rust/plugin.json",
+    "plugins/bug-hunter-rust/skills/bug-hunter-rust/SKILL.md",
+    "plugins/bug-hunter-rust/subagents",
+    "plugins/bug-hunter-ts/CHANGELOG.md",
+    "plugins/bug-hunter-ts/agents/bug-hunter-adversary-ts.md",
+    "plugins/bug-hunter-ts/agents/bug-hunter-remediator-ts.md",
+    "plugins/bug-hunter-ts/agents/bug-hunter-scanner-ts.md",
+    "plugins/bug-hunter-ts/plugin.json",
+    "plugins/bug-hunter-ts/skills/bug-hunter-ts/SKILL.md",
+    "plugins/bug-hunter-ts/subagents",
+    "plugins/canon/README.md",
+    "plugins/canon/agents/canon-architect.md",
+    "plugins/canon/agents/canon-auditor.md",
+    "plugins/canon/agents/canon-drafter.md",
+    "plugins/canon/agents/canon-exit-gate.md",
+    "plugins/canon/agents/canon-verifier.md",
+    "plugins/canon/plugin.json",
+    "plugins/canon/skills/canon/SKILL.md",
+    "plugins/delta/README.md",
+    "plugins/delta/agents/delta-changeset-analyzer.md",
+    "plugins/delta/agents/delta-commit-analyzer.md",
+    "plugins/delta/agents/delta-pr-narrator.md",
+    "plugins/delta/agents/delta-release-summarizer.md",
+    "plugins/delta/agents/delta-review-preprocessor.md",
+    "plugins/delta/skills/delta/SKILL.md",
+    "plugins/graph/README.md",
+    "plugins/graph/agents/graph-auditor.md",
+    "plugins/graph/agents/graph-clarifier.md",
+    "plugins/graph/agents/graph-intake.md",
+    "plugins/graph/skills/graph/SKILL.md",
+    "plugins/lambda/README.md",
+    "plugins/lambda/agents/lambda-exit-gate.md",
+    "plugins/lambda/agents/lambda-implementer.md",
+    "plugins/lambda/agents/lambda-mutator.md",
+    "plugins/lambda/agents/lambda-recon.md",
+    "plugins/lambda/agents/lambda-reviewer.md",
+    "plugins/lambda/plugin.json",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/proof/README.md",
+    "plugins/proof/agents/proof-adversary.md",
+    "plugins/proof/agents/proof-boundary-tracer.md",
+    "plugins/proof/agents/proof-exit-gate.md",
+    "plugins/proof/agents/proof-recon.md",
+    "plugins/proof/agents/proof-scanner.md",
+    "plugins/proof/plugin.json",
+    "plugins/proof/skills/proof/SKILL.md",
+    "plugins/trace/README.md",
+    "plugins/trace/agents/trace-reader.md",
+    "plugins/trace/agents/trace-recon.md",
+    "plugins/trace/agents/trace-risk-assessor.md",
+    "plugins/trace/agents/trace-synthesizer.md",
+    "plugins/trace/skills/trace/SKILL.md",
+    "plugins/vector/agents/vector-challenger.md",
+    "plugins/vector/agents/vector-estimator.md",
+    "plugins/vector/agents/vector-planner.md",
+    "plugins/vector/skills/vector/SKILL.md",
+    "shared/agent-best-practices.md",
+    "shared/constitution.md",
+    "shared/references/rust-hazards.md",
+    "shared/references/rust-smells.md",
+    "shared/references/rust-tooling.md",
+    "shared/references/rust.md",
+    "shared/references/typescript-hazards.md",
+    "shared/references/typescript-smells.md",
+    "shared/references/typescript-tooling.md",
+    "shared/references/typescript.md",
+    "shared/schemas/candidate@1.json",
+    "shared/schemas/field-survival-map@1.json",
+    "shared/schemas/mutation-report@1.json"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-4-6",
+  "turn_id": "6f2394fc8f75",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 893,
+    "cache_creation_tokens": 650415,
+    "cache_read_tokens": 16160351,
+    "output_tokens": 195292,
+    "api_call_count": 172
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01LjcfxpivdF7U788Y2Fv6kV",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "6f2394fc8f75",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 151,
+        "end": 152,
+        "entry_ids": [
+          "cf7da8c6-7028-40b9-89c1-cb32aa627709"
+        ],
+        "tool_use_id": "toolu_01LjcfxpivdF7U788Y2Fv6kV"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01LjcfxpivdF7U788Y2Fv6kV"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01HXvQjx6sAhz8kBdvw2KBHY",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "6f2394fc8f75",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 580,
+        "end": 581,
+        "entry_ids": [
+          "5d7871d3-41fe-4c6d-a66b-a1e339e7514a"
+        ],
+        "tool_use_id": "toolu_01HXvQjx6sAhz8kBdvw2KBHY"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01HXvQjx6sAhz8kBdvw2KBHY"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 33
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 53,
+      "agent_lines_removed": 10
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 53,
+      "agent_lines_removed": 10
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 53,
+      "agent_lines_removed": 10
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 53,
+      "agent_lines_removed": 10
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 569,
+      "agent_lines_removed": 278
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 569,
+      "agent_lines_removed": 278
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 569,
+      "agent_lines_removed": 278
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 569,
+      "agent_lines_removed": 278
+    },
+    {
+      "checkpoint_number": 10,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 569,
+      "agent_lines_removed": 278
+    },
+    {
+      "checkpoint_number": 11,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 569,
+      "agent_lines_removed": 278
+    },
+    {
+      "checkpoint_number": 12,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 569,
+      "agent_lines_removed": 278
+    },
+    {
+      "checkpoint_number": 13,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 985,
+      "agent_lines_removed": 506
+    },
+    {
+      "checkpoint_number": 14,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 985,
+      "agent_lines_removed": 506
+    },
+    {
+      "checkpoint_number": 15,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 985,
+      "agent_lines_removed": 506
+    },
+    {
+      "checkpoint_number": 16,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 985,
+      "agent_lines_removed": 506
+    },
+    {
+      "checkpoint_number": 17,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 985,
+      "agent_lines_removed": 506
+    },
+    {
+      "checkpoint_number": 18,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1317,
+      "agent_lines_removed": 668
+    },
+    {
+      "checkpoint_number": 19,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 20,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 21,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1377,
+      "agent_lines_removed": 665
+    },
+    {
+      "checkpoint_number": 22,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 23,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 24,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 25,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 26,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 27,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1375,
+      "agent_lines_removed": 663
+    },
+    {
+      "checkpoint_number": 28,
+      "user_lines_added": 158,
+      "user_lines_removed": 136,
+      "agent_lines_added": 2203,
+      "agent_lines_removed": 1664,
+      "user_added_per_file": {
+        "plugins/basis/README.md": 2,
+        "plugins/basis/skills/basis/SKILL.md": 7,
+        "plugins/delta/agents/delta-changeset-analyzer.md": 29,
+        "plugins/delta/agents/delta-commit-analyzer.md": 31,
+        "plugins/delta/agents/delta-pr-narrator.md": 26,
+        "plugins/delta/agents/delta-release-summarizer.md": 22,
+        "plugins/delta/agents/delta-review-preprocessor.md": 34,
+        "plugins/graph/README.md": 1,
+        "plugins/trace/skills/trace/SKILL.md": 6
+      },
+      "user_removed_per_file": {
+        "plugins/basis/README.md": 2,
+        "plugins/basis/skills/basis/SKILL.md": 7,
+        "plugins/delta/agents/delta-changeset-analyzer.md": 18,
+        "plugins/delta/agents/delta-commit-analyzer.md": 14,
+        "plugins/delta/agents/delta-pr-narrator.md": 17,
+        "plugins/delta/agents/delta-release-summarizer.md": 14,
+        "plugins/delta/agents/delta-review-preprocessor.md": 47,
+        "plugins/graph/README.md": 1,
+        "plugins/trace/skills/trace/SKILL.md": 16
+      }
+    },
+    {
+      "checkpoint_number": 29,
+      "user_lines_added": 19,
+      "user_lines_removed": 5,
+      "agent_lines_added": 2373,
+      "agent_lines_removed": 1800,
+      "user_added_per_file": {
+        "plugins/delta/README.md": 4,
+        "plugins/delta/skills/delta/SKILL.md": 14,
+        "plugins/trace/README.md": 1
+      },
+      "user_removed_per_file": {
+        "plugins/delta/README.md": 4,
+        "plugins/trace/README.md": 1
+      }
+    },
+    {
+      "checkpoint_number": 30,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2392,
+      "agent_lines_removed": 1805
+    },
+    {
+      "checkpoint_number": 31,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2404,
+      "agent_lines_removed": 1826
+    },
+    {
+      "checkpoint_number": 32,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2517,
+      "agent_lines_removed": 1828
+    },
+    {
+      "checkpoint_number": 33,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2518,
+      "agent_lines_removed": 1829
+    },
+    {
+      "checkpoint_number": 34,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2555,
+      "agent_lines_removed": 1829
+    }
+  ]
+}
