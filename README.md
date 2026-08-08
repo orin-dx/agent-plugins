@@ -46,6 +46,22 @@ flowchart LR
 
 ---
 
+## Design Principles
+
+Four decisions shape how every plugin and agent in this repository is built. They are enforced by `shared/constitution.md` and explained in `shared/agent-best-practices.md`.
+
+**Schema-Driven Development** — every handoff between agents is a typed JSON document. Schemas use JSON Schema draft-2020-12 with `additionalProperties: false`: a downstream agent cannot silently ignore a field, and a schema-invalid output halts the pipeline before any agent acts on bad data. Schema versions are immutable — a breaking change creates `<name>@2.json` rather than mutating the existing file. Every schema includes a `reasoning` scratchpad field that agents use for chain-of-thought; it is never forwarded downstream.
+
+**EARS output contracts** — agent prompts use EARS notation (`WHEN / IF / WHILE / WHERE / THE SYSTEM SHALL`) exclusively in their `<output>` sections, encoding hard constraints on what the agent must produce, must not produce, or must do under a specific condition. The interior of a prompt — how the agent searches, reasons, and decides — is left unconstrained. EARS is the fence; the backstory and goal fill the interior with judgment.
+
+**4-part agent structure** — every agent body has exactly four sections: `<backstory>` (experiential perspective that shapes judgment in open situations), `<goal>` (intent, not steps), `<judgment>` (the specific failure mode that looks like success), and `<output>` (schema reference and EARS contracts). No role labels. No success-criteria checklists. The structure encodes the difference between telling an agent what to pretend to be and telling it what it has learned.
+
+**Cognitive mode separation** — agents are dispatched by the cognitive mode they require, not their pipeline position. A scanner (exhaustive pattern matching, no filtering) and an adversary (default-to-skepticism, requires a concrete failing scenario) run sequentially but cannot share a mental mode — combining them produces an agent worse at both. Model and effort tiers follow the same logic: `haiku / low` for mechanical enumeration, `sonnet / medium` for analysis, `opus / high` for binding judgment.
+
+See [`ARCHITECTURE.md §7`](./ARCHITECTURE.md#7-agent-authoring-principles) for the full authoring guide, and [`docs/pipeline-walkthrough.md`](./docs/pipeline-walkthrough.md) for a concrete end-to-end example showing schemas at each stage.
+
+---
+
 ## Shared Schema Contract
 
 All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use JSON Schema draft-2020-12 with `additionalProperties: false`. Schema versions are immutable — a breaking change requires a new file (e.g. `requirement@2.json`). Every schema includes a `reasoning` scratchpad field that is never forwarded downstream.
