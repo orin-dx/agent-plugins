@@ -22,7 +22,7 @@ flowchart TD
     shared/references/*.md · shared/schemas/*.json
     Pulled on demand by the agent during task execution"]
 
-    T1 -->|on trigger| T2
+    T1 -->|on skill activation| T2
     T2 -->|on demand| T3
 ```
 
@@ -60,13 +60,15 @@ flowchart LR
     de -. iterate .-> gr
 
     pr(["**proof**\naudit"]) -.->|"finding-report@1"| de
-    pr -.->|"remediate"| ca
+    pr -.->|"finding-report@1"| ca
     ba(["**basis**\nmeta"]) -. scaffold .-> gr
 ```
 
 **Composable:** any contiguous subset installs cleanly. Start at `canon` if requirements come from an external tracker. End at `axiom` if automated release notes aren't needed.
 
 **Substitutable:** any stage can be replaced by a different implementation that honours the same schema contract. A Jira plugin replacing `graph` just needs to emit `requirement@1`.
+
+**Cross-cutting:** `axiom` also runs inside `canon` and `lambda` as an inline gate — not only at the end of the main pipeline.
 
 ---
 
@@ -100,7 +102,8 @@ flowchart TD
     Judgment — weighing competing evidence
     Adversarial review, exit gates, final verdicts"]
 
-    H --> S --> O
+    H -. "escalate only when judgment required" .-> S
+    S -. "escalate only when binding verdict required" .-> O
 ```
 
 Use the lowest tier that produces correct output. Opus is reserved for decisions that produce a binding verdict with downstream consequences.
@@ -120,10 +123,11 @@ flowchart LR
     Ver --> Gate["axiom-exit-gate
     opus / high"]
 
+    Fix["producing agent\ntargeted patch on blockers\n(effort escalates on retry 2)"]
+
     Gate -->|pass| Done(["verdict@1 · pass"])
-    Gate -->|fail| Fix["producing agent
-    targeted patch on blockers"]
-    Fix -->|"retry ≤ 3"| Art
+    Gate -->|fail| Fix
+    Fix -->|"retry ≤ 3 · updated retry_count"| Art
     Fix -->|"retry > 3"| Esc(["escalate to human"])
 ```
 
@@ -146,11 +150,18 @@ Full guide: `shared/agent-best-practices.md`. Key constraints:
 | **Judgment** | How to know if the goal was genuinely achieved vs. output that looks like it was. Names the key failure mode. |
 | **Output** | Structured output shape, referencing a schema from `shared/schemas/` when the output flows to another agent. |
 
-**Cognitive mode dispatch** — agents are dispatched by the cognitive mode they require, not by taxonomy number. A plugin with distinct scanning, tracing, adversarial, systemic, behavioral testing, and repair phases should have a dedicated agent per mode.
+**Cognitive mode dispatch** — agents are dispatched by the cognitive mode they require, not their pipeline position.
+- A scanner (exhaustive pattern matching, no filtering) and an adversary (default-to-skepticism, requires a concrete failing scenario) cannot share a mental mode — combining them produces an agent worse at both
+- Modes: enumeration (haiku/low), tracing/analysis/repair (sonnet/medium), adversarial judgment (opus/high)
+- A plugin with distinct scanning, tracing, adversarial, and repair phases has a dedicated agent per mode
 
-**Progressive context loading** — each agent declares a `<load_first>` block naming the specific `shared/references/` file for its phase. Never load all reference files into all agents.
+**Progressive context loading** — each agent loads only the reference file for its cognitive phase.
+- A `<load_first>` block names the specific `shared/references/` file — scanner loads hazards, architect loads smells, mutator loads tooling
+- Never load all reference files into all agents — attention degrades when the context window contains material the agent won't use
 
-**EARS for edges only** — EARS notation (`WHEN`, `IF`, `WHILE`, `WHERE`) belongs in output contracts and never-do rules. Not in implementation steps or search strategies — those are the interior where agent judgment is the point.
+**EARS for edges only** — EARS notation (`WHEN`, `IF`, `WHILE`, `WHERE`) belongs in output contracts and never-do rules.
+- Not in implementation steps or search strategies — those are the interior where agent judgment is the point
+- Over-constraining the interior caps the agent at the level of the author's imagination
 
 **Schema-driven handoffs** — where one agent's output is another's input, both reference the same schema file from `shared/schemas/`. The schema is the contract; the prompt describes the intent.
 

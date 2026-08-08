@@ -159,9 +159,11 @@ Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires th
 
 **Mutation gate: lambda-mutator catches the T7 bug**
 
-The implementer adds both fields to `ClientConfig` and writes the test from the plan. But suppose it maps `connect_timeout_ms` to the builder under an `if let Some(t)` guard — and gets the condition inverted, mapping `read_timeout_ms` to the connection slot. The unit test still passes because it checks the Duration value, not which slot it went into.
+**The mutation gate catches a slot-swap bug the unit test missed.**
 
-`lambda-mutator` runs cargo-mutants and finds a survivor: mutating the `if let Some(connect_timeout_ms)` arm to `if let Some(read_timeout_ms)` does not kill any test.
+- `lambda-implementer` inverts the condition — mapping `read_timeout_ms` to the connection slot instead of `connect_timeout_ms`
+- The unit test passes because it checks the Duration value, not which builder slot it went into
+- The surviving mutant is the specific code path that was never killed — `lambda-mutator` returns a precision test targeting exactly that slot assignment
 
 **Output: `mutation-report@1`**
 
@@ -197,7 +199,12 @@ The implementer adds both fields to `ClientConfig` and writes the test from the 
 
 ## Stage 6 — proof: Audit (cross-cutting)
 
-`proof` runs independently of the main pipeline — typically before a release. `proof-recon` (haiku/low) builds the workspace manifest. `proof-scanner` (sonnet/medium) runs the T1–T10 hazard taxonomy against all live files. For this codebase it finds a T7 candidate in a different module: an `AccessConfig` struct whose `private_registry` field is captured from user config but never reaches the publish command.
+**`proof` runs independently of the main pipeline — typically before a release.**
+
+- `proof-recon` (haiku/low) — builds the workspace manifest: live files, dead files, language detection
+- `proof-scanner` (sonnet/medium) — runs hazard taxonomy T1–T10 grep patterns against all live files
+
+For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct whose `private_registry` field is captured from user config but never reaches the publish command.
 
 `proof-boundary-tracer` (sonnet/medium) is dispatched because T7 was found. It traces every field in `AccessConfig` to determine which reach the execution boundary.
 
@@ -252,7 +259,12 @@ The implementer adds both fields to `ClientConfig` and writes the test from the 
 
 ## The Proof → Canon Loop
 
-`canon-architect` (opus/high) receives `finding-report@1` and designs a structural fix — not a patch. Rather than adding `private_registry` to the existing publish function's parameter list, the architect identifies that the root cause is a narrow parameter type that cannot grow without breaking callers.
+**`canon-architect` designs a structural fix — not a patch.**
+
+- A patch would add `private_registry` to the existing `publish()` parameter list — it would fix this one field but leave the narrow type intact, ready to silently drop the next field that gets added
+- The structural fix widens the parameter type to accept the full `AccessConfig` directly, eliminating the class of bug rather than the instance
+
+`canon-architect` (opus/high) receives `finding-report@1` and applies this fix.
 
 **Output: `spec@1` (structural)**
 
