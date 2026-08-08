@@ -29,6 +29,7 @@ flowchart LR
     de -. iterate .-> gr
 
     pr([proof\naudit]) -.->|"finding-report@1"| de
+    pr -.->|"remediate"| ca
     ba([basis\nmeta]) -. scaffold .-> gr
 ```
 
