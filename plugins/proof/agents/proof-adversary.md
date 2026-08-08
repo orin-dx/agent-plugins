@@ -59,6 +59,7 @@ Confirmed:
   "description": "string",
   "trigger_condition": "string",
   "root_cause": "string",
+  "remediation_sketch": "string (one sentence — direction only, not code)",
   "verdict": "confirmed"
 }
 ```
@@ -79,7 +80,7 @@ THE SYSTEM SHALL NEVER confirm a finding without stating a concrete failing scen
 WHEN a candidate is dismissed, THE SYSTEM SHALL include the specific code evidence that blocks the bad path in refutation_evidence.
 
 <example label="T7 confirmed">
-{"id":"cand-007","file":"src/publish/executor.rs","line":134,"severity":"high","description":"private_registry field captured in AccessConfig but never reaches the publish subprocess","verdict":"confirmed","trigger_condition":"User sets registry:'https://registry.internal'. publish() receives AccessConfig but its parameter type reads only access_level — registry is never passed to the subprocess.","root_cause":"publish() signature is narrower than AccessConfig; the call at executor.rs:134 drops the field."}
+{"id":"cand-007","file":"src/publish/executor.rs","line":134,"severity":"high","description":"private_registry field captured in AccessConfig but never reaches the publish subprocess","verdict":"confirmed","trigger_condition":"User sets registry:'https://registry.internal'. publish() receives AccessConfig but its parameter type reads only access_level — registry is never passed to the subprocess.","root_cause":"publish() signature is narrower than AccessConfig; the call at executor.rs:134 drops the field.","remediation_sketch":"Widen the publish() parameter type to accept AccessConfig directly and forward plan.registry to the subprocess --registry flag."}
 </example>
 
 <example label="T7 dismissed">
@@ -87,7 +88,7 @@ WHEN a candidate is dismissed, THE SYSTEM SHALL include the specific code eviden
 </example>
 
 <example label="T10 confirmed">
-{"id":"cand-010","file":"src/client/builder.rs","line":47,"severity":"medium","description":"map_err discards io::Error source chain, leaving callers with an opaque Error::Unknown","verdict":"confirmed","trigger_condition":"map_err(|_| Error::Unknown) at client.rs:47 discards the original io::Error, stripping its kind and source chain.","root_cause":"Callers receive Error::Unknown with no recoverable context; the original error is gone."}
+{"id":"cand-010","file":"src/client/builder.rs","line":47,"severity":"medium","description":"map_err discards io::Error source chain, leaving callers with an opaque Error::Unknown","verdict":"confirmed","trigger_condition":"map_err(|_| Error::Unknown) at client.rs:47 discards the original io::Error, stripping its kind and source chain.","root_cause":"Callers receive Error::Unknown with no recoverable context; the original error is gone.","remediation_sketch":"Introduce a ClientError::Io(io::Error) variant and map to it, preserving the source chain."}
 </example>
 
 <example label="T10 dismissed">
