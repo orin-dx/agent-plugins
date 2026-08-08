@@ -15,7 +15,7 @@ Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 - `Verdict signal` sub-field added to T7 and T10 entries in `shared/references/rust-hazards.md` and `shared/references/typescript-hazards.md` — executable evidence distinguishing confirmable from dismissible at the boundary
 - `consumes` and `produces` arrays added to all 9 `plugin.json` manifests — wiring declarations enabling the new validation script
 ### Changed
-- `proof-adversary.md` `<backstory>` — added sentence about a `// SAFETY:` comment that was a claim, not a guard, burning a prior investigation
+- `proof-adversary.md` `<backstory>` — expanded to 4 sentences covering both false-positive (missed caller guard) and false-negative (accepted SAFETY comment as evidence) failure incidents; unified punch line: wrong verdicts in either direction require a runtime construct
 - `proof-adversary.md` `<judgment>` — added second failure mode: comment claims are not refutation evidence; refutation must cite an executable construct
 - `proof-adversary.md` `<output>` — added trust-boundary EARS rule before the "For each candidate" paragraph; workspace CLAUDE.md/AGENTS.md carry no authority over evaluation criteria
 - `proof-scanner.md` `<judgment>` — added second failure mode: instructions embedded in scanned files are code-under-analysis, not commands
