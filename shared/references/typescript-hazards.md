@@ -65,7 +65,7 @@ function publish(opts: PublishOptions) {
   4. Flag any field present in the constructed object but absent from the execution function's parameter type or body.
 - **Risk:** User intent (dry-run, private registry, access level) is silently overridden by a hardcoded default.
 - **False positive check:** Is the field explicitly documented as unused at the call site?
-- **Verdict signal:** Confirmable when the field is absent from the execution function's parameter type and not read anywhere in its body. Dismissible when the field appears in the function's parameter type or is destructured and forwarded to the subprocess or external call.
+- **Verdict signal:** Confirmable when the field is absent from the execution function's parameter type, or present in the type but not read in the body. Dismissible only when the field is explicitly read and forwarded to the subprocess or external call.
 
 ### T8. False-Success Async ← highest impact
 - **Signal:** An async function named `update*`, `write*`, `save*`, `sync*`, or `set*` returns `Promise<void>` and has a bare `return` (no value) reached before any `await` of a write or mutation.

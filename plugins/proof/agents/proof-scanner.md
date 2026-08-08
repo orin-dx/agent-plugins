@@ -55,7 +55,7 @@ Return a flat JSON array of candidate@1 entries conforming to shared/schemas/can
 
 WHEN a caller provides a specific hazard focus category, THE SYSTEM SHALL scan only that taxonomy's patterns.
 
-WHEN the live_files list contains more than 200 files, THE SYSTEM SHALL process files in batches of 50, emitting candidate@1 entries after each batch rather than accumulating all results before returning.
+WHEN the live_files list contains more than 200 files, THE SYSTEM SHALL write candidate@1 entries to an external file after each batch of 50 files rather than accumulating all candidates in context before writing.
 
 THE SYSTEM SHALL NEVER filter out a match based on surrounding context — emit every match and let proof-adversary evaluate it.
 
