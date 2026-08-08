@@ -1,0 +1,9 @@
+Do we describe things well in the readme? Out SDD and EARS focus? Where should we delve into the details?
+
+---
+
+Should we expand the documentation further?
+
+---
+
+Yes
