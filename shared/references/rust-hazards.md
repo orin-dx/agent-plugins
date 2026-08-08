@@ -64,6 +64,7 @@ fn execute(plan: &PublishPlan) -> Result<(), Error> {
 - **Grep pattern:** fields named `tag`, `index`, `registry`, `access`, `dist_tag`, `repository`, `token`, or any `Option<String>` in plan/config structs.
 - **Risk:** User-specified routing (private registry, dist-tag, access level) is silently overridden by a hardcoded default.
 - **False positive check:** Is the field intentionally unused with a documented reason?
+- **Verdict signal:** Confirmable when the field is absent from the execution function's parameter list and absent from any subprocess argument list. Dismissible when the field appears as a named argument to the execution call or subprocess command before build or spawn.
 
 ### 8. False-Success Mutation ← highest impact
 - **Signal:** A function named `update_*`, `write_*`, `set_*`, or `bump_*` returns `Result<(), E>` and has a `return Ok(());` path that was reached without performing any visible mutation.
@@ -146,3 +147,4 @@ fn update_version(manifest: &mut Manifest, new: &Version) -> Result<bool, Error>
 - **Risk:** Callers and diagnostic tooling lose the original error's structured context. Diagnostic codes, help text, and source spans that would identify the root cause are silently dropped. Error messages become shallow strings that obscure the cause.
 - **False positive check:** Is this at a genuine FFI/ABI boundary where the foreign error type cannot cross? Is `.to_string()` required for a serialization format that mandates strings (JSON response body, structured log sink)? If neither, it is a downgrade.
 - **Distinguisher from T4:** T4 is accidental — `let _ = result` with no closure. T10 is intentional-but-lossy — the programmer chose a mapping that discards the source. Different fix: T4 needs `?`; T10 needs the error type to preserve the chain.
+- **Verdict signal:** Confirmable when `map_err(|_|` discards the closure parameter and the resulting error type loses source chain (no `.source()` or inner error field). Dismissible when the conversion crosses a genuine FFI/ABI boundary or the destination format mandates a string type.

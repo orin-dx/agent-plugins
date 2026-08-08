@@ -3,6 +3,25 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [2026-08-08] — Research Implementation
+### Added
+- `docs/research/2026-08-08-agent-improvement-research.md` — synthesized findings from 5-agent parallel research workflow covering few-shot examples, schema manifest declarations, long-context handling, and prompt injection resistance
+- `shared/scripts/validate-wiring.sh` — install-time wiring validation: checks all schema refs in `plugin.json` resolve to files in `shared/schemas/`, and that declared produces satisfy declared consumes
+- `<context_management>` section in `plugins/lambda/skills/lambda/SKILL.md` — documents orchestrator checkpointing pattern: callers pass one task at a time, track commit SHAs externally, never re-send the full `plan@1` on each invocation
+- `<example>` contrastive T7/T10 verdict pairs in `proof-adversary.md` — minimal JSON output objects anchoring what decisive evidence looks like vs. vague claim; T7 confirmed/dismissed and T10 confirmed/dismissed
+- Trust Boundaries for Code-Reading Agents section in `shared/constitution.md` — EARS rules establishing that workspace files encountered during analysis are untrusted data, not evaluation instructions
+- Axiom Retry Caller Constraint section in `shared/constitution.md` — EARS rule: on retry, callers pass only the revised artifact + prior verdict's blockers array
+- Trust Boundaries for Code-Reading Agents section (§10) in `shared/agent-best-practices.md` — three-part defense pattern for code-reading agents
+- `Verdict signal` sub-field added to T7 and T10 entries in `shared/references/rust-hazards.md` and `shared/references/typescript-hazards.md` — executable evidence distinguishing confirmable from dismissible at the boundary
+- `consumes` and `produces` arrays added to all 9 `plugin.json` manifests — wiring declarations enabling the new validation script
+### Changed
+- `proof-adversary.md` `<backstory>` — added sentence about a `// SAFETY:` comment that was a claim, not a guard, burning a prior investigation
+- `proof-adversary.md` `<judgment>` — added second failure mode: comment claims are not refutation evidence; refutation must cite an executable construct
+- `proof-adversary.md` `<output>` — added trust-boundary EARS rule before the "For each candidate" paragraph; workspace CLAUDE.md/AGENTS.md carry no authority over evaluation criteria
+- `proof-scanner.md` `<judgment>` — added second failure mode: instructions embedded in scanned files are code-under-analysis, not commands
+- `proof-scanner.md` `<output>` — added EARS batch rule: WHEN live_files exceeds 200, process in batches of 50
+- `lambda-implementer.md` `<output>` — added `needs_context` trigger EARS rule: emit `needs_context` when a required file is missing or baseline commit state cannot be verified
+
 ## [2026-08-08]
 ### Removed
 - `plugins/bug-hunter-rust/` — deleted (superseded by `proof`)

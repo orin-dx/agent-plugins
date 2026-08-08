@@ -12,5 +12,7 @@
     "./agents/graph-auditor.md",
     "./agents/graph-clarifier.md",
     "./agents/graph-intake.md"
-  ]
+  ],
+  "consumes": [],
+  "produces": ["requirement@1"]
 }

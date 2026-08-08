@@ -65,6 +65,7 @@ function publish(opts: PublishOptions) {
   4. Flag any field present in the constructed object but absent from the execution function's parameter type or body.
 - **Risk:** User intent (dry-run, private registry, access level) is silently overridden by a hardcoded default.
 - **False positive check:** Is the field explicitly documented as unused at the call site?
+- **Verdict signal:** Confirmable when the field is absent from the execution function's parameter type and not read anywhere in its body. Dismissible when the field appears in the function's parameter type or is destructured and forwarded to the subprocess or external call.
 
 ### T8. False-Success Async ← highest impact
 - **Signal:** An async function named `update*`, `write*`, `save*`, `sync*`, or `set*` returns `Promise<void>` and has a bare `return` (no value) reached before any `await` of a write or mutation.
@@ -163,3 +164,4 @@ async function updateConfig(path: string, next: Config): Promise<boolean> {
 - **Risk:** Callers receive a resolved promise or a non-throwing return believing the operation succeeded. The failure is invisible to monitoring, retry logic, and the caller's control flow.
 - **False positive check:** Is the no-op explicitly documented as intentional? Is the error logged AND the caller notified via a return value or status field? If neither, it is suppression.
 - **Distinguisher from T2 (Unhandled Promise Rejection):** T2 has no catch at all — the rejection propagates unhandled. T10 has a catch that actively hides the error from the caller.
+- **Verdict signal:** Confirmable when the catch handler resolves or returns without signaling failure and the caller has no recovery path. Dismissible when the handler logs the error AND signals failure via a return value, status field, or re-throw.

@@ -12,5 +12,7 @@
     "./agents/vector-challenger.md",
     "./agents/vector-estimator.md",
     "./agents/vector-planner.md"
-  ]
+  ],
+  "consumes": ["spec@1"],
+  "produces": ["plan@1"]
 }

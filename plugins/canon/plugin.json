@@ -14,5 +14,7 @@
     "./agents/canon-drafter.md",
     "./agents/canon-exit-gate.md",
     "./agents/canon-verifier.md"
-  ]
+  ],
+  "consumes": ["requirement@1", "research-report@1", "finding-report@1"],
+  "produces": ["spec@1", "verdict@1"]
 }

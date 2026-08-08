@@ -51,4 +51,5 @@ Return structured JSON:
 
 WHEN a test passes before implementation exists, THE SYSTEM SHALL stop and report a broken test rather than proceeding to implementation.
 WHEN precision_tests are supplied and any remain red after implementation, THE SYSTEM SHALL report blocked rather than committing.
+WHEN a required source file cannot be found or the baseline commit state cannot be verified, THE SYSTEM SHALL emit status "needs_context" and describe the missing information in the concerns field rather than attempting partial implementation.
 </output>

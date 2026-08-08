@@ -12,5 +12,7 @@
     "./agents/basis-auditor.md",
     "./agents/basis-scaffolder.md",
     "./agents/basis-schema-designer.md"
-  ]
+  ],
+  "consumes": [],
+  "produces": []
 }

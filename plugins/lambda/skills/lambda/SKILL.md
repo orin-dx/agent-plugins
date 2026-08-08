@@ -75,3 +75,24 @@ After all tasks are complete and `lambda-mutator` has run, `lambda-exit-gate` ru
 | **`lambda-exit-gate`** | Adversarial exit verification | opus / high | After all tasks and mutation gate complete — independent axiom check against spec; produces verdict@1. |
 
 </subagent_dispatch_matrix>
+
+---
+
+<context_management>
+
+Lambda executes tasks sequentially. Each `lambda-implementer` invocation handles exactly one task. The orchestrating caller is responsible for keeping context lean across the sequence.
+
+**Caller MUST pass per-invocation:**
+- The current task object only (not the full `plan@1`).
+- The workspace manifest from `lambda-recon` (file list + baseline status).
+- Any `precision_tests` from `lambda-mutator` for the current task.
+
+**Caller MUST NOT pass:**
+- The full `plan@1` on every invocation — a 40-task plan passed 40 times consumes 320K–600K tokens on plan context alone.
+- Prior task results — the commit SHA is sufficient to verify what happened.
+
+**Progress tracking:** The caller tracks completed task IDs and their commit SHAs externally (in a progress note or equivalent). On re-entry after interruption, pass the remaining tasks, not the full list.
+
+**When `lambda-implementer` emits `needs_context`:** the caller resolves the missing information (file path, baseline commit) before re-invoking — do not retry with the same inputs.
+
+</context_management>

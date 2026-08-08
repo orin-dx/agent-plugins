@@ -13,5 +13,7 @@
     "./agents/trace-recon.md",
     "./agents/trace-risk-assessor.md",
     "./agents/trace-synthesizer.md"
-  ]
+  ],
+  "consumes": ["requirement@1"],
+  "produces": ["research-report@1"]
 }

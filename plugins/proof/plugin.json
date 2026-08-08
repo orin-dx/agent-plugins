@@ -14,5 +14,7 @@
     "./agents/proof-exit-gate.md",
     "./agents/proof-recon.md",
     "./agents/proof-scanner.md"
-  ]
+  ],
+  "consumes": [],
+  "produces": ["finding-report@1", "verdict@1"]
 }

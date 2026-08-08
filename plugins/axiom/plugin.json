@@ -12,5 +12,7 @@
     "./agents/axiom-exit-gate.md",
     "./agents/axiom-recon.md",
     "./agents/axiom-verifier.md"
-  ]
+  ],
+  "consumes": [],
+  "produces": ["verdict@1"]
 }

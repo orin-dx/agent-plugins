@@ -14,5 +14,7 @@
     "./agents/delta-pr-narrator.md",
     "./agents/delta-release-summarizer.md",
     "./agents/delta-review-preprocessor.md"
-  ]
+  ],
+  "consumes": ["changeset@1"],
+  "produces": ["release-artifact@1"]
 }

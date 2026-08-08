@@ -14,5 +14,7 @@
     "./agents/lambda-mutator.md",
     "./agents/lambda-recon.md",
     "./agents/lambda-reviewer.md"
-  ]
+  ],
+  "consumes": ["plan@1", "spec@1"],
+  "produces": ["changeset@1", "verdict@1"]
 }
