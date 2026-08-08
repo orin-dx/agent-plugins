@@ -29,14 +29,11 @@ Do not activate for: general code questions, exploratory research, or authoring 
 
 <three_stage_flow>
 
-### Stage 1 — Recon (haiku, low effort)
-Inventory the artifact. Determine type, locate the file, enumerate the criteria it should be verified against (from a linked spec, requirement, or caller statement). Produce a structured manifest.
-
-### Stage 2 — Verify (sonnet, medium effort)
-Cross-reference the artifact against each criterion from the recon manifest. Find evidence for or against each. Produce a verification report with verified, failed, and unverifiable criteria.
-
-### Stage 3 — Exit Gate (opus, high effort)
-Produce the final verdict. Pass only if all criteria are verified with no unresolved failures. On fail, produce specific actionable blockers — not generic rejections. Each blocker must give the producing agent enough to make a targeted fix.
+| Stage | Agent | Model | Effort | Responsibility |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 — Recon | `axiom-recon` | haiku | low | Inventory the artifact: type, location, criteria list, source files to read. No judgment. |
+| 2 — Verify | `axiom-verifier` | sonnet | medium | Cross-reference each criterion against the source files. Classify as verified, failed, or unverifiable. Neutral — reports evidence only. |
+| 3 — Exit Gate | `axiom-exit-gate` | opus | high | Produce the final verdict. Pass only if all criteria are verified with no unresolved failures. On fail, return specific actionable blockers. |
 
 </three_stage_flow>
 
@@ -56,25 +53,18 @@ The protocol output is a `verdict@1` object: `pass` or `fail`, with `blockers` o
 
 <sub_skills>
 
-| Sub-skill | Artifact Type |
-| :--- | :--- |
-| `verify-requirement` | Requirements document |
-| `verify-spec` | Design specification |
-| `verify-plan` | Implementation plan |
-| `verify-implementation` | Code implementation |
-| `verify-pr` | Pull request |
-| `exit-gate` | Final verdict assembly (all types) |
+| Sub-skill | Artifact Type | Pipeline |
+| :--- | :--- | :--- |
+| `verify-requirement` | Requirements document | haiku/low → sonnet/medium → opus/high |
+| `verify-spec` | Design specification | haiku/low → sonnet/medium → opus/high |
+| `verify-plan` | Implementation plan | haiku/low → sonnet/medium → opus/high |
+| `verify-implementation` | Code implementation | haiku/low → sonnet/medium → opus/high |
+| `verify-pr` | Pull request | haiku/low → sonnet/medium → opus/high |
+| `exit-gate` | Final verdict assembly (all types) | haiku/low → sonnet/medium → opus/high |
 
 </sub_skills>
 
 ---
-
-<success_criteria>
-
-- **Pass**: all criteria confirmed verified, no unresolved failures. Downstream stage may proceed.
-- **Fail**: one or more criteria unmet. Returns specific, actionable blockers. Producing agent must fix and resubmit. Gate does not proceed until pass or retry limit reached.
-
-</success_criteria>
 
 ---
 

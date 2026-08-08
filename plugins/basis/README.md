@@ -24,7 +24,7 @@ The tool for building tools. Scaffolds new plugins, audits existing ones for eco
 | `basis/scaffold` | Generates a complete, ready-to-install plugin directory given a plugin ID and description |
 | `basis/audit` | Audits an existing plugin directory against all ecosystem conformance rules; returns structured pass/fail/warn per check |
 | `basis/schema` | Designs a new JSON Schema (draft 2020-12) for an inter-agent artifact; checks for conflicts with existing schemas |
-| `basis/subagent` | Generates a single conformant subagent `.md` file using the 5-section Superpowers framework |
+| `basis/subagent` | Generates a single conformant subagent `.md` file using the 4-part structure |
 
 ---
 
@@ -48,7 +48,7 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | Skill file | `skills/<id>/SKILL.md` exists with valid YAML frontmatter and a `description` trigger string |
 | Agent files | All agents listed in `plugin.json` have a corresponding `.md` file |
 | Agent descriptions | 80–200 words each; start with "Delegate to this subagent when…" |
-| Body word count | Agent body under 200 words — prompts over this should be audited for procedure masquerading as guidance |
+| 4-part body structure | Agent body has exactly: backstory, goal, judgment, output — no success_criteria, no role sections, EARS only in output |
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
 | No authoring-time refs | Agent bodies do not reference `shared/agent-best-practices.md` at runtime |

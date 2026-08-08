@@ -1,8 +1,8 @@
 # lambda — Implementation
 
-**Stage:** Code · **Output:** `changeset@1` · **Version:** 1.0.1
+**Stage:** Code · **Output:** `changeset@1` · **Version:** 1.1.0
 
-Executes implementation tasks from a `plan@1` using strict TDD. Each task runs in a fresh subagent with isolated context — no state bleeds between tasks. After all tasks complete, an adversarial exit gate reads the codebase from scratch, assumes the implementation is incomplete, and returns a formal `verdict@1` before producing `changeset@1`.
+Executes implementation tasks from a `plan@1` using strict TDD. Each task runs in a fresh subagent with isolated context — no state bleeds between tasks. After each task commits, a mutation gate verifies the test suite would catch real faults before the next task begins. After all tasks complete, an adversarial exit gate reads the codebase from scratch, assumes the implementation is incomplete, and returns a formal `verdict@1` before producing `changeset@1`.
 
 ---
 
@@ -33,20 +33,21 @@ Executes implementation tasks from a `plan@1` using strict TDD. Each task runs i
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `lambda-recon` | Workspace Recon | haiku / low | Discovers test runner, build tool, and baseline test state before any code is written. |
-| `lambda-implementer` | Implementer | sonnet / medium | Executes one task: writes the failing test, implements minimal code to pass it, commits. |
-| `lambda-reviewer` | Reviewer | sonnet / medium | Post-task code review — checks for missed sibling functions, code quality issues, and regressions. |
-| `lambda-exit-gate` | Exit Gate | opus / high | Adversarially verifies the complete implementation: all acceptance criteria implemented and tested, all tests pass, no regressions. |
+| `lambda-recon` | Workspace Recon | haiku / low | Detects language, test runner, and build tool. Inventories plan files. Confirms baseline passes before any code is written. |
+| `lambda-implementer` | TDD Executor | sonnet / medium | Executes one task: writes the failing test, implements minimal code to pass it, commits. Re-invoked when mutation gate returns precision tests. |
+| `lambda-mutator` | Mutation Testing Gate | sonnet / medium | Runs mutation testing on implemented files (cargo-mutants for Rust, Stryker for TypeScript). Identifies surviving mutants and designs precision tests that kill them. |
+| `lambda-reviewer` | Pre-Gate Reviewer | sonnet / medium | Neutral post-task review — checks scope adherence, non-negotiable violations, sibling gaps, and test quality before the exit gate runs. |
+| `lambda-exit-gate` | Adversarial Verifier | opus / high | Reads code from scratch. Verifies all acceptance criteria are implemented and tested, all tests pass, mutation gate ran, no regressions. Produces `verdict@1`. |
 
 ---
 
 ## Pipeline
 
 ```
-plan@1 → lambda-recon → [lambda-implementer → lambda-reviewer] × N tasks → lambda-exit-gate → changeset@1
+plan@1 → lambda-recon → [lambda-implementer → lambda-mutator → lambda-reviewer] × N tasks → lambda-exit-gate → changeset@1
 ```
 
-Each task runs in a fresh `lambda-implementer` context. The reviewer runs after each individual task. The exit gate runs once after all tasks complete.
+Each task runs in a fresh `lambda-implementer` context. After the implementer commits, `lambda-mutator` runs and may feed precision tests back into a second `lambda-implementer` cycle before the reviewer and next task proceed. The exit gate runs once after all tasks complete and must confirm the mutation gate ran.
 
 ---
 
@@ -63,11 +64,23 @@ Every task follows this exact sequence — no shortcuts:
 
 ---
 
+## Mutation Gate (per task)
+
+After each task commits, `lambda-mutator` runs mutation testing scoped to the changed files:
+
+- **Rust** workspaces: `cargo-mutants`
+- **TypeScript/JavaScript** workspaces: Stryker
+- Language detected from workspace root (`Cargo.toml` → rust; `package.json` → typescript)
+
+For each surviving mutant, `lambda-mutator` returns a precision test — a specific, targeted assertion that would fail if that mutation were present. Those tests are fed back to `lambda-implementer` as additional failing tests to write and make green. Only when zero mutants survive (or the tool is unavailable) does the pipeline proceed to `lambda-reviewer`.
+
+---
+
 ## Exit Gate
 
-After all tasks are complete, `lambda-exit-gate` runs independently. It does not inherit context from the implementer — it reads the current code state from scratch, assumes the implementation is incomplete, and runs the full axiom verification protocol against the spec. It returns a `verdict@1` before `changeset@1` is produced.
+After all tasks are complete, `lambda-exit-gate` runs independently. It does not inherit context from any prior agent — it reads the current code state from scratch and assumes the implementation is incomplete. It confirms that `lambda-mutator` ran (or recorded a `tool_unavailable` gap) and produces a `verdict@1` before `changeset@1` is released.
 
-If the exit gate fails, blockers are returned to the implementer for targeted fixes (max 3 retries).
+If the exit gate fails, blockers are returned to `lambda-implementer` for targeted fixes (max 3 retries; escalates to human after that).
 
 ---
 

@@ -11,6 +11,7 @@
   "agents": [
     "./agents/lambda-exit-gate.md",
     "./agents/lambda-implementer.md",
+    "./agents/lambda-mutator.md",
     "./agents/lambda-recon.md",
     "./agents/lambda-reviewer.md"
   ]

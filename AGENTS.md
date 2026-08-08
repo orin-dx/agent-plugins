@@ -1,15 +1,16 @@
 # Orin DX AI Agent & Skill Specification (`AGENTS.md`)
 
-This guide defines the top-level repository guidelines for AI coding agents (Antigravity/AGY, Claude, Cursor, Copilot, Codex) working on or utilizing `orin-dx/agent-plugins`.
+This guide defines the top-level repository guidelines for AI coding agents (Claude Code, AGY, Cursor, Copilot, Codex) working on or utilizing `orin-dx/agent-plugins`.
 
 ---
 
-## 1. Authoring Standards & Single Source of Truth
+## 1. Authoritative Sources
 
-To prevent rule duplication and context drift, all authoring principles, context engineering standards, and platform guides are centralized in `shared/`:
+All hard rules for plugin and agent authoring live in one place:
 
-- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Authoritative manual for Context Engineering, CSO trigger frontmatter (100–200 words), 3-tier progressive disclosure, dynamic tool discovery, 4-stage agentic loop (Explore ➔ Plan ➔ Code ➔ Verify), Superpowers subagent framework, and Google Antigravity (`agy`) vs Claude Code operational guidance.
-- [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, and Red-to-Green test verification standards.
+- [**`shared/constitution.md`**](./shared/constitution.md): EARS-format authoritative constraints. The fence all plugin development must stay inside. Read this first and last.
+- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution, explained with examples. Authoring-time only — never loaded by agents at runtime.
+- [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, Red-to-Green verification standards.
 - [**`shared/references/modern-cli-tools.md`**](./shared/references/modern-cli-tools.md): Global preference directive for modern CLI tools (`bat`, `zoxide`, `ripgrep`, `fd`, `eza`, `delta`, `jq`, `fzf`, `gh`).
 
 ---
@@ -18,24 +19,30 @@ To prevent rule duplication and context drift, all authoring principles, context
 
 ```text
 plugins/<plugin-id>/
-├── plugin.json                 <-- Plugin Manifest
+├── plugin.json                   <-- Plugin Manifest (id, version, skills, agents)
+├── README.md                     <-- Purpose, trigger phrases, agent table, install
+├── CHANGELOG.md                  <-- Semver history
 ├── skills/
 │   └── <plugin-id>/
-│       ├── SKILL.md            <-- Primary Skill (CSO User Intent Frontmatter)
-│       └── references/         <-- On-Demand Subdocuments (Tier 3)
+│       └── SKILL.md              <-- Skill definition (dispatch matrix, pipeline)
 └── agents/
-    ├── <plugin>-scanner-<lang>.md   <-- Scanner Subagent (Superpowers Framework)
-    ├── <plugin>-adversary-<lang>.md <-- Adversary Subagent (Superpowers Framework)
-    ├── <plugin>-remediator-<lang>.md<-- Remediator Subagent (Superpowers Framework)
-    └── <subagent-name>.md           <-- Additional Domain Subagents
+    ├── <id>-recon.md             <-- haiku/low  — deterministic enumeration
+    ├── <id>-scanner.md           <-- sonnet/med — pattern matching
+    ├── <id>-adversary.md         <-- opus/high  — adversarial verification
+    └── <id>-exit-gate.md         <-- opus/high  — binding judgment
 ```
+
+Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, systemic, behavioral, judgment, repair) — not by pipeline position. See `shared/constitution.md` for the model/effort tier rules.
 
 ---
 
 ## 3. Quick Checklist for Adding New Plugins
 
-1. **CSO Triggers**: Write 100–200 word frontmatter descriptions (User Intent for Skills, Delegation Scenarios for Subagents).
-2. **Progressive Disclosure**: Link to `shared/` context files via relative Markdown links.
-3. **Non-Prescriptive Design**: Focus on goals, search patterns, and verification metrics rather than rigid step-by-step scripts.
-4. **Manifest Registration**: Add plugin entry to root `marketplace.json` and validate syntax (`jq . marketplace.json`).
-5. **Legal Attribution**: Set `"author": "Gabriel Castro (Orin DX)"` in `plugin.json`.
+1. **Use `basis`** — run `basis-scaffolder` to generate the full directory structure and stubs.
+2. **4-part agent structure** — every agent body: `<backstory>`, `<goal>`, `<judgment>`, `<output>`. No `<role>` body sections. No `success_criteria` checklists.
+3. **EARS in output only** — WHEN/IF/WHILE/WHERE notation belongs only in `<output>` contracts and never-do rules.
+4. **Progressive context loading** — one `<load_first>` block per agent, naming only the reference file for its cognitive phase.
+5. **Schema-first handoffs** — define `shared/schemas/<name>@<version>.json` before writing the agent that produces it.
+6. **Abstract tool language** — "use your file reading tool", never `view_file`, `read_file`, or `Bash tool`.
+7. **Manifest registration** — add an entry to root `marketplace.json` and validate: `jq . marketplace.json`.
+8. **Legal attribution** — set `"author": "Gabriel Castro (Orin DX)"` in `plugin.json`.

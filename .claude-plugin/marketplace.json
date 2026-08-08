@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "basis",
-      "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure and validates conformance to ecosystem schemas.",
+      "description": "Meta-plugin for scaffolding and auditing plugins, skills, and agents. Generates plugin directory structure and validates conformance to ecosystem schemas.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",

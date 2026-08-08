@@ -39,12 +39,12 @@ Recon detects the workspace language from manifest files present (Cargo.toml →
 
 <subagent_dispatch_matrix>
 
-| Agent | Role | Delegate When |
-| :--- | :--- | :--- |
-| **trace-recon** | Source mapper | Start every research task here. Maps internal sources, external keywords, and existing implementations. |
-| **trace-reader** | Evidence extractor | Given the source map, reads each source and extracts findings with citations and confidence levels. |
-| **trace-synthesizer** | Recommendation producer | Given findings, synthesizes a research-report@1 with a falsifiable recommendation and confidence level. |
-| **trace-risk-assessor** | Risk prioritizer | Given a proposed approach or research-report@1, identifies and prioritizes technical risks with mitigations. |
+| Agent | Role | Model / Effort | Delegate When |
+| :--- | :--- | :--- | :--- |
+| **trace-recon** | Source mapper | haiku / low | Start every research task here. Maps internal sources, external keywords, and existing implementations. |
+| **trace-reader** | Evidence extractor | sonnet / medium | Given the source map, reads each source and extracts findings with citations and confidence levels. |
+| **trace-synthesizer** | Recommendation producer | sonnet / medium | Given findings, synthesizes a research-report@1 with a falsifiable recommendation and confidence level. |
+| **trace-risk-assessor** | Risk prioritizer | sonnet / medium | Given a proposed approach or research-report@1, identifies and prioritizes technical risks with mitigations. |
 
 </subagent_dispatch_matrix>
 
@@ -58,13 +58,3 @@ All research concludes in a `research-report@1` (schema: `shared/schemas/researc
 
 The recommendation is falsifiable: a spec or plan written from it will not be surprised by implementation reality.
 </output>
-
----
-
-<success_criteria>
-- [ ] Every claim carries a citation (file:line or URL) and a confidence label.
-- [ ] Contradictions between sources are surfaced, not silently resolved.
-- [ ] Open questions that remain unanswered are listed explicitly.
-- [ ] The recommendation includes an explicit confidence level and rationale.
-- [ ] A spec writer (canon) can read the report and write a spec without needing additional research.
-</success_criteria>

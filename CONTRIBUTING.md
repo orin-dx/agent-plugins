@@ -15,11 +15,11 @@ The fastest way to scaffold a new plugin is with the `basis` plugin:
 To scaffold manually:
 
 ```bash
-mkdir -p plugins/<id>/skills/<id> plugins/<id>/subagents
+mkdir -p plugins/<id>/skills/<id> plugins/<id>/agents
 ln -s ../../shared plugins/<id>/shared
 ```
 
-Then create `plugin.json`, `skills/<id>/SKILL.md`, and `subagents/*.md` following the conventions below.
+Then create `plugin.json`, `skills/<id>/SKILL.md`, and `agents/*.md` following the conventions below.
 
 ---
 
@@ -29,13 +29,16 @@ Then create `plugin.json`, `skills/<id>/SKILL.md`, and `subagents/*.md` followin
 plugins/<id>/
 ├── plugin.json
 ├── README.md
+├── CHANGELOG.md
 ├── skills/<id>/SKILL.md
-├── subagents/
-│   ├── <id>-recon.md       (haiku/low — mechanical recon)
-│   ├── <id>-worker.md      (sonnet/medium — analysis)
-│   └── <id>-exit-gate.md   (opus/high — judgment)
-└── shared -> ../../shared
+└── agents/
+    ├── <id>-scanner.md       (sonnet/medium — pattern matching)
+    ├── <id>-worker.md        (sonnet/medium — analysis)
+    ├── <id>-adversary.md     (opus/high — adversarial reasoning)
+    └── <id>-exit-gate.md     (opus/high — final judgment)
 ```
+
+Organize agents by **cognitive mode**, not pipeline position. A scan agent and an analysis agent require different mental modes — split them even if they run sequentially.
 
 ### `plugin.json`
 
@@ -60,27 +63,30 @@ The skill prompt is what the user invokes. It should:
 
 ---
 
-## Subagent Authoring Checklist (Section 9)
+## Agent Authoring Checklist
 
-Read `shared/agent-best-practices.md` Section 9 before authoring. The hard requirements:
+Read `shared/agent-best-practices.md` before authoring. The hard requirements:
 
-### Description field (YAML frontmatter)
-- [ ] Starts with `"Delegate to this subagent when…"`
-- [ ] 80–200 words
-- [ ] Covers: routing condition, expected input, what it returns, key behavioral constraints
+### 4-part structure (frontmatter + body)
+- [ ] **Backstory** — 2–4 sentences. What has this agent been burned by? What does it value? Guides judgment without constraining method.
+- [ ] **Goal** — what the agent must produce and why. Intent, not steps.
+- [ ] **Judgment** — how to tell if the goal was genuinely achieved vs. output that merely looks like it was. Name the key failure mode.
+- [ ] **Output** — structured shape; reference a schema from `shared/schemas/` when output flows to another agent.
 
-### Body (below the closing `---`)
-- [ ] Under 200 words
-- [ ] Begins with the goal — what the agent must produce
-- [ ] Includes a compact JSON output example with every field named
-- [ ] Marks `reasoning` as scratchpad: "not forwarded downstream"
-- [ ] No `<context>` or `<role>` sections that restate the description
-- [ ] No filler phrases: "your job is to", "make sure to", "please ensure"
+No `<role>` section in the body — that's what `<backstory>` replaced. The frontmatter `role:` field is platform metadata (short display label for routing) and should be kept. No `success_criteria:` checklist. No filler: "your job is to", "make sure to", "please ensure".
+
+### Progressive context loading
+- [ ] Declares a `<load_first>` block naming the specific `shared/references/` file for this agent's phase
+- [ ] Does not load reference files outside its cognitive mode (scanner loads hazards, not smells)
+
+### EARS placement
+- [ ] EARS notation (`WHEN`, `IF`, `WHILE`, `WHERE`) used only in output contracts and never-do rules
+- [ ] No EARS in implementation steps, search strategies, or reasoning guidance
 
 ### Model and effort
 - [ ] `haiku` / `low` — deterministic enumeration only (manifest building, file inventory)
-- [ ] `sonnet` / `medium` — analysis (scanning, drafting, planning, reviewing)
-- [ ] `opus` / `high` — judgment (exit gates, adversarial review, final verdicts)
+- [ ] `sonnet` / `medium` — analysis (scanning, drafting, planning, tracing)
+- [ ] `opus` / `high` — judgment (adversarial reasoning, exit gates, final verdicts)
 
 ### Tool language
 - [ ] Uses abstract tool language: "use your file reading tool", "use your search tool"
@@ -88,8 +94,7 @@ Read `shared/agent-best-practices.md` Section 9 before authoring. The hard requi
 - [ ] No absolute paths
 
 ### Schema conformance
-- [ ] If the output is a named schema (e.g. `spec@1`), the inline JSON shape matches the schema in `shared/schemas/` exactly — no undeclared fields, no missing required fields
-- [ ] `additionalProperties: false` schemas: verify every field in the output shape is declared in the schema
+- [ ] If the output is a named schema (e.g. `finding-report@1`), every field in the output shape is declared in `shared/schemas/` — no undeclared fields, no missing required fields
 
 ---
 

@@ -39,6 +39,20 @@ Aggregates changesets since the last release into grouped, user-facing release n
 
 ---
 
+<subagent_dispatch_matrix>
+
+| Agent | Role | Model / Effort | Delegate When |
+| :--- | :--- | :--- | :--- |
+| **delta-commit-analyzer** | Commit author | haiku / low | Staged changes are ready and need a conventional commit message explaining why. |
+| **delta-changeset-analyzer** | Changeset extractor | sonnet / medium | A git diff needs a structured changeset@1 with semver impact and acceptance criteria mapping. |
+| **delta-pr-narrator** | PR description author | sonnet / medium | A PR needs a title and body a reviewer with zero context can act on. |
+| **delta-review-preprocessor** | Review package assembler | haiku / low | Before opening a PR, bundle diff, linked spec, test results, and open questions for the reviewer. |
+| **delta-release-summarizer** | Release notes author | sonnet / medium | Aggregate changeset@1 entries into a user-facing release-artifact@1. |
+
+</subagent_dispatch_matrix>
+
+---
+
 <references>
 At runtime, agents read the following shared reference files:
 - `shared/references/conventional-commits.md` — type/scope conventions and commit message rules

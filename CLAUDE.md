@@ -8,13 +8,13 @@ Quick reference guide for Claude Code CLI and Claude AI agents interacting with 
 
 - **Install Plugin in Claude Code**:
   ```bash
-  claude plugin add orin-dx/agent-plugins/bug-hunter-rust
-  claude plugin add orin-dx/agent-plugins/bug-hunter-ts
+  claude plugin add orin-dx/agent-plugins/proof
+  claude plugin add orin-dx/agent-plugins/basis
   ```
 - **Install Plugin in AGY**:
   ```bash
-  agy plugin add orin-dx/agent-plugins/bug-hunter-rust
-  agy plugin add orin-dx/agent-plugins/bug-hunter-ts
+  agy plugin add orin-dx/agent-plugins/proof
+  agy plugin add orin-dx/agent-plugins/basis
   ```
 - **Local Manifest Validation**:
   ```bash
@@ -26,10 +26,11 @@ Quick reference guide for Claude Code CLI and Claude AI agents interacting with 
 
 ## 2. Authoring Guidelines & Single Source of Truth
 
-All prompt engineering standards, CSO frontmatter specifications, and cross-platform CLI operational guidance are centralized in:
+All authoring rules and principles are centralized in:
 
-- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Section 7 details the complete Antigravity (`agy`) vs Claude Code Operational Matrix.
-- [**`AGENTS.md`**](./AGENTS.md): Repository standards and directory layout specification.
+- [**`shared/constitution.md`**](./shared/constitution.md): EARS-format authoritative rules — the fence all plugin development must stay inside. Read this first.
+- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution with examples — 4-part agent structure, EARS placement, cognitive modes, schema-driven handoffs, model/effort tiers.
+- [**`AGENTS.md`**](./AGENTS.md): Repository standards, directory layout, and new-plugin checklist.
 
 ---
 

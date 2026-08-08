@@ -34,7 +34,7 @@ Surveys prior art, existing implementations, and technical risks before a spec i
 | `trace-recon` | Source Mapper | haiku / low | Maps available sources — internal code, docs, and external search terms — without reading them. No content analysis. |
 | `trace-reader` | Source Reader | sonnet / medium | Reads each source identified by recon and extracts relevant findings with confidence classification. |
 | `trace-synthesizer` | Synthesizer | sonnet / medium | Aggregates findings across all sources into a coherent `research-report@1`. Resolves contradictions and notes open questions. |
-| `trace-risk-assessor` | Risk Assessor | opus / high | Adversarially reviews the proposed approach for technical risks before the spec is written. |
+| `trace-risk-assessor` | Risk Assessor | sonnet / medium | Reviews the proposed approach for technical risks before the spec is written. Surfaces risks neutrally without recommending whether to proceed. |
 
 ---
 

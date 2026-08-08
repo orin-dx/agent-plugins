@@ -15,8 +15,8 @@ flowchart TD
     Always active — used by model router to match skill or subagent"]
 
     T2["**Tier 2 · Body**
-    SKILL.md or subagents/*.md · under 200 words
-    Loaded on trigger when a skill activates or subagent is dispatched"]
+    SKILL.md or agents/*.md · under 200 words
+    Loaded on trigger when a skill activates or agent is dispatched"]
 
     T3["**Tier 3 · References**
     shared/references/*.md · shared/schemas/*.json
@@ -26,7 +26,7 @@ flowchart TD
     T2 -->|on demand| T3
 ```
 
-Subagents pull reference files themselves using their file reading tool. The host never pre-loads them.
+Agents pull reference files themselves using their file reading tool. The host never pre-loads them.
 
 ---
 
@@ -36,12 +36,12 @@ Subagents pull reference files themselves using their file reading tool. The hos
 plugins/<id>/
 ├── plugin.json              ← Manifest: id, version, skills, agents list
 ├── README.md                ← Plugin documentation
+├── CHANGELOG.md             ← Version history
 ├── skills/<id>/SKILL.md     ← Skill prompt (what the user invokes)
-├── subagents/*.md           ← Individual subagent prompts
-└── shared -> ../../shared   ← Symlink for local reference access
+└── agents/*.md              ← Individual agent prompts
 ```
 
-`plugin.json` fields: `id`, `version` (semver), `skills` (list of skill IDs), `agents` (list of subagent names).
+`plugin.json` fields: `id`, `version` (semver), `description`, `skills` (path to skills dir), `agents` (list of agent file paths).
 
 ---
 
@@ -132,19 +132,26 @@ On `fail`, the orchestrator passes **only the blockers array** back to the produ
 
 ---
 
-## 7. Subagent Authoring Principles (Section 9)
+## 7. Agent Authoring Principles
 
-Full checklist: `shared/agent-best-practices.md` Section 9. Key constraints:
+Full guide: `shared/agent-best-practices.md`. Key constraints:
 
-| Constraint | Rule |
+**4-part agent structure** — every agent defines:
+
+| Part | Purpose |
 | :--- | :--- |
-| **Description** | 80–200 words, starts with "Delegate to this subagent when…" |
-| **Body** | Under 200 words — goal + output shape + non-obvious heuristics only |
-| **XML sections** | No `<context>` or `<role>` that restate what the description already says |
-| **Output shape** | Compact inline JSON example; if a named schema, reference the file |
-| **Tool language** | Abstract ("use your file reading tool") — never tool-specific API names |
-| **Reasoning** | Always in the output shape, always marked "not forwarded downstream" |
-| **Runtime refs** | Subagents pull `shared/references/` files; never reference `agent-best-practices.md` at runtime |
+| **Backstory** | 2–4 sentences of experiential perspective. What has this agent been burned by? What does it value? Guides judgment in the open interior. |
+| **Goal** | What the agent must produce and why. Intent, not steps. |
+| **Judgment** | How to know if the goal was genuinely achieved vs. output that looks like it was. Names the key failure mode. |
+| **Output** | Structured output shape, referencing a schema from `shared/schemas/` when the output flows to another agent. |
+
+**Cognitive mode dispatch** — agents are dispatched by the cognitive mode they require, not by taxonomy number. A plugin with distinct scanning, tracing, adversarial, systemic, behavioral testing, and repair phases should have a dedicated agent per mode.
+
+**Progressive context loading** — each agent declares a `<load_first>` block naming the specific `shared/references/` file for its phase. Never load all reference files into all agents.
+
+**EARS for edges only** — EARS notation (`WHEN`, `IF`, `WHILE`, `WHERE`) belongs in output contracts and never-do rules. Not in implementation steps or search strategies — those are the interior where agent judgment is the point.
+
+**Schema-driven handoffs** — where one agent's output is another's input, both reference the same schema file from `shared/schemas/`. The schema is the contract; the prompt describes the intent.
 
 ---
 

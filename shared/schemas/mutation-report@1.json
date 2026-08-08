@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mutation-report@1",
+  "description": "Output of lambda-mutator. Reports surviving mutants, precision tests designed to kill them, and the overall mutation verdict. Consumed by lambda-exit-gate; precision_tests forwarded to lambda-implementer on fail.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tool_used", "mutants_tested", "survived_mutants", "precision_tests", "verdict", "reasoning"],
+  "properties": {
+    "tool_used": {
+      "type": "string",
+      "enum": ["cargo-mutants", "stryker", "tool_unavailable"]
+    },
+    "mutants_tested": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "survived_mutants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "file", "line", "mutation_description", "why_it_survived"],
+        "properties": {
+          "id": { "type": "string" },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "mutation_description": { "type": "string" },
+          "why_it_survived": { "type": "string" }
+        }
+      }
+    },
+    "precision_tests": {
+      "type": "array",
+      "description": "One precision test per surviving mutant. Forwarded to lambda-implementer when verdict is fail.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["for_mutant_id", "test_name", "test_description", "assertion"],
+        "properties": {
+          "for_mutant_id": { "type": "string" },
+          "test_name": { "type": "string" },
+          "test_description": { "type": "string" },
+          "assertion": { "type": "string" }
+        }
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "fail", "tool_unavailable"]
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Private scratchpad. Not forwarded downstream."
+    }
+  }
+}

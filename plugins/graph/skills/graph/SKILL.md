@@ -15,17 +15,12 @@ Graph is the requirement capture layer. It converts raw need statements into str
 
 <sub_skills>
 
-### graph/capture
-Convert a free-text need statement into a requirement@1 draft. Delegates to `graph-intake`, which fills in statement, stakeholder, why, and done_when from context alone — without asking questions.
-
-### graph/prioritize
-Given a set of requirement@1 drafts, rank them by impact, urgency, and dependency order. Returns an ordered list with brief rationale for each position.
-
-### graph/connect
-Link a requirement to related requirements, specs, or implementation files already in the workspace. Surfaces dependencies, blockers, and duplicates before the requirement enters the backlog.
-
-### graph/audit
-Cross-reference all open requirements against existing specs, plans, and implementation files. Delegates to `graph-auditor` to identify gaps (requirements with no spec), coverage (requirements with matching implementation), and duplicates. Returns a structured audit report.
+| Sub-skill | Agent | Model | Effort | What it does |
+| :--- | :--- | :--- | :--- | :--- |
+| `graph/capture` | `graph-intake` | sonnet | medium | Converts a free-text need into a requirement@1 draft — no questions asked, all inferred fields noted. |
+| `graph/prioritize` | — | sonnet | medium | Ranks requirement@1 drafts by impact, urgency, and dependency order; returns an ordered list with rationale. |
+| `graph/connect` | — | sonnet | medium | Links a requirement to related requirements, specs, or implementation files; surfaces dependencies and duplicates. |
+| `graph/audit` | `graph-auditor` | sonnet | medium | Cross-references all open requirements against specs, plans, and implementation files; identifies gaps, coverage, and duplicates. |
 
 </sub_skills>
 
@@ -41,12 +36,6 @@ Key fields:
 - `done_when` — array of testable propositions, each confirmable true/false from the outside
 - `out_of_scope` — explicit boundaries that prevent scope creep
 </output_schema>
-
----
-
-<success_criteria>
-A requirement is complete when a downstream spec writer can read it and produce an accurate, unambiguous spec without asking any clarifying questions.
-</success_criteria>
 
 ---
 

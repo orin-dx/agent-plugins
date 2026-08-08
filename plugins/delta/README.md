@@ -25,7 +25,7 @@ Handles everything after implementation: commit messages, PR descriptions, chang
 | `delta/commit` | Reads staged diff, produces a conventional commit message explaining the *why* |
 | `delta/pr` | Produces a PR title and body a reviewer with zero prior context can understand |
 | `delta/changeset` | Extracts semantic change meaning, distinguishes user-facing from internal, determines semver impact |
-| `delta/review` | Categorizes incoming review comments as must-fix, suggestion, or question; produces a response plan |
+| `delta/review` | Assembles the pre-PR review package — changeset diff, linked spec, test results, and open questions — before opening a PR |
 | `delta/receive` | Alias for `delta/review` — use when framing work as receiving feedback rather than reviewing |
 | `delta/release` | Aggregates changesets since last release into grouped user-facing notes and determines the semver bump |
 
@@ -38,7 +38,7 @@ Handles everything after implementation: commit messages, PR descriptions, chang
 | `delta-commit-analyzer` | Commit Author | haiku / low | Reads staged diff and produces a conventional commit message explaining why, not what. |
 | `delta-changeset-analyzer` | Changeset Extractor | sonnet / medium | Produces a `changeset@1` from a git diff, mapping files changed and acceptance criteria met. |
 | `delta-pr-narrator` | PR Author | sonnet / medium | Writes a PR title and body from the reviewer's perspective — zero prior context assumed. |
-| `delta-review-preprocessor` | Review Triager | sonnet / medium | Categorizes PR review comments as must-fix, suggestion, or question; produces an action plan. |
+| `delta-review-preprocessor` | Review Package Assembler | haiku / low | Before a PR is opened, bundles the changeset diff, linked spec, test results, and open questions into a structured review package for the reviewer. |
 | `delta-release-summarizer` | Release Author | sonnet / medium | Aggregates `changeset@1` entries into a `release-artifact@1` with user-facing summaries. |
 
 ---
@@ -50,8 +50,8 @@ Delta is a toolbox, not a pipeline. Pick the subagent that matches the task:
 | Task | Subagents to run |
 | :--- | :--- |
 | Making a commit | `delta-commit-analyzer` |
-| Opening a PR | `delta-changeset-analyzer` → `delta-pr-narrator` |
-| Responding to review | `delta-review-preprocessor` |
+| Opening a PR | `delta-review-preprocessor` → `delta-changeset-analyzer` → `delta-pr-narrator` |
+| Responding to review | `delta-changeset-analyzer` |
 | Cutting a release | `delta-release-summarizer` |
 
 ---

@@ -1,8 +1,8 @@
 ---
 name: code
 description: >-
-  Activate when the user says "implement this", "execute the plan", "write the code", "build this feature", "generate tests for X", "write tests for this spec", "refactor this without changing behavior", or "explain what this code does". Also activate when handed a plan@1 artifact and asked to execute it, or when a spec@1 exists but no plan. Every task starts TDD-first: write a failing test, confirm red, write minimal implementation, confirm green, commit. The axiom exit gate runs independently at the end to verify all spec criteria are met — it reads the codebase from scratch and assumes the implementation is incomplete. Works from plan@1 (preferred) or spec@1 directly when no plan exists.
-version: "1.0.0"
+  Activate when the user says "implement this", "execute the plan", "write the code", "build this feature", "generate tests for X", "write tests for this spec", "refactor this without changing behavior", or "explain what this code does". Also activate when handed a plan@1 artifact and asked to execute it, or when a spec@1 exists but no plan. Every task starts TDD-first: write a failing test, confirm red, write minimal implementation, confirm green, commit. After implementation, mutation testing verifies the test suite would catch real faults — surviving mutants are returned to the implementer as precision tests before the exit gate runs. The axiom exit gate runs independently at the end to verify all spec criteria are met — it reads the codebase from scratch and assumes the implementation is incomplete. Works from plan@1 (preferred) or spec@1 directly when no plan exists.
+version: "1.1.0"
 ---
 
 # Lambda — Implementation Skill
@@ -44,9 +44,21 @@ For every implementation task:
 
 ---
 
+<mutation_gate>
+
+After each implementation task commits, `lambda-mutator` runs mutation testing scoped to the files changed in that task. It detects language from the workspace root (Cargo.toml → `cargo-mutants`; package.json → Stryker) and analyzes every mutant the test suite failed to catch.
+
+For each surviving mutant, `lambda-mutator` designs a precision test that would kill it and returns those tests to `lambda-implementer` as additional failing tests. The implementer writes them and makes them green before any further tasks proceed.
+
+When the mutation tool is unavailable, `lambda-mutator` reports `tool_unavailable` and `lambda-exit-gate` records the gap rather than blocking.
+
+</mutation_gate>
+
+---
+
 <exit_gate>
 
-After all tasks are complete, `lambda-exit-gate` runs the axiom protocol against the spec independently. It does not inherit context from the implementer. It reads the current code state from scratch, assumes the implementation is incomplete, and returns a `verdict@1`.
+After all tasks are complete and `lambda-mutator` has run, `lambda-exit-gate` runs the axiom protocol against the spec independently. It does not inherit context from the implementer. It reads the current code state from scratch, assumes the implementation is incomplete, and confirms that mutation testing ran (or was noted as unavailable). It returns a `verdict@1`.
 
 </exit_gate>
 
@@ -54,11 +66,12 @@ After all tasks are complete, `lambda-exit-gate` runs the axiom protocol against
 
 <subagent_dispatch_matrix>
 
-| Agent | Role | When to delegate |
-| :--- | :--- | :--- |
-| **`lambda-recon`** | Workspace manifest & baseline | Before any code is written — detect language, test runner, confirm baseline passes. |
-| **`lambda-implementer`** | TDD execution | One task at a time from the plan@1 — full red/green/commit cycle. |
-| **`lambda-reviewer`** | Self-review | After each task commits — check scope, non-negotiables, sibling gaps, test quality. |
-| **`lambda-exit-gate`** | Adversarial exit verification | After all tasks complete — independent axiom check against the spec. |
+| Agent | Role | Tier | When to delegate |
+| :--- | :--- | :--- | :--- |
+| **`lambda-recon`** | Workspace manifest & baseline | haiku / low | Before any code is written — detect language, test runner, inventory plan files, confirm baseline passes. |
+| **`lambda-implementer`** | TDD execution | sonnet / medium | One task at a time from the plan@1 — full red/green/commit cycle. Re-invoked when lambda-mutator returns precision tests. |
+| **`lambda-mutator`** | Mutation testing gate | sonnet / medium | After each implementer commit — verify the test suite would catch real faults; return precision tests for any survivors. |
+| **`lambda-reviewer`** | Pre-gate review | sonnet / medium | After mutation gate passes — neutral review of scope, non-negotiables, sibling gaps, test quality. |
+| **`lambda-exit-gate`** | Adversarial exit verification | opus / high | After all tasks and mutation gate complete — independent axiom check against spec; produces verdict@1. |
 
 </subagent_dispatch_matrix>

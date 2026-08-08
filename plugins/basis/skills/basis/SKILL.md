@@ -1,26 +1,26 @@
 ---
 name: meta
 description: >-
-  Trigger this skill when the user asks to build a new plugin, create a plugin for a specific domain, scaffold a plugin directory, audit an existing plugin for conformance, check plugin conformance against ecosystem schemas, design a schema for inter-agent communication, add a new schema to shared/schemas/, write a subagent for a given task, or create a skill for a new capability. Activate when the user wants to understand the correct plugin directory layout, plugin.json format, SKILL.md CSO trigger writing conventions, the 5-section Superpowers subagent framework, shared schema design rules, or the symlink setup for shared/. Also use when replacing or migrating agent-plugin-builder work. basis knows the full ecosystem conventions end-to-end and its output is a ready-to-install plugin directory.
+  Trigger this skill when the user asks to build a new plugin, create a plugin for a specific domain, scaffold a plugin directory, audit an existing plugin for conformance, check plugin conformance against ecosystem schemas, design a schema for inter-agent communication, add a new schema to shared/schemas/, write an agent for a given task, or create a skill for a new capability. Activate when the user wants to understand the correct plugin directory layout, plugin.json format, SKILL.md description writing conventions, the 4-part agent structure (backstory, goal, judgment, output), shared schema design rules, or the symlink setup for shared/. Also use when replacing or migrating agent-plugin-builder work. basis knows the full ecosystem conventions end-to-end and its output is a ready-to-install plugin directory.
 version: "1.0.0"
 ---
 
 # basis — Meta-Plugin for Building Plugins
 
 <overview>
-basis accelerates plugin ecosystem growth by making the right way to build a plugin the easy way. It scaffolds compliant plugin directories, audits existing plugins for conformance, and designs inter-agent schema contracts following the Section 9 authoring principles.
+basis accelerates plugin ecosystem growth by making the right way to build a plugin the easy way. It scaffolds compliant plugin directories, audits existing plugins for conformance, and designs inter-agent schema contracts following the authoring principles in shared/constitution.md and shared/agent-best-practices.md.
 </overview>
 
 ---
 
 <sub_skills>
 
-## Sub-skills
-
-- **`basis/scaffold`**: Given a plugin ID and description, generate a complete plugin directory — `plugin.json`, `skills/<id>/SKILL.md`, starter subagent files, and the `shared` symlink. Output is ready to install.
-- **`basis/audit`**: Given an existing plugin directory, check it against all ecosystem conformance rules and return a structured pass/fail/warn report per check.
-- **`basis/schema`**: Given a description of a new inter-agent artifact, design a JSON Schema (draft 2020-12) following ecosystem conventions and check it against existing schemas for conflicts.
-- **`basis/subagent`**: Given a task description and model/effort tier, generate a single conformant subagent `.md` file using the 5-section Superpowers framework.
+| Sub-skill | Agent | Model | Effort | What it does |
+| :--- | :--- | :--- | :--- | :--- |
+| `basis/scaffold` | `basis-scaffolder` | sonnet | medium | Generates a complete plugin directory — `plugin.json`, `skills/<id>/SKILL.md`, starter subagent files using the 4-part structure, and the `shared` symlink. Output is ready to install. |
+| `basis/audit` | `basis-auditor` | sonnet | medium | Audits an existing plugin directory against all ecosystem conformance rules; returns a structured pass/fail/warn report per check. |
+| `basis/schema` | `basis-schema-designer` | sonnet | medium | Designs a new JSON Schema (draft 2020-12) for an inter-agent artifact; checks for conflicts with existing schemas in shared/schemas/. |
+| `basis/subagent` | — | sonnet | medium | Generates a single conformant subagent `.md` file using the 4-part structure for a given task description and model/effort tier. |
 
 </sub_skills>
 

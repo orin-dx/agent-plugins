@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "field-survival-map@1",
+  "description": "Output of proof-boundary-tracer. Maps each field of a T7/T10 candidate struct or type to whether it reaches an execution boundary. Consumed by proof-adversary.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["candidate_id", "struct_or_type", "fields", "reasoning"],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "description": "The candidate@1 id this map was derived from."
+    },
+    "struct_or_type": {
+      "type": "string",
+      "description": "Name of the Rust struct or TypeScript interface/type whose fields were traced."
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "reaches_boundary", "boundary_type", "evidence", "last_observed_site"],
+        "properties": {
+          "name": { "type": "string" },
+          "reaches_boundary": {
+            "oneOf": [
+              { "type": "boolean" },
+              { "type": "string", "enum": ["uncertain"] }
+            ]
+          },
+          "boundary_type": {
+            "type": "string",
+            "enum": ["network", "subprocess", "storage", "render", "none", "unknown"]
+          },
+          "evidence": {
+            "type": "string",
+            "description": "Exact function calls, parameter names, or argument positions observed."
+          },
+          "last_observed_site": {
+            "type": "string",
+            "description": "file:line where the field trace ends or reaches boundary."
+          }
+        }
+      }
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Private scratchpad. Not forwarded downstream."
+    }
+  }
+}

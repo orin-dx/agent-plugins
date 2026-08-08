@@ -10,6 +10,7 @@
   "skills": "./skills/",
   "agents": [
     "./agents/proof-adversary.md",
+    "./agents/proof-boundary-tracer.md",
     "./agents/proof-exit-gate.md",
     "./agents/proof-recon.md",
     "./agents/proof-scanner.md"

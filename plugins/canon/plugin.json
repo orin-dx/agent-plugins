@@ -9,6 +9,7 @@
   },
   "skills": "./skills/",
   "agents": [
+    "./agents/canon-architect.md",
     "./agents/canon-auditor.md",
     "./agents/canon-drafter.md",
     "./agents/canon-exit-gate.md",

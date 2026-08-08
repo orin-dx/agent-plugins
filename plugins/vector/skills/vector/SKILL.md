@@ -31,6 +31,18 @@ Decompose a large or ambiguous task into smaller, dependency-ordered sub-tasks b
 
 ---
 
+<subagent_dispatch_matrix>
+
+| Agent | Role | Model / Effort | Delegate When |
+| :--- | :--- | :--- | :--- |
+| **vector-planner** | Plan author | sonnet / medium | Decompose a spec@1 into ordered, self-contained implementation tasks. |
+| **vector-estimator** | Effort estimator | sonnet / medium | Assign time estimates, identify parallelizable tasks, and surface blocking dependencies. |
+| **vector-challenger** | Adversarial reviewer | opus / high | Stress-test a draft plan@1 before any implementation begins. |
+
+</subagent_dispatch_matrix>
+
+---
+
 <artifact_contracts>
 
 **Consumes**: `spec@1`

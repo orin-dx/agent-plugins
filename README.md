@@ -41,7 +41,7 @@ flowchart LR
 | [`lambda`](./plugins/lambda/) | Code | Implements tasks via TDD, gates on exit | `changeset@1` |
 | [`axiom`](./plugins/axiom/) | Gate | Cross-artifact verification gate (reusable) | `verdict@1` |
 | [`delta`](./plugins/delta/) | Ship | Commits, PRs, changelogs, and release notes | `release-artifact@1` |
-| [`proof`](./plugins/proof/) | Audit | Adversarial bug hunting on live code | `finding-report@1` |
+| [`proof`](./plugins/proof/) | Audit | Fast cross-language bug scan before any release | `finding-report@1` |
 | [`basis`](./plugins/basis/) | Meta | Scaffolds and audits new plugins | — |
 
 ---
@@ -58,24 +58,32 @@ All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use J
 | `plan@1` | vector | lambda |
 | `changeset@1` | lambda | delta, axiom |
 | `verdict@1` | axiom | any gate consumer |
-| `finding-report@1` | proof | delta, humans |
+| `finding-report@1` | proof | delta, humans, canon-architect |
+| `field-survival-map@1` | proof-boundary-tracer | proof-adversary |
+| `mutation-report@1` | lambda-mutator | lambda-exit-gate, lambda-implementer |
 | `release-artifact@1` | delta | humans |
 
 ---
 
 ## Shared References
 
-Runtime-pullable guides in `shared/references/`. Subagents pull these themselves during task execution — they are not loaded into context at startup.
+Runtime-pullable guides in `shared/references/`. Agents pull these themselves during task execution — they are not loaded into context at startup. Language reference files are split by concern so each agent loads only its phase slice.
 
-| File | Purpose |
-| :--- | :--- |
-| `rust.md` | Rust hazard taxonomies, NAPI boundary rules, non-negotiables |
-| `typescript.md` | TS hazard taxonomies, unhandled promise patterns |
-| `conventional-commits.md` | Type/scope conventions and scope table |
-| `github.md` | PR template, `gh` CLI commands, labels |
-| `changesets.md` | Changeset vs commit distinction, semver decision guide |
-| `mcp-protocol.md` | MCP server lifecycle, tool definition format, A2A AgentCard |
-| `modern-cli-tools.md` | ripgrep, fd, bat, jq, delta, fzf usage patterns |
+| File | Purpose | Loaded by |
+| :--- | :--- | :--- |
+| `rust-hazards.md` | Rust hazard taxonomies T1–T10, grep patterns, before/after examples | scanner, adversary, boundary-tracer |
+| `rust-smells.md` | Rust architectural smells and resolving trait designs | architect |
+| `rust-tooling.md` | Rust test commands, NAPI rules, non-negotiables | mutator, remediator |
+| `rust.md` | Thin index → routes to the three files above | — |
+| `typescript-hazards.md` | TS hazard taxonomies T1–T10, grep patterns, before/after examples | scanner, adversary, boundary-tracer |
+| `typescript-smells.md` | TS architectural smells and interface/type designs | architect |
+| `typescript-tooling.md` | TS test commands (Stryker, Vitest), non-negotiables | mutator, remediator |
+| `typescript.md` | Thin index → routes to the three files above | — |
+| `conventional-commits.md` | Type/scope conventions and scope table | delta |
+| `github.md` | PR template, `gh` CLI commands, labels | delta |
+| `changesets.md` | Changeset vs commit distinction, semver decision guide | delta |
+| `mcp-protocol.md` | MCP server lifecycle, tool definition format, A2A AgentCard | — |
+| `modern-cli-tools.md` | ripgrep, fd, bat, jq, delta, fzf usage patterns | — |
 
 ---
 
@@ -123,6 +131,8 @@ agy-plugin add vector@orin-dx
 agy-plugin add lambda@orin-dx
 agy-plugin add axiom@orin-dx
 agy-plugin add delta@orin-dx
+agy-plugin add proof@orin-dx
+agy-plugin add basis@orin-dx
 ```
 
 ---
@@ -131,21 +141,13 @@ agy-plugin add delta@orin-dx
 
 ```
 agent-plugins/
-├── marketplace.json              ← Plugin registry (v2.0.0)
+├── marketplace.json              ← Plugin registry
 ├── ARCHITECTURE.md               ← System architecture
 ├── CONTRIBUTING.md               ← Plugin authoring guide
 ├── shared/
 │   ├── schemas/                  ← Versioned inter-agent JSON schemas
-│   │   ├── requirement@1.json
-│   │   ├── research-report@1.json
-│   │   ├── spec@1.json
-│   │   ├── plan@1.json
-│   │   ├── changeset@1.json
-│   │   ├── verdict@1.json
-│   │   ├── finding-report@1.json
-│   │   └── release-artifact@1.json
-│   ├── references/               ← Runtime-pullable domain guides
-│   └── agent-best-practices.md  ← Authoring-time principles (Section 9)
+│   ├── references/               ← Runtime-pullable domain guides (split by concern)
+│   └── agent-best-practices.md  ← Authoring-time principles
 └── plugins/
     ├── graph/                    ← Requirement capture
     ├── trace/                    ← Research synthesis
@@ -154,7 +156,7 @@ agent-plugins/
     ├── lambda/                   ← TDD implementation
     ├── axiom/                    ← Verification gate
     ├── delta/                    ← Ship tooling
-    ├── proof/                    ← Adversarial bug hunting
+    ├── proof/                    ← Fast cross-language bug scan
     └── basis/                    ← Plugin scaffolding
 ```
 

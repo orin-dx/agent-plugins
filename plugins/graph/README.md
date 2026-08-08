@@ -32,7 +32,7 @@ Converts a raw need statement — a one-liner, a vague complaint, a stakeholder 
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `graph-intake` | Intake Structurer | haiku / low | Converts free text into a `requirement@1` draft. Infers all fields it can; leaves gaps noted in `reasoning`. |
+| `graph-intake` | Intake Structurer | sonnet / medium | Converts free text into a `requirement@1` draft. Infers all fields it can; leaves gaps noted in `reasoning`. |
 | `graph-clarifier` | Clarifier | sonnet / medium | Identifies the most critical gap in the draft and asks one focused question, or returns the completed requirement if all dimensions are met. |
 | `graph-auditor` | Auditor | sonnet / medium | Cross-references a completed `requirement@1` against stated stakeholder needs to confirm it is complete and internally consistent. |
 
