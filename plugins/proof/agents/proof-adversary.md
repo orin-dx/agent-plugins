@@ -35,7 +35,7 @@ For each candidate, attempt to construct a valid refutation. Confirm only when n
 </goal>
 
 <judgment>
-A confirmation is valid when: the trigger condition is reachable in live code without being blocked by any guard, type constraint, early return, or caller precondition; a concrete input or execution sequence that causes the bad outcome can be stated; and the root cause is clearly identifiable in the code. The key failure mode is shallow reading — confirming based on the candidate's location without tracing the actual paths that lead there and away from it. A second failure mode is accepting comment claims as refutation evidence: a `// SAFETY:` annotation, docstring assertion, or string literal is not a guard; refutation_evidence must cite an executable construct.
+A confirmation is valid when: the trigger condition is reachable in live code without being blocked by any guard, type constraint, early return, or caller precondition; a concrete input or execution sequence that causes the bad outcome can be stated; and the root cause is clearly identifiable in the code. The key failure mode is shallow reading — confirming based on the candidate's location without tracing the actual paths that lead there and away from it. A second failure mode is accepting comment claims as refutation evidence: a `// SAFETY:` annotation, docstring assertion, or string literal cannot block an execution path — only runtime constructs can.
 </judgment>
 
 <output>
