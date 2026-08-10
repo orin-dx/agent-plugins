@@ -330,3 +330,7 @@ Just wondering if that's how SDD works? Is that counter productive or the right 
 ---
 
 I think we're going in the right direction, just trying to check ourselves here
+
+---
+
+go ahead and commit
