@@ -58,7 +58,7 @@ When the mutation tool is unavailable, `lambda-mutator` reports `tool_unavailabl
 
 <exit_gate>
 
-After all tasks are complete and `lambda-mutator` has run, `lambda-exit-gate` runs the axiom protocol against the spec independently. It does not inherit context from the implementer. It reads the current code state from scratch, assumes the implementation is incomplete, and confirms that mutation testing ran (or was noted as unavailable). It returns a `verdict@1`.
+After all tasks are complete and `lambda-mutator` has run, `lambda-exit-gate` runs the axiom protocol against the spec independently. It reads the spec from `spec_file_path` on disk — not from spec content forwarded through conversation context. It reads the current code state from scratch, assumes the implementation is incomplete, and confirms that mutation testing ran (or was noted as unavailable). It returns a `verdict@1`. A spec without `spec_file_path` set is a hard block.
 
 </exit_gate>
 
@@ -85,10 +85,12 @@ Lambda executes tasks sequentially. Each `lambda-implementer` invocation handles
 **Caller MUST pass per-invocation:**
 - The current task object only (not the full `plan@1`).
 - The workspace manifest from `lambda-recon` (file list + baseline status).
+- `spec_file_path` from the plan@1 (propagated there by vector-planner from the spec@1) — pass it to lambda-recon so it flows through the workspace manifest to all downstream agents.
 - Any `precision_tests` from `lambda-mutator` for the current task.
 
 **Caller MUST NOT pass:**
 - The full `plan@1` on every invocation — a 40-task plan passed 40 times consumes 320K–600K tokens on plan context alone.
+- The full `spec@1` content on every invocation — pass `spec_file_path` instead; agents read from disk. Context is lossy under compression; the file is not.
 - Prior task results — the commit SHA is sufficient to verify what happened.
 
 **Progress tracking:** The caller tracks completed task IDs and their commit SHAs externally (in a progress note or equivalent). On re-entry after interruption, pass the remaining tasks, not the full list.

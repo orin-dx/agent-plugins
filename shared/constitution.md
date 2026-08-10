@@ -83,6 +83,16 @@ IF axiom-exit-gate emits a blockers array in a fail verdict, the producing agent
 
 ---
 
+## Spec Persistence
+
+WHEN canon-exit-gate issues a pass verdict, the canon skill orchestrator SHALL write the spec to `<workspace_root>/.claude/specs/<id>.json`, set `spec_file_path` to the workspace-relative path in the spec@1, and pass the updated spec to vector-planner.
+
+WHEN any agent consumes a spec@1 to make implementation or verification decisions, it SHALL read from `spec_file_path` when set — forwarding spec content through conversation context is not a substitute. Context is compressed across long sessions; the file is not.
+
+WHEN spec_file_path is absent, agents SHALL proceed with in-context spec content and record a spec_file_unset coverage gap — graceful degradation, not a hard block.
+
+---
+
 ## Schema-Driven Handoffs
 
 WHERE an agent produces structured output consumed by another agent, it SHALL reference a schema from `shared/schemas/`.

@@ -5,17 +5,18 @@ model: haiku
 effort: low
 description: >-
   Delegate to this subagent at the very start of a lambda protocol execution,
-  before any implementation code is written. Input is a plan@1 and a workspace
-  root path. The agent detects the primary language by inspecting root config
-  files (Cargo.toml → rust; package.json → typescript/js), locates the test
-  runner and build tool, runs the full test suite to confirm the baseline
-  passes, and inventories the files named in the plan. If baseline tests are
-  failing the agent stops immediately — implementers must not start on a broken
-  baseline. Output is a JSON workspace manifest: workspace_root, language,
-  test_runner, build_tool, baseline_tests_pass, live_modules, and
-  plan_entry_points (the specific files the plan intends to touch). This
-  manifest is the authoritative context for all downstream lambda agents. Do
-  not skip this step.
+  before any implementation code is written. Input is a plan@1, a workspace root path,
+  and optionally a spec_file_path. The agent detects the primary language by inspecting
+  root config files (Cargo.toml → rust; package.json → typescript/js), locates the test
+  runner and build tool, runs the full test suite to confirm the baseline passes, and
+  inventories the files named in the plan. If baseline tests are failing the agent stops
+  immediately — implementers must not start on a broken baseline. When spec_file_path is
+  provided, the agent verifies the file exists and includes spec_file_path in the
+  manifest; when absent or unreadable, it records a spec_file_warning in the manifest
+  rather than failing. Output is a JSON workspace manifest: workspace_root, language,
+  test_runner, build_tool, baseline_tests_pass, live_modules, plan_entry_points, and
+  spec_file_path (null with warning if not provided or file not found). This manifest is
+  the authoritative context for all downstream lambda agents. Do not skip this step.
 ---
 
 <backstory>
@@ -42,12 +43,18 @@ Return structured JSON:
   "baseline_tests_pass": true,
   "live_modules": ["string"],
   "plan_entry_points": ["string"],
+  "spec_file_path": "string | null",
+  "spec_file_warning": "string | null",
   "reasoning": "string"
 }
 ```
 
 `plan_entry_points` lists the files the plan names as implementation targets.
-`reasoning` is a private scratchpad explaining how each field was determined. It is not forwarded downstream.
+`spec_file_path` is the workspace-relative path to the spec@1 file. Set from the input if provided and the file exists; null otherwise.
+`spec_file_warning` is set when spec_file_path was absent from the input or the file did not exist at the given path. Null when spec_file_path is confirmed present.
+`reasoning` is a private scratchpad — not forwarded downstream.
 
 WHEN baseline_tests_pass is false, THE SYSTEM SHALL halt and return the test failure output instead of a manifest — no downstream agent may proceed.
+WHEN spec_file_path is provided in the input, THE SYSTEM SHALL verify the file exists using the file reading tool and set spec_file_warning if it does not.
+WHEN spec_file_path is absent from the input, THE SYSTEM SHALL set spec_file_path to null and set spec_file_warning to "spec_file_path not provided — downstream agents will use in-context spec, which may be incomplete under context compression".
 </output>

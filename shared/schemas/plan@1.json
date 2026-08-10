@@ -53,6 +53,11 @@
             "type": "array",
             "items": { "type": "string" },
             "description": "IDs of tasks that must complete before this one"
+          },
+          "covers_criteria": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "IDs of acceptance criteria from spec@1 that this task covers. vector-challenger checks that every criterion ID appears in at least one task."
           }
         }
       }
@@ -60,6 +65,10 @@
     "linked_spec": {
       "type": "string",
       "description": "ID of the spec@1 this plan implements"
+    },
+    "spec_file_path": {
+      "type": "string",
+      "description": "Workspace-relative path to the spec@1 file this plan implements (e.g. .claude/specs/SPEC-001.json). Propagated from spec@1.spec_file_path. Agents resolve it against workspace_root from the lambda-recon manifest."
     },
     "reasoning": {
       "type": "string",

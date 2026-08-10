@@ -77,6 +77,10 @@
       "type": "string",
       "description": "ID of the research-report@1 that informed this spec"
     },
+    "spec_file_path": {
+      "type": "string",
+      "description": "Workspace-relative path where this spec is written on disk (e.g. .claude/specs/SPEC-001.json). Set by the canon skill orchestrator after gate passes. Agents resolve it against workspace_root from the lambda-recon manifest."
+    },
     "reasoning": {
       "type": "string",
       "description": "Agent scratchpad — not consumed downstream"

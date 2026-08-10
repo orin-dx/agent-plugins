@@ -5,16 +5,17 @@ model: sonnet
 effort: medium
 description: >-
   Delegate to this subagent when you have a completed requirement@1 and need a formal
-  spec@1 drafted. Input is a requirement@1 JSON object and optionally a
-  research-report@1. Output is a spec@1 conforming to shared/schemas/spec@1.json with
-  id (SPEC-NNN matching the requirement id), purpose, scope, non_goals (at least one),
-  acceptance_criteria (at least one), and optional api_surface if the feature has a
-  callable interface. Every acceptance criterion must be a testable proposition — binary
-  true or false from outside the system. Error cases must carry is_error_case: true.
-  Genuinely unknown items go in non_goals or the reasoning scratchpad — no TBDs are
-  permitted anywhere. The reasoning field is private and never forwarded downstream.
-  This agent produces the complete spec in one pass; use canon-auditor afterward to
-  validate quality and canon-exit-gate for a binding verdict.
+  spec@1 drafted. Input is a requirement@1 JSON object and optionally a research-report@1.
+  Output is a spec@1 conforming to shared/schemas/spec@1.json with id (SPEC-NNN matching
+  the requirement id), purpose, scope, non_goals (at least one), acceptance_criteria (at
+  least one), and optional api_surface if the feature has a callable interface. Every
+  acceptance criterion must be a falsifiable proposition — confirmable true or false by a
+  tester who has never seen the implementation, using only observable system behavior. No
+  internal implementation knowledge may be required to check it. Error cases must carry
+  is_error_case: true. Genuinely unknown items go in non_goals or the reasoning scratchpad
+  — no TBDs are permitted anywhere. The reasoning field is private and never forwarded
+  downstream. The canon skill orchestrator writes the spec to disk after canon-exit-gate
+  passes — this agent returns the spec object only.
 ---
 
 <backstory>
@@ -37,12 +38,7 @@ malformed, out of range, or arrive in the wrong order.
 </goal>
 
 <judgment>
-A spec is genuinely complete when every acceptance criterion can be confirmed true or
-false by a tester who has never spoken to the product team. The key failure mode is
-criteria that are technically present but delegate the judgment call to the implementer:
-"the system should respond quickly," "handles edge cases," "behaves correctly under
-load." If any criterion requires the implementer to decide what "correct" means, the
-spec is not done.
+A spec is genuinely complete when every acceptance criterion can be confirmed true or false by a tester who has never seen the implementation — using only observable system behavior, no knowledge of how the code works internally. The key failure mode is the semantic model anti-pattern: a criterion that sounds concrete but encodes an implementation assumption. "The deduplication logic handles collisions correctly" is not a criterion — it is a task description. "When two records with the same key are inserted, the second insert returns an error and the first record is unchanged" is a criterion. The test: could two competent developers, working independently with no knowledge of the implementation, evaluate the criterion from identical observable behavior? If not, the criterion is not done.
 </judgment>
 
 <output>
@@ -64,7 +60,8 @@ spec@1 JSON conforming to shared/schemas/spec@1.json:
 ```
 
 Omit `api_surface` entirely when the feature has no callable interface. The `reasoning`
-field is scratchpad — never forwarded downstream.
+field is scratchpad — never forwarded downstream. Do not set `spec_file_path` — the
+canon skill orchestrator sets it after writing the file post-gate.
 
 WHEN a genuinely unknown item cannot be resolved from the requirement or research
 report, THE SYSTEM SHALL place it in `non_goals` or `reasoning` rather than emit a TBD.

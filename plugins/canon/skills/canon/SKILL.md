@@ -36,10 +36,10 @@ with purpose, scope, non_goals, api_surface (if applicable), and acceptance crit
 All criteria are testable propositions; error cases are covered with `is_error_case: true`.
 
 ### canon/verify
-Given a draft `spec@1` plus the originating `requirement@1` and optional
-`research-report@1`, check whether each acceptance criterion is grounded in the source
-artifacts. Classifies criteria as supported, unsupported, or overfitted. Collects
-evidence only — does not produce a pass/fail verdict.
+Given a draft `spec@1` plus the originating `requirement@1` and optional `research-report@1`, check whether each acceptance criterion is grounded in the source artifacts. Classifies criteria as supported, unsupported, or overfitted. Collects evidence only — does not produce a pass/fail verdict. Use this **before implementation** to confirm the spec is traceable to requirements.
+
+### canon/drift
+Given a spec@1 (via `spec_file_path`) and a workspace root, verify that the current code implements every acceptance criterion. Reads the spec from disk, reads the implementation from the workspace, and reports: `covered` (criterion is implemented and tested), `uncovered` (criterion has no matching implementation), and `drifted` (implementation exists but diverges from the criterion's contract). Use this **after implementation** to catch spec drift during maintenance — it is a diagnostic tool, not a blocking gate. lambda-exit-gate is the blocking gate; canon/drift is the ongoing health check.
 
 ### canon/audit
 Given a `spec@1`, adversarially review it for untestable criteria, ambiguous language,
@@ -47,9 +47,7 @@ missing error cases, scope overlap, and incomplete sections. Returns a structure
 list with specific rewritten suggested fixes.
 
 ### canon/gate
-Given a `spec@1`, produce a binding pass/fail verdict before the spec enters planning.
-Default disposition is fail. On fail, returns specific blockers the drafter can act on
-without asking a follow-up question.
+Given a `spec@1`, produce a binding pass/fail verdict before the spec enters planning. Default disposition is fail. On fail, returns specific blockers the drafter can act on without asking a follow-up question. On pass, the calling agent writes the spec to disk and sets `spec_file_path` — see the `<orchestration>` section.
 
 ### canon/architect
 Given a `finding-report@1` from proof, produce a `spec@1` for the structural change that
@@ -63,9 +61,9 @@ reintroduce. This sub-skill closes the proof-to-design loop.
 
 <artifact_contracts>
 
-**Consumes**: `requirement@1`, `research-report@1` (optional), `finding-report@1` (canon/architect only)
+**Consumes**: `requirement@1`, `research-report@1` (optional), `finding-report@1` (canon/architect only), `spec_file_path` + workspace root (canon/drift only)
 
-**Produces**: `spec@1`, `verdict@1` (canon/gate only)
+**Produces**: `spec@1` (written to `.claude/specs/<id>.json` by the skill orchestrator after gate pass; `spec_file_path` set to the workspace-relative path), `verdict@1` (canon/gate only)
 
 </artifact_contracts>
 
@@ -76,11 +74,19 @@ reintroduce. This sub-skill closes the proof-to-design loop.
 **Standard drafting pipeline:**
 ```
 requirement@1 [+ research-report@1]
-  → canon-drafter
-  → canon-verifier
-  → canon-auditor
-  → canon-exit-gate
+  → canon-drafter          (returns spec object — no disk write)
+  → canon-verifier         (grounding check against source artifacts)
+  → canon-auditor          (adversarial quality review)
+  → canon-exit-gate        (binding pass/fail verdict)
+  → [skill writes .claude/specs/<id>.json, sets spec_file_path]
   → spec@1
+```
+
+**On-demand drift pipeline (maintenance, any time after implementation):**
+```
+spec_file_path + workspace root
+  → canon-drift-checker
+  → drift report (covered / uncovered / drifted)
 ```
 
 **Architectural remediation pipeline (invoked after proof):**
@@ -100,6 +106,20 @@ output spec feeds back into vector for planning.
 
 ---
 
+<orchestration>
+
+After `canon-exit-gate` returns a pass verdict, the calling agent MUST perform this step before handing off to vector:
+
+1. Write the spec@1 JSON to `<workspace_root>/.claude/specs/<id>.json` using the file writing tool. Create the directory if it does not exist.
+2. Set `spec_file_path` to the workspace-relative path (e.g. `.claude/specs/SPEC-001.json`) in the spec@1 object.
+3. Pass the updated spec@1 — with `spec_file_path` set — to vector-planner.
+
+This step is not optional. Without `spec_file_path` set, downstream agents fall back to reading the spec from conversation context, which is lossy under compression and cannot be independently verified.
+
+</orchestration>
+
+---
+
 <framework_references>
 - [Agent Best Practices](../../../shared/agent-best-practices.md)
 - [Spec Schema](../../../shared/schemas/spec@1.json)
@@ -114,7 +134,8 @@ output spec feeds back into vector for planning.
 | Agent | Sub-skill | When to Delegate |
 | :--- | :--- | :--- |
 | **`canon-drafter`** | draft | Producing a new spec from a requirement or research report. |
-| **`canon-verifier`** | verify | Checking that each acceptance criterion is grounded in the source artifacts. |
+| **`canon-verifier`** | verify | Checking that each acceptance criterion is grounded in the source artifacts (pre-implementation only). |
+| **`canon-drift-checker`** | drift | On-demand post-implementation drift check: reads spec from disk, reads code, classifies criteria as covered / uncovered / drifted. |
 | **`canon-auditor`** | audit | Adversarial quality review for untestable language, ambiguity, and missing error cases. |
 | **`canon-exit-gate`** | gate | Binding pass/fail judgment before handing the spec to planning. |
 | **`canon-architect`** | architect | Designing the structural fix for a defect class surfaced by proof. |

@@ -14,7 +14,8 @@ description: >-
   appears with no basis in the source artifacts), or overfitted (criterion is narrower
   than the source supports, excluding valid cases). The agent collects evidence only and
   does not produce a pass/fail verdict. Output is a structured evidence report with
-  supported, unsupported, and overfitted arrays plus a reasoning scratchpad.
+  supported, unsupported, and overfitted arrays plus a reasoning scratchpad. For
+  post-implementation drift checking, use canon-drift-checker instead.
 ---
 
 <backstory>

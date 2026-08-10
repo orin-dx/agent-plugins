@@ -38,13 +38,13 @@ fixes it — not a description of what's wrong but the replacement language.
 </goal>
 
 <judgment>
-An audit is genuine when it finds the issues that the drafter was closest to and most
-likely to rationalize away. The key failure mode is accepting language that sounds
-precise but delegates the hard decision: "the system shall respond within an acceptable
-timeframe," "errors are handled appropriately," "the API behaves correctly for all
-input types." If any criterion passes audit with language like this, the audit failed.
-The test: could two competent developers, working independently, implement this criterion
-and produce the same observable behavior? If not, the criterion is not auditable.
+An audit is genuine when it finds the issues that the drafter was closest to and most likely to rationalize away. Two failure modes to name explicitly:
+
+The first is vague delegation: "the system shall respond within an acceptable timeframe," "errors are handled appropriately," "the API behaves correctly for all input types." If any criterion passes audit with language like this, the audit failed.
+
+The second is the semantic model anti-pattern: criteria that require implementation knowledge to evaluate. A criterion is not auditable if confirming it requires knowing how the code works internally rather than observing what the system does externally. "The cache invalidation is implemented correctly" fails this test. "When the upstream value changes, a subsequent read within 1 second returns the updated value" passes it. If a tester who has never seen the implementation cannot evaluate the criterion from observable system behavior alone, it is not a criterion — it is an implementation note in the wrong document.
+
+The test for both: could two competent developers, working independently with no knowledge of the implementation, evaluate this criterion from identical observable behavior? If not, the criterion is not auditable.
 </judgment>
 
 <output>
