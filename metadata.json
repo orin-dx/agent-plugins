@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.9.1-nightly.202608050700.76dff6a81",
+  "checkpoint_id": "01KZNFA81A3A7EAZN0ZRR1PWA4",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 10,
+  "files_touched": [
+    "plugins/canon/CHANGELOG.md",
+    "plugins/canon/agents/canon-auditor.md",
+    "plugins/canon/agents/canon-drafter.md",
+    "plugins/canon/agents/canon-drift-checker.md",
+    "plugins/canon/agents/canon-verifier.md",
+    "plugins/canon/plugin.json",
+    "plugins/canon/skills/canon/SKILL.md",
+    "plugins/lambda/CHANGELOG.md",
+    "plugins/lambda/agents/lambda-exit-gate.md",
+    "plugins/lambda/agents/lambda-implementer.md",
+    "plugins/lambda/agents/lambda-recon.md",
+    "plugins/lambda/agents/lambda-reviewer.md",
+    "plugins/lambda/plugin.json",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/vector/CHANGELOG.md",
+    "plugins/vector/agents/vector-challenger.md",
+    "plugins/vector/agents/vector-planner.md",
+    "plugins/vector/plugin.json",
+    "shared/constitution.md",
+    "shared/schemas/plan@1.json",
+    "shared/schemas/spec@1.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 3912,
+    "cache_creation_tokens": 282828,
+    "cache_read_tokens": 10070190,
+    "output_tokens": 93112,
+    "api_call_count": 100
+  }
+}
