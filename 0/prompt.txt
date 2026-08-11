@@ -1,0 +1,348 @@
+We need to further improve our plugins, skills and agents to be better about not relying solely on the context window for the spec. Here is some context that is specific to callisto and rust but should be generalized to other languages, specially TS/JS.
+
+The pipeline as a spec-verification system
+
+The agents aren't just a fancier way to write code. They separate concerns that I've been conflating:
+
+graph-intake → graph-clarifier     # WHAT we're building (requirement@1)
+canon-drafter → canon-auditor      # IS IT UNAMBIGUOUS (spec@1 with testable criteria)
+canon-exit-gate                    # ADVERSARIAL GATE before a line of code exists
+vector-planner → vector-challenger # HOW to build it (plan@1 in dependency order)
+lambda-recon → lambda-implementer  # BUILD with red-green per task
+lambda-reviewer                    # REVIEW each commit before the next task starts
+lambda-exit-gate                   # ADVERSARIAL re-read from scratch at the end
+canon-verifier                     # DRIFT CHECK spec vs. code after the fact
+
+The critical property: every agent after canon-exit-gate reads from scratch. It doesn't inherit my context. If I implemented something wrong, the exit gate finds it not because it trusts me but because it independently re-reads the spec and the code and checks each criterion.
+
+---
+What this means for a semantic model specifically
+
+A semantic model is a perfect fit for canon because:
+
+- The concepts (PackageId, VersionPlan, etc.) map directly to spec@1 documents
+- The invariants become acceptance_criteria — testable propositions
+- canon-auditor would have caught our drift early: "this criterion is vague — 'bare names match across ecosystems by design' — what exactly does that mean? Under what conditions? What's the counterexample?"
+
+The spec@1 for PackageId would look like:
+
+acceptance_criteria:
+  - id: PKG-1: Bare("foo").matches(Prefixed(Cargo, "foo")) → true
+  - id: PKG-2: Prefixed(Cargo, "foo").matches(Prefixed(Npm, "foo")) → false
+  - id: PKG-3: [[package]] rule application is specificity-ordered (prefixed > bare)
+  - id: PKG-4: A bare rule matching packages in multiple ecosystems emits a diagnostic
+
+Each of those is independently verifiable. lambda-reviewer after each commit would check: does this commit address PKG-3? Does it break PKG-1?
+
+---
+The concrete workflow change going forward
+
+Before writing any more production code, we run each remaining track through the canon→vector→lambda pipeline:
+
+1. I draft a spec@1 for each remaining track (Part B, Track E, config validation) — concrete acceptance criteria, not prose
+2. canon:canon-auditor reviews it adversarially — catches vague criteria before any implementation
+3. vector:vector-planner produces the task list with exact red tests and verification commands
+4. vector:vector-challenger checks for missing tasks and wrong ordering
+5. lambda-implementer does one task at a time — can't skip the red phase
+6. lambda-exit-gate re-reads from scratch before we declare done
+
+For the semantic model document specifically: it should be written as a collection of spec@1 files, not a prose design doc. That makes it machine-verifiable, not just human-readable, and canon-verifier can check drift against the code at any time.
+
+---
+The honest assessment of what was missing
+
+We had TDD discipline in name but not in structure. Writing red tests is only half of it — the other half is having a pre-agreed, externalized spec that the tests are proving, and an adversarial agent verifying the correspondence after the fact. Without the canon→lambda gate chain, I was the only spec-holder, and context compression broke that.
+
+The question is: do you want to start this pipeline now on the remaining tracks (Part B GREEN, Track E, config validation), or do you want to first write the semantic model spec as a set of spec@1 files and use that as the foundation? The latter is slower upfront but would mean every future track has a formal contract to verify against.
+
+❯ I like how you through through the semantic model and that Option 3 is the proper solution. That's what I was going towards as I read that too.
+
+Good. That settles the design: specificity ordering + diagnostic, no changes to matches() itself.
+
+Given the process discussion, the right next step is to run both remaining implementation tracks through canon before writing a line of code:
+
+- Part B (idempotent apply) — RED tests are already written, which means we have a natural spec: the three test invariants define the exact contract. We should formalize that as a spec@1 so lambda-exit-gate has something to verify against, not just "the tests pass."
+- Track E (specificity + diagnostic) — Option 3 gives us four clean acceptance criteria (two for specificity ordering, two for the diagnostic). That's a tight spec ready to be canonicalized.
+
+Both are bounded enough that a single canon-drafter → canon-auditor → vector-planner pass should produce a plan we can hand directly to lambda-implementer.
+
+Which do you want to start with — Part B (completing work already in progress) or Track E (the newly decided design)? Or should we draft both specs in parallel and then sequence the implementation?
+
+❯ What prompt can I give with full details to the plugins/skills/agent agent to execute on improvemtns to our plugins as quickly and correctly as possible? Be details, be specific about the semantic model idea, how to fully enact SDD and TDD without relying on the lossy context window as we have been. Help me help you
+
+Here is a complete, copy-pasteable prompt. Give this to an agent (via the Agent tool or a new session) and it will execute the full pipeline without needing context from our conversation.
+
+---
+# Callisto: Implement Track B and Track E via SDD+TDD Agent Pipeline
+
+## Project
+
+Rust monorepo at `/Users/gabe/Projects/callisto`.
+Verification command: `just ci` (must exit 0 at the end).
+Non-negotiables that override everything:
+- NEVER create a git commit without explicit user instruction
+- NEVER invoke `callisto publish` against any real registry
+- TDD iron law: watch the test FAIL before writing implementation
+- All implementation is sequential within each track
+
+---
+
+## Your Mandate
+
+Execute two implementation tracks using the strict canon → vector → lambda
+pipeline. You may NOT write production code outside this pipeline. Every
+acceptance criterion must be in a spec@1 before any implementation begins.
+
+### Pipeline (follow in order, for each track):
+
+1. `lambda:lambda-recon` — confirm baseline tests pass before anything else
+2. `canon:canon-drafter` — produce spec@1 from the acceptance criteria below
+3. `canon:canon-auditor` — must pass (no vague criteria) before continuing
+4. `canon:canon-exit-gate` — must pass before continuing
+5. `vector:vector-planner` — produce plan@1 with exact red tests and verification commands
+6. `vector:vector-challenger` — must pass before continuing
+7. `lambda:lambda-implementer` — one task at a time, red phase MANDATORY
+8. `lambda:lambda-reviewer` — review each commit before the next task
+9. `lambda:lambda-exit-gate` — adversarial re-read from scratch before declaring done
+
+Write spec@1 files to `.claude/specs/` (e.g., `track-b-idempotent-apply.json`,
+`track-e-specificity.json`). These become permanent source-of-truth artifacts.
+
+---
+
+## Track B: Idempotent `apply_version_plan`
+
+### Context
+
+File: `crates/callisto-graph/src/apply.rs`
+
+The version-writing loop (read the file to find it) currently calls
+`handle.write_version(&bump.to, permit)?` unconditionally. This is wrong.
+Three RED tests already exist in the test module at the bottom of apply.rs —
+do NOT write new tests for these, your job is to make the existing RED tests
+go GREEN.
+
+The existing RED test names are:
+- `apply_is_idempotent_when_manifest_already_at_target_version`
+- `apply_returns_error_when_manifest_has_unexpected_version`
+- `apply_stages_changeset_path_even_when_file_already_deleted`
+
+Confirm they are currently failing before writing implementation.
+
+Infrastructure already exists — read these files to understand what's available:
+- `crates/callisto-graph/src/error.rs` — `GraphError::UnexpectedManifestVersion`
+  variant is already defined with `path`, `expected_from`, `expected_to`, `found`
+- `crates/callisto-manifests/src/cargo.rs` — `WorkspaceCargoResolver::workspace_version()`
+  method already exists
+
+### Required logic
+
+Replace the unconditional write with:
+read current manifest version via the appropriate resolver
+match current version:
+  == bump.from  → call write_version, stage the manifest path
+  == bump.to    → skip write_version (already applied), still stage the manifest path
+  anything else → return Err(GraphError::UnexpectedManifestVersion {
+                      path, expected_from: bump.from, expected_to: bump.to, found: current
+                  })
+
+Also fix: changeset paths must be added to `modified_paths` regardless of
+whether the changeset file exists on disk. Find the conditional that checks
+`full.exists()` before pushing the changeset path and remove that gate.
+
+### Acceptance criteria (encode ALL of these into spec@1)
+
+- B-1: When manifest version equals bump.from, write_version is called and
+  the manifest path is included in outcome.staged
+- B-2: When manifest version equals bump.to (already applied), write_version
+  is NOT called, and the manifest path IS still included in outcome.staged
+- B-3: When manifest version is neither from nor to, returns
+  Err(GraphError::UnexpectedManifestVersion) with the correct path,
+  expected_from, expected_to, and found values populated
+- B-4: The changeset path is always included in outcome.staged regardless of
+  whether the changeset file exists on disk at apply time
+- B-5: The three existing RED tests all pass after implementation
+
+---
+
+## Track E: PackageId Specificity Ordering + Cross-Ecosystem Diagnostic
+
+### Design decision (already made — implement exactly this, no deviation)
+
+Do NOT change `PackageId::matches()`. The bare-matches-all-ecosystems
+behavior is correct for napi-rs polyglot packages. The two fixes are:
+
+**Fix 1 — Specificity ordering in rule application**
+
+File: `crates/callisto-graph/src/walk.rs`
+
+Find the `[[package]]` rule lookup (a `.find()` call over `cfg.packages`).
+Replace first-match-wins with specificity-ordered matching:
+
+A prefixed PackageId rule (pattern like `cargo:foo` or `npm:foo`) beats a
+bare PackageId rule (pattern like `foo`) when both match the same package,
+regardless of which rule appears first in callisto.toml.
+
+Algorithm:
+1. Collect ALL matching `[[package]]` rules for this package
+2. If any are prefixed matches, use the first prefixed match (declaration order)
+3. If none are prefixed matches, use the first bare match (declaration order)
+4. If no matches, result is None
+
+Read `crates/callisto-model/src/identity.rs` to understand the PackageId
+type. You may need to add `is_prefixed()` / `is_bare()` methods if they do
+not exist. Keep any additions minimal.
+
+`cfg.packages` is typed as `Vec<(PackageId, PackageConfig)>` — read
+`crates/callisto-graph/src/config/resolve.rs` to confirm.
+
+**Fix 2 — Cross-ecosystem diagnostic**
+
+In `ManifestWalkResolver::build` in `walk.rs`, after the packages loop
+completes (before the edges loop):
+
+For each bare-pattern entry in `cfg.packages`, collect the set of distinct
+ecosystems among all packages it matched. If the set contains more than one
+ecosystem, push to `diagnostics` (already exists in scope):
+
+Message format:
+"[[package]] rule `{pattern}` matches packages in multiple ecosystems
+({ecosystem_list}); use an ecosystem-prefixed pattern like `cargo:{name}` if
+you intend only one ecosystem"
+
+`[[package-set]]` rules (in `cfg.package_sets`) are EXEMPT from this
+diagnostic — multi-ecosystem matching is their explicit, intentional purpose.
+
+To implement this: during the packages loop, track a
+`BTreeMap<PackageId_pattern_string, BTreeSet<Ecosystem>>` of which ecosystems
+each bare rule matched. After the loop, check that map to emit diagnostics.
+
+The `diagnostics` vec is already declared at the top of `build()` and is
+returned in the final `ManifestWalkResolver { ... }` struct.
+
+### Acceptance criteria (encode ALL of these into spec@1)
+
+- E-1: When `callisto.toml` contains `[[package]] match = "foo"` followed by
+  `[[package]] match = "cargo:foo"`, the package `cargo:foo` uses the
+  `cargo:foo` rule's config (not the `foo` rule's config)
+- E-2: When `callisto.toml` contains `[[package]] match = "cargo:foo"`
+  followed by `[[package]] match = "foo"`, the package `cargo:foo` still uses
+  the `cargo:foo` rule's config (specificity beats declaration order)
+- E-3: When only bare rules exist, first-match-wins (declaration order)
+  is preserved unchanged
+- E-4: When only prefixed rules exist, first-match-wins (declaration order)
+  is preserved unchanged
+- E-5: A bare `[[package]]` rule that matches packages in exactly one
+  ecosystem emits no diagnostic
+- E-6: A bare `[[package]]` rule that matches packages in two or more
+  ecosystems emits exactly one diagnostic, naming the pattern and the
+  matched ecosystems
+- E-7: `[[package-set]]` rules never emit the cross-ecosystem diagnostic
+- E-8: `PackageId::matches()` behavior is unchanged end-to-end (do not
+  modify the method itself)
+
+---
+
+## Semantic Model Principle
+
+When writing spec@1 acceptance criteria, each criterion must be a falsifiable
+proposition verifiable from outside the implementation — no internal
+implementation knowledge required to check it.
+
+Wrong: "Specificity ordering is implemented correctly"
+Right: "When rule A is prefixed and rule B is bare and both match package X,
+        the config from rule A is applied to X"
+
+The spec@1 files you produce are permanent artifacts. `canon:canon-verifier`
+can re-run against them at any time to detect spec drift.
+
+---
+
+## Files to Read Before Writing Any Spec
+
+- `crates/callisto-graph/src/apply.rs` (full file — study the test module)
+- `crates/callisto-graph/src/walk.rs` (full file)
+- `crates/callisto-model/src/identity.rs` (PackageId and matches())
+- `crates/callisto-graph/src/error.rs` (GraphError variants)
+- `crates/callisto-manifests/src/cargo.rs` (workspace_version method)
+- `crates/callisto-graph/src/config/resolve.rs` (ResolvedConfig struct)
+- `crates/callisto-graph/src/config/raw.rs` (raw config types)
+
+---
+
+## Sequencing
+
+Run Track B and Track E through steps 2-4 (canon pipeline) in parallel —
+they are specced independently and touch disjoint files. Sequence all
+implementation (steps 5-9) within each track sequentially. Do not interleave
+Track B and Track E implementation tasks.
+
+After both tracks reach lambda-exit-gate GREEN:
+- Run `just ci` and confirm exit 0
+- Report: for each spec criterion, which test covers it
+- Report: any criteria that have no test coverage (this is a blocker)
+
+---
+A few notes on what makes this prompt work differently than how we've been operating:
+
+The spec goes in before the code. canon-auditor will reject vague criteria before the implementer ever opens a file. Criterion E-1 above forced me to write a concrete before/after scenario — "specificity ordering is correct" would have failed the audit.
+
+The RED tests for B are named explicitly. The implementer knows to find them, confirm they fail, then make them pass — not to write new tests. The exit gate verifies against the spec, not against "tests pass."
+
+The diagnostic feeds back into the spec itself. The agent has to track which packages each bare rule matched during the walk — that tracking mechanic isn't an implementation detail, it's derivable from the acceptance criteria E-5 and E-6. The canon pipeline ensures the implementer understood the contract before starting.
+
+---
+
+Sorry, I interrupted you
+
+---
+
+Pickup where you left off
+
+---
+
+Can we do an adversarial round of the changes we made considering out best practices, industry best practices and possible improvements to the plugins? Show me what you think before taking any action at all
+
+---
+
+Talk to tradeoffs with me where you  have concerns
+
+---
+
+1, your recommendation works, 2, let's go with the separate agent, graceful degradation seems best but enforcing the entry point, right?
+
+---
+
+Any other gaps, concerns or issues we should call out before we publish a new version?
+
+---
+
+Let's fix absolutely everything please
+
+---
+
+AGAIN, don't unaturally wrap our MD files FFS
+
+---
+
+Just wondering if that's how SDD works? Is that counter productive or the right thing to do?
+
+---
+
+I think we're going in the right direction, just trying to check ourselves here
+
+---
+
+go ahead and commit
+
+---
+
+/Users/gabe/Desktop/Personal\ —\ Spec-Driven\ Development\ 2026\ —\ Comparison\ of\ 15\ SDD\ Frameworks,\ Artifacts,\ and\ Decision\ Paths\ \|\ by\ Jaroslaw\ Wasowski\ \|\ Medium.pdf
+
+---
+
+What do you think of the article? How does it inform our decisions?
+
+---
+
+Yes, let’s do that
