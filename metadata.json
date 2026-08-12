@@ -1,0 +1,59 @@
+{
+  "cli_version": "0.9.1-nightly.202608050700.76dff6a81",
+  "checkpoint_id": "01KZTRBHK8T6TT4YAGD5K7QBFB",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 12,
+  "files_touched": [
+    ".gitignore",
+    "ARCHITECTURE.md",
+    "CHANGELOG.md",
+    "README.md",
+    "marketplace.json",
+    "plugins/axiom/README.md",
+    "plugins/canon/CHANGELOG.md",
+    "plugins/canon/README.md",
+    "plugins/canon/agents/canon-drafter.md",
+    "plugins/canon/agents/canon-drift-checker.md",
+    "plugins/canon/plugin.json",
+    "plugins/canon/skills/canon/SKILL.md",
+    "plugins/delta/CHANGELOG.md",
+    "plugins/delta/README.md",
+    "plugins/delta/agents/delta-changeset-analyzer.md",
+    "plugins/delta/plugin.json",
+    "plugins/delta/skills/delta/SKILL.md",
+    "plugins/lambda/CHANGELOG.md",
+    "plugins/lambda/README.md",
+    "plugins/lambda/agents/lambda-exit-gate.md",
+    "plugins/lambda/agents/lambda-implementer.md",
+    "plugins/lambda/agents/lambda-recon.md",
+    "plugins/lambda/agents/lambda-reviewer.md",
+    "plugins/lambda/plugin.json",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/vector/CHANGELOG.md",
+    "plugins/vector/README.md",
+    "plugins/vector/agents/vector-planner.md",
+    "plugins/vector/plugin.json",
+    "plugins/vector/skills/vector/SKILL.md",
+    "shared/constitution.md",
+    "shared/schemas/changeset@1.json",
+    "shared/schemas/plan@1.json",
+    "shared/schemas/spec@1.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 9323,
+    "cache_creation_tokens": 2047825,
+    "cache_read_tokens": 67626995,
+    "output_tokens": 297032,
+    "api_call_count": 343
+  }
+}
