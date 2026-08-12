@@ -55,20 +55,24 @@ flowchart LR
     tr -->|"research-report@1"| ca["**canon**\nspec"]
     ca -->|"spec@1"| ve["**vector**\nplan"]
     ve -->|"plan@1"| la["**lambda**\ncode"]
-    la -->|"changeset@1"| ax["**axiom**\ngate"]
-    ax -->|"verdict@1"| de["**delta**\nship"]
+    la -->|"changeset@1"| de["**delta**\nship"]
     de -. iterate .-> gr
+
+    ax(["**axiom**\ngate"])
+    ca -.->|"spec@1"| ax
+    la -.->|"changeset@1"| ax
+    ax -.->|"verdict@1"| de
 
     pr(["**proof**\naudit"]) -.->|"finding-report@1"| de
     pr -.->|"finding-report@1"| ca
     ba(["**basis**\nmeta"]) -. scaffold .-> gr
 ```
 
-**Composable:** any contiguous subset installs cleanly. Start at `canon` if requirements come from an external tracker. End at `axiom` if automated release notes aren't needed.
+**Composable:** any contiguous subset installs cleanly. Start at `canon` if requirements come from an external tracker. End at `lambda` if automated shipping tooling isn't needed. Layer `axiom` in at any stage for an independent verification pass.
 
 **Substitutable:** any stage can be replaced by a different implementation that honours the same schema contract. A Jira plugin replacing `graph` just needs to emit `requirement@1`.
 
-**Cross-cutting:** `axiom` also runs inside `canon` and `lambda` as an inline gate — not only at the end of the main pipeline.
+**Cross-cutting, not inline:** `axiom`'s `plugin.json` declares `consumes: []` — nothing invokes it automatically. `canon-exit-gate` and `lambda-exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline axiom formalizes; they do not call into axiom's own agents. Install axiom when you want that protocol available standalone against any artifact, including as a second opinion on top of canon's or lambda's own gate.
 
 ---
 

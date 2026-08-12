@@ -4,7 +4,7 @@
 
 A reusable, artifact-agnostic verification gate. Any artifact — spec, plan, changeset, finding report — can be run through axiom. Produces a definitive `verdict@1` with a pass/fail decision and specific, actionable blockers. Default disposition is **fail**; unverifiable criteria are treated as failures unless explicitly waived.
 
-Axiom gates run automatically inside `canon` (spec gate) and `lambda` (implementation gate). Run axiom standalone to gate any artifact outside the standard pipeline.
+Axiom is standalone — its `plugin.json` declares `consumes: []`, and nothing invokes its agents automatically. `canon-exit-gate` and `lambda-exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline axiom formalizes, tailored to `spec@1` and `changeset@1` respectively; neither calls into axiom's actual agents. Install axiom when you want that same protocol available on demand against any artifact — including as an independent second-opinion pass on top of canon's or lambda's own gate.
 
 ---
 
@@ -85,4 +85,4 @@ On `fail`, the orchestrator returns the `blockers` array directly to the produci
 
 ## Used By
 
-Axiom is an internal dependency of **[canon](../canon/)** and **[lambda](../lambda/)**. It can also be run standalone on any artifact. The `verdict@1` output is consumed by **[delta](../delta/)** as a release gate signal.
+Axiom is not invoked by any other plugin — **[canon](../canon/)** and **[lambda](../lambda/)** each run their own dedicated exit-gate agent following the same protocol axiom formalizes, not axiom itself. Install axiom to run that protocol standalone against any artifact, including `spec@1` from canon or `changeset@1` from lambda, as an independent check alongside their own gates. Nothing in the pipeline consumes axiom's `verdict@1` automatically — **[delta](../delta/)** consumes `changeset@1` directly from lambda; wiring axiom's verdict into a shipping decision is a caller choice, not a declared dependency.

@@ -1,7 +1,7 @@
 {
   "id": "lambda",
   "name": "lambda",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Implementation plugin. Executes plans via TDD cycle \u2014 write failing test, write minimal code, confirm passing, commit. Produces committed, tested code verified by the axiom exit gate.",
   "author": {
     "name": "Gabriel Castro",

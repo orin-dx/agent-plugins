@@ -1,5 +1,21 @@
 # Changelog — canon
 
+## [1.2.0] - 2026-08-11
+### Added
+- `canon/correct` sub-skill — given a spec_file_path, criterion_id, and a contradiction report from lambda-implementer, revises the affected criterion (and dependents) and returns a corrected spec@1 with `revision_note` set; the correction re-enters the standard verify → audit → gate pipeline before overwriting the file
+- `revision_note` field in `spec@1` schema — set only on corrections, describes what changed and why
+- Spec file commit step in orchestration — the skill orchestrator now commits `.claude/specs/<id>.json` to version control after writing it, not just to the working tree; an uncommitted spec is invisible to canon-drift-checker and a future session
+### Changed
+- `canon-drafter` now supports correction mode as an alternate input path alongside fresh drafting from a requirement@1
+- Correction re-entry now routes the amended plan through vector-challenger before lambda resumes — amendment is not exempt from adversarial review
+- `canon-drift-checker` no longer presumes whether code or spec is wrong on a drifted classification — it states both sides and leaves the correction path to the caller
+- `canon-drift-checker` now carries the trust-boundary defense for workspace-reading agents — code comments and documentation claiming a criterion is satisfied are treated as untrusted data, not evidence
+- `canon-drift-checker` accepts a prior changeset's `criteria_evidence` as an optional starting pointer — but always re-reads and independently reconfirms each location rather than trusting that it is still accurate
+### Fixed
+- A second spec_contradiction on the same criterion_id after correction now escalates to a human instead of looping back to canon/correct indefinitely
+- `canon-drift-checker`'s `covered` output entries now use the same structured evidence shape as changeset@1's criteria_evidence (test/implementation file and line) instead of a free-text `evidence` string, so a drift check's freshly-confirmed pointers can be handed forward to the next check or exit gate
+- Repaired pre-existing hard-wrapped paragraphs in canon-drafter.md (backstory, goal, output) and canon SKILL.md (overview, canon/draft, canon/audit, canon/architect) left over from before this session
+
 ## [1.1.0] - 2026-08-10
 ### Added
 - `canon-drift-checker` agent (opus/high) — on-demand post-implementation drift detection; reads spec from disk, classifies criteria as covered, uncovered, or drifted

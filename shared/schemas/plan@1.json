@@ -70,6 +70,14 @@
       "type": "string",
       "description": "Workspace-relative path to the spec@1 file this plan implements (e.g. .claude/specs/SPEC-001.json). Propagated from spec@1.spec_file_path. Agents resolve it against workspace_root from the lambda-recon manifest."
     },
+    "spec_hash": {
+      "type": "string",
+      "description": "Content hash (e.g. sha256:<hex>) of the spec@1 file at spec_file_path as it existed when this plan was created. Set by vector-planner. lambda-recon recomputes the current file's hash and compares it to this value to detect whether the spec changed after planning — a mismatch means the plan may not cover criteria added or changed since it was made."
+    },
+    "linked_requirement": {
+      "type": "string",
+      "description": "ID of the requirement@1 the source spec@1 implements. Propagated from spec@1.linked_requirement by vector-planner so the full requirement-to-code chain is traceable without re-reading the spec."
+    },
     "reasoning": {
       "type": "string",
       "description": "Agent scratchpad — not consumed downstream"

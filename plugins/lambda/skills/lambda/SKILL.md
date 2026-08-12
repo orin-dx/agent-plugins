@@ -2,7 +2,7 @@
 name: code
 description: >-
   Activate when the user says "implement this", "execute the plan", "write the code", "build this feature", "generate tests for X", "write tests for this spec", "refactor this without changing behavior", or "explain what this code does". Also activate when handed a plan@1 artifact and asked to execute it, or when a spec@1 exists but no plan. Every task starts TDD-first: write a failing test, confirm red, write minimal implementation, confirm green, commit. After implementation, mutation testing verifies the test suite would catch real faults — surviving mutants are returned to the implementer as precision tests before the exit gate runs. The axiom exit gate runs independently at the end to verify all spec criteria are met — it reads the codebase from scratch and assumes the implementation is incomplete. Works from plan@1 (preferred) or spec@1 directly when no plan exists.
-version: "1.1.0"
+version: "1.2.0"
 ---
 
 # Lambda — Implementation Skill
@@ -24,7 +24,7 @@ version: "1.1.0"
 
 **Consumes**: `plan@1` (preferred) or `spec@1` directly if no plan exists.
 
-**Produces**: `changeset@1`, committed code.
+**Produces**: committed code, and per-task `criteria_evidence` (exact test and implementation file/line for each criterion proven). No lambda agent assembles a `changeset@1` itself — that schema is produced by `delta-changeset-analyzer` when shipping. The caller aggregates each task's `criteria_evidence` across the run and hands the collection to `delta-changeset-analyzer` alongside the diff, so delta uses lambda's exact evidence instead of reconstructing approximate locations from the diff.
 
 </io>
 
@@ -60,6 +60,8 @@ When the mutation tool is unavailable, `lambda-mutator` reports `tool_unavailabl
 
 After all tasks are complete and `lambda-mutator` has run, `lambda-exit-gate` runs the axiom protocol against the spec independently. It reads the spec from `spec_file_path` on disk — not from spec content forwarded through conversation context. It reads the current code state from scratch, assumes the implementation is incomplete, and confirms that mutation testing ran (or was noted as unavailable). It returns a `verdict@1`. A spec without `spec_file_path` set is a hard block.
 
+The caller passes the aggregated per-task `criteria_evidence` to `lambda-exit-gate` alongside the manifest. The gate uses each entry as a pointer to check — reading exactly the named file and line — rather than searching the codebase cold for every criterion. This makes verification faster without making it less adversarial: the gate still reads the actual location itself and confirms the criterion holds; it does not accept the pointer's existence as proof.
+
 </exit_gate>
 
 ---
@@ -93,8 +95,10 @@ Lambda executes tasks sequentially. Each `lambda-implementer` invocation handles
 - The full `spec@1` content on every invocation — pass `spec_file_path` instead; agents read from disk. Context is lossy under compression; the file is not.
 - Prior task results — the commit SHA is sufficient to verify what happened.
 
-**Progress tracking:** The caller tracks completed task IDs and their commit SHAs externally (in a progress note or equivalent). On re-entry after interruption, pass the remaining tasks, not the full list.
+**Progress tracking:** The caller tracks completed task IDs, their commit SHAs, and their `criteria_evidence` entries externally (in a progress note or equivalent). On re-entry after interruption, pass the remaining tasks, not the full list. The accumulated `criteria_evidence` across all completed tasks is what gets passed to `lambda-exit-gate` and later to `delta-changeset-analyzer` — do not discard it once a task completes.
 
 **When `lambda-implementer` emits `needs_context`:** the caller resolves the missing information (file path, baseline commit) before re-invoking — do not retry with the same inputs.
+
+**When `lambda-implementer` emits `spec_contradiction`:** the caller halts remaining task execution — already-completed tasks are not rolled back, but no further task proceeds against a spec known to be wrong. Route the contradiction (spec_file_path, criterion_id, spec_claim, observed_behavior) to canon/correct. Once the corrected spec passes canon-exit-gate and is written back to the same spec_file_path, route the corrected spec@1 to vector-planner in amend mode, then through vector-challenger — an amended plan is not exempt from adversarial review, especially for newly added tasks — before resuming lambda from the remaining tasks. The caller tracks correction attempts per criterion_id: if the same criterion_id triggers spec_contradiction a second time after already being corrected, escalate to a human rather than routing to canon/correct again.
 
 </context_management>

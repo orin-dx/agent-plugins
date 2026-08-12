@@ -29,6 +29,22 @@
       "items": { "type": "string" },
       "description": "IDs from spec@1.acceptance_criteria that this changeset satisfies"
     },
+    "criteria_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion_id", "test_file", "implementation_file"],
+        "additionalProperties": false,
+        "properties": {
+          "criterion_id": { "type": "string" },
+          "test_file": { "type": "string" },
+          "test_line": { "type": "integer" },
+          "implementation_file": { "type": "string" },
+          "implementation_line": { "type": "integer" }
+        }
+      },
+      "description": "Per-criterion evidence trail: exactly where each acceptance_criteria_met ID is tested and implemented. When sourced from lambda-implementer's own TDD cycle, test_line and implementation_line are exact. When reconstructed from a diff with no lambda run behind it, file-level entries without line numbers are acceptable rather than fabricating precision that was never observed. A criterion may have more than one entry when it is proven in more than one place."
+    },
     "breaking_changes": {
       "type": "array",
       "items": { "type": "string" },
@@ -41,6 +57,10 @@
     },
     "linked_spec": { "type": "string" },
     "linked_plan": { "type": "string" },
+    "linked_requirement": {
+      "type": "string",
+      "description": "ID of the requirement@1 this change ultimately traces back to. Propagated from spec@1.linked_requirement via plan@1.linked_requirement when available."
+    },
     "reasoning": {
       "type": "string",
       "description": "Agent scratchpad — not consumed downstream"

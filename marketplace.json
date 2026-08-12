@@ -48,28 +48,28 @@
     {
       "id": "canon",
       "name": "canon",
-      "version": "1.0.1",
+      "version": "1.2.0",
       "path": "./plugins/canon",
       "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code. Skills: draft, review, verify, changeset."
     },
     {
       "id": "vector",
       "name": "vector",
-      "version": "1.0.1",
+      "version": "1.2.0",
       "path": "./plugins/vector",
       "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with TDD steps, exact code, and commit messages. No TBDs."
     },
     {
       "id": "lambda",
       "name": "lambda",
-      "version": "1.0.1",
+      "version": "1.2.0",
       "path": "./plugins/lambda",
       "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the axiom exit gate."
     },
     {
       "id": "delta",
       "name": "delta",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "path": "./plugins/delta",
       "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, review, receive, changeset, release."
     }

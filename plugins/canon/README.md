@@ -1,12 +1,8 @@
 # canon — Specification
 
-**Stage:** Spec · **Output:** `spec@1` · **Version:** 1.1.0
+**Stage:** Spec · **Output:** `spec@1` · **Version:** 1.2.0
 
-Drafts, audits, and gates unambiguous, testable specifications. Also designs structural
-remediation specs from proof's defect class findings. A spec that exits canon can be
-handed to a developer who has never spoken to the product team and implemented without
-clarifying questions. An adversarial exit gate enforces this guarantee — default
-disposition is fail.
+Drafts, audits, and gates unambiguous, testable specifications. Also designs structural remediation specs from proof's defect class findings, detects drift between a gated spec and the live codebase, and revises a gated spec when implementation reveals it was wrong. A spec that exits canon can be handed to a developer who has never spoken to the product team and implemented without clarifying questions. An adversarial exit gate enforces this guarantee — default disposition is fail. Once gated, the spec is written to disk and committed — downstream agents read it from its file, not from conversation context.
 
 ---
 
@@ -17,8 +13,10 @@ disposition is fail.
 - You want to audit a spec for vague criteria, missing error cases, or unverifiable claims
 - You need a binding pass/fail gate on a spec before it enters planning
 - proof has returned a `finding-report@1` and the defect class requires a structural fix, not a patch
+- You want to check whether the live codebase still matches a spec gated weeks or months ago
+- lambda-implementer reported that a criterion contradicts observed system behavior and the spec itself needs correcting
 
-**Invoke with:** `"Write a spec for this requirement"`, `"Draft a spec based on this research"`, `"Verify this spec against the requirement"`, `"Audit the spec for ambiguities"`, `"Gate this spec"`, `"Design the structural fix for this defect class"`
+**Invoke with:** `"Write a spec for this requirement"`, `"Draft a spec based on this research"`, `"Verify this spec against the requirement"`, `"Audit the spec for ambiguities"`, `"Gate this spec"`, `"Design the structural fix for this defect class"`, `"Check this spec for drift"`, `"Correct this spec — the criterion doesn't match reality"`
 
 ---
 
@@ -28,8 +26,10 @@ disposition is fail.
 | :--- | :--- |
 | `canon/draft` | Drafts a `spec@1` from a `requirement@1` and optional `research-report@1` — no TBDs permitted |
 | `canon/verify` | Checks that each acceptance criterion is grounded in the source requirement or research report |
+| `canon/drift` | Checks whether the live codebase still implements every criterion in a gated spec — covered, uncovered, or drifted |
 | `canon/audit` | Adversarially reviews a spec for vague criteria, missing error cases, and unverifiable claims |
 | `canon/gate` | Binding pass/fail verdict before the spec enters planning |
+| `canon/correct` | Revises a previously gated spec after lambda-implementer reports a criterion contradicts observed system behavior |
 | `canon/architect` | Produces a structural remediation `spec@1` from a `finding-report@1` — eliminates the defect class, not the instances |
 
 ---
@@ -38,8 +38,9 @@ disposition is fail.
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `canon-drafter` | Drafter | sonnet / medium | Produces a `spec@1` from a `requirement@1` and optional `research-report@1`. No TBDs permitted. |
-| `canon-verifier` | Draft Verifier | sonnet / medium | Checks that acceptance criteria are grounded in the source artifacts. Neutral — collects evidence only. |
+| `canon-drafter` | Drafter | sonnet / medium | Produces a `spec@1` from a `requirement@1` and optional `research-report@1`, or revises a gated spec in correction mode. No TBDs permitted. |
+| `canon-verifier` | Draft Verifier | sonnet / medium | Checks that acceptance criteria are grounded in the source artifacts (pre-implementation only). Neutral — collects evidence only. |
+| `canon-drift-checker` | Drift Detector | opus / high | On-demand, post-implementation: reads the spec from disk and the code from the workspace, classifies each criterion as covered, uncovered, or drifted. When a prior changeset's `criteria_evidence` is available, uses its pointers as a starting point but always independently re-verifies each one. |
 | `canon-auditor` | Auditor | sonnet / medium | Adversarially reviews the spec for vague criteria, missing error cases, ambiguous language, and incomplete sections. |
 | `canon-exit-gate` | Exit Gate | opus / high | Binding pass/fail verdict before the spec enters planning. Default disposition: fail. |
 | `canon-architect` | Architectural Remediator | opus / high | Takes a `finding-report@1` from proof and produces a `spec@1` for the structural fix that eliminates the defect class. |
@@ -55,7 +56,24 @@ requirement@1 [+ research-report@1]
   → canon-verifier
   → canon-auditor
   → canon-exit-gate
+  → [skill writes .claude/specs/<id>.json, commits it, sets spec_file_path]
   → spec@1
+```
+
+**On-demand drift pipeline (maintenance, any time after implementation):**
+```
+spec_file_path + workspace root
+  → canon-drift-checker
+  → drift report (covered / uncovered / drifted)
+```
+
+**Correction pipeline (triggered by a lambda-implementer spec_contradiction report):**
+```
+spec_file_path + criterion_id + contradiction report
+  → canon-drafter (correction mode)
+  → canon-verifier → canon-auditor → canon-exit-gate
+  → [skill overwrites the same file, sets revision_note, commits]
+  → corrected spec@1 → vector-planner (amend mode) → lambda resumes
 ```
 
 **Architectural remediation pipeline (invoked after proof):**
@@ -67,9 +85,7 @@ finding-report@1
   → vector → lambda
 ```
 
-`canon-verifier` checks draft specs against their source artifacts — it is not a
-codebase drift detector. `canon-architect` is not part of the standard drafting pipeline:
-it is invoked when proof returns a finding report and the root cause is structural.
+`canon-verifier` checks draft specs against their source artifacts pre-implementation — it does not detect drift after code exists; that is `canon-drift-checker`'s job. `canon-architect` is not part of the standard drafting pipeline: it is invoked when proof returns a finding report and the root cause is structural.
 
 ---
 
@@ -98,6 +114,8 @@ targeted retry. Maximum 3 retries before escalation to a human.
 | `scope` | yes | What is in scope for this spec |
 | `non_goals` | yes | Explicit list of what this spec does NOT cover |
 | `acceptance_criteria` | yes | Array of testable propositions; each has `is_error_case` flag |
+| `spec_file_path` | no | Workspace-relative path where this spec is written on disk. Set by the skill orchestrator after gate pass. |
+| `revision_note` | no | Set only on a correction — what changed and why, citing the affected criterion_id |
 | `reasoning` | yes | Scratchpad — never forwarded downstream |
 
 **`verdict@1`** — produced by `canon-exit-gate` only; see `shared/schemas/verdict@1.json`

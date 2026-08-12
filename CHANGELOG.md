@@ -3,6 +3,24 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [2026-08-12] — Spec Persistence, Correction Loop, and Traceability
+### Added
+- `spec_file_path` mechanism — the canon skill orchestrator writes the gated spec to `.claude/specs/<id>.json`, commits it, and every downstream agent reads it from disk instead of from lossy conversation context. `lambda-recon` warns (not fails) when the path is absent; graceful degradation throughout.
+- `covers_criteria` on `plan@1` tasks and an `orphaned-criteria` check in `vector-challenger` — every acceptance criterion must be claimed by at least one task before implementation begins.
+- `canon-drift-checker` (opus/high) — on-demand, post-implementation diagnostic that classifies each criterion as covered, uncovered, or drifted; a health check, not a blocking gate.
+- Spec correction loop — `lambda-implementer` reports `spec_contradiction` when a criterion contradicts observed system behavior rather than forcing a false pass; the caller routes this to a new `canon/correct` sub-skill, which revises the spec, re-gates it, and hands the correction to `vector-planner` in amend mode (patching only affected tasks, always re-reviewed by `vector-challenger`). A second contradiction on the same criterion escalates to a human.
+- `criteria_evidence` on `changeset@1` — exact test and implementation file/line per criterion, captured by `lambda-implementer` as a byproduct of the TDD cycle it already runs. `lambda-exit-gate` uses it as a pointer to check, never as proof by itself. `delta-changeset-analyzer` uses it directly when available, falling back to file-level (no fabricated line numbers) reconstruction from a diff otherwise.
+- `linked_requirement` propagated end-to-end: `spec@1` → `plan@1` → `changeset@1`, so the requirement-to-code chain is traceable without re-reading intermediate artifacts.
+- `spec_hash` on `plan@1` — a raw-file-byte content hash `lambda-recon` compares against the live spec file to detect drift between planning and implementation.
+- Trust-boundary defense (backstory priming, named failure mode, output EARS rule) extended to five workspace-reading agents that lacked it: `lambda-implementer`, `lambda-reviewer`, `lambda-exit-gate`, `lambda-recon`, `canon-drift-checker`.
+- `.gitignore` — was absent; `.DS_Store` had been accumulating as an untracked file.
+### Changed
+- `canon-drafter` runs in an alternate correction mode in addition to fresh drafting; still returns the spec object only, never writes to disk itself.
+### Fixed
+- `axiom/README.md` and `ARCHITECTURE.md` claimed axiom "runs inside canon and lambda as an inline gate." False — `axiom`'s `plugin.json` declares `consumes: []`, confirmed independently by `shared/scripts/validate-wiring.sh`. `canon-exit-gate` and `lambda-exit-gate` are separate agents that independently implement the same protocol axiom formalizes; neither invokes axiom's agents. Corrected the claim and redrew the pipeline diagrams in `README.md` and `ARCHITECTURE.md` so axiom shows as the standalone, optional gate it actually is.
+- `lambda`'s and `vector`'s `SKILL.md` frontmatter versions were stuck one and two releases behind their `plugin.json` — never caught until this pass. Synced, and vector's sub-skill descriptions (which never mentioned `covers_criteria`, `spec_file_path`, or `orphaned-criteria`) now reflect actual current behavior.
+- Root `README.md`'s pipeline diagram and lambda's own docs claimed lambda produces `changeset@1` directly — it doesn't; `delta-changeset-analyzer` does, from lambda's `criteria_evidence`. Corrected across `lambda/README.md` and `lambda/skills/lambda/SKILL.md`.
+
 ## [2026-08-08] — Research Implementation
 ### Added
 - `docs/research/2026-08-08-agent-improvement-research.md` — synthesized findings from 5-agent parallel research workflow covering few-shot examples, schema manifest declarations, long-context handling, and prompt injection resistance

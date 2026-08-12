@@ -2,7 +2,7 @@
 name: ship
 description: >-
   Trigger this skill when the user asks to commit code, write a commit message, open a PR, create a pull request, write the PR description, review a PR, address feedback, respond to review comments, add a changeset, cut a release, summarize what's in a release, or document a change. Activate when the user says "commit this", "write a commit message", "open a PR", "create a pull request", "write the PR description", "review this PR", "address the feedback", "add a changeset", "cut a release", "what's in this release", or "document this change". This skill reads the staged diff, linked spec, and linked requirement to produce meaningful, context-aware output — not mechanical templates. It coordinates five subagents that each handle one phase of the shipping lifecycle: commit authoring, PR narration, changeset extraction, review preprocessing, and release summarization.
-version: "1.0.0"
+version: "1.1.0"
 ---
 
 # Delta — Shipping Skill
@@ -24,7 +24,7 @@ Reads the staged git diff and produces a conventional commit message that explai
 Given a diff, a linked spec, and a linked requirement, produces a PR title and body a reviewer with zero context can understand. Delegates to `delta-pr-narrator`.
 
 ### `delta/changeset`
-Extracts the semantic meaning of a change for a changeset entry, distinguishes user-facing from internal changes, and determines semver impact. Delegates to `delta-changeset-analyzer`. Produces `changeset@1`.
+Extracts the semantic meaning of a change for a changeset entry, distinguishes user-facing from internal changes, and determines semver impact. When the change was implemented via lambda, pass along the criteria_evidence lambda-implementer collected during the TDD run — delta-changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff. Delegates to `delta-changeset-analyzer`. Produces `changeset@1`.
 
 ### `delta/review`
 Categorizes incoming review comments as must-fix, suggestion, or question. Produces a prioritized response plan. Delegates to `delta-review-preprocessor`.
@@ -64,8 +64,8 @@ At runtime, agents read the following shared reference files:
 
 <io>
 
-**Consumes**: `changeset@1`, staged git changes, PR diff, review comments
+**Consumes**: `changeset@1`, staged git changes, PR diff, review comments, optionally lambda's aggregated `criteria_evidence` from the run that produced the diff
 
-**Produces**: merged PR, `release-artifact@1`
+**Produces**: merged PR, `release-artifact@1`, `changeset@1` (via `delta-changeset-analyzer`)
 
 </io>

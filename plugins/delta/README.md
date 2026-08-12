@@ -1,6 +1,6 @@
 # delta — Ship Tooling
 
-**Stage:** Ship · **Output:** `release-artifact@1` · **Version:** 1.0.1
+**Stage:** Ship · **Output:** `release-artifact@1` · **Version:** 1.1.0
 
 Handles everything after implementation: commit messages, PR descriptions, changeset extraction, review triage, and release notes. Delta is not a linear pipeline — each subagent is invoked individually based on the task at hand. It reads the staged diff, linked spec, and linked requirement at runtime to produce meaningful, context-aware output, not mechanical templates.
 
@@ -36,7 +36,7 @@ Handles everything after implementation: commit messages, PR descriptions, chang
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
 | `delta-commit-analyzer` | Commit Author | haiku / low | Reads staged diff and produces a conventional commit message explaining why, not what. |
-| `delta-changeset-analyzer` | Changeset Extractor | sonnet / medium | Produces a `changeset@1` from a git diff, mapping files changed and acceptance criteria met. |
+| `delta-changeset-analyzer` | Changeset Extractor | sonnet / medium | Produces a `changeset@1` from a git diff, mapping files changed and acceptance criteria met. When lambda's per-criterion evidence (exact test and implementation file/line) is available from the run that produced the diff, uses it directly instead of reconstructing approximate locations. |
 | `delta-pr-narrator` | PR Author | sonnet / medium | Writes a PR title and body from the reviewer's perspective — zero prior context assumed. |
 | `delta-review-preprocessor` | Review Package Assembler | haiku / low | Before a PR is opened, bundles the changeset diff, linked spec, test results, and open questions into a structured review package for the reviewer. |
 | `delta-release-summarizer` | Release Author | sonnet / medium | Aggregates `changeset@1` entries into a `release-artifact@1` with user-facing summaries. |
@@ -87,4 +87,4 @@ Agents read these at runtime — they are not injected at startup:
 
 ## Previous Stage
 
-Consumes `changeset@1` from **[lambda](../lambda/)** or produced directly from a staged git diff.
+Consumes lambda's per-task `criteria_evidence` from **[lambda](../lambda/)** (aggregated across the implementation run) as the precise input to `delta/changeset`, or produces `changeset@1` directly from a staged git diff when no lambda run backs the change.

@@ -1,5 +1,16 @@
 # Changelog — vector
 
+## [1.2.0] - 2026-08-11
+### Added
+- `spec_hash` field in `plan@1` schema — content hash of the spec file at plan-creation time, set by vector-planner and compared by lambda-recon to detect spec changes after planning
+- `linked_requirement` field in `plan@1` schema — propagated from spec@1.linked_requirement by vector-planner so the requirement-to-code chain is traceable without re-reading the spec
+- Amend mode in `vector-planner` — given an existing plan@1, a corrected spec@1, and the criterion_ids that changed, patches only the tasks tied to affected criteria instead of re-decomposing the entire plan
+### Changed
+- `vector-planner` computes `spec_hash` over the raw spec file bytes, not a parsed or re-serialized form, matching lambda-recon's comparison exactly
+- An amended plan now passes through `vector-challenger` before lambda resumes — amendment is not exempt from adversarial review
+### Fixed
+- `vector` SKILL.md frontmatter version was stuck at 1.0.0 while `plugin.json` had already moved to 1.1.0 and then 1.2.0 across the prior two rounds — synced to 1.2.0, and its sub_skills and artifact_contracts sections (which never mentioned covers_criteria, spec_file_path, or orphaned-criteria) now reflect actual current behavior
+
 ## [1.1.0] - 2026-08-10
 ### Added
 - `covers_criteria` field per task in `plan@1` — every acceptance criterion ID from the spec must appear in at least one task; vector-planner sets it, vector-challenger enforces completeness
