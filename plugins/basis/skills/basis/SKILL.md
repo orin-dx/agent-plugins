@@ -2,7 +2,7 @@
 name: meta
 description: >-
   Trigger this skill when the user asks to build a new plugin, create a plugin for a specific domain, scaffold a plugin directory, audit an existing plugin for conformance, check plugin conformance against ecosystem schemas, design a schema for inter-agent communication, add a new schema to shared/schemas/, write an agent for a given task, or create a skill for a new capability. Activate when the user wants to understand the correct plugin directory layout, plugin.json format, SKILL.md description writing conventions, the 4-part agent structure (backstory, goal, judgment, output), shared schema design rules, or the symlink setup for shared/. Also use when replacing or migrating agent-plugin-builder work. basis knows the full ecosystem conventions end-to-end and its output is a ready-to-install plugin directory.
-version: "1.0.0"
+version: "1.1.0"
 ---
 
 # basis — Meta-Plugin for Building Plugins
@@ -17,9 +17,9 @@ basis accelerates plugin ecosystem growth by making the right way to build a plu
 
 | Sub-skill | Agent | Model | Effort | What it does |
 | :--- | :--- | :--- | :--- | :--- |
-| `basis/scaffold` | `basis-scaffolder` | sonnet | medium | Generates a complete plugin directory — `plugin.json`, `skills/<id>/SKILL.md`, starter subagent files using the 4-part structure, and the `shared` symlink. Output is ready to install. |
-| `basis/audit` | `basis-auditor` | sonnet | medium | Audits an existing plugin directory against all ecosystem conformance rules; returns a structured pass/fail/warn report per check. |
-| `basis/schema` | `basis-schema-designer` | sonnet | medium | Designs a new JSON Schema (draft 2020-12) for an inter-agent artifact; checks for conflicts with existing schemas in shared/schemas/. |
+| `basis/scaffold` | `scaffolder` | sonnet | medium | Generates a complete plugin directory — `plugin.json`, `skills/<id>/SKILL.md`, starter subagent files using the 4-part structure, and the `shared` symlink. Output is ready to install. |
+| `basis/audit` | `auditor` | sonnet | medium | Audits an existing plugin directory against all ecosystem conformance rules; returns a structured pass/fail/warn report per check. |
+| `basis/schema` | `schema-designer` | sonnet | medium | Designs a new JSON Schema (draft 2020-12) for an inter-agent artifact; checks for conflicts with existing schemas in shared/schemas/. |
 | `basis/subagent` | — | sonnet | medium | Generates a single conformant subagent `.md` file using the 4-part structure for a given task description and model/effort tier. |
 
 </sub_skills>

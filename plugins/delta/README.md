@@ -35,11 +35,11 @@ Handles everything after implementation: commit messages, PR descriptions, chang
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `delta-commit-analyzer` | Commit Author | haiku / low | Reads staged diff and produces a conventional commit message explaining why, not what. |
-| `delta-changeset-analyzer` | Changeset Extractor | sonnet / medium | Produces a `changeset@1` from a git diff, mapping files changed and acceptance criteria met. When lambda's per-criterion evidence (exact test and implementation file/line) is available from the run that produced the diff, uses it directly instead of reconstructing approximate locations. |
-| `delta-pr-narrator` | PR Author | sonnet / medium | Writes a PR title and body from the reviewer's perspective — zero prior context assumed. |
-| `delta-review-preprocessor` | Review Package Assembler | haiku / low | Before a PR is opened, bundles the changeset diff, linked spec, test results, and open questions into a structured review package for the reviewer. |
-| `delta-release-summarizer` | Release Author | sonnet / medium | Aggregates `changeset@1` entries into a `release-artifact@1` with user-facing summaries. |
+| `commit-analyzer` | Commit Author | haiku / low | Reads staged diff and produces a conventional commit message explaining why, not what. |
+| `changeset-analyzer` | Changeset Extractor | sonnet / medium | Produces a `changeset@1` from a git diff, mapping files changed and acceptance criteria met. When lambda's per-criterion evidence (exact test and implementation file/line) is available from the run that produced the diff, uses it directly instead of reconstructing approximate locations. |
+| `pr-narrator` | PR Author | sonnet / medium | Writes a PR title and body from the reviewer's perspective — zero prior context assumed. |
+| `review-preprocessor` | Review Package Assembler | haiku / low | Before a PR is opened, bundles the changeset diff, linked spec, test results, and open questions into a structured review package for the reviewer. |
+| `release-summarizer` | Release Author | sonnet / medium | Aggregates `changeset@1` entries into a `release-artifact@1` with user-facing summaries. |
 
 ---
 
@@ -49,10 +49,10 @@ Delta is a toolbox, not a pipeline. Pick the subagent that matches the task:
 
 | Task | Subagents to run |
 | :--- | :--- |
-| Making a commit | `delta-commit-analyzer` |
-| Opening a PR | `delta-review-preprocessor` → `delta-changeset-analyzer` → `delta-pr-narrator` |
-| Responding to review | `delta-changeset-analyzer` |
-| Cutting a release | `delta-release-summarizer` |
+| Making a commit | `commit-analyzer` |
+| Opening a PR | `review-preprocessor` → `changeset-analyzer` → `pr-narrator` |
+| Responding to review | `changeset-analyzer` |
+| Cutting a release | `release-summarizer` |
 
 ---
 

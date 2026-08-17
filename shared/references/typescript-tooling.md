@@ -4,36 +4,24 @@ _Loaded by: mutator, remediator. Contains test runner detection, test commands, 
 
 ---
 
-## Test Runner Detection
+## Workspace Test Discovery & Execution
+
+Before running tests, check `package.json` scripts and workspace task runners:
 
 ```bash
-# Identify what's available
-ls vitest.config.* jest.config.* bun.test.* 2>/dev/null
-cat package.json | jq '.scripts'
+# Check package scripts and task runner configs
+jq '.scripts' package.json 2>/dev/null
+ls vitest.config.* jest.config.* bun.test.* moonrepo.yml turbo.json 2>/dev/null
 ```
 
----
-
-## Test Commands
-
-```bash
-# Vitest
-npx vitest run
-npx vitest run --reporter=verbose
-
-# Jest
-npx jest
-npx jest --verbose
-
-# Bun
-bun test
-
-# Type-check only (no test execution)
-npx tsc --noEmit
-
-# Mutation testing (mutator agent)
-npx stryker run
-```
+1. **Package Script / Task Runner First**: Prefer running project-defined scripts (e.g. `pnpm test`, `npm test`, `bun test`, `moon run :test`) or targeted file runs supported by the project runner.
+2. **Framework Commands**: If invoking native test frameworks directly, target the specific test file:
+   - Vitest: `npx vitest run <file>`
+   - Jest: `npx jest <file>`
+   - Bun: `bun test <file>`
+   - Type check: `npx tsc --noEmit`
+   - Mutation testing: `npx stryker run`
+3. **Context Efficiency**: Scope test runs to the affected module or file during inner TDD cycles to keep context windows clean.
 
 ---
 

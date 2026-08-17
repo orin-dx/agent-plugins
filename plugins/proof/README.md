@@ -34,27 +34,27 @@ Works on Rust, TypeScript, and JavaScript codebases. Language is auto-detected f
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `proof-recon` | Workspace Recon | haiku / low | Traces imports from entry points to build a verified live/dead file manifest. All downstream agents operate only on live files. |
-| `proof-scanner` | Hazard Scanner | sonnet / medium | Loads language-specific hazard taxonomies, runs grep patterns against live files, emits every match as a candidate@1 entry. No filtering — exhaustiveness is the goal. |
-| `proof-boundary-tracer` | Data Flow Tracer | sonnet / medium | Conditional. Invoked for T7 and T10 candidates only. Traces each field of the flagged struct or type from construction site to execution boundary and produces a field survival map for the adversary. |
-| `proof-adversary` | Adversarial Verifier | opus / high | Invoked once per candidate. Tries hard to refute before confirming. Runs a one-time constitution sweep for Invisible Invariants. Confirms only when a concrete failing scenario can be stated. |
-| `proof-exit-gate` | Exit Verifier | opus / high | Re-reads all affected code from scratch after remediation. Checks resolved findings, scans for sibling gaps, verifies compile and tests. Escalates to human when retry_count exceeds 3. |
+| `recon` | Workspace Recon | haiku / low | Traces imports from entry points to build a verified live/dead file manifest. All downstream agents operate only on live files. |
+| `scanner` | Hazard Scanner | sonnet / medium | Loads language-specific hazard taxonomies, runs grep patterns against live files, emits every match as a candidate@1 entry. No filtering — exhaustiveness is the goal. |
+| `boundary-tracer` | Data Flow Tracer | sonnet / medium | Conditional. Invoked for T7 and T10 candidates only. Traces each field of the flagged struct or type from construction site to execution boundary and produces a field survival map for the adversary. |
+| `adversary` | Adversarial Verifier | opus / high | Invoked once per candidate. Tries hard to refute before confirming. Runs a one-time constitution sweep for Invisible Invariants. Confirms only when a concrete failing scenario can be stated. |
+| `exit-gate` | Exit Verifier | opus / high | Re-reads all affected code from scratch after remediation. Checks resolved findings, scans for sibling gaps, verifies compile and tests. Escalates to human when retry_count exceeds 3. |
 
 ---
 
 ## Pipeline
 
 ```
-workspace → proof-recon → proof-scanner → [proof-boundary-tracer?] → proof-adversary → proof-exit-gate → finding-report@1
+workspace → recon → scanner → [boundary-tracer?] → adversary → exit-gate → finding-report@1
 ```
 
-`proof-boundary-tracer` is conditional — invoked only when the scanner produces T7 (write-only fields / intent-capture discard) or T10 (error downgrade) candidates.
+`boundary-tracer` is conditional — invoked only when the scanner produces T7 (write-only fields / intent-capture discard) or T10 (error downgrade) candidates.
 
 ---
 
 ## Dead Code Exclusion
 
-`proof-recon` traces imports from all declared entry points to build a verified live file set. Any file not reachable from any entry point is classified as dead and excluded from all scanning and adversarial phases. This eliminates false positives from unused code paths — proof only reports bugs that can actually be triggered.
+`recon` traces imports from all declared entry points to build a verified live file set. Any file not reachable from any entry point is classified as dead and excluded from all scanning and adversarial phases. This eliminates false positives from unused code paths — proof only reports bugs that can actually be triggered.
 
 ---
 
@@ -92,8 +92,8 @@ Each confirmed finding requires:
 
 | File | Contents | Loaded by |
 | :--- | :--- | :--- |
-| `shared/references/rust-hazards.md` | Rust hazard taxonomies T1-T10, grep patterns, NAPI boundary rules | proof-scanner, proof-boundary-tracer, proof-adversary (Rust workspaces) |
-| `shared/references/typescript-hazards.md` | TypeScript hazard taxonomies T1-T10, grep patterns, unhandled promise patterns | proof-scanner, proof-boundary-tracer, proof-adversary (TS/JS workspaces) |
+| `shared/references/rust-hazards.md` | Rust hazard taxonomies T1-T10, grep patterns, NAPI boundary rules | scanner, boundary-tracer, adversary (Rust workspaces) |
+| `shared/references/typescript-hazards.md` | TypeScript hazard taxonomies T1-T10, grep patterns, unhandled promise patterns | scanner, boundary-tracer, adversary (TS/JS workspaces) |
 | `shared/schemas/candidate@1.json` | Scanner output shape | — |
 | `shared/schemas/finding-report@1.json` | Adversary and exit-gate output shape | — |
 | `shared/schemas/verdict@1.json` | Exit-gate verdict shape | — |

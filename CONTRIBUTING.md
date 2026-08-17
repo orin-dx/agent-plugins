@@ -10,7 +10,7 @@ The fastest way to scaffold a new plugin is with the `basis` plugin:
 "Create a plugin called <id> that does <goal>"
 ```
 
-`basis-scaffolder` generates the full directory structure, `plugin.json`, `SKILL.md`, and stub subagent files. Run `basis-auditor` afterward to verify conformance.
+`scaffolder` generates the full directory structure, `plugin.json`, `SKILL.md`, and stub subagent files. Run `auditor` afterward to verify conformance.
 
 To scaffold manually:
 

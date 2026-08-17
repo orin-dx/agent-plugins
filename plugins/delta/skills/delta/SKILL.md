@@ -2,7 +2,7 @@
 name: ship
 description: >-
   Trigger this skill when the user asks to commit code, write a commit message, open a PR, create a pull request, write the PR description, review a PR, address feedback, respond to review comments, add a changeset, cut a release, summarize what's in a release, or document a change. Activate when the user says "commit this", "write a commit message", "open a PR", "create a pull request", "write the PR description", "review this PR", "address the feedback", "add a changeset", "cut a release", "what's in this release", or "document this change". This skill reads the staged diff, linked spec, and linked requirement to produce meaningful, context-aware output — not mechanical templates. It coordinates five subagents that each handle one phase of the shipping lifecycle: commit authoring, PR narration, changeset extraction, review preprocessing, and release summarization.
-version: "1.1.0"
+version: "1.2.0"
 ---
 
 # Delta — Shipping Skill
@@ -18,22 +18,22 @@ Delta shepherds completed, verified code through the full shipping lifecycle. It
 ## Sub-skills
 
 ### `delta/commit`
-Reads the staged git diff and produces a conventional commit message that explains why the change was made. Delegates to `delta-commit-analyzer`.
+Reads the staged git diff and produces a conventional commit message that explains why the change was made. Delegates to `commit-analyzer`.
 
 ### `delta/pr`
-Given a diff, a linked spec, and a linked requirement, produces a PR title and body a reviewer with zero context can understand. Delegates to `delta-pr-narrator`.
+Given a diff, a linked spec, and a linked requirement, produces a PR title and body a reviewer with zero context can understand. Delegates to `pr-narrator`.
 
 ### `delta/changeset`
-Extracts the semantic meaning of a change for a changeset entry, distinguishes user-facing from internal changes, and determines semver impact. When the change was implemented via lambda, pass along the criteria_evidence lambda-implementer collected during the TDD run — delta-changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff. Delegates to `delta-changeset-analyzer`. Produces `changeset@1`.
+Extracts the semantic meaning of a change for a changeset entry, distinguishes user-facing from internal changes, and determines semver impact. When the change was implemented via lambda, pass along the criteria_evidence implementer collected during the TDD run — changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff. Delegates to `changeset-analyzer`. Produces `changeset@1`.
 
 ### `delta/review`
-Categorizes incoming review comments as must-fix, suggestion, or question. Produces a prioritized response plan. Delegates to `delta-review-preprocessor`.
+Categorizes incoming review comments as must-fix, suggestion, or question. Produces a prioritized response plan. Delegates to `review-preprocessor`.
 
 ### `delta/receive`
 Alias for `delta/review` — used when framing the work as receiving and processing feedback rather than reviewing.
 
 ### `delta/release`
-Aggregates changesets since the last release into grouped, user-facing release notes and determines the semver bump. Delegates to `delta-release-summarizer`. Produces `release-artifact@1`.
+Aggregates changesets since the last release into grouped, user-facing release notes and determines the semver bump. Delegates to `release-summarizer`. Produces `release-artifact@1`.
 
 </sub_skills>
 
@@ -43,11 +43,11 @@ Aggregates changesets since the last release into grouped, user-facing release n
 
 | Agent | Role | Model / Effort | Delegate When |
 | :--- | :--- | :--- | :--- |
-| **delta-commit-analyzer** | Commit author | haiku / low | Staged changes are ready and need a conventional commit message explaining why. |
-| **delta-changeset-analyzer** | Changeset extractor | sonnet / medium | A git diff needs a structured changeset@1 with semver impact and acceptance criteria mapping. |
-| **delta-pr-narrator** | PR description author | sonnet / medium | A PR needs a title and body a reviewer with zero context can act on. |
-| **delta-review-preprocessor** | Review package assembler | haiku / low | Before opening a PR, bundle diff, linked spec, test results, and open questions for the reviewer. |
-| **delta-release-summarizer** | Release notes author | sonnet / medium | Aggregate changeset@1 entries into a user-facing release-artifact@1. |
+| **commit-analyzer** | Commit author | haiku / low | Staged changes are ready and need a conventional commit message explaining why. |
+| **changeset-analyzer** | Changeset extractor | sonnet / medium | A git diff needs a structured changeset@1 with semver impact and acceptance criteria mapping. |
+| **pr-narrator** | PR description author | sonnet / medium | A PR needs a title and body a reviewer with zero context can act on. |
+| **review-preprocessor** | Review package assembler | haiku / low | Before opening a PR, bundle diff, linked spec, test results, and open questions for the reviewer. |
+| **release-summarizer** | Release notes author | sonnet / medium | Aggregate changeset@1 entries into a user-facing release-artifact@1. |
 
 </subagent_dispatch_matrix>
 
@@ -66,6 +66,6 @@ At runtime, agents read the following shared reference files:
 
 **Consumes**: `changeset@1`, staged git changes, PR diff, review comments, optionally lambda's aggregated `criteria_evidence` from the run that produced the diff
 
-**Produces**: merged PR, `release-artifact@1`, `changeset@1` (via `delta-changeset-analyzer`)
+**Produces**: merged PR, `release-artifact@1`, `changeset@1` (via `changeset-analyzer`)
 
 </io>

@@ -72,7 +72,7 @@ flowchart LR
 
 **Substitutable:** any stage can be replaced by a different implementation that honours the same schema contract. A Jira plugin replacing `graph` just needs to emit `requirement@1`.
 
-**Cross-cutting, not inline:** `axiom`'s `plugin.json` declares `consumes: []` — nothing invokes it automatically. `canon-exit-gate` and `lambda-exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline axiom formalizes; they do not call into axiom's own agents. Install axiom when you want that protocol available standalone against any artifact, including as a second opinion on top of canon's or lambda's own gate.
+**Cross-cutting, not inline:** `axiom`'s `plugin.json` declares `consumes: []` — nothing invokes it automatically. `exit-gate` and `exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline axiom formalizes; they do not call into axiom's own agents. Install axiom when you want that protocol available standalone against any artifact, including as a second opinion on top of canon's or lambda's own gate.
 
 ---
 
@@ -120,11 +120,11 @@ Use the lowest tier that produces correct output. Opus is reserved for decisions
 
 ```mermaid
 flowchart LR
-    Art[artifact + criteria] --> Recon["axiom-recon
+    Art[artifact + criteria] --> Recon["recon
     haiku / low"]
-    Recon --> Ver["axiom-verifier
+    Recon --> Ver["verifier
     sonnet / medium"]
-    Ver --> Gate["axiom-exit-gate
+    Ver --> Gate["exit-gate
     opus / high"]
 
     Fix["producing agent\ntargeted patch on blockers\n(effort escalates on retry 2)"]

@@ -1,7 +1,7 @@
 {
   "id": "vector",
   "name": "vector",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with TDD steps, exact code, and commit messages. No TBDs. A developer with zero domain context can execute the plan mechanically.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,10 +9,14 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/vector-challenger.md",
-    "./agents/vector-estimator.md",
-    "./agents/vector-planner.md"
+    "./agents/challenger.md",
+    "./agents/estimator.md",
+    "./agents/planner.md"
   ],
-  "consumes": ["spec@1"],
-  "produces": ["plan@1"]
+  "consumes": [
+    "spec@1"
+  ],
+  "produces": [
+    "plan@1"
+  ]
 }

@@ -26,10 +26,10 @@ plugins/<plugin-id>/
 │   └── <plugin-id>/
 │       └── SKILL.md              <-- Skill definition (dispatch matrix, pipeline)
 └── agents/
-    ├── <id>-recon.md             <-- haiku/low  — deterministic enumeration
-    ├── <id>-scanner.md           <-- sonnet/med — pattern matching
-    ├── <id>-adversary.md         <-- opus/high  — adversarial verification
-    └── <id>-exit-gate.md         <-- opus/high  — binding judgment
+    ├── recon.md                  <-- haiku/low  — deterministic enumeration
+    ├── scanner.md                <-- sonnet/med — pattern matching
+    ├── adversary.md              <-- sonnet/med — adversarial verification
+    └── exit-gate.md              <-- opus/high  — binding judgment
 ```
 
 Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, systemic, behavioral, judgment, repair) — not by pipeline position. See `shared/constitution.md` for the model/effort tier rules.
@@ -38,7 +38,7 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 
 ## 3. Quick Checklist for Adding New Plugins
 
-1. **Use `basis`** — run `basis-scaffolder` to generate the full directory structure and stubs.
+1. **Use `basis`** — run `scaffolder` to generate the full directory structure and stubs.
 2. **4-part agent structure** — every agent body: `<backstory>`, `<goal>`, `<judgment>`, `<output>`. No `<role>` body sections. No `success_criteria` checklists.
 3. **EARS in output only** — WHEN/IF/WHILE/WHERE notation belongs only in `<output>` contracts and never-do rules.
 4. **Progressive context loading** — one `<load_first>` block per agent, naming only the reference file for its cognitive phase.

@@ -1,7 +1,7 @@
 {
   "id": "basis",
   "name": "basis",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Meta-plugin for building new plugins. Scaffolds plugin directories, audits existing plugins for conformance to ecosystem schemas, and designs shared schema contracts. Replaces agent-plugin-builder.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,9 +9,9 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/basis-auditor.md",
-    "./agents/basis-scaffolder.md",
-    "./agents/basis-schema-designer.md"
+    "./agents/auditor.md",
+    "./agents/scaffolder.md",
+    "./agents/schema-designer.md"
   ],
   "consumes": [],
   "produces": []

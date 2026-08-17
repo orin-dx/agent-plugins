@@ -1,7 +1,7 @@
 {
   "id": "canon",
   "name": "canon",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Every acceptance criterion is a testable proposition. Detects spec drift against actual code. Skills: draft, review, verify, changeset.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,13 +9,20 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/canon-architect.md",
-    "./agents/canon-auditor.md",
-    "./agents/canon-drift-checker.md",
-    "./agents/canon-drafter.md",
-    "./agents/canon-exit-gate.md",
-    "./agents/canon-verifier.md"
+    "./agents/architect.md",
+    "./agents/auditor.md",
+    "./agents/drift-checker.md",
+    "./agents/drafter.md",
+    "./agents/exit-gate.md",
+    "./agents/verifier.md"
   ],
-  "consumes": ["requirement@1", "research-report@1", "finding-report@1"],
-  "produces": ["spec@1", "verdict@1"]
+  "consumes": [
+    "requirement@1",
+    "research-report@1",
+    "finding-report@1"
+  ],
+  "produces": [
+    "spec@1",
+    "verdict@1"
+  ]
 }

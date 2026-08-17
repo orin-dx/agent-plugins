@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "arch-spec@1",
+  "title": "Architectural Spec",
+  "description": "A structural specification for internal refactoring, trait extraction, AST transforms, and subsystem invariants where types and architectural invariants are the primary contract.",
+  "type": "object",
+  "required": ["id", "purpose", "scope", "target_crates", "architectural_invariants", "trait_contracts", "acceptance_criteria"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (e.g. ARCH-SPEC-001)"
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Why this structural refactoring is required and the defect class or bottleneck it eliminates."
+    },
+    "scope": {
+      "type": "string",
+      "description": "Crates, modules, and data structures touched by this refactor."
+    },
+    "target_crates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "List of crate names or workspace packages involved in this architectural refactor."
+    },
+    "non_goals": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicitly excluded structural changes or deferred refactors."
+    },
+    "architectural_invariants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "invariant_rule", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "invariant_rule": { "type": "string", "description": "Rigid architectural property that must hold (e.g. CST format preservation, atomic tempfile rename, no clone on hot path)." },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    "trait_contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["trait_name", "crate", "definition_snippet", "responsibilities"],
+        "additionalProperties": false,
+        "properties": {
+          "trait_name": { "type": "string" },
+          "crate": { "type": "string" },
+          "definition_snippet": { "type": "string" },
+          "responsibilities": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "criterion"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "criterion": {
+            "type": "string",
+            "description": "A testable proposition — something confirmable true or false via compilation, unit tests, or static proof."
+          },
+          "is_error_case": {
+            "type": "boolean",
+            "default": false
+          },
+          "target_crate": {
+            "type": "string",
+            "description": "The specific crate or module where this criterion is verified."
+          }
+        }
+      }
+    },
+    "linked_findings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Finding IDs from proof or audit reports that this structural refactor resolves."
+    },
+    "spec_file_path": {
+      "type": "string",
+      "description": "Workspace-relative path where this spec is written on disk (e.g. .claude/specs/ARCH-SPEC-001.json)."
+    },
+    "revision_note": {
+      "type": "string",
+      "description": "Describes what changed and why if revised after gate rejection."
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream."
+    }
+  }
+}

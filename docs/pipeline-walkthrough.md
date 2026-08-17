@@ -16,7 +16,7 @@ This walkthrough shows how the pipeline catches that bug before it ships, and ho
 
 ## Stage 1 — graph: Need
 
-The user invokes the `graph` skill. `graph-intake` (sonnet/medium) converts free text into a structured requirement. `graph-clarifier` asks one targeted question if the success condition is ambiguous. `graph-auditor` (sonnet/medium) checks for testability.
+The user invokes the `graph` skill. `intake` (sonnet/medium) converts free text into a structured requirement. `clarifier` asks one targeted question if the success condition is ambiguous. `auditor` (sonnet/medium) checks for testability.
 
 **Output: `requirement@1`**
 
@@ -42,7 +42,7 @@ The user invokes the `graph` skill. `graph-intake` (sonnet/medium) converts free
 
 ## Stage 2 — trace: Research
 
-`trace` receives `requirement@1`. `trace-recon` (haiku/low) builds a workspace manifest. `trace-reader` (sonnet/medium) reads relevant source files. `trace-risk-assessor` (sonnet/medium) identifies what could go wrong. `trace-synthesizer` (sonnet/medium) produces the research report.
+`trace` receives `requirement@1`. `recon` (haiku/low) builds a workspace manifest. `reader` (sonnet/medium) reads relevant source files. `risk-assessor` (sonnet/medium) identifies what could go wrong. `synthesizer` (sonnet/medium) produces the research report.
 
 **Output: `research-report@1`**
 
@@ -75,7 +75,7 @@ The user invokes the `graph` skill. `graph-intake` (sonnet/medium) converts free
 
 ## Stage 3 — canon: Spec
 
-`canon-drafter` (sonnet/medium) turns the requirement and research report into a testable spec. `canon-verifier` (sonnet/medium) checks every acceptance criterion against the source artifacts — not the codebase. `canon-auditor` (sonnet/medium) hunts vague language. `canon-exit-gate` (opus/high) issues a binding pass or fail.
+`drafter` (sonnet/medium) turns the requirement and research report into a testable spec. `verifier` (sonnet/medium) checks every acceptance criterion against the source artifacts — not the codebase. `auditor` (sonnet/medium) hunts vague language. `exit-gate` (opus/high) issues a binding pass or fail.
 
 **Output: `spec@1`**
 
@@ -115,7 +115,7 @@ Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires th
 
 ## Stage 4 — vector: Plan
 
-`vector-planner` (sonnet/medium) decomposes the spec into sequenced tasks with TDD steps. `vector-estimator` (sonnet/medium) adds sizing. `vector-challenger` (opus/high) pressure-tests the sequence for hidden dependencies.
+`planner` (sonnet/medium) decomposes the spec into sequenced tasks with TDD steps. `estimator` (sonnet/medium) adds sizing. `challenger` (opus/high) pressure-tests the sequence for hidden dependencies.
 
 **Output: `plan@1`** (abridged)
 
@@ -155,15 +155,15 @@ Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires th
 
 ## Stage 5 — lambda: Code
 
-`lambda-recon` (haiku/low) reads the manifest from `plan@1`. `lambda-implementer` (sonnet/medium) runs the TDD cycle per task — write failing test, write minimal implementation, confirm green. `lambda-mutator` (sonnet/medium) runs cargo-mutants after each task.
+`recon` (haiku/low) reads the manifest from `plan@1`. `implementer` (sonnet/medium) runs the TDD cycle per task — write failing test, write minimal implementation, confirm green. `mutator` (sonnet/medium) runs cargo-mutants after each task.
 
-**Mutation gate: lambda-mutator catches the T7 bug**
+**Mutation gate: mutator catches the T7 bug**
 
 **The mutation gate catches a slot-swap bug the unit test missed.**
 
-- `lambda-implementer` inverts the condition — mapping `read_timeout_ms` to the connection slot instead of `connect_timeout_ms`
+- `implementer` inverts the condition — mapping `read_timeout_ms` to the connection slot instead of `connect_timeout_ms`
 - The unit test passes because it checks the Duration value, not which builder slot it went into
-- The surviving mutant is the specific code path that was never killed — `lambda-mutator` returns a precision test targeting exactly that slot assignment
+- The surviving mutant is the specific code path that was never killed — `mutator` returns a precision test targeting exactly that slot assignment
 
 **Output: `mutation-report@1`**
 
@@ -193,7 +193,7 @@ Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires th
 }
 ```
 
-`lambda-mutator` re-invokes `lambda-implementer` with the precision test as an additional failing test. The implementer fixes the slot assignment and both tests go green. `lambda-exit-gate` (opus/high) confirms the mutation gate passed on the second cycle and issues the changeset.
+`mutator` re-invokes `implementer` with the precision test as an additional failing test. The implementer fixes the slot assignment and both tests go green. `exit-gate` (opus/high) confirms the mutation gate passed on the second cycle and issues the changeset.
 
 ---
 
@@ -201,12 +201,12 @@ Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires th
 
 **`proof` runs independently of the main pipeline — typically before a release.**
 
-- `proof-recon` (haiku/low) — builds the workspace manifest: live files, dead files, language detection
-- `proof-scanner` (sonnet/medium) — runs hazard taxonomy T1–T10 grep patterns against all live files
+- `recon` (haiku/low) — builds the workspace manifest: live files, dead files, language detection
+- `scanner` (sonnet/medium) — runs hazard taxonomy T1–T10 grep patterns against all live files
 
 For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct whose `private_registry` field is captured from user config but never reaches the publish command.
 
-`proof-boundary-tracer` (sonnet/medium) is dispatched because T7 was found. It traces every field in `AccessConfig` to determine which reach the execution boundary.
+`boundary-tracer` (sonnet/medium) is dispatched because T7 was found. It traces every field in `AccessConfig` to determine which reach the execution boundary.
 
 **Output: `field-survival-map@1`**
 
@@ -234,7 +234,7 @@ For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct
 }
 ```
 
-`proof-adversary` (opus/high) confirms the finding is real — user-specified registry is silently overridden by the hardcoded default. `proof-exit-gate` (opus/high) issues the finding report.
+`adversary` (opus/high) confirms the finding is real — user-specified registry is silently overridden by the hardcoded default. `exit-gate` (opus/high) issues the finding report.
 
 **Output: `finding-report@1`** (abridged)
 
@@ -259,12 +259,12 @@ For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct
 
 ## The Proof → Canon Loop
 
-**`canon-architect` designs a structural fix — not a patch.**
+**`architect` designs a structural fix — not a patch.**
 
 - A patch would add `private_registry` to the existing `publish()` parameter list — it would fix this one field but leave the narrow type intact, ready to silently drop the next field that gets added
 - The structural fix widens the parameter type to accept the full `AccessConfig` directly, eliminating the class of bug rather than the instance
 
-`canon-architect` (opus/high) receives `finding-report@1` and applies this fix.
+`architect` (opus/high) receives `finding-report@1` and applies this fix.
 
 **Output: `spec@1` (structural)**
 
@@ -299,8 +299,8 @@ This spec re-enters the pipeline at `vector` for planning, then `lambda` for imp
 
 | Principle | Where it appeared |
 | :--- | :--- |
-| **Schema-driven handoffs** | Each stage received a typed document. `trace-synthesizer` couldn't omit the risk finding without schema validation failing. |
+| **Schema-driven handoffs** | Each stage received a typed document. `synthesizer` couldn't omit the risk finding without schema validation failing. |
 | **EARS output contracts** | `spec@1` ac-1 is an EARS statement — it makes the T7 risk machine-checkable, not advisory. |
-| **Cognitive mode separation** | `proof-scanner` found T7 candidates without filtering. `proof-boundary-tracer` traced field survival. `proof-adversary` verdicted. Three agents, three modes, none contaminating the others. |
-| **Mutation gate** | `lambda-mutator` caught the slot-swap bug that unit tests missed. The precision test it generated became part of the permanent test suite. |
-| **Proof → canon loop** | The finding didn't produce a patch. `canon-architect` designed a structural fix that makes the whole class of bug a compile error. |
+| **Cognitive mode separation** | `scanner` found T7 candidates without filtering. `boundary-tracer` traced field survival. `adversary` verdicted. Three agents, three modes, none contaminating the others. |
+| **Mutation gate** | `mutator` caught the slot-swap bug that unit tests missed. The precision test it generated became part of the permanent test suite. |
+| **Proof → canon loop** | The finding didn't produce a patch. `architect` designed a structural fix that makes the whole class of bug a compile error. |

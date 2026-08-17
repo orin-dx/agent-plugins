@@ -1,8 +1,8 @@
 ---
 name: spec
 description: >-
-  Trigger this skill when the user asks to write or draft a spec, says "spec this out", wants to check whether a spec is complete or unambiguous, says "review this spec", asks whether a spec matches the source requirement ("is this grounded?"), asks for a structural fix after proof surfaces a defect class, needs a pass/fail gate before planning, or reports that lambda-implementer found a spec criterion contradicts observed system behavior. Also activate when converting a requirement or research report into a structured specification document, when proof has returned a finding-report and the fix is architectural rather than a local patch, or when a previously gated spec needs correction after implementation reveals it was wrong. This skill produces spec@1 artifacts where every acceptance criterion is a testable proposition — no TBDs, no ambiguous language. Criteria must be confirmable true or false from the outside; error cases carry their own dedicated criteria. Use canon to catch untestable language ("the system should be responsive"), ambiguous scope, missing error cases, unsupported criteria, and defect classes that require structural elimination rather than instance patching.
-version: "1.2.0"
+  Trigger this skill when the user asks to write or draft a spec, says "spec this out", wants to check whether a spec is complete or unambiguous, says "review this spec", asks whether a spec matches the source requirement ("is this grounded?"), asks for a structural fix after proof surfaces a defect class, needs a pass/fail gate before planning, or reports that implementer found a spec criterion contradicts observed system behavior. Also activate when converting a requirement or research report into a structured specification document, when proof has returned a finding-report and the fix is architectural rather than a local patch, or when a previously gated spec needs correction after implementation reveals it was wrong. This skill produces spec@1 artifacts where every acceptance criterion is a testable proposition — no TBDs, no ambiguous language. Criteria must be confirmable true or false from the outside; error cases carry their own dedicated criteria. Use canon to catch untestable language ("the system should be responsive"), ambiguous scope, missing error cases, unsupported criteria, and defect classes that require structural elimination rather than instance patching.
+version: "1.3.0"
 ---
 
 # canon — Specification Skill
@@ -22,7 +22,7 @@ Given a `requirement@1` and optionally a `research-report@1`, produce a `spec@1`
 Given a draft `spec@1` plus the originating `requirement@1` and optional `research-report@1`, check whether each acceptance criterion is grounded in the source artifacts. Classifies criteria as supported, unsupported, or overfitted. Collects evidence only — does not produce a pass/fail verdict. Use this **before implementation** to confirm the spec is traceable to requirements.
 
 ### canon/drift
-Given a spec@1 (via `spec_file_path`) and a workspace root, verify that the current code implements every acceptance criterion. Reads the spec from disk, reads the implementation from the workspace, and reports: `covered` (criterion is implemented and tested), `uncovered` (criterion has no matching implementation), and `drifted` (implementation exists but diverges from the criterion's contract). When a prior changeset's `criteria_evidence` is available, its file and line pointers are a starting point to check, not a claim to trust — every pointer is re-read and independently reconfirmed, since the code may have moved since it was recorded. Use this **after implementation** to catch spec drift during maintenance — it is a diagnostic tool, not a blocking gate. lambda-exit-gate is the blocking gate; canon/drift is the ongoing health check.
+Given a spec@1 (via `spec_file_path`) and a workspace root, verify that the current code implements every acceptance criterion. Reads the spec from disk, reads the implementation from the workspace, and reports: `covered` (criterion is implemented and tested), `uncovered` (criterion has no matching implementation), and `drifted` (implementation exists but diverges from the criterion's contract). When a prior changeset's `criteria_evidence` is available, its file and line pointers are a starting point to check, not a claim to trust — every pointer is re-read and independently reconfirmed, since the code may have moved since it was recorded. Use this **after implementation** to catch spec drift during maintenance — it is a diagnostic tool, not a blocking gate. exit-gate is the blocking gate; canon/drift is the ongoing health check.
 
 ### canon/audit
 Given a `spec@1`, adversarially review it for untestable criteria, ambiguous language, missing error cases, scope overlap, and incomplete sections. Returns a structured issue list with specific rewritten suggested fixes.
@@ -31,7 +31,7 @@ Given a `spec@1`, adversarially review it for untestable criteria, ambiguous lan
 Given a `spec@1`, produce a binding pass/fail verdict before the spec enters planning. Default disposition is fail. On fail, returns specific blockers the drafter can act on without asking a follow-up question. On pass, the calling agent writes the spec to disk and sets `spec_file_path` — see the `<orchestration>` section.
 
 ### canon/correct
-Given a `spec_file_path`, the `criterion_id` of an acceptance criterion, and a contradiction report from `lambda-implementer` (what the spec says vs. what the system actually does), revise the affected criterion — and any criteria that depend on it — and return a corrected `spec@1` with `revision_note` set. The corrected spec re-enters the standard verify → audit → gate pipeline before it overwrites the file on disk. Use this when implementation reveals the spec itself is wrong, not merely hard to satisfy.
+Given a `spec_file_path`, the `criterion_id` of an acceptance criterion, and a contradiction report from `implementer` (what the spec says vs. what the system actually does), revise the affected criterion — and any criteria that depend on it — and return a corrected `spec@1` with `revision_note` set. The corrected spec re-enters the standard verify → audit → gate pipeline before it overwrites the file on disk. Use this when implementation reveals the spec itself is wrong, not merely hard to satisfy.
 
 ### canon/architect
 Given a `finding-report@1` from proof, produce a `spec@1` for the structural change that eliminates the defect class — not a patch of individual instances but the abstraction boundary, type invariant, or interface redesign that makes the class impossible to reintroduce. This sub-skill closes the proof-to-design loop.
@@ -52,43 +52,44 @@ Given a `finding-report@1` from proof, produce a `spec@1` for the structural cha
 
 <pipeline>
 
-**Standard drafting pipeline:**
+**Standard drafting pipeline (with 2-Round Circuit Breaker):**
 ```
-requirement@1 [+ research-report@1]
-  → canon-drafter          (returns spec object — no disk write)
-  → canon-verifier         (grounding check against source artifacts)
-  → canon-auditor          (adversarial quality review)
-  → canon-exit-gate        (binding pass/fail verdict)
+requirement@1 / arch requirement [+ research-report@1]
+  → drafter          (Sonnet: returns spec@1 or arch-spec@1 — no disk write)
+  → verifier         (Sonnet: grounding check against source artifacts)
+  → auditor          (Sonnet: adversarial quality review — max 2 rounds)
+  → exit-gate        (Opus: terminal binding pass/fail verdict)
   → [skill writes .claude/specs/<id>.json, sets spec_file_path]
-  → spec@1
+  → spec@1 / arch-spec@1
 ```
+
+**2-Round Circuit Breaker Rule:** Drafter ↔ Auditor review loops are strictly capped at 2 iterations. On Round 2, unresolved debates regarding internal helper names or line citations are demoted to non-blocking `api_notes`, and the spec proceeds to exit-gate.
 
 **On-demand drift pipeline (maintenance, any time after implementation):**
 ```
 spec_file_path + workspace root
-  → canon-drift-checker
-  → drift report (covered / uncovered / drifted)
+  → drift-checker    (Sonnet: covered / uncovered / drifted)
 ```
 
-**Correction pipeline (triggered by a lambda-implementer spec_contradiction report):**
+**Correction pipeline (triggered by an implementer spec_contradiction report):**
 ```
 spec_file_path + criterion_id + contradiction report
-  → canon-drafter          (correction mode — returns corrected spec object)
-  → canon-verifier → canon-auditor → canon-exit-gate
+  → drafter          (Sonnet: correction mode — returns delta-corrected spec)
+  → verifier → auditor → exit-gate
   → [skill overwrites .claude/specs/<id>.json at the same path, sets revision_note, commits]
-  → corrected spec@1 → vector-planner (amend mode) → lambda resumes
+  → corrected spec@1 → planner (amend mode) → lambda resumes
 ```
 
 **Architectural remediation pipeline (invoked after proof):**
 ```
 finding-report@1
-  → canon-architect
-  → canon-exit-gate
-  → spec@1 (architectural)
+  → architect        (Sonnet: produces arch-spec@1 with trait & invariant contracts)
+  → exit-gate        (Opus: single-pass terminal gate)
+  → arch-spec@1
   → vector → lambda
 ```
 
-`canon-architect` is not part of the standard drafting pipeline. It is invoked when proof returns a `finding-report@1` and the root cause requires a structural fix. The output spec feeds back into vector for planning.
+`architect` is invoked when proof returns a `finding-report@1` and the root cause requires a structural fix. The output `arch-spec@1` feeds back into vector for planning.
 
 </pipeline>
 
@@ -96,16 +97,16 @@ finding-report@1
 
 <orchestration>
 
-After `canon-exit-gate` returns a pass verdict, the calling agent MUST perform this step before handing off to vector:
+After `exit-gate` returns a pass verdict, the calling agent MUST perform this step before handing off to vector:
 
 1. Write the spec@1 JSON to `<workspace_root>/.claude/specs/<id>.json` using the file writing tool. Create the directory if it does not exist.
-2. Commit the file to version control using your shell tool. An uncommitted spec file is invisible to a fresh checkout, a future session, and `canon-drift-checker` — it exists only in the current working tree.
+2. Commit the file to version control using your shell tool. An uncommitted spec file is invisible to a fresh checkout, a future session, and `drift-checker` — it exists only in the current working tree.
 3. Set `spec_file_path` to the workspace-relative path (e.g. `.claude/specs/SPEC-001.json`) in the spec@1 object.
-4. Pass the updated spec@1 — with `spec_file_path` set — to vector-planner.
+4. Pass the updated spec@1 — with `spec_file_path` set — to planner.
 
 This step is not optional. Without `spec_file_path` set, downstream agents fall back to reading the spec from conversation context, which is lossy under compression and cannot be independently verified.
 
-**Correction re-entry:** when `canon-drafter` runs in correction mode (canon/correct) and the corrected spec passes `canon-exit-gate`, the calling agent overwrites the existing file at the same `spec_file_path` — the path does not change across a correction — and commits the change. The spec's `id` stays the same; `revision_note` records what changed and why. The calling agent then routes the corrected spec@1 to `vector-planner` in amend mode so only the affected tasks are patched, not the full plan, and the amended plan still passes through `vector-challenger` before lambda resumes — amendment is not exempt from adversarial review.
+**Correction re-entry:** when `drafter` runs in correction mode (canon/correct) and the corrected spec passes `exit-gate`, the calling agent overwrites the existing file at the same `spec_file_path` — the path does not change across a correction — and commits the change. The spec's `id` stays the same; `revision_note` records what changed and why. The calling agent then routes the corrected spec@1 to `planner` in amend mode so only the affected tasks are patched, not the full plan, and the amended plan still passes through `challenger` before lambda resumes — amendment is not exempt from adversarial review.
 
 </orchestration>
 
@@ -124,11 +125,11 @@ This step is not optional. Without `spec_file_path` set, downstream agents fall 
 
 | Agent | Sub-skill | When to Delegate |
 | :--- | :--- | :--- |
-| **`canon-drafter`** | draft, correct | Producing a new spec from a requirement or research report, or revising a previously gated spec after lambda-implementer reports a criterion contradicts observed system behavior. |
-| **`canon-verifier`** | verify | Checking that each acceptance criterion is grounded in the source artifacts (pre-implementation only). |
-| **`canon-drift-checker`** | drift | On-demand post-implementation drift check: reads spec from disk, reads code, classifies criteria as covered / uncovered / drifted. |
-| **`canon-auditor`** | audit | Adversarial quality review for untestable language, ambiguity, and missing error cases. |
-| **`canon-exit-gate`** | gate | Binding pass/fail judgment before handing the spec to planning. |
-| **`canon-architect`** | architect | Designing the structural fix for a defect class surfaced by proof. |
+| **`drafter`** | draft, correct | Producing a new spec from a requirement or research report, or revising a previously gated spec after implementer reports a criterion contradicts observed system behavior. |
+| **`verifier`** | verify | Checking that each acceptance criterion is grounded in the source artifacts (pre-implementation only). |
+| **`drift-checker`** | drift | On-demand post-implementation drift check: reads spec from disk, reads code, classifies criteria as covered / uncovered / drifted. |
+| **`auditor`** | audit | Adversarial quality review for untestable language, ambiguity, and missing error cases. |
+| **`exit-gate`** | gate | Binding pass/fail judgment before handing the spec to planning. |
+| **`architect`** | architect | Designing the structural fix for a defect class surfaced by proof. |
 
 </subagent_dispatch_matrix>

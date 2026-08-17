@@ -1,4 +1,12 @@
-# Changelog — graph
+# Changelog
+
+— graph
+
+## [1.1.0] - 2026-08-17
+
+### Changed
+- **Lean Agent Names**: Agents now display cleanly as `graph:intake`, `graph:clarifier`, and `graph:auditor`.
+- **Direct Requirement Capture**: `intake` extracts testable acceptance criteria with zero conversational filler.
 
 ## [1.0.1] - 2026-08-05
 ### Fixed
@@ -11,4 +19,4 @@
 - Initial release
 - Requirement capture with GitHub Issues integration; extensible to Linear, Jira
 - `requirement@1` output schema
-- Subagents: graph-intake, graph-clarifier, graph-auditor
+- Subagents: intake, clarifier, auditor

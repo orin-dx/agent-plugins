@@ -7,7 +7,7 @@ Changesets are structured records of what changed and why, used to generate rele
 ```json
 {
   "summary": "Add cross-language recon agent to proof plugin",
-  "files_changed": ["plugins/proof/subagents/proof-recon.md"],
+  "files_changed": ["plugins/proof/subagents/recon.md"],
   "tests_added": [],
   "acceptance_criteria_met": ["SPEC-001-AC-3", "SPEC-001-AC-4"],
   "breaking_changes": [],

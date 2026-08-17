@@ -36,14 +36,20 @@ IF an agent body contains a `success_criteria` checklist, it SHALL be replaced w
 
 ---
 
-## Agent Frontmatter
-
 WHEN an agent is authored, its YAML frontmatter SHALL include: `name`, `role` (short display label), `model`, `effort`, and `description`.
 
-WHEN assigning `model` and `effort`, the author SHALL apply:
-- `haiku / low` — deterministic enumeration only (recon, manifest building, inventory)
-- `sonnet / medium` — analysis (scanning, drafting, planning, reviewing, tracing)
-- `opus / high` — judgment (adversarial reasoning, exit gates, binding verdicts)
+WHEN assigning `model` and `effort`, the author SHALL apply dynamic routing based on task complexity:
+- `haiku / low` — deterministic enumeration and mechanical validation (recon, formatting, line citation lookups)
+- `sonnet / medium` — analysis and execution (scanning, drafting, planning, TDD implementation, code reviews, standard exit gates)
+- `opus / high` — judgment (Tier 3 cross-crate architectural boundary gates, terminal binding verdicts)
+
+---
+
+## Static Prompt Prefix Invariant
+
+WHEN authoring agent prompts, THE SYSTEM SHALL maintain an identical static header across all agents in the ecosystem to maximize prompt cache sharing (>95% hit rate).
+
+WHEN passing task-specific inputs (file paths, line ranges, criteria IDs, blocker arrays), THE CALLER SHALL place them strictly at the tail of the prompt after the static cache breakpoint.
 
 ---
 
@@ -77,47 +83,77 @@ WHERE an agent loads workspace documentation files to extract architectural inva
 
 ## Axiom Retry Caller Constraint
 
-WHEN re-submitting an artifact to axiom-exit-gate after a fail verdict, the caller SHALL pass only the revised artifact and the prior verdict's blockers array — not the full verification report context.
+WHEN re-submitting an artifact to exit-gate after a fail verdict, the caller SHALL pass only the revised artifact and the prior verdict's blockers array — not the full verification report context.
 
-IF axiom-exit-gate emits a blockers array in a fail verdict, the producing agent SHALL address only those blockers in its targeted patch.
+IF exit-gate emits a blockers array in a fail verdict, the producing agent SHALL address only those blockers in its targeted patch.
 
 ---
 
 ## Spec Persistence
 
-WHEN canon-exit-gate issues a pass verdict, the canon skill orchestrator SHALL write the spec to `<workspace_root>/.claude/specs/<id>.json`, commit the file to version control, set `spec_file_path` to the workspace-relative path in the spec@1, and pass the updated spec to vector-planner.
+WHEN exit-gate issues a pass verdict, the canon skill orchestrator SHALL write the spec to `<workspace_root>/.claude/specs/<id>.json`, commit the file to version control, set `spec_file_path` to the workspace-relative path in the spec@1, and pass the updated spec to planner.
 
 WHEN any agent consumes a spec@1 to make implementation or verification decisions, it SHALL read from `spec_file_path` when set — forwarding spec content through conversation context is not a substitute. Context is compressed across long sessions; the file is not.
 
 WHEN spec_file_path is absent, agents SHALL proceed with in-context spec content and record a spec_file_unset coverage gap — graceful degradation, not a hard block.
 
-IF the spec is written to disk but not committed to version control, it SHALL be treated as not yet persisted — an uncommitted file is invisible to a fresh checkout, a future session, and canon-drift-checker.
+IF the spec is written to disk but not committed to version control, it SHALL be treated as not yet persisted — an uncommitted file is invisible to a fresh checkout, a future session, and drift-checker.
 
 ---
 
 ## Spec Staleness Detection
 
-WHEN vector-planner produces a plan@1 from a spec at spec_file_path, it SHALL set `spec_hash` to a content hash computed over the raw file bytes as read from disk — not a parsed or re-serialized form.
+WHEN planner produces a plan@1 from a spec at spec_file_path, it SHALL set `spec_hash` to a content hash computed over the raw file bytes as read from disk — not a parsed or re-serialized form.
 
-WHEN lambda-recon receives a plan@1 carrying `spec_hash`, it SHALL recompute the current spec file's content hash the same way — over raw file bytes — and record a spec_drift_warning when the hashes differ.
+WHEN recon receives a plan@1 carrying `spec_hash`, it SHALL recompute the current spec file's content hash the same way — over raw file bytes — and record a spec_drift_warning when the hashes differ.
 
-WHEN spec_drift_warning is set, downstream agents SHALL record a coverage gap noting the plan may not reflect the current spec — graceful degradation, not a hard block, because lambda-recon already surfaced it.
+WHEN spec_drift_warning is set, downstream agents SHALL record a coverage gap noting the plan may not reflect the current spec — graceful degradation, not a hard block, because recon already surfaced it.
 
 ---
 
 ## Spec Correction Loop
 
-WHEN lambda-implementer determines that an acceptance criterion contradicts observed system behavior, it SHALL emit status spec_contradiction rather than implementing code that satisfies neither the spec nor reality.
+WHEN implementer determines that an acceptance criterion contradicts observed system behavior, it SHALL emit status spec_contradiction rather than implementing code that satisfies neither the spec nor reality.
 
 WHEN a spec_contradiction is reported, the caller SHALL halt remaining task execution and route the contradiction to canon/correct before any further task in the plan proceeds — an uncorrected spec SHALL NOT continue to govern implementation.
 
-WHEN canon/correct produces a corrected spec@1 that passes canon-exit-gate, the skill orchestrator SHALL overwrite the existing file at the same spec_file_path and commit the change — the file path SHALL NOT change across a correction.
+WHEN canon/correct produces a corrected spec@1 that passes exit-gate, the skill orchestrator SHALL overwrite the existing file at the same spec_file_path and commit the change — the file path SHALL NOT change across a correction.
 
-WHEN a corrected spec@1 is handed to vector-planner, it SHALL run in amend mode — patching only the tasks tied to the affected criteria — rather than re-decomposing the entire plan.
+WHEN a corrected spec@1 is handed to planner, it SHALL run in amend mode — patching only the tasks tied to the affected criteria — rather than re-decomposing the entire plan.
 
-WHEN an amended plan@1 is produced, it SHALL pass through vector-challenger before lambda resumes — amendment is not exempt from adversarial review.
+WHEN an amended plan@1 is produced, it SHALL pass through challenger before lambda resumes — amendment is not exempt from adversarial review.
 
 IF the same criterion_id triggers spec_contradiction a second time after already being corrected via canon/correct, the caller SHALL escalate to a human rather than routing to canon/correct again.
+
+---
+
+## Epistemic Stopping & Circuit Breakers
+
+WHILE running iterative review loops without a deterministic execution compiler (such as drafter-auditor or planner-challenger), THE SYSTEM SHALL cap adversarial revision cycles at a maximum of 2 rounds.
+
+WHEN a spec or plan enters round 2 of revision with disputed private helper names, internal control flow, or line citations, THE SYSTEM SHALL demote those items to non-blocking `api_notes` and issue a pass verdict rather than looping.
+
+WHEN re-evaluating an artifact after a fail verdict, the gatekeeper agent SHALL evaluate ONLY the blocker delta and SHALL NOT re-read the entire document on Opus unless an architectural invariant was violated.
+
+---
+
+## Subsystem Compilation Batching
+
+WHEN planner decomposes a spec into an implementation plan@1, it SHALL group tasks into cohesive Subsystem Batches aligned with transactional crate/package compilation boundaries.
+
+WHEN lambda executes a plan@1, it SHALL dispatch one implementer subagent per Subsystem Batch rather than spawning separate subagents for individual 10-line micro-tasks.
+
+WHILE implementing a batch, THE SYSTEM SHALL apply the YAGNI principle: write the minimum viable code diff required to make tests pass, avoiding speculative wrappers and premature abstractions.
+
+---
+
+## Output Economy & Communication Density
+
+WHEN generating inter-agent payloads, reports, or reviews, THE SYSTEM SHALL communicate with high information density:
+- Eliminate conversational preambles, pleasantries, and storytelling filler.
+- Use exact file and line pointers rather than copy-pasting multi-line code blocks.
+- On artifact revisions, emit delta patches rather than reprinting unchanged content.
+- Keep scratchpad and reasoning fields focused and unpadded without imposing artificial truncations that compromise technical depth.
 
 ---
 

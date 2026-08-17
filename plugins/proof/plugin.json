@@ -1,7 +1,7 @@
 {
   "id": "proof",
   "name": "proof",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Cross-language bug hunting. Finds real bugs in live code through recon, hazard scanning, adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/. Supersedes bug-hunter-rust and bug-hunter-ts.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,12 +9,15 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/proof-adversary.md",
-    "./agents/proof-boundary-tracer.md",
-    "./agents/proof-exit-gate.md",
-    "./agents/proof-recon.md",
-    "./agents/proof-scanner.md"
+    "./agents/adversary.md",
+    "./agents/boundary-tracer.md",
+    "./agents/exit-gate.md",
+    "./agents/recon.md",
+    "./agents/scanner.md"
   ],
   "consumes": [],
-  "produces": ["finding-report@1", "verdict@1"]
+  "produces": [
+    "finding-report@1",
+    "verdict@1"
+  ]
 }

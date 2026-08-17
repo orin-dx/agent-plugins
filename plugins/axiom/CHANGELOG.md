@@ -1,4 +1,14 @@
-# Changelog — axiom
+# Changelog
+
+— axiom
+
+## [1.1.0] - 2026-08-17
+
+### Added
+- **Targeted Gate Re-checks**: `exit-gate` verifies only the specific blocker delta on retry runs, saving time and tokens.
+
+### Changed
+- **Lean Agent Names**: Agents now display cleanly as `axiom:recon`, `axiom:verifier`, and `axiom:exit-gate`.
 
 ## [1.0.1] - 2026-08-05
 ### Fixed
@@ -12,4 +22,4 @@
 - Cross-cutting verification gate usable at any pipeline stage
 - recon → verify → exit-gate protocol with retry-with-feedback loop
 - `verdict@1` output schema
-- Subagents: axiom-recon, axiom-verifier, axiom-exit-gate
+- Subagents: recon, verifier, exit-gate

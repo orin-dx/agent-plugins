@@ -4,45 +4,18 @@ _Loaded by: mutator, remediator. Contains test commands, build checks, and the n
 
 ---
 
-## Test Commands
+## Workspace Test Discovery & Execution
 
-```bash
-# Run all tests
-cargo nextest run
-
-# Run a specific test by name
-cargo nextest run test_name
-
-# Run with stdout (for debugging)
-cargo nextest run -- --nocapture
-
-# Type-check only (no build artifacts)
-cargo check --all-features
-
-# Lint — treat all warnings as errors
-cargo clippy --all-features -- -D warnings
-
-# Mutation testing (mutator agent)
-cargo mutants --workspace
-```
-
----
-
-## Workspace Test Discovery
-
-Before running tests, confirm the test runner in use:
+Before running tests, check for project task runners to respect repo-specific workflows:
 
 ```bash
 # Check for task runners
 ls justfile Makefile moonrepo.yml .moon/ 2>/dev/null
-
-# Run via task runner if present
-just test
-moon run :test
-
-# Otherwise fall back to cargo nextest
-cargo nextest run
 ```
+
+1. **Task Runner First**: If a task runner exists (`just`, `moon`, `make`), invoke tests through the task runner using targeted arguments where supported (e.g. `just test <test_name>`).
+2. **Native Fallback**: If no task runner is present, use the project's native test framework (`cargo nextest run <test_name>` or `cargo test -p <crate> --test <target>`).
+3. **Context Efficiency**: Target the specific test or module under active development during inner TDD cycles to avoid flooding context with passing test output.
 
 ---
 

@@ -9,7 +9,7 @@ Early pipeline designs had each stage perform its own output validation inline �
 
 ## Decision
 
-`axiom` is a reusable, artifact-agnostic verification gate. Any artifact type can be run through it by passing the artifact and evaluation criteria. The gate runs three agents in sequence: `axiom-recon` (haiku/low — builds a structured understanding of what the artifact claims), `axiom-verifier` (sonnet/medium — checks claims against evidence), `axiom-exit-gate` (opus/high — weighs evidence and issues a binding `verdict@1`). On fail, the orchestrator passes only the blockers array to the producing agent — not the full verification context — for a targeted patch. `retry_count` is tracked in `verdict@1` and incremented by the exit gate. Effort escalates on retry 2. Circuit breaks after 3 retries and escalates to human.
+`axiom` is a reusable, artifact-agnostic verification gate. Any artifact type can be run through it by passing the artifact and evaluation criteria. The gate runs three agents in sequence: `recon` (haiku/low — builds a structured understanding of what the artifact claims), `verifier` (sonnet/medium — checks claims against evidence), `exit-gate` (opus/high — weighs evidence and issues a binding `verdict@1`). On fail, the orchestrator passes only the blockers array to the producing agent — not the full verification context — for a targeted patch. `retry_count` is tracked in `verdict@1` and incremented by the exit gate. Effort escalates on retry 2. Circuit breaks after 3 retries and escalates to human.
 
 ## Consequences
 

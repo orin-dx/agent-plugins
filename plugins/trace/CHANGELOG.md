@@ -1,4 +1,12 @@
-# Changelog — trace
+# Changelog
+
+— trace
+
+## [1.1.0] - 2026-08-17
+
+### Changed
+- **Lean Agent Names**: Agents now display cleanly as `trace:reader`, `trace:risk-assessor`, and `trace:synthesizer`.
+- **High-Density Research**: `synthesizer` structures findings around exact file pointers and clear evidence assumptions.
 
 ## [1.0.1] - 2026-08-05
 ### Fixed
@@ -11,4 +19,4 @@
 - Initial release
 - Evidence-based research pipeline distinguishing confirmed findings from assumptions
 - `research-report@1` output schema consumed by `canon`
-- Subagents: trace-recon, trace-reader, trace-synthesizer, trace-risk-assessor
+- Subagents: recon, reader, synthesizer, risk-assessor

@@ -4,7 +4,7 @@
 
 A reusable, artifact-agnostic verification gate. Any artifact — spec, plan, changeset, finding report — can be run through axiom. Produces a definitive `verdict@1` with a pass/fail decision and specific, actionable blockers. Default disposition is **fail**; unverifiable criteria are treated as failures unless explicitly waived.
 
-Axiom is standalone — its `plugin.json` declares `consumes: []`, and nothing invokes its agents automatically. `canon-exit-gate` and `lambda-exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline axiom formalizes, tailored to `spec@1` and `changeset@1` respectively; neither calls into axiom's actual agents. Install axiom when you want that same protocol available on demand against any artifact — including as an independent second-opinion pass on top of canon's or lambda's own gate.
+Axiom is standalone — its `plugin.json` declares `consumes: []`, and nothing invokes its agents automatically. `exit-gate` and `exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline axiom formalizes, tailored to `spec@1` and `changeset@1` respectively; neither calls into axiom's actual agents. Install axiom when you want that same protocol available on demand against any artifact — including as an independent second-opinion pass on top of canon's or lambda's own gate.
 
 ---
 
@@ -32,16 +32,16 @@ Axiom is standalone — its `plugin.json` declares `consumes: []`, and nothing i
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `axiom-recon` | Artifact Recon | haiku / low | Builds the verification manifest: artifact path, criteria to check, source files to read. No judgment. |
-| `axiom-verifier` | Verifier | sonnet / medium | Reads each source file and classifies every criterion as `verified`, `failed`, or `unverifiable`. Neutral — reports evidence only, not verdicts. |
-| `axiom-exit-gate` | Exit Gate | opus / high | Produces a final `verdict@1`. Default: fail. Unverifiable criteria are failures unless explicitly waived. |
+| `recon` | Artifact Recon | haiku / low | Builds the verification manifest: artifact path, criteria to check, source files to read. No judgment. |
+| `verifier` | Verifier | sonnet / medium | Reads each source file and classifies every criterion as `verified`, `failed`, or `unverifiable`. Neutral — reports evidence only, not verdicts. |
+| `exit-gate` | Exit Gate | opus / high | Produces a final `verdict@1`. Default: fail. Unverifiable criteria are failures unless explicitly waived. |
 
 ---
 
 ## Pipeline
 
 ```
-artifact + criteria → axiom-recon → axiom-verifier → axiom-exit-gate → verdict@1
+artifact + criteria → recon → verifier → exit-gate → verdict@1
 ```
 
 Recon and verifier are deliberately separate: recon makes no judgments, verifier reports evidence without a verdict. Only the exit gate decides pass/fail — with higher model effort to match the stakes.

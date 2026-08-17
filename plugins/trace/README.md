@@ -31,17 +31,17 @@ Surveys prior art, existing implementations, and technical risks before a spec i
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `trace-recon` | Source Mapper | haiku / low | Maps available sources — internal code, docs, and external search terms — without reading them. No content analysis. |
-| `trace-reader` | Source Reader | sonnet / medium | Reads each source identified by recon and extracts relevant findings with confidence classification. |
-| `trace-synthesizer` | Synthesizer | sonnet / medium | Aggregates findings across all sources into a coherent `research-report@1`. Resolves contradictions and notes open questions. |
-| `trace-risk-assessor` | Risk Assessor | sonnet / medium | Reviews the proposed approach for technical risks before the spec is written. Surfaces risks neutrally without recommending whether to proceed. |
+| `recon` | Source Mapper | haiku / low | Maps available sources — internal code, docs, and external search terms — without reading them. No content analysis. |
+| `reader` | Source Reader | sonnet / medium | Reads each source identified by recon and extracts relevant findings with confidence classification. |
+| `synthesizer` | Synthesizer | sonnet / medium | Aggregates findings across all sources into a coherent `research-report@1`. Resolves contradictions and notes open questions. |
+| `risk-assessor` | Risk Assessor | sonnet / medium | Reviews the proposed approach for technical risks before the spec is written. Surfaces risks neutrally without recommending whether to proceed. |
 
 ---
 
 ## Pipeline
 
 ```
-requirement@1 → trace-recon → trace-reader → trace-synthesizer → trace-risk-assessor → research-report@1
+requirement@1 → recon → reader → synthesizer → risk-assessor → research-report@1
 ```
 
 Recon runs first and maps all sources before any reading begins. Reader and synthesizer are separate to keep source extraction honest — synthesizer cannot retroactively shape what was read. Risk assessor runs last with full context.

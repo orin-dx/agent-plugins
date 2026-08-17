@@ -1,7 +1,7 @@
 {
   "id": "axiom",
   "name": "axiom",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Cross-cutting verification gate. Confirms any stage artifact meets its criteria before the next stage begins. Implements the axiom protocol: recon \u2192 verify \u2192 exit-gate with retry-with-feedback.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,10 +9,12 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/axiom-exit-gate.md",
-    "./agents/axiom-recon.md",
-    "./agents/axiom-verifier.md"
+    "./agents/exit-gate.md",
+    "./agents/recon.md",
+    "./agents/verifier.md"
   ],
   "consumes": [],
-  "produces": ["verdict@1"]
+  "produces": [
+    "verdict@1"
+  ]
 }

@@ -1,7 +1,7 @@
 {
   "id": "graph",
   "name": "graph",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to any issue tracker that produces the requirement@1 schema.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,10 +9,12 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/graph-auditor.md",
-    "./agents/graph-clarifier.md",
-    "./agents/graph-intake.md"
+    "./agents/auditor.md",
+    "./agents/clarifier.md",
+    "./agents/intake.md"
   ],
   "consumes": [],
-  "produces": ["requirement@1"]
+  "produces": [
+    "requirement@1"
+  ]
 }

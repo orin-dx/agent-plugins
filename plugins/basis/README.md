@@ -2,7 +2,7 @@
 
 **Stage:** Meta · **Output:** conformant plugin directory · **Version:** 1.0.1
 
-The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `basis-scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
+The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 
 ---
 
@@ -32,13 +32,13 @@ The tool for building tools. Scaffolds new plugins, audits existing ones for eco
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `basis-scaffolder` | Scaffolder | sonnet / medium | Generates a complete plugin directory: `plugin.json`, `SKILL.md`, stub subagents, `shared` symlink. |
-| `basis-auditor` | Conformance Auditor | sonnet / medium | Audits a plugin directory for ecosystem conformance across all required fields, structure rules, and authoring principles. |
-| `basis-schema-designer` | Schema Designer | sonnet / medium | Designs a new JSON Schema for a proposed inter-agent artifact; checks for conflicts with existing schemas. |
+| `scaffolder` | Scaffolder | sonnet / medium | Generates a complete plugin directory: `plugin.json`, `SKILL.md`, stub subagents, `shared` symlink. |
+| `auditor` | Conformance Auditor | sonnet / medium | Audits a plugin directory for ecosystem conformance across all required fields, structure rules, and authoring principles. |
+| `schema-designer` | Schema Designer | sonnet / medium | Designs a new JSON Schema for a proposed inter-agent artifact; checks for conflicts with existing schemas. |
 
 ---
 
-## Conformance Checks (basis-auditor)
+## Conformance Checks (auditor)
 
 The auditor checks all of the following. A plugin that fails any check is not ecosystem-conformant:
 
@@ -57,7 +57,7 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 
 ## Directory Layout
 
-Plugins produced by `basis-scaffolder` follow this exact layout:
+Plugins produced by `scaffolder` follow this exact layout:
 
 ```
 plugins/<id>/

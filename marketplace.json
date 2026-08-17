@@ -1,13 +1,13 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "orin-dx-agent-plugins",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
       "id": "basis",
       "name": "basis",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "path": "./plugins/basis",
       "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts.",
       "supersedes": "agent-plugin-builder"
@@ -15,7 +15,7 @@
     {
       "id": "proof",
       "name": "proof",
-      "version": "2.0.1",
+      "version": "2.1.0",
       "path": "./plugins/proof",
       "description": "Cross-language bug hunting plugin. Finds real bugs in live code through recon (workspace manifest), scanning (hazard taxonomies), adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/.",
       "supersedes": [
@@ -26,7 +26,7 @@
     {
       "id": "axiom",
       "name": "axiom",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "path": "./plugins/axiom",
       "description": "Cross-cutting verification gate. Confirms that any stage artifact meets its criteria before the next stage begins. Skills: verify-requirement, verify-spec, verify-plan, verify-implementation, verify-pr, exit-gate.",
       "supersedes": "verify-first"
@@ -34,42 +34,42 @@
     {
       "id": "graph",
       "name": "graph",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "path": "./plugins/graph",
       "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker that produces the requirement@1 schema."
     },
     {
       "id": "trace",
       "name": "trace",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "path": "./plugins/trace",
       "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Produces research-report@1 for consumption by canon (spec)."
     },
     {
       "id": "canon",
       "name": "canon",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "path": "./plugins/canon",
       "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code. Skills: draft, review, verify, changeset."
     },
     {
       "id": "vector",
       "name": "vector",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "path": "./plugins/vector",
       "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with TDD steps, exact code, and commit messages. No TBDs."
     },
     {
       "id": "lambda",
       "name": "lambda",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "path": "./plugins/lambda",
       "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the axiom exit gate."
     },
     {
       "id": "delta",
       "name": "delta",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "path": "./plugins/delta",
       "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, review, receive, changeset, release."
     }

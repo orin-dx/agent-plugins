@@ -95,9 +95,9 @@ All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use J
 | `plan@1` | vector | lambda |
 | `changeset@1` | lambda | delta, axiom |
 | `verdict@1` | axiom | any gate consumer |
-| `finding-report@1` | proof | delta, humans, canon-architect |
-| `field-survival-map@1` | proof-boundary-tracer | proof-adversary |
-| `mutation-report@1` | lambda-mutator | lambda-exit-gate, lambda-implementer |
+| `finding-report@1` | proof | delta, humans, architect |
+| `field-survival-map@1` | boundary-tracer | adversary |
+| `mutation-report@1` | mutator | exit-gate, implementer |
 | `release-artifact@1` | delta | humans |
 
 ---

@@ -1,7 +1,7 @@
 {
   "id": "trace",
   "name": "trace",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Distinguishes confirmed findings from assumptions. Produces research-report@1 for consumption by canon (spec).",
   "author": {
     "name": "Gabriel Castro",
@@ -9,11 +9,15 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/trace-reader.md",
-    "./agents/trace-recon.md",
-    "./agents/trace-risk-assessor.md",
-    "./agents/trace-synthesizer.md"
+    "./agents/reader.md",
+    "./agents/recon.md",
+    "./agents/risk-assessor.md",
+    "./agents/synthesizer.md"
   ],
-  "consumes": ["requirement@1"],
-  "produces": ["research-report@1"]
+  "consumes": [
+    "requirement@1"
+  ],
+  "produces": [
+    "research-report@1"
+  ]
 }

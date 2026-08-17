@@ -1,7 +1,7 @@
 {
   "id": "lambda",
   "name": "lambda",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Implementation plugin. Executes plans via TDD cycle \u2014 write failing test, write minimal code, confirm passing, commit. Produces committed, tested code verified by the axiom exit gate.",
   "author": {
     "name": "Gabriel Castro",
@@ -9,12 +9,18 @@
   },
   "skills": "./skills/",
   "agents": [
-    "./agents/lambda-exit-gate.md",
-    "./agents/lambda-implementer.md",
-    "./agents/lambda-mutator.md",
-    "./agents/lambda-recon.md",
-    "./agents/lambda-reviewer.md"
+    "./agents/exit-gate.md",
+    "./agents/implementer.md",
+    "./agents/mutator.md",
+    "./agents/recon.md",
+    "./agents/reviewer.md"
   ],
-  "consumes": ["plan@1", "spec@1"],
-  "produces": ["changeset@1", "verdict@1"]
+  "consumes": [
+    "plan@1",
+    "spec@1"
+  ],
+  "produces": [
+    "changeset@1",
+    "verdict@1"
+  ]
 }

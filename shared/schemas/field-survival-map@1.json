@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "field-survival-map@1",
-  "description": "Output of proof-boundary-tracer. Maps each field of a T7/T10 candidate struct or type to whether it reaches an execution boundary. Consumed by proof-adversary.",
+  "description": "Output of boundary-tracer. Maps each field of a T7/T10 candidate struct or type to whether it reaches an execution boundary. Consumed by adversary.",
   "type": "object",
   "additionalProperties": false,
   "required": ["candidate_id", "struct_or_type", "fields", "reasoning"],

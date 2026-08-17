@@ -1,4 +1,15 @@
-# Changelog — basis
+# Changelog
+
+— basis
+
+## [1.1.0] - 2026-08-17
+
+### Added
+- **Lean Plugin Scaffolding**: `scaffolder` generates clean agent names without redundant plugin prefixes.
+- **Cache-Aware Audits**: `auditor` checks that new plugin prompts follow static prefix caching standards.
+
+### Changed
+- **Lean Agent Names**: Agents now display cleanly as `basis:scaffolder`, `basis:auditor`, and `basis:schema-designer`.
 
 ## [1.0.1] - 2026-08-05
 ### Fixed
@@ -10,4 +21,4 @@
 ### Added
 - Initial release, superseding `agent-plugin-builder`
 - Plugin scaffolding, conformance auditing, and schema contract design
-- Subagents: basis-scaffolder, basis-auditor, basis-schema-designer
+- Subagents: scaffolder, auditor, schema-designer
