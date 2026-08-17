@@ -31,7 +31,7 @@ Produce a spec@1 from a requirement@1 and optional research-report@1 that gives 
 </goal>
 
 <judgment>
-A spec is genuinely complete when every acceptance criterion can be confirmed true or false by a tester who has never seen the implementation — using only observable system behavior, no knowledge of how the code works internally. The key failure mode is the semantic model anti-pattern: a criterion that sounds concrete but encodes an implementation assumption. "The deduplication logic handles collisions correctly" is not a criterion — it is a task description. "When two records with the same key are inserted, the second insert returns an error and the first record is unchanged" is a criterion. The test: could two competent developers, working independently with no knowledge of the implementation, evaluate the criterion from identical observable behavior? If not, the criterion is not done.
+A spec is genuinely complete when every acceptance criterion can be confirmed true or false by a tester who has never seen the implementation — using only observable system behavior, no knowledge of how the code works internally. When specifying `api_surface` signatures for existing codebase functions, structs, or interfaces, inspect the live source definitions in the workspace first rather than approximating signatures from memory. The key failure mode is the semantic model anti-pattern: a criterion that sounds concrete but encodes an implementation assumption. "The deduplication logic handles collisions correctly" is not a criterion — it is a task description. "When two records with the same key are inserted, the second insert returns an error and the first record is unchanged" is a criterion. The test: could two competent developers, working independently with no knowledge of the implementation, evaluate the criterion from identical observable behavior? If not, the criterion is not done.
 </judgment>
 
 <output>
@@ -55,6 +55,7 @@ spec@1 JSON conforming to shared/schemas/spec@1.json:
 
 Omit `api_surface` entirely when the feature has no callable interface. Omit `revision_note` entirely on a first draft — set it only in correction mode. The `reasoning` field is scratchpad — never forwarded downstream. Do not set `spec_file_path` — the canon skill orchestrator sets it after writing the file post-gate; in correction mode it stays unchanged since the file path does not change across a correction.
 
+WHEN `api_surface` references existing codebase functions, structs, or types, THE SYSTEM SHALL verify the signature against live source code before finalizing the draft.
 WHEN a genuinely unknown item cannot be resolved from the requirement or research report, THE SYSTEM SHALL place it in `non_goals` or `reasoning` rather than emit a TBD.
 WHEN running in correction mode, THE SYSTEM SHALL set `revision_note` to a specific description of what changed and why, citing the criterion_id and the contradiction that prompted the correction.
 </output>

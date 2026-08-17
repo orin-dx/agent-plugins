@@ -2,7 +2,7 @@
 name: need
 description: >-
   Trigger this skill when the user describes a need ("we need X", "the problem is Y", "users are asking for Z"), when they want to define or capture a requirement, when they ask what is in the backlog, or when they ask whether a need is already captured or addressed. Use when someone wants to structure a raw idea or pain point into a formal requirement before any spec or code is written. This skill transforms free-text need statements into structured requirement@1 artifacts containing: a one-sentence statement, stakeholder identification, the underlying why, testable done-when criteria, and explicit out-of-scope boundaries. Integrates with GitHub Issues by default — requirements are created as issues with a machine-readable requirement@1 block. Extensible: any issue tracker that produces the requirement@1 schema (Jira, Linear, Notion) can substitute as the backing store. Also activate for backlog audits, duplicate requirement detection, and coverage gap analysis against existing specs and implementation files.
-version: "1.1.0"
+version: 1.2.0
 ---
 
 # Graph — Need Definition Skill

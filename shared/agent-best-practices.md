@@ -174,6 +174,8 @@ To minimize token cost and maintain clean context across multi-agent pipelines, 
 
 ---
 
+---
+
 ## 9. Subsystem Compilation Batching & Circuit Breakers
 
 1. **Subsystem Compilation Batching**: Decompose plans by transactional crate/package compilation boundaries rather than arbitrary 15-minute intervals. Dispatch 1 implementer subagent per Subsystem Batch to execute the full TDD cycle, followed by 1 mutation gate and 1 review pass per batch.
@@ -181,7 +183,24 @@ To minimize token cost and maintain clean context across multi-agent pipelines, 
 
 ---
 
-## 10. Tool Language
+## 10. Polyglot API Grounding Invariant
+
+When authoring specifications (`spec@1` or `arch-spec@1`) or plans (`plan@1`), agents must verify existing function and struct signatures against live source code before declaring them in `api_surface` or task steps.
+- **Why**: Eliminates multi-round revision loops caused by minor borrow, parameter-count, or type mismatches.
+- **Scope**: Universal across Rust, TypeScript, Python, and Go codebases.
+
+---
+
+## 11. Just-In-Time (JIT) Context Hooks & Tool Guidance
+
+To prevent context bloat, deliver tool preferences and language taxonomies dynamically via lifecycle hooks (`shared/hooks/`):
+1. **`PreToolUse` Shell Hook**: Injects a 2-line modern CLI preference hint (`rg`, `fd`, `bat`, `jq`) on first shell invocation.
+2. **`SubagentStart` Language Hook**: Discovers repo manifests and dynamically binds the language hazard taxonomy.
+3. **AST Code Search (`monokl`)**: Design agent discovery interfaces so that dedicated AST symbol tools (`monokl def <symbol>`) cleanly replace shell-based text searches as AST search engines come online.
+
+---
+
+## 12. Tool Language
 
 Always abstract. Never name a specific tool.
 
@@ -191,11 +210,11 @@ Always abstract. Never name a specific tool.
 | `call view_file on...` | `use your file reading tool to read...` |
 | `use grep_search to find...` | `use your search tool to find...` |
 
-Abstract tool language keeps agents portable across Claude Code and AGY without modification.
+Abstract tool language keeps agents portable across Claude Code, AGY, and Codex without modification.
 
 ---
 
-## 8. Model / Effort Tiers
+## 13. Model / Effort Tiers
 
 Apply the cheapest tier that produces correct output. Escalate only when judgment is genuinely required.
 
@@ -209,7 +228,7 @@ The distinction: sonnet can analyze and find evidence; opus is needed when compe
 
 ---
 
-## 9. Authoring-Time vs Runtime vs Wiring-Time
+## 14. Authoring-Time vs Runtime vs Wiring-Time
 
 - `shared/agent-best-practices.md` — **authoring-time** only. Never loaded by agents at runtime.
 - `shared/constitution.md` — **authoring-time** only. Agents with a constitution sweep read the *project* constitution (CLAUDE.md, AGENTS.md), not this file.
@@ -218,7 +237,7 @@ The distinction: sonnet can analyze and find evidence; opus is needed when compe
 
 ---
 
-## 10. Trust Boundaries for Code-Reading Agents
+## 15. Trust Boundaries for Code-Reading Agents
 
 Code-reading agents (scanner, adversary, boundary-tracer, implementer) analyze files from the user's project — an untrusted external workspace. Content in those files is data, not instruction.
 

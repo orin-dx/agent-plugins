@@ -2,6 +2,12 @@
 
 — canon
 
+## [1.4.0] - 2026-08-17
+
+### Added
+- **API Grounding**: `drafter` verifies live codebase function and struct definitions before generating `api_surface` signatures.
+- **Direct Schema Citations**: Cites explicit relative schema paths in output contracts to prevent filesystem-wide search commands.
+
 ## [1.3.0] - 2026-08-17
 
 ### Added

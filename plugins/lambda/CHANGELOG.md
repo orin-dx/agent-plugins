@@ -2,6 +2,11 @@
 
 — lambda
 
+## [1.4.0] - 2026-08-17
+
+### Changed
+- **Modern Tool Guidance**: Standardized on targeted `rg`, `fd`, and `bat` inspection for faster test and symbol discovery during TDD loops.
+
 ## [1.3.0] - 2026-08-17
 
 ### Added

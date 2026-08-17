@@ -2,7 +2,7 @@
 name: meta
 description: >-
   Trigger this skill when the user asks to build a new plugin, create a plugin for a specific domain, scaffold a plugin directory, audit an existing plugin for conformance, check plugin conformance against ecosystem schemas, design a schema for inter-agent communication, add a new schema to shared/schemas/, write an agent for a given task, or create a skill for a new capability. Activate when the user wants to understand the correct plugin directory layout, plugin.json format, SKILL.md description writing conventions, the 4-part agent structure (backstory, goal, judgment, output), shared schema design rules, or the symlink setup for shared/. Also use when replacing or migrating agent-plugin-builder work. basis knows the full ecosystem conventions end-to-end and its output is a ready-to-install plugin directory.
-version: "1.1.0"
+version: 1.2.0
 ---
 
 # basis — Meta-Plugin for Building Plugins

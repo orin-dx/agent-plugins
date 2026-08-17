@@ -2,6 +2,11 @@
 
 — axiom
 
+## [1.2.0] - 2026-08-17
+
+### Changed
+- **Direct Schema Paths**: Standardized explicit schema resolution in gate output contracts.
+
 ## [1.1.0] - 2026-08-17
 
 ### Added

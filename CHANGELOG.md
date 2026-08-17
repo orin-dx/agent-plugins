@@ -3,6 +3,19 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [2.2.0] - 2026-08-17 — Polyglot API Grounding, JIT Context Hooks, and Modern Tool Guidance
+
+### Architectural Performance & Tooling
+- **Polyglot API Grounding**: Mandated that agents inspect live source definitions before declaring function or type signatures in specs (`canon`) or plans (`vector`), eliminating multi-round revision loops caused by parameter or borrow mismatches.
+- **Just-In-Time (JIT) Context Hooks**: Added cross-platform lifecycle hook templates in `shared/hooks/` (`pre-command.sh`, `subagent-start.sh`) that dynamically load minimal 2-line modern CLI guidance and language hazard taxonomies without polluting cold prompt caches.
+- **Modern CLI Preference Invariant**: Standardized tool selection heuristics in cached static headers to prioritize `rg`, `fd`, `bat`, and `jq` over legacy `grep`, `find`, `sed`, and `cat`.
+- **Explicit Relative Schema Citations**: Enforced relative path citations (`shared/schemas/<name>@<version>.json`) in all `<output>` contracts, eliminating filesystem-wide `find /` schema searches.
+
+### Skills & Agent Capabilities
+- **`canon` (v1.4.0)**: `drafter` now verifies live codebase function and struct definitions before generating `api_surface` entries.
+- **`vector` (v1.4.0)**: `planner` verifies existing types and modules against source code before defining task-level TDD steps.
+- **`basis` (v1.2.0)**: Added scaffolding templates and auditing rules for JIT lifecycle hooks and modern CLI tool preference.
+
 ## [2026-08-17] — High-Signal Performance, Lean Naming, and Subsystem Batching
 
 ### Performance & Token Efficiency

@@ -2,6 +2,11 @@
 
 — vector
 
+## [1.4.0] - 2026-08-17
+
+### Added
+- **Task Step Grounding**: `planner` inspects live source files before declaring signatures and types in implementation task steps.
+
 ## [1.3.0] - 2026-08-17
 
 ### Added

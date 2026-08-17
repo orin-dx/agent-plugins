@@ -2,6 +2,11 @@
 
 — trace
 
+## [1.2.0] - 2026-08-17
+
+### Changed
+- **Targeted Research Lookups**: Uses `rg` and `bat` patterns for fast, windowed codebase evidence gathering.
+
 ## [1.1.0] - 2026-08-17
 
 ### Changed

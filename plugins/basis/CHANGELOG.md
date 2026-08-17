@@ -2,6 +2,11 @@
 
 — basis
 
+## [1.2.0] - 2026-08-17
+
+### Added
+- **JIT Hook Scaffolding**: Added reference hook generation in `shared/hooks/` for cross-platform lifecycle context injection.
+
 ## [1.1.0] - 2026-08-17
 
 ### Added

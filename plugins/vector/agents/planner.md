@@ -49,8 +49,9 @@ Include `reasoning` as a scratchpad for decomposition logic — it is not forwar
 
 WHEN spec_file_path is set in the source spec@1, THE SYSTEM SHALL read the spec from disk at that path before decomposing tasks, propagate spec_file_path into the plan@1 output, and set spec_hash to a content hash computed over the raw file bytes as read from disk — not a parsed or re-serialized form — so recon computes an identical hash for identical content.
 WHEN the source spec@1 carries linked_requirement, THE SYSTEM SHALL propagate it into the plan@1 output so the requirement-to-code chain remains traceable without re-reading the spec.
+WHEN decomposing tasks, THE SYSTEM SHALL group related tasks into cohesive `batches` aligned with transactional crate/package compilation boundaries.
+WHEN tasks reference existing codebase functions or types, THE SYSTEM SHALL verify signatures against live source code before finalizing task steps.
 WHEN the spec leaves something ambiguous, NEVER defer it — pick an approach and state it explicitly as a task-level note.
-IF a task would exceed fifteen minutes for a competent developer, split it into smaller tasks.
 NEVER use placeholders such as "TBD", "as appropriate", or "implement the feature" in any task step.
 WHEN an acceptance criterion ID from the spec does not appear in any task's `covers_criteria`, THE SYSTEM SHALL create a task that covers it rather than leaving it uncovered.
 WHEN running in amend mode, THE SYSTEM SHALL modify only tasks whose covers_criteria includes an affected criterion_id, plus any new tasks required for newly introduced criteria, and SHALL recompute spec_hash against the corrected spec file so it reflects the version the amended plan now matches.

@@ -2,6 +2,11 @@
 
 — delta
 
+## [1.3.0] - 2026-08-17
+
+### Changed
+- **Direct Evidence Citations**: Formatted changeset evidence pointers with direct file and line references.
+
 ## [1.2.0] - 2026-08-17
 
 ### Changed

@@ -49,13 +49,23 @@ WHEN assigning `model` and `effort`, the author SHALL apply dynamic routing base
 
 WHEN authoring agent prompts, THE SYSTEM SHALL maintain an identical static header across all agents in the ecosystem to maximize prompt cache sharing (>95% hit rate).
 
+WHEN executing shell operations, THE SYSTEM SHALL prioritize modern CLI tools (ripgrep `rg`, `fd`, `bat`, `jq`, `delta`, `eza`) over legacy builtins (`grep`, `find`, `sed`, `cat`).
+
 WHEN passing task-specific inputs (file paths, line ranges, criteria IDs, blocker arrays), THE CALLER SHALL place them strictly at the tail of the prompt after the static cache breakpoint.
 
 ---
 
-## Progressive Context Loading
+## API Grounding Invariant
+
+WHEN drafting or revising a specification (`spec@1` or `arch-spec@1`) or plan (`plan@1`) that references existing codebase functions, structs, or types in `api_surface`, THE AGENT SHALL inspect the live code definitions before declaring signatures rather than approximating from memory.
+
+---
+
+## Progressive Context Loading & JIT Hooks
 
 WHEN an agent requires a shared reference file, it SHALL load only the file for its cognitive phase — not all reference files.
+
+WHERE an agent execution platform supports lifecycle hooks, THE SYSTEM SHALL load minimal tool and hazard context just-in-time upon tool invocation rather than preloading full reference files at initialization.
 
 IF a reference file exceeds 120 lines covering mixed concerns, it SHALL be split by concern before publishing.
 
@@ -160,6 +170,8 @@ WHEN generating inter-agent payloads, reports, or reviews, THE SYSTEM SHALL comm
 ## Schema-Driven Handoffs
 
 WHERE an agent produces structured output consumed by another agent, it SHALL reference a schema from `shared/schemas/`.
+
+WHEN an agent emits structured output conforming to a schema, its output contract SHALL cite the exact relative path (`shared/schemas/<name>@<version>.json`) rather than un-pathed filenames.
 
 WHEN a new inter-agent handoff is introduced, a schema SHALL be defined in `shared/schemas/` before the agent prompts are written.
 

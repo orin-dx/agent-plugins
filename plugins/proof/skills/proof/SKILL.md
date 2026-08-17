@@ -2,7 +2,7 @@
 name: audit
 description: >-
   Trigger this skill when the user asks to perform a bug hunt, code audit, find bugs, security audit, defect scan, vulnerability scan, code review for bugs, or asks "what's wrong with this code." Activate for any codebase language — Rust, TypeScript, or JavaScript. This skill runs a 5-phase pipeline: (1) recon builds a verified module manifest and detects the primary language from Cargo.toml or package.json; (2) scanner reads language-specific hazard taxonomies from shared/references/rust-hazards.md or shared/references/typescript-hazards.md and emits candidates in live files only; (3) boundary-tracer (conditional) traces field survival for T7 and T10 candidates; (4) adversary attempts to refute each candidate by tracing control flow — only unrebutted findings with concrete failing scenarios survive; (5) exit-gate independently re-reads code from scratch, checks for sibling gaps, confirms compile and tests pass, and escalates to human after 3 failed retries. Proof never reports bugs in dead or unreachable code. Output follows the finding-report@1 schema.
-version: "2.1.0"
+version: 2.2.0
 ---
 
 # proof — Cross-Language Bug-Hunting Skill

@@ -2,6 +2,11 @@
 
 — graph
 
+## [1.2.0] - 2026-08-17
+
+### Changed
+- **Streamlined Intake**: Standardized requirement schema citations across intake and clarifier agents.
+
 ## [1.1.0] - 2026-08-17
 
 ### Changed

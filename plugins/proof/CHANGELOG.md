@@ -2,6 +2,11 @@
 
 — proof
 
+## [2.2.0] - 2026-08-17
+
+### Changed
+- **Fast Symbol Discovery**: Updated scanning and adversary workflows to use targeted `rg` patterns for symbol inspection.
+
 ## [2.1.0] - 2026-08-17
 
 ### Added

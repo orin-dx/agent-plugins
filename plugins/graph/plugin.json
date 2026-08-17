@@ -1,7 +1,7 @@
 {
   "id": "graph",
   "name": "graph",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to any issue tracker that produces the requirement@1 schema.",
   "author": {
     "name": "Gabriel Castro",

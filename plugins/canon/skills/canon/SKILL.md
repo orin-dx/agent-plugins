@@ -2,7 +2,7 @@
 name: spec
 description: >-
   Trigger this skill when the user asks to write or draft a spec, says "spec this out", wants to check whether a spec is complete or unambiguous, says "review this spec", asks whether a spec matches the source requirement ("is this grounded?"), asks for a structural fix after proof surfaces a defect class, needs a pass/fail gate before planning, or reports that implementer found a spec criterion contradicts observed system behavior. Also activate when converting a requirement or research report into a structured specification document, when proof has returned a finding-report and the fix is architectural rather than a local patch, or when a previously gated spec needs correction after implementation reveals it was wrong. This skill produces spec@1 artifacts where every acceptance criterion is a testable proposition — no TBDs, no ambiguous language. Criteria must be confirmable true or false from the outside; error cases carry their own dedicated criteria. Use canon to catch untestable language ("the system should be responsive"), ambiguous scope, missing error cases, unsupported criteria, and defect classes that require structural elimination rather than instance patching.
-version: "1.3.0"
+version: 1.4.0
 ---
 
 # canon — Specification Skill
