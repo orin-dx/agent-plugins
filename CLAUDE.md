@@ -25,6 +25,14 @@ Quick reference guide for Claude Code CLI and Claude AI agents interacting with 
   ```bash
   ./scripts/check-mermaid.sh
   ```
+- **Version Consistency** (run after any version bump — checks `plugin.json`, README, CHANGELOG, and `marketplace.json` agree):
+  ```bash
+  ./scripts/check-versions.sh
+  ```
+- **Skill Doc Accuracy** (run after adding/removing/renaming a skill directory — checks every skill a README's table documents actually exists):
+  ```bash
+  ./scripts/check-skills-doc.sh
+  ```
 
 ---
 

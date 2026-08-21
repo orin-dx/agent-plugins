@@ -163,6 +163,12 @@ jq . plugins/*/plugin.json > /dev/null
 # Only an actual render catches it. Needs Node (npx); no repo dependency.
 ./scripts/check-mermaid.sh
 
+# Check that plugin.json/README/CHANGELOG/marketplace.json versions agree
+./scripts/check-versions.sh
+
+# Check every skill a README documents actually has a skills/ directory
+./scripts/check-skills-doc.sh
+
 # Check schema files parse correctly
 jq . shared/schemas/*.json > /dev/null
 ```
