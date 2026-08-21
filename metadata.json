@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0HE5A4PJEQZ7YSRBHKTPRY6",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 16,
+  "files_touched": [
+    "plugins/canon/CHANGELOG.md",
+    "plugins/canon/README.md",
+    "plugins/canon/agents/drift-checker.md",
+    "plugins/canon/plugin.json",
+    "plugins/canon/skills/architect/SKILL.md",
+    "plugins/canon/skills/audit-spec/SKILL.md",
+    "plugins/canon/skills/canon/SKILL.md",
+    "plugins/canon/skills/correct-spec/SKILL.md",
+    "plugins/canon/skills/draft-spec/SKILL.md",
+    "plugins/canon/skills/gate-spec/SKILL.md",
+    "plugins/canon/skills/spec-drift/SKILL.md",
+    "plugins/canon/skills/verify-spec/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 4,
+    "cache_creation_tokens": 1342,
+    "cache_read_tokens": 960024,
+    "output_tokens": 702,
+    "api_call_count": 2
+  }
+}
