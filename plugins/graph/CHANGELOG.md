@@ -2,6 +2,18 @@
 
 — graph
 
+## [2.0.0] - 2026-08-20
+
+### Breaking
+- Single `need` skill replaced by five targeted skills: `capture-need`, `clarify-requirement`, `prioritize-backlog`, `connect-requirement`, `audit-backlog`. Anything invoking `/graph:graph` must switch to the new per-skill names.
+- `audit` was the natural bare-word name for the backlog-coverage skill but collides with `proof`'s existing plugin-level skill (`name: audit`) — named `audit-backlog` instead, per the constitution's Skill Names rule.
+- A follow-up pass renamed `capture` → `capture-need`, `clarify` → `clarify-requirement`, `prioritize` → `prioritize-backlog`, `connect` → `connect-requirement`: the plugin id `graph` doesn't hint at "requirement" the way `delta` hints at "shipping," so bare verbs left the object ambiguous in slash-command autocomplete.
+### Added
+- `prioritizer` agent (new) — ranks requirement@1 drafts by impact, urgency, and dependency order with a stated rationale per ranking. No existing agent covered this; the old SKILL.md listed a `prioritize` sub-skill with no agent behind it.
+- `graph/clarify-requirement` skill — `clarifier` had a real agent but was never listed in the old SKILL.md's sub-skills table. Given its own skill in this split.
+### Fixed
+- `graph/connect-requirement` and `graph/audit-backlog` were previously two undifferentiated sub-skill descriptions (one had no agent). Both now explicitly route to `auditor`, distinguished by scope: `connect-requirement` takes one requirement, `audit-backlog` sweeps the whole open backlog. `auditor.md`'s description documents both modes.
+
 ## [1.2.0] - 2026-08-17
 
 ### Changed
