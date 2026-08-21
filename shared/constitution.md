@@ -18,6 +18,8 @@ plugins/<id>/
 └── agents/*.md
 ```
 
+A new plugin SHALL default to a single skill directory named after the plugin id. IF the plugin's scope grows to cover several genuinely independent, heterogeneous user intents on the same artifact (not a linear pipeline invoked as one flow), the plugin author MAY split `skills/<id>/` into multiple directories — `skills/<skill-name>/SKILL.md` per skill — each still conforming to the frontmatter and body rules below. The skill-routing key is the directory name, not the frontmatter `name:` field.
+
 WHEN a plugin manifest (`plugin.json`) is authored, it SHALL include: `id`, `version` (semver), `description`, `skills`, and `agents` (list of file paths).
 
 IF a plugin is superseded by another, it SHALL be deleted from the repository rather than marked deprecated.
@@ -125,15 +127,15 @@ WHEN spec_drift_warning is set, downstream agents SHALL record a coverage gap no
 
 WHEN implementer determines that an acceptance criterion contradicts observed system behavior, it SHALL emit status spec_contradiction rather than implementing code that satisfies neither the spec nor reality.
 
-WHEN a spec_contradiction is reported, the caller SHALL halt remaining task execution and route the contradiction to canon/correct before any further task in the plan proceeds — an uncorrected spec SHALL NOT continue to govern implementation.
+WHEN a spec_contradiction is reported, the caller SHALL halt remaining task execution and route the contradiction to canon/correct-spec before any further task in the plan proceeds — an uncorrected spec SHALL NOT continue to govern implementation.
 
-WHEN canon/correct produces a corrected spec@1 that passes exit-gate, the skill orchestrator SHALL overwrite the existing file at the same spec_file_path and commit the change — the file path SHALL NOT change across a correction.
+WHEN canon/correct-spec produces a corrected spec@1 that passes exit-gate, the skill orchestrator SHALL overwrite the existing file at the same spec_file_path and commit the change — the file path SHALL NOT change across a correction.
 
 WHEN a corrected spec@1 is handed to planner, it SHALL run in amend mode — patching only the tasks tied to the affected criteria — rather than re-decomposing the entire plan.
 
 WHEN an amended plan@1 is produced, it SHALL pass through challenger before lambda resumes — amendment is not exempt from adversarial review.
 
-IF the same criterion_id triggers spec_contradiction a second time after already being corrected via canon/correct, the caller SHALL escalate to a human rather than routing to canon/correct again.
+IF the same criterion_id triggers spec_contradiction a second time after already being corrected via canon/correct-spec, the caller SHALL escalate to a human rather than routing to canon/correct-spec again.
 
 ---
 
@@ -191,9 +193,11 @@ IF an agent prompt contains absolute paths, they SHALL be replaced with relative
 
 ## Skill Names
 
-WHEN a skill is named in `SKILL.md` frontmatter, it SHALL use a single lifecycle-stage word unique across all installed plugins.
+WHEN a skill is named in `SKILL.md` frontmatter, it SHALL default to a single lifecycle-stage word.
 
-IF two plugins in the same ecosystem would share a skill name, the plugin author SHALL use a qualified name (`<plugin>-<stage>`) to prevent collision.
+IF a single word does not communicate what the skill acts on, the plugin author SHALL use a more specific multi-word name instead (e.g. `post-review`, not `post`).
+
+Skill names SHALL NOT be prefixed with their own plugin id to resolve a collision with another plugin's skill name (e.g. `delta-post`) — the plugin-qualified invocation (`<plugin>:<skill>`) already disambiguates two plugins using the same bare skill name, so prefixing the name itself duplicates that and adds no clarity.
 
 ---
 
