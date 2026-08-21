@@ -155,6 +155,12 @@ cd agent-plugins
 jq . marketplace.json > /dev/null
 jq . plugins/*/plugin.json > /dev/null
 
+# Render every Mermaid diagram in the repo and report any that fail to parse.
+# A syntax error in a diagram is invisible to every check above it — it's
+# still valid markdown, jq never touches it, and it reads fine as source.
+# Only an actual render catches it. Needs Node (npx); no repo dependency.
+./scripts/check-mermaid.sh
+
 # Check schema files parse correctly
 jq . shared/schemas/*.json > /dev/null
 ```

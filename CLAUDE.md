@@ -21,6 +21,10 @@ Quick reference guide for Claude Code CLI and Claude AI agents interacting with 
   jq . marketplace.json > /dev/null
   jq . plugins/*/plugin.json > /dev/null
   ```
+- **Mermaid Diagram Validation** (run after touching any mermaid-fenced block — a syntax error still reads as valid markdown, only an actual render catches it):
+  ```bash
+  ./scripts/check-mermaid.sh
+  ```
 
 ---
 
