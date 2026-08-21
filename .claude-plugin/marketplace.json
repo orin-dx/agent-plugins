@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "basis",
-      "description": "Meta-plugin for scaffolding and auditing plugins, skills, and agents. Generates plugin directory structure and validates conformance to ecosystem schemas.",
+      "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
@@ -39,7 +39,7 @@
     },
     {
       "name": "graph",
-      "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker.",
+      "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker that produces the requirement@1 schema. Skills: capture-need, clarify-requirement, prioritize-backlog, connect-requirement, audit-backlog.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
@@ -59,7 +59,7 @@
     },
     {
       "name": "canon",
-      "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code.",
+      "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, gate-spec, correct-spec, architect.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
@@ -89,7 +89,7 @@
     },
     {
       "name": "delta",
-      "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation.",
+      "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, changeset, receive-feedback, post-review, release.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",

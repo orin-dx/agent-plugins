@@ -8,6 +8,7 @@
 - Single `spec` skill replaced by seven targeted skills: `draft-spec`, `verify-spec`, `spec-drift`, `audit-spec`, `gate-spec`, `correct-spec`, `architect`. Anything invoking `/canon:canon` (or the old sub-skill markdown headers) must switch to the new per-skill names.
 - `audit` and `gate` were the natural bare-word names for two of these but collide with existing plugin-level skills (`proof`'s `audit`, `axiom`'s `gate`) — named `audit-spec` and `gate-spec` instead, per the amended constitution Skill Names rule (specific multi-word name over a `<plugin>-<stage>` prefix).
 - A follow-up pass renamed `draft` → `draft-spec`, `verify` → `verify-spec`, `drift` → `spec-drift`, `correct` → `correct-spec`: the plugin id `canon` doesn't hint at "spec" the way `delta` hints at "shipping," so bare verbs left the skill's object ambiguous in slash-command autocomplete. `architect` stayed bare — distinctive enough on its own.
+- `drift-checker`'s `summary` field changed shape from a free-text string to a structured object (`covered_count`/`uncovered_count`/`drifted_count`/`note`). Anything consuming `canon/spec-drift`'s output and reading `summary` as a string will break.
 ### Fixed
 - `plugin.json`'s `description` listed stale skills (`review`, `changeset`) that never existed in canon — corrected to the real list.
 
