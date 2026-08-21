@@ -1,0 +1,77 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0HE6NWDY6AE2JDVTZJDREW3",
+  "session_id": "bbc88500-1c22-4b17-a7aa-f01c453ffafa",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-21T05:55:22.423908Z",
+  "branch": "main",
+  "checkpoints_count": 16,
+  "files_touched": [
+    "ARCHITECTURE.md",
+    "README.md",
+    "marketplace.json",
+    "plugins/axiom/README.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "54f8bcce4c86",
+  "checkpoint_transcript_start": 2537,
+  "transcript_lines_at_start": 2537,
+  "compact_transcript_start": 324,
+  "token_usage": {
+    "input_tokens": 6,
+    "cache_creation_tokens": 1540,
+    "cache_read_tokens": 1453406,
+    "output_tokens": 1102,
+    "api_call_count": 3
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01Ceji4FyqdZb3WPd7vQeMiy",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "54f8bcce4c86",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1731,
+        "end": 1732,
+        "entry_ids": [
+          "ea19d1e0-3d11-4a98-b2fa-f528617695bd"
+        ],
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 16
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-21T05:55:22.282742Z",
+    "agent_lines": 18,
+    "agent_removed": 18,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 18,
+    "total_lines_changed": 36,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
