@@ -1,94 +1,127 @@
 # lambda — Implementation
 
-**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 1.2.0
+**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 1.4.2
 
-Executes implementation tasks from a `plan@1` using strict TDD. Each task runs in a fresh subagent with isolated context — no state bleeds between tasks. `recon` reads the spec directly from disk at `spec_file_path` and, when the plan carries a `spec_hash`, flags whether the spec changed since the plan was made. As each task goes green, `implementer` records exactly where — test file/line, implementation file/line — as `criteria_evidence`, a byproduct of the TDD cycle it already runs. After each task commits, a mutation gate verifies the test suite would catch real faults before the next task begins. If an implementer discovers that a criterion contradicts what the system actually does — not merely that it's hard to implement — it stops and reports the contradiction rather than faking a pass; the caller routes that back to canon for correction before any further task proceeds. After all tasks complete, an adversarial exit gate reads the codebase from scratch, assumes the implementation is incomplete, uses the aggregated `criteria_evidence` as pointers to check (never as proof by itself), and returns a formal `verdict@1`. Lambda does not assemble `changeset@2` itself — the caller hands its accumulated `criteria_evidence` to **[delta](../delta/)**, which produces `changeset@2` from it.
+One skill, one strict TDD pipeline. Give it a `plan@1` and it executes every task in order — failing test, minimal code, green, commit — then gates the result with mutation testing and an adversarial exit check before handing off. No plan yet? Give it a `spec@1` directly.
+
+Lambda never assembles a changeset itself. It hands `criteria_evidence` — exact test and implementation locations for every criterion it proved — to **[delta](../delta/)**, which produces `changeset@2` from it.
 
 ---
 
 ## When to Use
 
-- You have a `plan@1` and want to execute it task-by-task via TDD
-- You have a `spec@1` but no plan and want to implement directly
-- You want to generate a test suite for a module or spec without changing implementation code
-- You want a plain-language explanation of what a module does and why
-- You need to refactor code without changing observable behavior, with tests staying green throughout
+- You have a `plan@1` and want it executed task-by-task via TDD
+- You have a `spec@1` but no plan, and want to implement directly
+- You need proof — not just a claim — that every acceptance criterion was actually tested
 
-**Invoke with:** `"Implement this"`, `"Execute the plan"`, `"Build this feature"`, `"Write tests for this spec"`, `"Generate tests for X"`, `"Explain what this code does"`, `"Refactor this without changing behavior"`
+**Invoke with:** `"Implement this"`, `"Execute the plan"`, `"Build this feature"`
 
----
-
-## Sub-skills
-
-| Sub-skill | What it does |
-| :--- | :--- |
-| `lambda/implement` | Executes a single task from `plan@1` via full TDD: failing test → minimal code → commit |
-| `lambda/generate-tests` | Writes a complete test suite for a spec or module — no implementation code changed |
-| `lambda/explain` | Reads a module or function and produces a plain-language explanation of what it does and why |
-| `lambda/refactor` | Restructures code for clarity or performance; tests must stay green throughout |
-
----
-
-## Subagents
-
-| Subagent | Role | Tier | Description |
-| :--- | :--- | :--- | :--- |
-| `recon` | Workspace Recon | haiku / low | Detects language, test runner, and build tool. Inventories plan files. Confirms baseline passes before any code is written. Verifies the spec file exists at `spec_file_path` and flags `spec_drift_warning` if the plan's `spec_hash` no longer matches the file on disk. |
-| `implementer` | TDD Executor | sonnet / medium | Executes one task: writes the failing test, implements minimal code to pass it, commits. Re-invoked when mutation gate returns precision tests. Reports `spec_contradiction` instead of implementing when a criterion contradicts observed system behavior. |
-| `mutator` | Mutation Testing Gate | sonnet / medium | Runs mutation testing on implemented files (cargo-mutants for Rust, Stryker for TypeScript). Identifies surviving mutants and designs precision tests that kill them. |
-| `reviewer` | Pre-Gate Reviewer | sonnet / medium | Neutral post-task review — checks scope adherence, non-negotiable violations, sibling gaps, and test quality before the exit gate runs. |
-| `exit-gate` | Adversarial Verifier | opus / high | Reads code from scratch. Verifies all acceptance criteria are implemented and tested, all tests pass, mutation gate ran, no regressions. Produces `verdict@1`. |
+> The skill also triggers on "generate tests for X," "explain what this code does," and "refactor this without changing behavior" — but no agent here implements those as distinct modes. They fall through to the same TDD pipeline below, which only fits some of them. See [Capability Gaps](#capability-gaps).
 
 ---
 
 ## Pipeline
 
-```
-plan@1 → recon → [implementer → mutator → reviewer] × N tasks → exit-gate → changeset@2
+```mermaid
+flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+
+    Plan["plan@1
+    (or spec@1 direct)"] --> Recon["recon
+    haiku / low"]
+
+    subgraph loop [" per task, × N "]
+        direction LR
+        Impl["implementer
+        sonnet / medium"] --> Mut["mutator
+        sonnet / medium"]
+        Mut -.->|precision tests| Impl
+        Mut --> Rev["reviewer
+        sonnet / medium"]
+    end
+
+    Recon --> Impl
+    Rev --> Gate["exit-gate
+    opus / high"]
+    Gate --> Done(["verdict@1"])
+
+    class Plan source
+    class Recon store
+    class Impl,Mut engine
+    class Rev,Gate router
+    class Done output
+
+    style loop fill:#fafafa,stroke:#cbd5e1,stroke-width:1.5px,stroke-dasharray: 4 4,rx:10px,ry:10px
 ```
 
-Each task runs in a fresh `implementer` context. After the implementer commits, `mutator` runs and may feed precision tests back into a second `implementer` cycle before the reviewer and next task proceed. The exit gate runs once after all tasks complete and must confirm the mutation gate ran.
+Each task runs in a fresh `implementer` context — no state bleeds between tasks. `mutator` can feed precision tests back into `implementer` before `reviewer` and the next task proceed. `exit-gate` runs once, after every task completes, and confirms mutation testing ran.
 
 ---
 
 ## TDD Cycle (per task)
 
-Every task follows this exact sequence — no shortcuts:
+No shortcuts:
 
-1. Write the failing test exactly as specified in the plan
-2. Run the test — confirm it fails with the expected error **(red phase required; a test that passes before implementation is broken)**
-3. Write the minimal implementation to make it pass — no more
-4. Run the test — confirm it passes (green)
-5. Run the full test suite — confirm no regressions
-6. Commit with the conventional commit message from the plan
+1. Write the failing test exactly as specified in the plan.
+2. Run it — confirm it fails with the expected error. **Red phase is required.** A test that passes before implementation exists means the test is broken.
+3. Write the minimal implementation that makes it pass. No more.
+4. Run it again — confirm green.
+5. Run the full suite — confirm no regressions.
+6. Commit with the plan's conventional commit message.
 
 ---
 
 ## Mutation Gate (per task)
 
-After each task commits, `mutator` runs mutation testing scoped to the changed files:
+After a task commits, `mutator` runs mutation testing scoped to the changed files — `cargo-mutants` for Rust, Stryker for TypeScript/JavaScript, detected from the workspace root.
 
-- **Rust** workspaces: `cargo-mutants`
-- **TypeScript/JavaScript** workspaces: Stryker
-- Language detected from workspace root (`Cargo.toml` → rust; `package.json` → typescript)
-
-For each surviving mutant, `mutator` returns a precision test — a specific, targeted assertion that would fail if that mutation were present. Those tests are fed back to `implementer` as additional failing tests to write and make green. Only when zero mutants survive (or the tool is unavailable) does the pipeline proceed to `reviewer`.
+For every surviving mutant, it designs a precision test that would kill it and returns those to `implementer` as additional failing tests. Only when zero mutants survive — or the tool is unavailable, recorded as a gap rather than a block — does the batch move to `reviewer`.
 
 ---
 
 ## Exit Gate
 
-After all tasks are complete, `exit-gate` runs independently. It does not inherit context from any prior agent — it reads the current code state from scratch and assumes the implementation is incomplete. It confirms that `mutator` ran (or recorded a `tool_unavailable` gap) and produces a `verdict@1` before `changeset@2` is released.
+`exit-gate` runs once, after all tasks complete, with no inherited context from any prior agent. It reads the current code from scratch, assumes the implementation is incomplete, and confirms mutation testing ran before it returns `verdict@1`.
 
-If the exit gate fails, blockers are returned to `implementer` for targeted fixes (max 3 retries; escalates to human after that).
+On fail, blockers go back to `implementer` for a targeted fix — three retries, then escalate to a human.
+
+---
+
+## Subagents
+
+| Subagent | Role | Tier | What it does |
+| :--- | :--- | :--- | :--- |
+| `recon` | Workspace Recon | haiku / low | Detects language, test runner, build tool. Inventories plan files. Confirms the baseline passes before any code is written. Flags `spec_drift_warning` if the plan's `spec_hash` no longer matches the spec file on disk. |
+| `implementer` | TDD Executor | sonnet / medium | Executes one task: failing test, minimal code, green, commit. Absorbs precision tests from `mutator` when supplied. Reports `spec_contradiction` instead of forcing an implementation that satisfies neither the criterion nor reality. |
+| `mutator` | Mutation Gate | sonnet / medium | Runs mutation testing on the task's changed files. Designs a precision test for every surviving mutant. |
+| `reviewer` | Pre-Gate Review | sonnet / medium | Neutral check before the exit gate: scope adherence, non-negotiable violations, sibling gaps, test quality. |
+| `exit-gate` | Adversarial Verifier | opus / high | Independent, from-scratch verification that every criterion is implemented, tested, and passing, with no regressions. Produces `verdict@1`. |
+
+---
+
+## Capability Gaps
+
+Three of the skill's trigger phrases have no agent behind them:
+
+| Trigger phrase | What actually happens |
+| :--- | :--- |
+| "generate tests for X" | Only produces a real result if reframed as implementation tasks whose deliverable *is* the test — there's no test-only mode. |
+| "explain what this code does" | Unimplemented. There's no failing test to write for an explanation, so the TDD pipeline doesn't fit — no agent here produces one. |
+| "refactor this without changing behavior" | Unimplemented as a distinct mode. A refactor only runs through this pipeline if it's expressed as tasks with their own red/green cycle proving behavior is unchanged. |
+
+If you need any of these as real capabilities, they'd need a dedicated agent — this is a documentation-accuracy note, not a promise they're coming.
 
 ---
 
 ## Output Schema
 
-`verdict@1` — see `shared/schemas/verdict@1.json`. Produced by `exit-gate`; pass/fail with specific blockers on failure.
+`verdict@1` — see `shared/schemas/verdict@1.json`. Produced by `exit-gate`: pass or fail, with specific blockers on failure.
 
-Each `implementer` task also returns `criteria_evidence` — an array of `{criterion_id, test_file, test_line, implementation_file, implementation_line}` entries, one per criterion the task proves. The caller accumulates these across the run and hands them to `changeset-analyzer` when shipping, which uses them to populate `changeset@2.criteria_evidence` — see `shared/schemas/changeset@2.json`.
+Each `implementer` task also returns `criteria_evidence` — one `{criterion_id, test_file, test_line, implementation_file, implementation_line}` entry per criterion the task proves. The caller accumulates these across the run and hands them to `changeset-analyzer` when shipping, which uses them to populate `changeset@2.criteria_evidence` — see `shared/schemas/changeset@2.json`.
 
 ---
 
@@ -106,4 +139,4 @@ Each `implementer` task also returns `criteria_evidence` — an array of `{crite
 
 ## Next Stage
 
-Feed the `verdict@1` to **[axiom](../axiom/)** for standalone gate verification, and hand the accumulated `criteria_evidence` to **[delta](../delta/)** for commit, PR, changeset, and release tooling.
+Feed `verdict@1` to **[axiom](../axiom/)** for standalone gate verification. Hand the accumulated `criteria_evidence` to **[delta](../delta/)** for commit, PR, changeset, and release tooling.

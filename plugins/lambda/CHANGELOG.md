@@ -2,6 +2,14 @@
 
 — lambda
 
+## [1.4.2] - 2026-08-21
+
+### Fixed
+- SKILL.md and README.md documented a fictional "Sub-skills" table (`lambda/implement`, `lambda/generate-tests`, `lambda/explain`, `lambda/refactor`) with slash-path names that look like independently invokable skills — lambda has exactly one skill directory, and no agent implements "generate-tests," "explain," or "refactor" as a distinct mode. Replaced with an honest description of the one real pipeline (recon → [implementer → mutator → reviewer] × N → exit-gate) and a Capability Gaps table naming which trigger phrases have no agent behind them.
+- README's version line was stuck at 1.2.0 while `plugin.json` had already moved to 1.4.1.
+### Changed
+- README's plain-text pipeline is now a Mermaid diagram styled with the palette from `shared/references/orin-visual-standard.md`, with the per-task loop (`implementer` → `mutator` → `reviewer`) in its own subgraph, separate from the one-time `recon`/`exit-gate` bookends.
+
 ## [1.4.0] - 2026-08-17
 
 ### Changed

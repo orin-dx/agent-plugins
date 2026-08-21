@@ -7,16 +7,13 @@ version: 1.4.0
 
 # Lambda — Implementation Skill
 
-<sub_skills>
+<capability>
 
-| Sub-skill | What it does |
-| :--- | :--- |
-| `lambda/implement` | Executes a single task from a plan@1 via the full TDD cycle: failing test → minimal code → commit. |
-| `lambda/generate-tests` | Writes a complete test suite for a spec or module without changing implementation code. |
-| `lambda/explain` | Reads a module or function and produces a plain-language explanation of what it does and why. |
-| `lambda/refactor` | Restructures code for clarity or performance without changing observable behavior; tests must stay green throughout. |
+lambda is one skill, not four. Every real invocation runs the same TDD pipeline through `implementer`: read the task's acceptance criteria, write a failing test, confirm red, write the minimal implementation, confirm green, commit — then `mutator` and `reviewer` gate the batch before `exit-gate` runs the final adversarial check.
 
-</sub_skills>
+The frontmatter `description` also triggers on "generate tests for X," "explain what this code does," and "refactor this without changing behavior." None of those have dedicated agent behavior — no agent here writes tests without implementation, produces a plain-language explanation, or runs a refactor-only mode. A request framed that way still routes to `implementer`'s standard TDD cycle; if that's not a fit (there is no failing test to write for "explain this"), say so rather than forcing the pipeline to produce something no agent actually defined.
+
+</capability>
 
 ---
 
