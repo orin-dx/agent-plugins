@@ -1,6 +1,6 @@
 # basis — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 1.0.1
+**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.0.0
 
 The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 
@@ -17,14 +17,16 @@ The tool for building tools. Scaffolds new plugins, audits existing ones for eco
 
 ---
 
-## Sub-skills
+## Skills
 
-| Sub-skill | What it does |
-| :--- | :--- |
-| `basis/scaffold` | Generates a complete, ready-to-install plugin directory given a plugin ID and description |
-| `basis/audit` | Audits an existing plugin directory against all ecosystem conformance rules; returns structured pass/fail/warn per check |
-| `basis/schema` | Designs a new JSON Schema (draft 2020-12) for an inter-agent artifact; checks for conflicts with existing schemas |
-| `basis/subagent` | Generates a single conformant subagent `.md` file using the 4-part structure |
+| Skill | What it does | Subagent |
+| :--- | :--- | :--- |
+| `basis/scaffold-plugin` | Generates a complete, ready-to-install plugin directory given a plugin ID and description | `scaffolder` |
+| `basis/audit-plugin` | Audits an existing plugin directory against all ecosystem conformance rules; returns structured pass/fail/warn per check | `auditor` |
+| `basis/design-schema` | Designs a new JSON Schema (draft 2020-12) for an inter-agent artifact; checks for conflicts with existing schemas | `schema-designer` |
+| `basis/scaffold-subagent` | Generates a single conformant subagent `.md` file for an existing plugin — skips plugin.json/SKILL.md/symlink | `scaffolder` (single-subagent mode) |
+
+`audit-plugin` is not bare `audit` — that word is already `proof`'s plugin-level skill name (code/bug auditing). See `shared/constitution.md`'s Skill Names rule.
 
 ---
 
@@ -57,7 +59,7 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 
 ## Directory Layout
 
-Plugins produced by `scaffolder` follow this exact layout:
+Plugins produced by `scaffolder` follow this exact layout — one skill directory named after the plugin id, the default for a new plugin:
 
 ```
 plugins/<id>/
@@ -69,6 +71,8 @@ plugins/<id>/
 └── agents/
     └── <agent-name>.md          # one file per agent in plugin.json
 ```
+
+If a plugin's scope later grows to cover several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into multiple directories, one per skill (`skills/<skill-name>/SKILL.md`), each still following the frontmatter and 4-part-body rules. `delta`, `canon`, `graph`, and `basis` itself are all examples. `basis/audit-plugin` checks every SKILL.md found under `skills/`, not just one.
 
 ---
 

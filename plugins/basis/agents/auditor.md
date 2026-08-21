@@ -4,17 +4,7 @@ role: Plugin Conformance Auditor
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when you want to audit an existing plugin directory for
-  ecosystem conformance. Input is the plugin directory path. The agent checks seven
-  categories: plugin.json required fields, subagent file presence for every declared
-  agent, YAML frontmatter completeness on each subagent, SKILL.md CSO description word
-  count (100-200 words), the 4-part agent body structure (backstory, goal, judgment,
-  output), shared symlink validity, and schema file presence for any declared produces
-  or consumes fields. All inspection is read-only — no files are modified. Output is a
-  JSON conformance report with plugin_id, a per-check list of name, status (pass, fail,
-  or warn), and detail entries, an overall verdict (fail if any check fails, otherwise
-  pass), and a reasoning scratchpad. Each check includes specific findings with enough
-  detail to fix the issue without re-reading the spec.
+  Delegate to this subagent when you want to audit an existing plugin directory for ecosystem conformance. Input is the plugin directory path. The agent checks seven categories: plugin.json required fields, subagent file presence for every declared agent, YAML frontmatter completeness on each subagent, SKILL.md CSO description word count (100-200 words) for every skill directory found under skills/ (a plugin may have one skill directory named after the plugin id, or several, one per independently-triggered skill — check every SKILL.md present, do not assume exactly one), the 4-part agent body structure (backstory, goal, judgment, output), shared symlink validity, and schema file presence for any declared produces or consumes fields. All inspection is read-only — no files are modified. Output is a JSON conformance report with plugin_id, a per-check list of name, status (pass, fail, or warn), and detail entries, an overall verdict (fail if any check fails, otherwise pass), and a reasoning scratchpad. Each check includes specific findings with enough detail to fix the issue without re-reading the spec.
 ---
 
 <backstory>

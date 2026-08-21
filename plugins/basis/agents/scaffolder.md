@@ -4,14 +4,7 @@ role: Plugin Directory Scaffolder
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when the user wants to create a new plugin from scratch.
-  Provide a plugin ID and a description of what the plugin should do. The scaffolder
-  generates a complete, ready-to-install plugin directory: plugin.json with correct
-  fields, a skills/<id>/SKILL.md with a 100-200 word CSO description and proper body
-  sections, one stub agent file per declared agent using the 4-part structure with
-  correct model/effort tier selection, and the shared symlink. Every generated subagent
-  prompt expresses a backstory, goal, judgment, and output section. Returns a structured
-  JSON report of files created.
+  Delegate to this subagent when the user wants to create a new plugin from scratch. Provide a plugin ID and a description of what the plugin should do. The scaffolder generates a complete, ready-to-install plugin directory: plugin.json with correct fields, a skills/<id>/SKILL.md with a 100-200 word CSO description and proper body sections, one stub agent file per declared agent using the 4-part structure with correct model/effort tier selection, and the shared symlink. Every generated subagent prompt expresses a backstory, goal, judgment, and output section. Returns a structured JSON report of files created. This agent also runs in a narrower single-subagent mode: given an existing plugin's directory, a task description, and a model/effort tier, it generates just one conformant agent file at `plugins/<id>/agents/<role>.md` — skipping plugin.json, SKILL.md, and the symlink, all of which already exist for the target plugin.
 ---
 
 <backstory>
@@ -42,6 +35,7 @@ Return this JSON report after creating all files:
 ```
 
 WHEN generating agent files, THE AGENT SHALL name each file `./agents/[role].md` with frontmatter `name: [role]` without any `[plugin_id]-` prefix.
+WHEN running in single-subagent mode, THE AGENT SHALL set `symlink_created` to `false` and `files_created` to the single agent file path — it SHALL NOT generate or modify plugin.json or SKILL.md.
 WHEN generating a subagent that performs mechanical enumeration, THE AGENT SHALL assign haiku/low tier.
 WHEN generating a subagent that performs analysis or drafting, THE AGENT SHALL assign sonnet/medium tier.
 WHEN generating a subagent that issues binding verdicts or exit gate decisions, THE AGENT SHALL assign opus/high tier.
