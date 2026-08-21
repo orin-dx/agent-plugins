@@ -24,6 +24,13 @@ Nine plugins cover the complete path from raw idea to shipped release. Each plug
 
 ```mermaid
 flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#881337,rx:8px,ry:8px;
+
     gr[graph\nneed] -->|"requirement@1"| tr[trace\nresearch]
     tr -->|"research-report@1"| ca[canon\nspec]
     ca -->|"spec@1"| ve[vector\nplan]
@@ -39,6 +46,13 @@ flowchart LR
     pr([proof\naudit]) -.->|"finding-report@1"| de
     pr -.->|"finding-report@1"| ca
     ba([basis\nmeta]) -. scaffold .-> gr
+
+    class gr source
+    class tr,ca,ve,la engine
+    class de output
+    class ax router
+    class pr alert
+    class ba store
 ```
 
 | Plugin | Stage | Purpose | Output |

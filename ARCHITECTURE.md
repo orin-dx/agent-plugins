@@ -10,6 +10,10 @@ Context is loaded on demand. Every agent's context window contains only what its
 
 ```mermaid
 flowchart TD
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+
     T1["**Tier 1 · Metadata**
     Frontmatter description · 80–200 words
     Always active — used by model router to match skill or subagent"]
@@ -24,6 +28,10 @@ flowchart TD
 
     T1 -->|on skill activation| T2
     T2 -->|on demand| T3
+
+    class T1 source
+    class T2 engine
+    class T3 store
 ```
 
 Agents pull reference files themselves using their file reading tool. The host never pre-loads them.
@@ -53,6 +61,13 @@ Nine plugins form a directed pipeline. Each stage produces a typed artifact cons
 
 ```mermaid
 flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#881337,rx:8px,ry:8px;
+
     gr["**graph**\nneed"] -->|"requirement@1"| tr["**trace**\nresearch"]
     tr -->|"research-report@1"| ca["**canon**\nspec"]
     ca -->|"spec@1"| ve["**vector**\nplan"]
@@ -68,6 +83,13 @@ flowchart LR
     pr(["**proof**\naudit"]) -.->|"finding-report@1"| de
     pr -.->|"finding-report@1"| ca
     ba(["**basis**\nmeta"]) -. scaffold .-> gr
+
+    class gr source
+    class tr,ca,ve,la engine
+    class de output
+    class ax router
+    class pr alert
+    class ba store
 ```
 
 **Composable:** any contiguous subset installs cleanly. Start at `canon` if requirements come from an external tracker. End at `lambda` if automated shipping tooling isn't needed. Layer `axiom` in at any stage for an independent verification pass.
@@ -96,6 +118,10 @@ Each subagent declares `model` and `effort` in its frontmatter. These are routin
 
 ```mermaid
 flowchart TD
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+
     H["**haiku · low**
     Mechanical — deterministic enumeration
     Manifest building, file inventory, commit message writing"]
@@ -110,6 +136,10 @@ flowchart TD
 
     H -. "escalate only when judgment required" .-> S
     S -. "escalate only when binding verdict required" .-> O
+
+    class H store
+    class S engine
+    class O router
 ```
 
 Use the lowest tier that produces correct output. Opus is reserved for decisions that produce a binding verdict with downstream consequences.
@@ -122,19 +152,43 @@ Use the lowest tier that produces correct output. Opus is reserved for decisions
 
 ```mermaid
 flowchart LR
-    Art[artifact + criteria] --> Recon["recon
-    haiku / low"]
-    Recon --> Ver["verifier
-    sonnet / medium"]
-    Ver --> Gate["exit-gate
-    opus / high"]
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#881337,rx:8px,ry:8px;
 
-    Fix["producing agent\ntargeted patch on blockers\n(effort escalates on retry 2)"]
+    Art[artifact + criteria]
+
+    subgraph check [Verification Chain]
+        direction LR
+        Recon["recon
+        haiku / low"] --> Ver["verifier
+        sonnet / medium"] --> Gate["exit-gate
+        opus / high"]
+    end
+
+    Art --> Recon
+
+    Fix["producing agent
+    targeted patch on blockers
+    (effort escalates on retry 2)"]
 
     Gate -->|pass| Done(["verdict@1 · pass"])
     Gate -->|fail| Fix
     Fix -->|"retry ≤ 3 · updated retry_count"| Art
     Fix -->|"retry > 3"| Esc(["escalate to human"])
+
+    class Art source
+    class Recon store
+    class Ver engine
+    class Gate router
+    class Done output
+    class Fix router
+    class Esc alert
+
+    style check fill:#fafafa,stroke:#cbd5e1,stroke-width:1.5px,stroke-dasharray: 4 4,rx:10px,ry:10px
 ```
 
 On `fail`, the orchestrator passes **only the blockers array** back to the producing agent — not the full artifact context — so it can make a targeted fix. On retry 2, the effort level escalates. After 3 retries, the circuit breaks and control passes to the human.
