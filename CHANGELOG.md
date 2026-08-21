@@ -3,6 +3,31 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.0.0] - 2026-08-21 — Multi-Skill Plugins, Consumer-Scaled Changesets, and a Voice Standard
+
+### Breaking Changes
+- `delta`, `canon`, `graph`, and `basis` each split their single broad skill into targeted, independently-triggered skills (22 total). `/delta:ship`, `/canon:canon`, `/graph:graph`, and `/basis:basis` are gone.
+- `changeset@1` and `release-artifact@1` are superseded by `changeset@2`/`release-artifact@2`, which add required `consumer_impact` and `semver_impact` fields. `@1` remain on disk and valid — new consumers should target `@2`.
+
+### Architectural Rule Changes
+- Plugin Structure now explicitly allows multiple skill directories per plugin (`skills/<skill-name>/SKILL.md`) when a plugin's scope covers genuinely independent, heterogeneous intents on the same artifact — previously every plugin was assumed to have exactly one, named after the plugin id.
+- Skill Names collisions now resolve with a specific compound name (`audit-spec`, not `canon-audit`) instead of a plugin-id prefix — the `plugin:skill` invocation already disambiguates two plugins sharing a bare word, so the prefix only duplicated that.
+
+### Skills & Agent Capabilities
+- **`delta` (v2.0.0)**: split into `commit`, `pr`, `changeset`, `receive-feedback`, `post-review`, `release`. `changeset-analyzer` now classifies `consumer_impact`/`semver_impact` before writing anything and scales summary detail to match; `release-summarizer` aggregates instead of re-deriving type; `pr-narrator` gained real length and structure discipline it previously lacked.
+- **`canon` (v2.0.0)**: split into `draft-spec`, `verify-spec`, `spec-drift`, `audit-spec`, `gate-spec`, `correct-spec`, `architect`. Corrected two wrong model tiers (`drift-checker` and `architect` are `opus/high`, not `sonnet/medium`) and a stale `plugin.json` description listing sub-skills that never existed.
+- **`graph` (v2.0.0)**: split into `capture-need`, `clarify-requirement`, `prioritize-backlog`, `connect-requirement`, `audit-backlog`. Added `prioritizer` — the one genuinely new agent this pass required; `clarifier` had a real agent but no listed sub-skill until now.
+- **`basis` (v2.0.0)**: split into `scaffold-plugin`, `audit-plugin`, `design-schema`, `scaffold-subagent`. `scaffolder` now documents a single-subagent generation mode; `auditor` now checks every skill directory a plugin has instead of assuming exactly one.
+- **`lambda` (v1.4.1)**: `plugin.json` no longer lists `changeset@1` in `produces` — lambda never assembles a changeset itself, `changeset-analyzer` does.
+
+### Voice & Documentation Standards
+- Added `shared/references/docs-voice.md`: a checkable voice standard (lead with the conclusion, active voice, bullets over prose, a banned-word list, the Conventional Comments/Google review-label vocabulary for triaging feedback) — embedded into `conventional-commits.md`, `github.md`, and `changesets.md` rather than loaded as a second reference, per this repo's one-reference-file-per-agent convention.
+
+### Fixes
+- Cross-plugin references left stale by `canon`'s rename (`shared/constitution.md`'s Spec Correction Loop, `lambda`'s SKILL.md) corrected.
+- `canon/drift-checker` and `graph/auditor`'s `summary` fields changed from an unbounded prose paragraph to structured counts plus an optional one-clause note.
+- `AGENTS.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, and root `README.md` brought in sync with the multi-skill pattern; `CONTRIBUTING.md`'s stale `author`/`skills` field examples, a prefixed-agent-name example contradicting the Namespacing Rule, and a diagram inconsistency between README and ARCHITECTURE (proof→canon edge label) also corrected.
+
 ## [2.2.0] - 2026-08-17 — Polyglot API Grounding, JIT Context Hooks, and Modern Tool Guidance
 
 ### Architectural Performance & Tooling
