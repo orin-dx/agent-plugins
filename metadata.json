@@ -1,0 +1,36 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0HE5S29AP4BQ0Z7B8VGWSGG",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 16,
+  "files_touched": [
+    "plugins/graph/CHANGELOG.md",
+    "plugins/graph/README.md",
+    "plugins/graph/agents/auditor.md",
+    "plugins/graph/agents/prioritizer.md",
+    "plugins/graph/plugin.json",
+    "plugins/graph/skills/audit-backlog/SKILL.md",
+    "plugins/graph/skills/capture-need/SKILL.md",
+    "plugins/graph/skills/clarify-requirement/SKILL.md",
+    "plugins/graph/skills/connect-requirement/SKILL.md",
+    "plugins/graph/skills/graph/SKILL.md",
+    "plugins/graph/skills/prioritize-backlog/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 4,
+    "cache_creation_tokens": 1445,
+    "cache_read_tokens": 962698,
+    "output_tokens": 773,
+    "api_call_count": 2
+  }
+}
