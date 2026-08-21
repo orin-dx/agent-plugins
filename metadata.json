@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0J6Q82WT7P2EGAC7ZFMG22P",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "shared/references/conventional-commits.md",
+    "shared/references/docs-voice.md",
+    "shared/references/github.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 18,
+    "cache_creation_tokens": 495638,
+    "cache_read_tokens": 3940455,
+    "output_tokens": 7049,
+    "api_call_count": 9
+  }
+}
