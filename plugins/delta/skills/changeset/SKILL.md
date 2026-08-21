@@ -1,20 +1,20 @@
 ---
 name: changeset
 description: >-
-  Trigger when the user asks to add a changeset or document a change: "add a changeset", "document this change", "what changed here". Extracts the consumer-facing meaning of a diff: classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per the decision table in shared/references/changesets.md, then writes a summary whose detail scales with that classification. When the change was implemented via lambda, pass along the criteria_evidence implementer collected during the TDD run — changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff.
-version: 2.0.0
+  Trigger when the user asks to add a changeset or document a change: "add a changeset", "document this change", "what changed here". Extracts the consumer-facing meaning of a diff: classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per the decision table in shared/references/changesets.md, then writes a summary whose detail scales with that classification. On a diff spanning multiple independent topics — the normal case for a single PR is one topic, but a backlog/catch-up run since the last release often isn't — produces one changeset per topic rather than one bundled entry covering all of them. When the change was implemented via lambda, pass along the criteria_evidence implementer collected during the TDD run — changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff.
+version: 2.1.0
 ---
 
 # Delta — Changeset
 
 <overview>
-A changeset is the changelog entry, written once at authoring time and later aggregated — not rewritten — into a release. `changeset-analyzer` classifies consumer_impact and semver_impact directly from the diff before writing anything, and scales the summary's detail to match: terse for a patch, one sentence for a minor, full old-behavior-to-new-behavior-to-required-action detail for a major. Delegates entirely to `changeset-analyzer`.
+A changeset is the changelog entry, written once at authoring time and later aggregated — not rewritten — into a release. `changeset-analyzer` first checks how many independent topics the diff actually contains, then classifies consumer_impact and semver_impact per topic before writing anything, and scales each summary's detail to match: terse for a patch, one sentence for a minor, full old-behavior-to-new-behavior-to-required-action detail for a major. Delegates entirely to `changeset-analyzer`.
 </overview>
 
 <dispatch>
 | Agent | Model / Effort | Delegate When |
 | :--- | :--- | :--- |
-| **changeset-analyzer** | sonnet / medium | A git diff needs a structured `changeset@2` with consumer/semver classification and acceptance criteria mapping. |
+| **changeset-analyzer** | sonnet / medium | A git diff needs one or more structured `changeset@2` entries with consumer/semver classification and acceptance criteria mapping. |
 </dispatch>
 
 <references>
@@ -22,6 +22,6 @@ A changeset is the changelog entry, written once at authoring time and later agg
 </references>
 
 <io>
-**Consumes**: git diff, optionally a linked `spec@1`, optionally lambda's aggregated `criteria_evidence`
-**Produces**: `changeset@2` conforming to `shared/schemas/changeset@2.json`. Route to `delta/pr` or `delta/release` depending on the next stage.
+**Consumes**: git diff (a single PR's, or a larger backlog/catch-up diff since the last release), optionally a linked `spec@1`, optionally lambda's aggregated `criteria_evidence`
+**Produces**: one or more `changeset@2` entries conforming to `shared/schemas/changeset@2.json` — one per independent topic found in the diff, never one entry bundling unrelated topics together. Route to `delta/pr` or `delta/release` depending on the next stage.
 </io>

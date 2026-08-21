@@ -1,7 +1,7 @@
 {
   "id": "delta",
   "name": "delta",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Shipping plugin. Shepherds completed, verified code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, changeset, receive-feedback, post-review, release. Produces release-artifact@2 from changeset@2 inputs.",
   "author": {
     "name": "Gabriel Castro",

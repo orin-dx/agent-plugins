@@ -2,6 +2,11 @@
 
 — delta
 
+## [2.1.0] - 2026-08-21
+
+### Added
+- `changeset-analyzer` now checks whether a diff contains multiple independent topics before classifying anything, and emits one `changeset@2` per topic instead of one bundled entry — the normal single-PR case still produces exactly one changeset, unchanged. Prompted by a real incident in a sibling repo (`callisto`) where a large backlog/catch-up diff got bundled into one changeset spanning unrelated tracks, with package attribution guessed from a written summary instead of verified per-topic against the actual diff. `changeset-analyzer`'s output contract changes from a single object to an array of one-or-more; `delta/changeset`'s `<io>` section updated to match.
+
 ## [2.0.0] - 2026-08-20
 
 ### Breaking

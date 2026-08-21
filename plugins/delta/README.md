@@ -1,6 +1,6 @@
 # delta — Ship Tooling
 
-**Stage:** Ship · **Output:** `release-artifact@2` · **Version:** 2.0.0
+**Stage:** Ship · **Output:** `release-artifact@2` · **Version:** 2.1.0
 
 Handles everything after implementation: commit messages, PR descriptions, changeset extraction, review triage, posting a review, and release notes. Delta is not a linear pipeline — six independently-triggered skills, each dispatching to the subagent that matches the task. It reads the staged diff, linked spec, and linked requirement at runtime to produce meaningful, context-aware output, not mechanical templates.
 
@@ -27,7 +27,7 @@ Delta does not critique code quality or spec conformance — that's the built-in
 | :--- | :--- | :--- |
 | `delta/commit` | Reads staged diff, produces a conventional commit message explaining the *why* | `commit-analyzer` |
 | `delta/pr` | Produces a PR title and body a reviewer with zero prior context can understand, opens the PR after confirmation | `pr-narrator` |
-| `delta/changeset` | Classifies consumer_impact and semver_impact, then writes a changeset whose detail scales with that classification | `changeset-analyzer` |
+| `delta/changeset` | Splits a diff into independent topics if it has more than one, classifies consumer_impact and semver_impact per topic, and writes a changeset whose detail scales with that classification | `changeset-analyzer` |
 | `delta/receive-feedback` | Triages incoming review comments (must-fix / suggestion / question) and assembles the review package | `review-preprocessor` |
 | `delta/post-review` | Posts an already-drafted review or reply via `gh pr review`/`gh pr comment`, gated by explicit confirmation | none — mechanical orchestration only |
 | `delta/release` | Aggregates changesets since the last release; version is `max(semver_impact)` across included changesets | `release-summarizer` |

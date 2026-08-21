@@ -33,6 +33,12 @@ Set at authoring time, per changeset — not guessed later at release time:
 
 `release-summarizer` filters out `internal-only` entries automatically — they never need a human decision about inclusion.
 
+## One Changeset Per Topic
+
+A changeset describes one coherent, single-sentence-describable change — not a diff. For a single PR these are usually the same thing; they stop being the same thing on a backlog/catch-up run covering many commits since the last actual release, where several unrelated tracks of work have piled up unshipped. `changeset-analyzer` checks for this before classifying anything: if the summary would need "and" to join two things that don't share a cause, that's two changesets, not one with a longer summary.
+
+Splitting means each topic's `consumer_impact`/`semver_impact`/`files_changed` are verified against that topic's own diff slice — not inferred from a written summary of the whole batch, and not assigned by assumption when a handful of files or commits don't obviously belong to one track over another (say so in `reasoning` instead of guessing). A spurious split costs a slightly longer release-notes list. A false merge hides a change inside an unrelated summary where a consumer reading release notes will never find it — bundling is the more expensive mistake of the two, do not default to it for convenience on a large diff.
+
 ## Voice
 
 Separate *what changed* (factual) from *why* (one clause) — don't blend them. Detail scales with `semver_impact`: `patch`/`internal-only` gets one clause, `minor` gets one sentence plus an optional one-clause why, `major` requires each `breaking_changes` entry to state old behavior → new behavior → what the caller does about it. No banned words (*delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, meticulous, game-changer, utilize*). Full standard: `shared/references/docs-voice.md`.
