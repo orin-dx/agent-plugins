@@ -47,7 +47,7 @@ flowchart LR
     sonnet / medium"]
     Reader -->|findings + confidence| Synth["synthesizer
     sonnet / medium"]
-    Synth -->|research-report@1| Risk["risk-assessor
+    Synth -->|"research-report@1"| Risk["risk-assessor
     sonnet / medium"]
     Risk --> Out(["research-report@1
     + risks"])

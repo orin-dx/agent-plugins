@@ -49,10 +49,10 @@ flowchart LR
     classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
     classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
 
-    Spec[spec@1] --> Planner[planner]
+    Spec["spec@1"] --> Planner[planner]
     Planner --> Challenger[challenger]
-    Challenger -.->|findings: targeted fix| Planner
-    Challenger --> Plan([plan@1])
+    Challenger -.->|"findings: targeted fix"| Planner
+    Challenger --> Plan(["plan@1"])
     Plan -.->|optional| Estimator[estimator]
 
     class Spec source

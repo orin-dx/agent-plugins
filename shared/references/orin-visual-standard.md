@@ -45,7 +45,7 @@ style SubgraphName fill:#fafafa,stroke:#cbd5e1,stroke-width:1.5px,stroke-dasharr
 ```
 
 ### Sequence Diagram Theme Initialization
-```mermaid
+```text
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#eef2ff', 'primaryBorderColor': '#6366f1', 'primaryTextColor': '#1e1b4b', 'actorBkg': '#f8fafc', 'actorBorder': '#64748b', 'actorTextColor': '#0f172a', 'actorLineColor': '#94a3b8', 'signalColor': '#334155', 'signalTextColor': '#0f172a', 'labelBoxBkgColor': '#f5f3ff', 'labelBoxBorderColor': '#8b5cf6', 'labelTextColor': '#4c1d95', 'sequenceNumberColor': '#6366f1' }}}%%
 ```
 
