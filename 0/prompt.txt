@@ -1,0 +1,170 @@
+Do all of it at once please
+
+---
+
+<task-notification>
+<task-id>a5f2826b4d27f5c5d</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a5f2826b4d27f5c5d.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix proof's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Directive: fix `proof`'s fictional sub-skills table and polish its README for scannability. Done — no commits made (per parent's central-sync instruction on marketplace files, I left version-control to the parent).
+
+**Version:** `2.2.0` → `2.2.1` (patch, per this repo's own semver table: doc/accuracy fix).
+
+**Summary:** `plugins/proof/skills/proof/SKILL.md` and `plugins/proof/README.md` both claimed four independently-invokable "sub-skills" (`proof/scan`, `proof/focus`, `proof/verify`, `proof/remediations`) — fiction, since proof has exactly one skill directory (`skills/proof/`), confirmed against `plugin.json`'s single agent set. Replaced both with an honest "How It Works" section describing the one fixed 5-phase pipeline (recon → scanner → boundary-tracer [conditional] → adversary → exit-gate) and how the request itself — not a separate command — determines which phase does the work. Also fixed a stale version mismatch (README said `2.0.0`, `plugin.json` said `2.2.0`), replaced the README's plain-text pipeline arrow with a styled Mermaid flowchart using `orin-visual-standard.md`'s palette, and added the `CHANGELOG.md` entry.
+
+Files touched: `plugins/proof/skills/proof/SKILL.md`, `plugins/proof/README.md`, `plugins/proof/plugin.json`, `plugins/proof/CHANGELOG.md`.</result>
+<usage><subagent_tokens>677585</subagent_tokens><tool_uses>13</tool_uses><duration_ms>82936</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a927682ccc9a6afe4</task-id>
+<tool-use-id>toolu_01AvocDBAmDxHC1B1pfeF3RW</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a927682ccc9a6afe4.output</output-file>
+<status>completed</status>
+<summary>Agent "Polish canon README for scannability" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Reads cleanly end to end. Stopping here.
+
+**Task**: Polish `plugins/canon/README.md` for readability/scannability (accuracy already correct from earlier this session).
+
+Changes:
+- Opening description: collapsed a 5-sentence dense paragraph into one lead sentence + 4 bullets (docs-voice rule 4/1) — was doing five separate jobs in one block, now scannable at a glance.
+- Converted the primary "Standard drafting pipeline" from ASCII arrows to a real Mermaid flowchart, styled with `orin-visual-standard.md`'s six-color `classDef` palette (source/engine/router/output roles), matching the convention already applied to root `README.md`/`ARCHITECTURE.md` this session.
+- Left the three secondary pipelines (drift check, correction, architectural remediation) as ASCII — they're on-demand/less-trafficked flows, converting all four would be more clutter than clarity, per the directive's own guidance.
+- Everything else (Skills table, Subagents table, Exit Gate Conditions, Output Schemas, Install, Next Stage) was already clean — left untouched rather than rewritten for its own sake.
+
+No commit made — file edited only, not staged/committed (parent didn't ask for that in this directive).</result>
+<usage><subagent_tokens>676938</subagent_tokens><tool_uses>6</tool_uses><duration_ms>44037</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>affd80035792a6fff</task-id>
+<tool-use-id>toolu_01MacnjXwgXjwVjR6Vyuz5oF</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/affd80035792a6fff.output</output-file>
+<status>completed</status>
+<summary>Agent "Polish basis README for scannability" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: polish `plugins/basis/README.md` for readability/scannability (accuracy already correct, no fix needed here).
+
+The file was already in good shape — tables, bullets, active voice, no banned words, correct ASCII tree for directory structure. Made one change:
+
+- Split the trailing paragraph under "Directory Layout" into two: the split-condition explanation (with the delta/canon/graph/basis examples) now stands alone, and the `basis/audit-plugin` behavior note (a distinct fact, previously tacked onto the same block) gets its own sentence.
+
+Considered adding a Mermaid diagram for the scaffold→audit relationship and decided against it — basis's four skills are independently invoked, not a real pipeline, so a diagram wouldn't earn its place. No other changes; the rest already met the bar.</result>
+<usage><subagent_tokens>668262</subagent_tokens><tool_uses>4</tool_uses><duration_ms>33400</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a75c2247f4502164f</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a75c2247f4502164f.output</output-file>
+<status>completed</status>
+<summary>Agent "Polish graph README for scannability" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Rest of the file already conforms to `docs-voice.md` (bullets used throughout, tables consistent, no banned words, no filler) — no other changes needed.
+
+**Summary:**
+- `plugins/graph/README.md`: replaced the hand-aligned ASCII pipeline diagram with a Mermaid `flowchart TD` styled per `orin-visual-standard.md`'s six-color palette (`capture-need`=source/indigo, `clarify-requirement`+`prioritize-backlog`=engine/violet, `requirement@1`=output/emerald cylinder, `connect-requirement`+`audit-backlog`=router/amber).
+- No other changes — rest of the file already reads cleanly against `docs-voice.md`.
+- Not committed (no commit instruction in scope).</result>
+<usage><subagent_tokens>672498</subagent_tokens><tool_uses>4</tool_uses><duration_ms>39116</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a457f3787d4632457</task-id>
+<tool-use-id>toolu_01UYkRLr4VcVQuLgyna4oWGP</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a457f3787d4632457.output</output-file>
+<status>completed</status>
+<summary>Agent "Polish delta README for scannability" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: Polish `plugins/delta/README.md` for readability/scannability (pure polish, no accuracy issues to fix).
+
+The README already followed `docs-voice.md` well — active voice, tables over prose, no banned words, no filler. Made one substantive change plus verified the rest:
+
+- Converted the "Pipeline" section from hand-aligned ASCII box-drawing art (fragile across renderers, hard to maintain) to a real Mermaid flowchart styled with `orin-visual-standard.md`'s six-color palette — indigo for inputs (`git diff`, `PR comments`), violet for the three drafting/analysis skills (`changeset`, `pr`, `release`), amber for the two triage/gate skills (`receive-feedback`, `post-review`), emerald for terminal outputs. Left `fix code` unstyled deliberately — it's the one step outside delta's scope, and the missing color reads as a signal, not an omission.
+- Added one clarifying sentence under the diagram noting `fix code` is a human/lambda step, not delta's.
+- Everything else (intro paragraphs, tables, section structure) already read cleanly — left unchanged rather than rewriting for its own sake.
+
+Not committed — no commit made, per no explicit instruction to commit in this directive.</result>
+<usage><subagent_tokens>675378</subagent_tokens><tool_uses>5</tool_uses><duration_ms>56609</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ae4a0c637fb258ef8</task-id>
+<tool-use-id>toolu_01ECgbCKme6JPeK8D2bbhhyr</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/ae4a0c637fb258ef8.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix vector's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Clean — `plugin.json` valid, no banned words. Report:
+
+**vector**: `1.4.0` → `1.4.1` (patch — doc-accuracy fix, no behavior change).
+
+- Fixed: `SKILL.md`/`README.md` documented a fictional "Sub-skills" list (`vector/plan`, `vector/estimate`, `vector/challenge`, plus `vector/decompose` in SKILL.md with no agent behind it at all) that read like independently-invokable skills; `vector` has exactly one skill directory. Replaced with an honest "one skill, adaptive behavior" description in both files.
+- Fixed: README's Subagents table wrongly listed `challenger` as `opus/high` — the actual agent file says `sonnet/medium`.
+- Changed: README's plain-text pipeline is now a Mermaid flowchart with `orin-visual-standard.md`'s palette, and now shows the challenger→planner feedback loop the prose already described.
+- `plugin.json` description had no fictional sub-skill mentions — untouched except version bump.
+
+Files touched (not committed — no commit made, per scope): `plugins/vector/plugin.json`, `plugins/vector/skills/vector/SKILL.md`, `plugins/vector/README.md`, `plugins/vector/CHANGELOG.md`. Not touched: `marketplace.json`, `.claude-plugin/marketplace.json` (central sync, out of scope per directive).</result>
+<usage><subagent_tokens>689259</subagent_tokens><tool_uses>15</tool_uses><duration_ms>117169</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a736dd531ad7c25b5</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a736dd531ad7c25b5.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix axiom's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Task: Fix axiom's documentation (fictional sub-skills accuracy + README readability polish).**
+
+**Version note (correction to directive):** `plugin.json` was already at `1.2.0`, not `1.0.1` — the README's version line was itself stale/wrong (a bonus drift bug, now fixed). Bumped `1.2.0 → 1.2.1`.
+
+**What changed:**
+- `skills/axiom/SKILL.md`: removed the fictional 6-entry `&lt;sub_skills&gt;` table (`verify-requirement`, `verify-spec`, etc. — none real). Merged the "any artifact type" property into the existing accurate `&lt;three_stage_flow&gt;` table instead of adding a redundant new section.
+- `README.md`: removed the fictional 2-entry Sub-skills table (`axiom/gate`, `axiom/verify`), replaced with an honest "How It Works" section (one skill, one 3-agent pipeline, reused per artifact type). Fixed the version-line drift (`1.0.1` → matches `plugin.json`). Fixed a copy-paste typo ("`exit-gate` and `exit-gate` are separate agents" → canon's and lambda's own exit-gates). Rewrote for `docs-voice.md` (lead with conclusion, bullets, no filler). Converted the plain-text pipeline to a Mermaid flowchart using `orin-visual-standard.md`'s palette (`source`/`store`/`engine`/`router`/`output`), matching `ARCHITECTURE.md`'s existing axiom-gate diagram.
+- `plugin.json`: no fictional names found in `description` (already accurate) — only the version bump.
+- `CHANGELOG.md`: new `[1.2.1]` entry, format matches existing entries.
+- `jq . plugins/axiom/plugin.json` — valid.
+
+No commits made (not instructed to commit). Files touched: `plugins/axiom/skills/axiom/SKILL.md`, `plugins/axiom/README.md`, `plugins/axiom/plugin.json`, `plugins/axiom/CHANGELOG.md`.</result>
+<usage><subagent_tokens>684580</subagent_tokens><tool_uses>16</tool_uses><duration_ms>96261</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>aab837f40886d1b45</task-id>
+<tool-use-id>toolu_013naRAJ9aoYoK7RktVgBZmf</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/aab837f40886d1b45.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix trace's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>`trace` documentation fixed: SKILL.md and README.md documented two different, both-fictional "sub-skills" lists (`trace/question` etc. vs `trace/survey` etc.) — replaced both with one honest description of the real four-agent pipeline (recon → reader → synthesizer → risk-assessor). Also polished README for docs-voice scannability and added a Mermaid diagram styled with the shared palette, replacing the plain-text pipeline arrow chain.
+
+**Version:** `plugin.json` was actually `1.2.0` already (not `1.0.1` as assumed — that number only appeared in README's stale version line, itself part of the bug). Bumped to **1.2.1** (patch, doc/accuracy fix per `changesets.md`'s semver table).
+
+Files changed (uncommitted, no commit made per scope — not asked to commit):
+- `plugins/trace/skills/trace/SKILL.md` — removed fictional `&lt;sub_skills&gt;` block, replaced with an honest one-pipeline description in `&lt;overview&gt;`, version → 1.2.1
+- `plugins/trace/README.md` — removed fictional "Sub-skills" table, rewrote lead paragraph and Subagents description for docs-voice compliance, replaced plain-text pipeline with a palette-styled Mermaid flowchart, fixed stale version line
+- `plugins/trace/plugin.json` — version 1.2.0 → 1.2.1
+- `plugins/trace/CHANGELOG.md` — added `[1.2.1]` entry documenting the fix
+
+Verified: `jq . plugins/trace/plugin.json` passes, Mermaid fence balanced, zero remaining references to any of the fictional sub-skill names.</result>
+<usage><subagent_tokens>683058</subagent_tokens><tool_uses>14</tool_uses><duration_ms>87511</duration_ms></usage>
+</task-notification>
