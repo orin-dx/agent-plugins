@@ -2,7 +2,14 @@
 
 **Stage:** Spec · **Output:** `spec@1` · **Version:** 2.0.0
 
-Drafts, audits, and gates unambiguous, testable specifications. Also designs structural remediation specs from proof's defect class findings, detects drift between a gated spec and the live codebase, and revises a gated spec when implementation reveals it was wrong. A spec that exits canon can be handed to a developer who has never spoken to the product team and implemented without clarifying questions. An adversarial exit gate enforces this guarantee — default disposition is fail. Once gated, the spec is written to disk and committed — downstream agents read it from its file, not from conversation context.
+Turns requirements into unambiguous, testable specs a developer can implement without a single clarifying question — and keeps them that way after implementation starts.
+
+- **Drafts, audits, and gates** specs against that standard; an adversarial exit gate enforces it, default disposition fail
+- **Designs structural remediation specs** from proof's defect-class findings
+- **Detects drift** between a gated spec and the live codebase
+- **Revises a gated spec** when implementation reveals it was wrong
+
+Once gated, the spec is written to disk and committed — downstream agents read it from the file, never from conversation context.
 
 Seven independently-triggered skills, not a linear pipeline — pick the one that matches the task.
 
@@ -54,14 +61,29 @@ Seven independently-triggered skills, not a linear pipeline — pick the one tha
 ## Pipelines
 
 **Standard drafting pipeline:**
-```
-requirement@1 [+ research-report@1]
-  → canon/draft-spec (drafter)
-  → canon/verify-spec (verifier)
-  → canon/audit-spec (auditor)
-  → canon/gate-spec (exit-gate)
-  → [skill writes .claude/specs/<id>.json, commits it, sets spec_file_path]
-  → spec@1
+```mermaid
+flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+
+    Req["requirement@1
+    + research-report@1"] --> Draft["canon/draft-spec
+    drafter"]
+    Draft --> Verify["canon/verify-spec
+    verifier"]
+    Verify --> Audit["canon/audit-spec
+    auditor"]
+    Audit --> Gate["canon/gate-spec
+    exit-gate"]
+    Gate -->|pass| Spec(["spec@1
+    written + committed"])
+
+    class Req source
+    class Draft,Verify,Audit engine
+    class Gate router
+    class Spec output
 ```
 
 **On-demand drift check (maintenance, any time after implementation):**

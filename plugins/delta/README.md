@@ -50,12 +50,31 @@ Delta does not critique code quality or spec conformance — that's the built-in
 
 ## Pipeline
 
-```
-git diff → delta/changeset → changeset@2 ─┬─→ delta/pr → PR opened
-                                            └─→ delta/release → release-artifact@2
+```mermaid
+flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
 
-PR comments → delta/receive-feedback → response plan → (fix code) → delta/post-review → posted reply
+    diff[git diff] --> chg["delta/changeset"]
+    chg -->|"changeset@2"| pr["delta/pr"]
+    chg -->|"changeset@2"| rel["delta/release"]
+    pr --> prOut(["PR opened"])
+    rel --> relOut(["release-artifact@2"])
+
+    comments[PR comments] --> recv["delta/receive-feedback"]
+    recv -->|"response plan"| fix[fix code]
+    fix --> post["delta/post-review"]
+    post --> reply(["posted reply"])
+
+    class diff,comments source
+    class chg,pr,rel engine
+    class recv,post router
+    class prOut,relOut,reply output
 ```
+
+`fix code` is the one step delta doesn't do — a human or `lambda` closes that gap before `delta/post-review` picks back up.
 
 ---
 

@@ -47,13 +47,30 @@ Five independently-triggered skills, not a linear pipeline — pick the one that
 
 ## Pipeline
 
-```
-[free text] → graph/capture-need (intake) → graph/clarify-requirement (clarifier, × N) → requirement@1
-                                                                    │
-                        ┌───────────────────────────────────────────┼───────────────────────────────────────────┐
-                        ▼                                           ▼                                           ▼
-              graph/connect-requirement                  graph/prioritize-backlog                       graph/audit-backlog
-              (this one: duplicate?)                     (rank against the backlog)                     (whole-backlog health)
+```mermaid
+flowchart TD
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+
+    FT[free text] --> CN["graph/capture-need
+    intake"]
+    CN --> CR["graph/clarify-requirement
+    clarifier, × N"]
+    CR --> REQ[("requirement@1")]
+
+    REQ --> CO["graph/connect-requirement
+    duplicate check"]
+    REQ --> PB["graph/prioritize-backlog
+    rank vs backlog"]
+    REQ --> AB["graph/audit-backlog
+    whole-backlog health"]
+
+    class CN source
+    class CR,PB engine
+    class REQ output
+    class CO,AB router
 ```
 
 `graph/clarify-requirement` loops until each `done_when` criterion is specific enough to write a failing test against it, the stakeholder is identified with enough context, and `out_of_scope` boundaries are explicit. `connect-requirement`, `prioritize-backlog`, and `audit-backlog` are on-demand checks, not required stops before `canon/draft-spec`.

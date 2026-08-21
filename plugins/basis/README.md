@@ -72,7 +72,9 @@ plugins/<id>/
     └── <agent-name>.md          # one file per agent in plugin.json
 ```
 
-If a plugin's scope later grows to cover several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into multiple directories, one per skill (`skills/<skill-name>/SKILL.md`), each still following the frontmatter and 4-part-body rules. `delta`, `canon`, `graph`, and `basis` itself are all examples. `basis/audit-plugin` checks every SKILL.md found under `skills/`, not just one.
+If a plugin's scope later grows to cover several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into multiple directories, one per skill (`skills/<skill-name>/SKILL.md`), each still following the frontmatter and 4-part-body rules. `delta`, `canon`, `graph`, and `basis` itself are all examples.
+
+`basis/audit-plugin` checks every `SKILL.md` found under `skills/`, not just one — it doesn't assume the single-directory default.
 
 ---
 
