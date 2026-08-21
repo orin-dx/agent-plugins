@@ -24,7 +24,7 @@ version: 1.4.0
 
 **Consumes**: `plan@1` (preferred) or `spec@1` directly if no plan exists.
 
-**Produces**: committed code, and per-task `criteria_evidence` (exact test and implementation file/line for each criterion proven). No lambda agent assembles a `changeset@1` itself — that schema is produced by `changeset-analyzer` when shipping. The caller aggregates each task's `criteria_evidence` across the run and hands the collection to `changeset-analyzer` alongside the diff, so delta uses lambda's exact evidence instead of reconstructing approximate locations from the diff.
+**Produces**: committed code, and per-task `criteria_evidence` (exact test and implementation file/line for each criterion proven). No lambda agent assembles a `changeset@2` itself — that schema is produced by `changeset-analyzer` when shipping. The caller aggregates each task's `criteria_evidence` across the run and hands the collection to `changeset-analyzer` alongside the diff, so delta uses lambda's exact evidence instead of reconstructing approximate locations from the diff.
 
 </io>
 
@@ -99,6 +99,6 @@ Lambda executes tasks sequentially by **Subsystem Batch**. Each `implementer` in
 
 **When `implementer` emits `needs_context`:** the caller resolves the missing information (file path, baseline commit) before re-invoking — do not retry with the same inputs.
 
-**When `implementer` emits `spec_contradiction`:** the caller halts remaining task execution — already-completed tasks are not rolled back, but no further task proceeds against a spec known to be wrong. Route the contradiction (spec_file_path, criterion_id, spec_claim, observed_behavior) to canon/correct. Once the corrected spec passes exit-gate and is written back to the same spec_file_path, route the corrected spec@1 to planner in amend mode, then through challenger — an amended plan is not exempt from adversarial review, especially for newly added tasks — before resuming lambda from the remaining tasks. The caller tracks correction attempts per criterion_id: if the same criterion_id triggers spec_contradiction a second time after already being corrected, escalate to a human rather than routing to canon/correct again.
+**When `implementer` emits `spec_contradiction`:** the caller halts remaining task execution — already-completed tasks are not rolled back, but no further task proceeds against a spec known to be wrong. Route the contradiction (spec_file_path, criterion_id, spec_claim, observed_behavior) to canon/correct-spec. Once the corrected spec passes exit-gate and is written back to the same spec_file_path, route the corrected spec@1 to planner in amend mode, then through challenger — an amended plan is not exempt from adversarial review, especially for newly added tasks — before resuming lambda from the remaining tasks. The caller tracks correction attempts per criterion_id: if the same criterion_id triggers spec_contradiction a second time after already being corrected, escalate to a human rather than routing to canon/correct-spec again.
 
 </context_management>

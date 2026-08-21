@@ -20,7 +20,6 @@
     "spec@1"
   ],
   "produces": [
-    "changeset@1",
     "verdict@1"
   ]
 }
