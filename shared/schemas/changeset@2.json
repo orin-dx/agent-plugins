@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "changeset@2",
+  "title": "Changeset",
+  "description": "Describes what was changed in an implementation and why, classified from a consumer's perspective. Supersedes changeset@1 — adds required consumer_impact and semver_impact, set once at authoring time rather than re-derived at release time. Produced by delta's changeset-analyzer, consumed by delta's release-summarizer and by axiom.",
+  "type": "object",
+  "required": ["summary", "consumer_impact", "semver_impact", "files_changed", "acceptance_criteria_met"],
+  "additionalProperties": false,
+  "properties": {
+    "summary": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Description of what changed, from the consumer's perspective. Length and detail scale with semver_impact: one clause for patch/internal-only, one sentence for minor, full detail for major. Under 200 characters."
+    },
+    "consumer_impact": {
+      "type": "string",
+      "enum": ["behavior-change", "new-capability", "internal-only"],
+      "description": "Whether this change is observable to someone outside this repo. See shared/references/changesets.md for classification rules."
+    },
+    "semver_impact": {
+      "type": "string",
+      "enum": ["major", "minor", "patch", "none"],
+      "description": "Version bump this change requires, per the Semver Decision Guide in shared/references/changesets.md. release-summarizer takes max(semver_impact) across a release's changesets rather than re-deriving it."
+    },
+    "files_changed": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Paths of files added, modified, or deleted"
+    },
+    "tests_added": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paths of test files added or modified"
+    },
+    "acceptance_criteria_met": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "IDs from spec@1.acceptance_criteria that this changeset satisfies"
+    },
+    "criteria_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion_id", "test_file", "implementation_file"],
+        "additionalProperties": false,
+        "properties": {
+          "criterion_id": { "type": "string" },
+          "test_file": { "type": "string" },
+          "test_line": { "type": "integer" },
+          "implementation_file": { "type": "string" },
+          "implementation_line": { "type": "integer" }
+        }
+      },
+      "description": "Per-criterion evidence trail: exactly where each acceptance_criteria_met ID is tested and implemented. When sourced from implementer's own TDD cycle, test_line and implementation_line are exact. When reconstructed from a diff with no lambda run behind it, file-level entries without line numbers are acceptable rather than fabricating precision that was never observed. A criterion may have more than one entry when it is proven in more than one place."
+    },
+    "breaking_changes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Public API or behavior changes that break existing callers. Each entry states old behavior, new behavior, and what the caller does about it."
+    },
+    "commits": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Git SHAs of commits in this changeset"
+    },
+    "linked_spec": { "type": "string" },
+    "linked_plan": { "type": "string" },
+    "linked_requirement": {
+      "type": "string",
+      "description": "ID of the requirement@1 this change ultimately traces back to. Propagated from spec@1.linked_requirement via plan@1.linked_requirement when available."
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

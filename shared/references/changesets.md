@@ -2,11 +2,15 @@
 
 Changesets are structured records of what changed and why, used to generate release notes and communicate changes to consumers.
 
-## The changeset@1 Schema
+## The changeset@2 Schema
+
+Supersedes `changeset@1` (`shared/schemas/changeset@1.json`, still valid, now legacy) by adding required `consumer_impact` and `semver_impact`. `changeset-analyzer` produces `changeset@2` — see `shared/schemas/changeset@2.json`.
 
 ```json
 {
   "summary": "Add cross-language recon agent to proof plugin",
+  "consumer_impact": "new-capability",
+  "semver_impact": "minor",
   "files_changed": ["plugins/proof/subagents/recon.md"],
   "tests_added": [],
   "acceptance_criteria_met": ["SPEC-001-AC-3", "SPEC-001-AC-4"],
@@ -16,6 +20,22 @@ Changesets are structured records of what changed and why, used to generate rele
   "linked_plan": "PLAN-001"
 }
 ```
+
+## Consumer Impact Classification
+
+Set at authoring time, per changeset — not guessed later at release time:
+
+| `consumer_impact` | Meaning |
+|---|---|
+| `behavior-change` | An existing, observable behavior changed for someone outside this repo |
+| `new-capability` | Something new is now possible that wasn't before |
+| `internal-only` | No observable effect outside this repo (refactor, internal tooling, test-only) |
+
+`release-summarizer` filters out `internal-only` entries automatically — they never need a human decision about inclusion.
+
+## Voice
+
+Separate *what changed* (factual) from *why* (one clause) — don't blend them. Detail scales with `semver_impact`: `patch`/`internal-only` gets one clause, `minor` gets one sentence plus an optional one-clause why, `major` requires each `breaking_changes` entry to state old behavior → new behavior → what the caller does about it. No banned words (*delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, meticulous, game-changer, utilize*). Full standard: `shared/references/docs-voice.md`.
 
 ## Changeset vs. Commit Message
 
@@ -28,7 +48,7 @@ Same change, two framings:
 
 ## Release Notes Generation
 
-The `delta/release` skill aggregates changeset summaries by type:
+The `delta/release` skill aggregates changeset summaries by `semver_impact` (breaking/feature/fix), filtering out `consumer_impact: internal-only` entries:
 
 ```markdown
 ## v2.0.0 (2026-08-04)
@@ -59,6 +79,8 @@ Skip changesets for:
 - Internal refactors with no behavioral change
 
 ## Semver Decision Guide
+
+This table is machine-enforced: `changeset-analyzer` sets `semver_impact` directly from it at authoring time. `release-summarizer` does not re-derive semver from prose — it takes `max(semver_impact)` across the changesets included in a release.
 
 | Change | Version bump |
 |---|---|
