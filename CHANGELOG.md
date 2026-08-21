@@ -3,6 +3,11 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.2.1] - 2026-08-21 — Anti-Fragmentation Judgment
+
+### Changed
+- **`delta` (v2.1.1)**: `changeset-analyzer`'s topic-splitting judgment (added in 3.2.0) now checks shared `linked_spec`/`linked_plan`/`linked_requirement` first, then explicitly stated shared scope, and only falls back to diff-inferred shared cause when neither applies — guarding against over-fragmenting a deliberately-scoped effort (a themed feature batch, a cross-package testing push) into many tiny changesets. `shared/references/changesets.md` updated to match.
+
 ## [3.2.0] - 2026-08-21 — Topic-Scoped Changesets
 
 ### Added

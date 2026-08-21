@@ -1,7 +1,7 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "orin-dx-agent-plugins",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
@@ -69,7 +69,7 @@
     {
       "id": "delta",
       "name": "delta",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "path": "./plugins/delta",
       "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, changeset, receive-feedback, post-review, release."
     }

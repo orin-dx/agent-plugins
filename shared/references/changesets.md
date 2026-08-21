@@ -35,9 +35,15 @@ Set at authoring time, per changeset — not guessed later at release time:
 
 ## One Changeset Per Topic
 
-A changeset describes one coherent, single-sentence-describable change — not a diff. For a single PR these are usually the same thing; they stop being the same thing on a backlog/catch-up run covering many commits since the last actual release, where several unrelated tracks of work have piled up unshipped. `changeset-analyzer` checks for this before classifying anything: if the summary would need "and" to join two things that don't share a cause, that's two changesets, not one with a longer summary.
+A changeset is one coherent, single-sentence-describable change — not a diff, and not a file/package/commit count. Bundling unrelated topics and fragmenting one coherent effort are equally real failure modes.
 
-Splitting means each topic's `consumer_impact`/`semver_impact`/`files_changed` are verified against that topic's own diff slice — not inferred from a written summary of the whole batch, and not assigned by assumption when a handful of files or commits don't obviously belong to one track over another (say so in `reasoning` instead of guessing). A spurious split costs a slightly longer release-notes list. A false merge hides a change inside an unrelated summary where a consumer reading release notes will never find it — bundling is the more expensive mistake of the two, do not default to it for convenience on a large diff.
+What belongs together, in order of how much weight the signal carries:
+
+1. **Shared `linked_spec`/`linked_plan`/`linked_requirement`** — a scope decision already made before the code existed, so it outweighs anything read from the diff. A testing push scoped as one requirement is one changeset even across every package.
+2. **An explicitly stated shared scope** from whoever handed over the diff ("a coordinated testing push," "shipping these together") — trust it.
+3. **Shared cause read from the diff**, only absent 1 and 2: does one part exist *because of* another (one changeset), or would each have happened independently (separate changesets)? An "and" joining two unrelated things is two changesets.
+
+Check 1 and 2 before falling back to 3 — most real cases resolve there. Splitting on genuine ambiguity is a fallback, not a default; reaching for it first produces changeset sprawl. Verify a split topic's `consumer_impact`/`semver_impact`/`files_changed` against its own diff slice, not the whole batch's summary — note anything unresolved in `reasoning` rather than assigning it by guess.
 
 ## Voice
 

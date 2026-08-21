@@ -2,6 +2,11 @@
 
 — delta
 
+## [2.1.1] - 2026-08-21
+
+### Changed
+- `changeset-analyzer`'s topic-splitting judgment now checks `linked_spec`/`linked_plan`/`linked_requirement` first, then explicitly stated shared scope, falling back to diff-inferred shared cause only when neither applies — splitting on ambiguity alone is a rare fallback, not the default. Prompted by concern that the 2.1.0 split-by-topic change could over-fragment a deliberately-scoped effort (e.g. a themed feature batch or a testing push) into many tiny changesets. `shared/references/changesets.md` updated to match.
+
 ## [2.1.0] - 2026-08-21
 
 ### Added
