@@ -9,7 +9,7 @@ Breaking change: append `!` after type/scope, or add `BREAKING CHANGE:` footer.
 ## Rules
 
 - Subject line: imperative mood, no period, under 72 characters
-- Body (optional): explain the *why*, not the what. Wrap at 72 characters.
+- Body (optional): explain the *why*, not the what. Do not artificially wrap lines — one paragraph per line, let the terminal/renderer soft-wrap.
 - Footer: `BREAKING CHANGE: <description>`, `Fixes #123`, `Refs #456`
 - Scope is optional; when used, it names the module or component
 
@@ -35,6 +35,10 @@ Update marketplace.json and skill trigger references.
 The body answers: why was this change needed? What problem does it solve?
 
 Don't describe what the code does (the diff shows that). Write what a reviewer needs to understand the intent.
+
+## Voice
+
+Active voice, imperative mood, under 20 words where possible. No banned words: *delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, meticulous, game-changer, utilize* (use "use"). Full standard: `shared/references/docs-voice.md`.
 
 ## Scope Conventions (this repo)
 
