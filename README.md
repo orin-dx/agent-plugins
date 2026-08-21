@@ -37,7 +37,7 @@ flowchart LR
     ax -.->|"verdict@1"| de
 
     pr([proof\naudit]) -.->|"finding-report@1"| de
-    pr -.->|"remediate"| ca
+    pr -.->|"finding-report@1"| ca
     ba([basis\nmeta]) -. scaffold .-> gr
 ```
 

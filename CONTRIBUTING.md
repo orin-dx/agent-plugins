@@ -32,27 +32,34 @@ plugins/<id>/
 ├── CHANGELOG.md
 ├── skills/<id>/SKILL.md
 └── agents/
-    ├── <id>-scanner.md       (sonnet/medium — pattern matching)
-    ├── <id>-worker.md        (sonnet/medium — analysis)
-    ├── <id>-adversary.md     (opus/high — adversarial reasoning)
-    └── <id>-exit-gate.md     (opus/high — final judgment)
+    ├── scanner.md       (sonnet/medium — pattern matching)
+    ├── worker.md        (sonnet/medium — analysis)
+    ├── adversary.md     (opus/high — adversarial reasoning)
+    └── exit-gate.md     (opus/high — final judgment)
 ```
 
-Organize agents by **cognitive mode**, not pipeline position. A scan agent and an analysis agent require different mental modes — split them even if they run sequentially.
+Organize agents by **cognitive mode**, not pipeline position. A scan agent and an analysis agent require different mental modes — split them even if they run sequentially. Agent files are never prefixed with the plugin id (`worker.md`, not `my-plugin-worker.md`) — Claude Code already namespaces agents as `<plugin_id>:<agent_name>`, so a prefix produces redundant `my-plugin:my-plugin-worker` stuttering. See `shared/agent-best-practices.md`'s Namespacing Rule.
+
+A plugin defaults to this single-skill layout. IF its scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead (see `delta`, `canon`, `graph`, `basis`). A new skill name defaults to a single lifecycle-stage word; go to a specific compound name (`audit-spec`, not `canon-audit`) only when the bare word is ambiguous or collides with another plugin's existing skill name — never resolve a collision by prefixing the plugin id, since `plugin:skill` invocation already disambiguates that. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
 
 ### `plugin.json`
 
 ```json
 {
   "id": "my-plugin",
-  "name": "My Plugin",
+  "name": "my-plugin",
   "version": "1.0.0",
   "description": "One sentence.",
-  "author": "Gabriel Castro (Orin DX)",
-  "skills": ["my-plugin"],
-  "agents": ["my-plugin-recon", "my-plugin-worker", "my-plugin-exit-gate"]
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "agents": ["./agents/recon.md", "./agents/worker.md", "./agents/exit-gate.md"]
 }
 ```
+
+`skills` is always the path string `"./skills/"` — the loader discovers every `SKILL.md` under it, whether that's one directory or several. `agents` is the explicit list of agent file paths; every file listed must exist, and every file present must be listed (`basis`'s `auditor` checks this).
 
 ### `SKILL.md`
 
@@ -117,11 +124,10 @@ Add an entry to the `"plugins"` array:
 ```json
 {
   "id": "my-plugin",
-  "name": "My Plugin",
+  "name": "my-plugin",
   "version": "1.0.0",
   "path": "./plugins/my-plugin",
-  "description": "One sentence description.",
-  "category": "lifecycle"
+  "description": "One sentence description. Skills: skill-one, skill-two."
 }
 ```
 

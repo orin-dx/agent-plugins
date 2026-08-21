@@ -32,6 +32,8 @@ plugins/<plugin-id>/
     └── exit-gate.md              <-- opus/high  — binding judgment
 ```
 
+A plugin defaults to one skill directory named after the plugin id, as above. IF the plugin's scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<plugin-id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead. `delta`, `canon`, `graph`, and `basis` are examples. The skill-routing key is the directory name, not the frontmatter `name:` field. A new skill name defaults to a single lifecycle-stage word; only go to a specific compound name (`audit-spec`, not `canon-audit`) when the bare word is ambiguous or collides with another plugin's existing skill name. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
+
 Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, systemic, behavioral, judgment, repair) — not by pipeline position. See `shared/constitution.md` for the model/effort tier rules.
 
 ---
