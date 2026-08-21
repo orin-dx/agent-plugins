@@ -1,0 +1,187 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0HE1KNJVQYP57S60CR902NA",
+  "session_id": "bbc88500-1c22-4b17-a7aa-f01c453ffafa",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-21T05:52:35.198846Z",
+  "branch": "main",
+  "checkpoints_count": 16,
+  "save_step_count": 9,
+  "files_touched": [
+    "plugins/basis/skills/basis/SKILL.md",
+    "plugins/canon/skills/canon/SKILL.md",
+    "plugins/delta/skills/delta/SKILL.md",
+    "plugins/graph/skills/graph/SKILL.md",
+    "shared/references/changesets.md",
+    "shared/schemas/changeset@2.json",
+    "shared/schemas/release-artifact@2.json"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "54f8bcce4c86",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 548,
+    "cache_creation_tokens": 653434,
+    "cache_read_tokens": 75059120,
+    "output_tokens": 238981,
+    "api_call_count": 274,
+    "subagent_tokens": {
+      "input_tokens": 32,
+      "cache_creation_tokens": 902404,
+      "cache_read_tokens": 3222425,
+      "output_tokens": 24676,
+      "api_call_count": 16
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01Ceji4FyqdZb3WPd7vQeMiy",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "54f8bcce4c86",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1731,
+        "end": 1732,
+        "entry_ids": [
+          "ea19d1e0-3d11-4a98-b2fa-f528617695bd"
+        ],
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 16
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 91,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        "shared/references/orin-visual-standard.md": 84
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 551,
+      "agent_lines_removed": 166,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 551,
+      "agent_lines_removed": 166,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 809,
+      "agent_lines_removed": 337,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1170,
+      "agent_lines_removed": 530,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1170,
+      "agent_lines_removed": 530,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1170,
+      "agent_lines_removed": 530,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1171,
+      "agent_lines_removed": 533,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1171,
+      "agent_lines_removed": 533,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 10,
+      "user_lines_added": 17,
+      "user_lines_removed": 10,
+      "agent_lines_added": 1202,
+      "agent_lines_removed": 547,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        "plugins/basis/skills/audit-plugin/SKILL.md": 1,
+        "plugins/canon/skills/audit-spec/SKILL.md": 1,
+        "plugins/canon/skills/gate-spec/SKILL.md": 5,
+        "plugins/delta/skills/post-review/SKILL.md": 3
+      },
+      "user_removed_per_file": {
+        "plugins/basis/skills/audit-plugin/SKILL.md": 1,
+        "plugins/canon/skills/audit-spec/SKILL.md": 1,
+        "plugins/canon/skills/gate-spec/SKILL.md": 5,
+        "plugins/delta/skills/post-review/SKILL.md": 3
+      }
+    }
+  ]
+}

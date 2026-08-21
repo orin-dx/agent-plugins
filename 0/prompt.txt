@@ -1,0 +1,171 @@
+We don't seem to have a skill for creating changesets, pull requests and any references for language, tone, etc when it comes to documentation right?
+
+---
+
+It seems to all be wrapped up in the ship skill which encompasses too much all at once right? Shouldn't we have one for receiving feedback? one for giving feedback, one for writing the changeset and one for creating a PR?
+
+---
+
+We want to have our language to be succinct, focused, to the point and generally engineering focused. Devoid of AI slop, ai word salad and filler words. We want to avoid unecessary and wordy blocks. Where appropriate favoring bullets, diagrams, etc.
+
+We want easily scannable, readable and understandable text vs wordy prose right?
+
+What kind of guidelines are out there? What does UX research say about user documentation? Best practices for changelogs, documentation, etc? How can we best guy our LLMs?
+
+---
+
+I do think we want to split the giant skill into smaller and more targeted skills right? Have we done the same in other plugins? Overloading it might result in less effective actions right?
+
+---
+
+<task-notification>
+<task-id>aacba13015f937d0e</task-id>
+<tool-use-id>toolu_01Ddiv97m9Ej1yUqxvG9YVs9</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/aacba13015f937d0e.output</output-file>
+<status>completed</status>
+<summary>Agent "Research documentation voice/tone guidelines" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Report on documentation voice/tone research (task: gather style guide sources, UX scannability research, changelog best practices, and LLM anti-slop prompting technique; synthesize into a checkable guideline list for a `docs-voice.md` reference).
+
+## Sources &amp; concrete rules
+
+**[Google Developer Documentation Style Guide](https://developers.google.com/style/tone)** — conversational but not dry; second person, active voice, present tense; serial comma; "write for scanning first, being read second" mindset; "sound like a knowledgeable friend," not marketing copy.
+
+**[Microsoft Writing Style Guide](https://learn.microsoft.com/en-us/style-guide/brand-voice-above-all-simple-human)** — 3 principles: warm/relaxed, crisp/clear, ready-to-help. "Crisp and clear" = write for scanning first, reading second. Conciseness rule: no wasted words, no filler qualifiers, be affirmative not hedgy.
+
+**[Diátaxis](https://diataxis.fr/)** — 4 separate doc modes (tutorial / how-to / reference / explanation), each answering a different question. Applies structurally: don't mix "why this works" explanation into a "how to ship a PR" how-to — keep reference (schema/API) separate from narrative (why the change matters).
+
+**[Keep a Changelog](https://keepachangelog.com/en/1.1.0/)** — fixed categories (Added/Changed/Deprecated/Removed/Fixed/Security); newest-first; "Unreleased" section at top; **write for the reader, not the tracker** — no bare "fixes #123," describe user-visible impact; regular cadence.
+
+**[Federal Plain Language Guidelines](https://digital.gov/guides/plain-language/principles)** — active voice always (name who does the action); sentence length target **15–20 words average**; one idea per sentence; cut wordy constructions.
+
+**[NN/G, F-shaped reading pattern](https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content-discovered/)** — users read ~20–28% of on-page text; they scan, not read. Countermeasure: **inverted pyramid** (conclusion first), front-loaded bolded/keyword phrases, short paragraphs, bullets over blocks.
+
+**AI-slop word lists** ([contentbeta](https://www.contentbeta.com/blog/list-of-words-overused-by-ai/), [awesome-slop](https://github.com/hwajongpark/awesome-slop)) — highest-severity terms: *delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, tapestry, landscape, underscore, meticulous, game-changer, cutting-edge, unprecedented, transformative, utilize (vs "use")*. Also banned structures: "It isn't just X, it's Y," rhetorical-question hooks, triplet-of-adjectives padding.
+
+**LLM anti-slop prompting** ([Anti-Slop Guide](https://cybertronai.github.io/SutroYaro/tooling/anti-slop-guide/), [Towards AI prompt](https://learnaitogethernewsletter.substack.com/p/the-prompt-we-use-to-prevent-ai-slop)) — negative word-bans alone catch ~80% of slop; the rest needs **positive structural constraints** (exact section format, sentence-length ceiling, required front-loaded answer) since a model told only "don't do X" tends to substitute a different flavor of padding. Before/after exemplar pairs outperform abstract rules. A cause worth knowing: RLHF rewards verbose, hedged, enthusiastic-sounding answers — banning words treats the symptom, constraining *structure and length* treats the cause.
+
+## Synthesized guideline set (→ `docs-voice.md`)
+
+1. Lead with the conclusion — answer before justification (inverted pyramid).
+2. Active voice, present tense, second person for instructions.
+3. One idea per sentence; average sentence length ≤20 words.
+4. Bullets/tables over paragraphs whenever the content is enumerable.
+5. No banned-word list: *delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, landscape, underscore, meticulous, game-changer, transformative, utilize→use, dive into*.
+6. No rhetorical-question hooks, no "it isn't just X, it's Y," no adjective triplets.
+7. State the mechanism, not the adjective — numbers/behavior over "robust"/"powerful" (matches existing `orin-visual-standard.md` §4 rule).
+8. Separate *what changed* (reference-like, factual) from *why* (one sentence, no more) — don't blend.
+9. Changelog/changeset entries: fixed category, user-facing impact language, no bare issue-number-only lines.
+10. PR bodies: summary bullets first, test plan as checklist, no prose recap of the diff.
+11. Cut hedge/filler qualifiers ("essentially," "basically," "in order to," "it's worth noting that").
+12. Self-edit pass: after drafting, re-read once specifically checking items 5–6 before output — prompt-only banned-word constraints miss ~20% without this.
+
+Sources: [Google style guide — tone](https://developers.google.com/style/tone) · [Microsoft brand voice](https://learn.microsoft.com/en-us/style-guide/brand-voice-above-all-simple-human) · [Diátaxis](https://diataxis.fr/) · [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · [Federal Plain Language Guidelines](https://digital.gov/guides/plain-language/principles) · [NN/G F-pattern](https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content-discovered/) · [NN/G how users read](https://www.nngroup.com/articles/how-users-read-on-the-web/) · [AI slop word list](https://www.contentbeta.com/blog/list-of-words-overused-by-ai/) · [awesome-slop wordlists](https://github.com/hwajongpark/awesome-slop) · [Anti-Slop Guide](https://cybertronai.github.io/SutroYaro/tooling/anti-slop-guide/) · [Towards AI anti-slop prompt](https://learnaitogethernewsletter.substack.com/p/the-prompt-we-use-to-prevent-ai-slop)</result>
+<usage><subagent_tokens>85716</subagent_tokens><tool_uses>8</tool_uses><duration_ms>48235</duration_ms></usage>
+</task-notification>
+
+---
+
+consider we might want to have a changeset analyzer who's goal is to determine what changed from the perspective of a consumer, not just what changed internally. Remembering that a changeset is a changelog entry (or can be combined into one entry for a version).
+
+We want to consider how to determine the semver and scale the details in the changeset based on how complex and how big the version bump is. How dow we want to write this skill?
+
+---
+
+And yes, I think we should split our skill. Let's plan things out and not rush into changes.
+
+---
+
+<task-notification>
+<task-id>a7c7e2ea398d1320a</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a7c7e2ea398d1320a.output</output-file>
+<status>completed</status>
+<summary>Agent "Research prior art for PR/review/changelog agent splits" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**PR-agent/review-poster split, verified against real prior art**
+
+**PR-Agent (Qodo/CodiumAI)** — [github.com/qodo-ai/pr-agent](https://github.com/qodo-ai/pr-agent), [command reference](https://deepwiki.com/qodo-ai/pr-agent/7.2-command-reference)
+- Confirmed genuinely separate code paths: `PRReviewer` (`/review`, `pr_reviewer.py`) does quality/issue critique; `PRDescription` (`/describe`, `pr_description.py`) does documentation generation. Different classes, different `run()` methods.
+- This directly validates the existing split in this repo between `pr-narrator` (documentation of intent) and any critique step — they're different cognitive modes in real production tooling, not an artificial distinction.
+
+**Atlassian Changesets** — [changesets/changesets](https://github.com/changesets/changesets), [detailed-explanation.md](https://github.com/atlassian/changesets/blob/master/docs/detailed-explanation.md)
+- Confirmed: authoring-time flow prompts for a **per-changeset semver bump type** (major/minor/patch) at PR time, plus a summary — written to a markdown file with YAML frontmatter immediately.
+- Release phase later takes the **max bump across all changesets** per package, flattens into one version bump, writes the changelog. This is exactly the `semver_impact`-per-changeset design already proposed in this conversation — it's established prior art, not overengineering.
+
+**Conventional Comments** — [conventionalcomments.org](https://conventionalcomments.org/)
+- Label taxonomy: `praise`, `nitpick`, `suggestion`, `issue`, `question`, `thought`, `chore` — prefixed on every review comment so intent is unambiguous before tone is read.
+
+**Google Eng Practices** — [how to write code review comments](https://google.github.io/eng-practices/review/reviewer/comments.html)
+- Comment-weight labels: `Nit:`, `Optional:`/`Consider:`, `FYI:` — same mechanism as Conventional Comments, different vocabulary.
+- Explicit rule: include positive comments, not just problems. Point out problems and let the author decide rather than dictating the fix, when possible.
+
+**Danger.js** — inconclusive. Search didn't surface a clean "compute report vs. post it" architectural split — Danger's checks-API vs. comment-API distinction is about *transport*, not a judgment/action separation. Don't cite this as strong precedent either way.
+
+**Human-in-the-loop / draft-confirm-act** — [Google Cloud agent design patterns](https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system), [HITL patterns 2026](https://myengineeringpath.dev/genai-engineer/human-in-the-loop/)
+- Established pattern: read-only steps execute automatically; write/side-effecting operations are gated by a confirmation checkpoint that exposes intent before the action fires. This is generic, well-established, not tool-specific.
+
+**Recommendation, mapped to this repo's cognitive-mode-separation convention:**
+
+- `commit-analyzer`, `pr-narrator`, `changeset-analyzer`: **keep as-is**, each is already a distinct cognitive mode (drafting for a different audience), confirmed correct by PR-Agent's actual class split and Changesets' authoring-time model.
+- `review-preprocessor`: keep; optionally adopt the Conventional Comments / Google label vocabulary for how it categorizes incoming comments (must-fix/suggestion/question already approximates `issue`/`suggestion`/`question`).
+- **`review-composer` (proposed new agent): skip it.** Critiquing a PR is already the built-in `code-review` skill's job (bug/quality findings, `--comment` posting), and PR-spec-conformance is already `axiom`'s "verify-pr" job. A new delta agent doing the same critique work duplicates two existing systems — this is the one place prior art suggests you're about to overcomplicate.
+- **`review-poster`: worth adding, but maybe not as an LLM agent.** Posting is pure mechanical execution of an already-drafted artifact (a review, a comment) — no judgment required, so per this repo's cognitive-mode table it may not need a subagent at all, just a skill-level confirmation gate before the `gh pr review`/`gh pr comment` call. If you want it as a named step for symmetry/auditability, make it `haiku/low`, mechanical only — never drafting content.
+- **"code analyzer": not a new delta concept.** It's the existing top-level `code-review` skill; delta should consume its findings, not re-implement them.</result>
+<usage><subagent_tokens>122945</subagent_tokens><tool_uses>9</tool_uses><duration_ms>563877</duration_ms></usage>
+</task-notification>
+
+---
+
+The single lifecycle-single word is maybe too aggressive post-review is a good name for example and avoids conflicts right?
+
+---
+
+We should avoid the plugin-stage naming, that is worse than being more specific with multiple words
+
+---
+
+Let’s get going
+
+---
+
+Show me all the changes we made, help summarize and explain it all
+
+---
+
+Should we have a bit more descriptive names for the skills since that's how we call them with slash "commands"?
+
+---
+
+Let's audit the relationship and coordination between the skills and plugins too. We want to ensure everything keeps working as well together
+
+---
+
+<task-notification>
+<task-id>a93cc196742c1dfe7</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a93cc196742c1dfe7.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit all agents for output conciseness" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Output economy audit — read all 36 agent files against the constitution's "Output Economy &amp; Communication Density" rule.
+
+**Already disciplined, worth naming:**
+- `proof/adversary.md` — `remediation_sketch: "string (one sentence — direction only, not code)"`. Exact, enforced brevity on the one field most likely to balloon into a code dump.
+- `delta/changeset-analyzer.md` — the only agent in the repo that scales output length to impact explicitly: terse for patch, one sentence for minor, full detail only for major. This is the model other summary-writing agents should match.
+- `trace/reader.md`, `lambda/*` — all fields structured, `reasoning` consistently marked scratchpad-only, no free paragraph fields.
+- `axiom/exit-gate.md` — restates `verdict_summary (max 300 chars)` even though the cap already lives in `shared/schemas/verdict@1.json`. Harmless, mildly helpful redundancy, not a gap.
+
+**Real gaps:**
+- `delta/pr-narrator.md` — `title`/`body` have zero length or structure guidance. In the same plugin as `changeset-analyzer`'s explicit detail-scaling, this is the sharpest inconsistency in the repo: one delta agent enforces terseness by rule, its sibling has none. Fix: cap `body` to summary-bullets-first / test-plan-checklist (which `github.md`'s voice section — already written this session — actually specifies) and reference it in the output contract, not just the loaded reference.
+- `canon/drift-checker.md` and `graph/agents/auditor.md` — both have a `summary` field specified as "one paragraph," and both describe that paragraph's actual content as enumerable (gap count / coverage rate / duplicates for one, covered/uncovered/drifted counts for the other). Per this session's own `docs-voice.md` rule ("bullets over paragraphs whenever the content is enumerable"), these should be a short bulleted breakdown or a capped 1-2 sentence field, not open-ended prose. Neither agent loads a reference file, so nothing constrains length today.
+
+**False alarm, checked and ruled out:** `proof/exit-gate.md` doesn't restate the 300-char cap on `verdict_summary` the way `axiom/exit-gate.md` does — looked like a gap, but the cap is enforced at the schema level (`verdict@1.json`), so every `verdict@1` producer inherits it regardless of whether the prompt repeats it.
+
+**Verdict:** generally disciplined — reasoning fields are uniformly scratchpad-only and excluded from downstream payloads, most structured fields have real shape constraints, and the worst-case pattern (unbounded prose where structure would do) shows up in exactly two spots, not a systemic drift. Fixing `pr-narrator`'s missing length discipline and the two "one paragraph" summary fields would close what's actually open.</result>
+<usage><subagent_tokens>449621</subagent_tokens><tool_uses>42</tool_uses><duration_ms>99884</duration_ms></usage>
+</task-notification>
+
+---
+
+Looks good
