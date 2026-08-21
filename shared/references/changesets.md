@@ -78,16 +78,19 @@ Skip changesets for:
 - Reference file updates
 - Internal refactors with no behavioral change
 
+**Check this list before reaching for the Semver Decision Guide below, not after.** The failure mode this guards against is real: rewriting a plugin's own self-description (fixing a fictional or stale claim in its `SKILL.md`/`README.md`) touches files but changes no behavior — it belongs on this skip list, not on the bump table. Jumping straight to "how much do I bump" skips the "should I bump at all" question the skip list exists to ask first. If nothing on the "when to write" list above applies and nothing changed for anyone outside this repo, stop here — no changeset, no version bump, no tag.
+
 ## Semver Decision Guide
 
 This table is machine-enforced: `changeset-analyzer` sets `semver_impact` directly from it at authoring time. `release-summarizer` does not re-derive semver from prose — it takes `max(semver_impact)` across the changesets included in a release.
 
 | Change | Version bump |
 |---|---|
+| Pure documentation or self-description fix, no behavior change | **none — see "Skip changesets for" above, do not bump** |
 | New plugin, no schema change | minor |
 | New field in existing schema (optional) | minor |
 | Removed or renamed field in existing schema | major + new file |
 | New schema file | minor |
-| Bug fix in subagent prompt | patch |
+| Bug fix in subagent prompt (changes actual behavior) | patch |
 | New skill within existing plugin | minor |
 | Renamed plugin ID | major |
