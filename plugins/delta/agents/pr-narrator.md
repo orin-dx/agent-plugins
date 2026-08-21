@@ -35,8 +35,8 @@ Return structured JSON:
 
 ```json
 {
-  "title": "string",
-  "body": "string",
+  "title": "string (imperative mood, under 70 chars — conventional commit subject style)",
+  "body": "string (markdown — Summary as 1-3 bullets, then Why, then Test Plan as a checklist; matches the PR template and Voice section in shared/references/github.md)",
   "labels": ["string"],
   "reasoning": "string"
 }
@@ -47,4 +47,6 @@ Return structured JSON:
 WHEN a spec or requirement is linked, NEVER omit the link from the PR body.
 IF breaking changes are present, they MUST appear in the PR body under their own heading.
 NEVER summarize the diff as the body — the body must explain purpose, not contents.
+THE SYSTEM SHALL structure `body` as summary bullets first and a test-plan checklist last, per `shared/references/github.md`'s template and Voice section — never a single prose block.
+NEVER exceed 3 summary bullets — if the change needs more than 3 to explain its purpose, the change's scope is the problem, not the bullet count.
 </output>

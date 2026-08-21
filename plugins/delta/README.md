@@ -1,8 +1,10 @@
 # delta — Ship Tooling
 
-**Stage:** Ship · **Output:** `release-artifact@1` · **Version:** 1.1.0
+**Stage:** Ship · **Output:** `release-artifact@2` · **Version:** 2.0.0
 
-Handles everything after implementation: commit messages, PR descriptions, changeset extraction, review triage, and release notes. Delta is not a linear pipeline — each subagent is invoked individually based on the task at hand. It reads the staged diff, linked spec, and linked requirement at runtime to produce meaningful, context-aware output, not mechanical templates.
+Handles everything after implementation: commit messages, PR descriptions, changeset extraction, review triage, posting a review, and release notes. Delta is not a linear pipeline — six independently-triggered skills, each dispatching to the subagent that matches the task. It reads the staged diff, linked spec, and linked requirement at runtime to produce meaningful, context-aware output, not mechanical templates.
+
+Delta does not critique code quality or spec conformance — that's the built-in `code-review` skill and `axiom`'s job respectively. Delta consumes their findings when relevant (e.g. `delta/post-review` can post an already-drafted `code-review` finding) rather than re-implementing them.
 
 ---
 
@@ -10,24 +12,25 @@ Handles everything after implementation: commit messages, PR descriptions, chang
 
 - You need a commit message that explains *why*, not just *what*
 - You're opening a PR and want a description a reviewer with zero context can act on
-- You need to categorize and respond to PR review comments
+- You need to categorize incoming PR review comments and respond to them
+- You have an already-drafted review or reply and want it posted to GitHub
 - You're cutting a release and need user-facing release notes
-- You want to extract a `changeset@1` from a git diff for semantic versioning
+- You want to extract a `changeset@2` from a git diff for semantic versioning, classified from a consumer's perspective
 
-**Invoke with:** `"Commit this"`, `"Write a commit message"`, `"Open a PR"`, `"Write the PR description"`, `"Address the feedback"`, `"Respond to review comments"`, `"Cut a release"`, `"What's in this release"`, `"Add a changeset"`
+**Invoke with:** `"Commit this"`, `"Write a commit message"`, `"Open a PR"`, `"Write the PR description"`, `"Address the feedback"`, `"Respond to review comments"`, `"Post this review"`, `"Cut a release"`, `"What's in this release"`, `"Add a changeset"`
 
 ---
 
-## Sub-skills
+## Skills
 
-| Sub-skill | What it does |
-| :--- | :--- |
-| `delta/commit` | Reads staged diff, produces a conventional commit message explaining the *why* |
-| `delta/pr` | Produces a PR title and body a reviewer with zero prior context can understand |
-| `delta/changeset` | Extracts semantic change meaning, distinguishes user-facing from internal, determines semver impact |
-| `delta/review` | Assembles the pre-PR review package — changeset diff, linked spec, test results, and open questions — before opening a PR |
-| `delta/receive` | Alias for `delta/review` — use when framing work as receiving feedback rather than reviewing |
-| `delta/release` | Aggregates changesets since last release into grouped user-facing notes and determines the semver bump |
+| Skill | What it does | Subagent |
+| :--- | :--- | :--- |
+| `delta/commit` | Reads staged diff, produces a conventional commit message explaining the *why* | `commit-analyzer` |
+| `delta/pr` | Produces a PR title and body a reviewer with zero prior context can understand, opens the PR after confirmation | `pr-narrator` |
+| `delta/changeset` | Classifies consumer_impact and semver_impact, then writes a changeset whose detail scales with that classification | `changeset-analyzer` |
+| `delta/receive-feedback` | Triages incoming review comments (must-fix / suggestion / question) and assembles the review package | `review-preprocessor` |
+| `delta/post-review` | Posts an already-drafted review or reply via `gh pr review`/`gh pr comment`, gated by explicit confirmation | none — mechanical orchestration only |
+| `delta/release` | Aggregates changesets since the last release; version is `max(semver_impact)` across included changesets | `release-summarizer` |
 
 ---
 
@@ -36,30 +39,30 @@ Handles everything after implementation: commit messages, PR descriptions, chang
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
 | `commit-analyzer` | Commit Author | haiku / low | Reads staged diff and produces a conventional commit message explaining why, not what. |
-| `changeset-analyzer` | Changeset Extractor | sonnet / medium | Produces a `changeset@1` from a git diff, mapping files changed and acceptance criteria met. When lambda's per-criterion evidence (exact test and implementation file/line) is available from the run that produced the diff, uses it directly instead of reconstructing approximate locations. |
+| `changeset-analyzer` | Changeset Extractor | sonnet / medium | Classifies `consumer_impact` and `semver_impact` from a git diff per the decision table in `changesets.md`, then produces a `changeset@2` whose summary detail scales with that classification. |
 | `pr-narrator` | PR Author | sonnet / medium | Writes a PR title and body from the reviewer's perspective — zero prior context assumed. |
-| `review-preprocessor` | Review Package Assembler | haiku / low | Before a PR is opened, bundles the changeset diff, linked spec, test results, and open questions into a structured review package for the reviewer. |
-| `release-summarizer` | Release Author | sonnet / medium | Aggregates `changeset@1` entries into a `release-artifact@1` with user-facing summaries. |
+| `review-preprocessor` | Review Package Assembler | haiku / low | Bundles the diff, linked spec, test results, and open questions into a structured review package; categorizes incoming comments by priority. |
+| `release-summarizer` | Release Author | sonnet / medium | Aggregates `changeset@2` entries into a `release-artifact@2`, computing the version as `max(semver_impact)` and filtering `internal-only` entries. |
+
+`delta/post-review` has no subagent — posting is mechanical execution of already-drafted content, gated by user confirmation, not a judgment task.
 
 ---
 
-## Subagent Selection
+## Pipeline
 
-Delta is a toolbox, not a pipeline. Pick the subagent that matches the task:
+```
+git diff → delta/changeset → changeset@2 ─┬─→ delta/pr → PR opened
+                                            └─→ delta/release → release-artifact@2
 
-| Task | Subagents to run |
-| :--- | :--- |
-| Making a commit | `commit-analyzer` |
-| Opening a PR | `review-preprocessor` → `changeset-analyzer` → `pr-narrator` |
-| Responding to review | `changeset-analyzer` |
-| Cutting a release | `release-summarizer` |
+PR comments → delta/receive-feedback → response plan → (fix code) → delta/post-review → posted reply
+```
 
 ---
 
 ## Output Schemas
 
-- `changeset@1` — see `shared/schemas/changeset@1.json`
-- `release-artifact@1` — see `shared/schemas/release-artifact@1.json`
+- `changeset@2` — see `shared/schemas/changeset@2.json` (supersedes `changeset@1`, still valid but legacy — adds required `consumer_impact`/`semver_impact`)
+- `release-artifact@2` — see `shared/schemas/release-artifact@2.json` (supersedes `release-artifact@1`)
 
 ---
 
@@ -67,9 +70,10 @@ Delta is a toolbox, not a pipeline. Pick the subagent that matches the task:
 
 Agents read these at runtime — they are not injected at startup:
 
-- `shared/references/conventional-commits.md` — type/scope conventions and commit message rules
-- `shared/references/github.md` — PR template and label conventions
-- `shared/references/changesets.md` — changeset format and semver bump decision rules
+- `shared/references/conventional-commits.md` — type/scope conventions, commit message rules, voice
+- `shared/references/github.md` — PR template, label conventions, review-comment vocabulary, voice
+- `shared/references/changesets.md` — changeset format, consumer/semver classification tables, voice
+- `shared/references/docs-voice.md` — the full voice standard these three embed a subset of
 
 ---
 
@@ -87,4 +91,4 @@ Agents read these at runtime — they are not injected at startup:
 
 ## Previous Stage
 
-Consumes lambda's per-task `criteria_evidence` from **[lambda](../lambda/)** (aggregated across the implementation run) as the precise input to `delta/changeset`, or produces `changeset@1` directly from a staged git diff when no lambda run backs the change.
+Consumes lambda's per-task `criteria_evidence` from **[lambda](../lambda/)** (aggregated across the implementation run) as the precise input to `delta/changeset`, or produces `changeset@2` directly from a staged git diff when no lambda run backs the change.
