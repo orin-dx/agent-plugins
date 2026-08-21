@@ -1,10 +1,13 @@
 # proof — Adversarial Bug Hunting
 
-**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.0.0
+**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.2.1
 
-Adversarial bug hunting on live code. Builds a reachability manifest to exclude dead code from scanning, sweeps live files against language-specific hazard taxonomies, optionally traces data flow for intent-capture and error-downgrade candidates, then adversarially refutes each candidate — a finding is confirmed only when no refutation can be constructed and a concrete failing scenario can be stated. Gates the output through an exit verifier before producing `finding-report@1`.
+Adversarial bug hunting on live code, for Rust, TypeScript, and JavaScript — language is auto-detected from `Cargo.toml` or `package.json`.
 
-Works on Rust, TypeScript, and JavaScript codebases. Language is auto-detected from `Cargo.toml` or `package.json`.
+- Builds a reachability manifest first, so dead code is never scanned.
+- Sweeps live files against language-specific hazard taxonomies, optionally tracing data flow for intent-capture and error-downgrade candidates.
+- Refutes every candidate before confirming it — a finding survives only when no refutation can be constructed and a concrete failing scenario can be stated.
+- Gates the output through an exit verifier before producing `finding-report@1`.
 
 ---
 
@@ -19,14 +22,16 @@ Works on Rust, TypeScript, and JavaScript codebases. Language is auto-detected f
 
 ---
 
-## Sub-skills
+## How It Works
 
-| Sub-skill | What it does |
-| :--- | :--- |
-| `proof/scan` | Full hazard sweep across all categories in the workspace |
-| `proof/focus` | Targeted scan — caller names one hazard category |
-| `proof/verify` | Adversarially verify a single reported candidate bug |
-| `proof/remediations` | Produce a structured fix plan from a finding report |
+proof is one skill, not a menu of sub-commands. The pipeline below is fixed — what changes is which part of the request drives it:
+
+- **Full bug hunt** — no category or candidate named: every hazard taxonomy gets scanned.
+- **Targeted scan** — the request names one hazard category (e.g. "unsafe memory", "unhandled promises"): the same pipeline runs, scoped to that category.
+- **Verify one candidate** — the request hands proof an already-identified bug: adversary runs directly against it, skipping the sweep.
+- **Post-remediation check** — the request asks whether prior findings are resolved: exit-gate re-reads the code from scratch and confirms.
+
+Unlike `delta` or `canon`, proof has exactly one skill directory (`skills/proof/`) — there's no `proof/scan` or `proof/verify` to invoke separately.
 
 ---
 
@@ -44,8 +49,30 @@ Works on Rust, TypeScript, and JavaScript codebases. Language is auto-detected f
 
 ## Pipeline
 
-```
-workspace → recon → scanner → [boundary-tracer?] → adversary → exit-gate → finding-report@1
+```mermaid
+flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+
+    ws[workspace] --> recon[recon]
+    recon --> scanner[scanner]
+    scanner -->|T7 / T10 candidates| bt["boundary-tracer
+    (conditional)"]
+    scanner --> adv[adversary]
+    bt --> adv
+    adv --> gate[exit-gate]
+    gate --> out(["finding-report@1"])
+
+    class ws source
+    class recon store
+    class scanner engine
+    class bt engine
+    class adv router
+    class gate router
+    class out output
 ```
 
 `boundary-tracer` is conditional — invoked only when the scanner produces T7 (write-only fields / intent-capture discard) or T10 (error downgrade) candidates.

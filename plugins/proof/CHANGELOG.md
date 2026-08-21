@@ -2,6 +2,14 @@
 
 — proof
 
+## [2.2.1] - 2026-08-21
+
+### Fixed
+- `SKILL.md` and `README.md` both documented a "Sub-skills" table (`proof/scan`, `proof/focus`, `proof/verify`, `proof/remediations`) styled like independently-invokable skills — the way `delta/commit` or `canon/draft-spec` genuinely are. proof has exactly one skill directory; none of those four were real. Replaced with an honest description of the one fixed pipeline adapting to what the request contains.
+- `README.md`'s version line said `2.0.0` while `plugin.json` said `2.2.0` — out of sync since at least the 2.1.0 release. Both now match.
+### Changed
+- `README.md`'s pipeline diagram upgraded from a plain-text arrow chain to a styled Mermaid flowchart using the palette in `shared/references/orin-visual-standard.md`.
+
 ## [2.2.0] - 2026-08-17
 
 ### Changed
