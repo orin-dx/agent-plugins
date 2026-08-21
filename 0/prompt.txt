@@ -1,0 +1,9 @@
+Did we really need a release for just doc updates?
+
+---
+
+We should leave it for this one, but we need to make sure that this doesn’t happen in the future
+
+---
+
+FYI the trace mermaid diagram has a typo and is not rendering. How do we check on mermaid diagrams like this? We make these mistakes every now and again.
