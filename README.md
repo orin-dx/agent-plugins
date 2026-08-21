@@ -28,12 +28,12 @@ flowchart LR
     tr -->|"research-report@1"| ca[canon\nspec]
     ca -->|"spec@1"| ve[vector\nplan]
     ve -->|"plan@1"| la[lambda\ncode]
-    la -->|"changeset@1"| de[delta\nship]
+    la -->|"changeset@2"| de[delta]
     de -. iterate .-> gr
 
     ax([axiom\ngate])
     ca -.->|"spec@1"| ax
-    la -.->|"changeset@1"| ax
+    la -.->|"changeset@2"| ax
     ax -.->|"verdict@1"| de
 
     pr([proof\naudit]) -.->|"finding-report@1"| de
@@ -47,9 +47,9 @@ flowchart LR
 | [`trace`](./plugins/trace/) | Research | Surveys prior art, risks, and patterns | `research-report@1` |
 | [`canon`](./plugins/canon/) | Spec | Drafts and gates unambiguous specifications | `spec@1` |
 | [`vector`](./plugins/vector/) | Plan | Decomposes specs into sequenced, testable tasks | `plan@1` |
-| [`lambda`](./plugins/lambda/) | Code | Implements tasks via TDD, gates on exit | `changeset@1` |
+| [`lambda`](./plugins/lambda/) | Code | Implements tasks via TDD, gates on exit | `changeset@2` |
 | [`axiom`](./plugins/axiom/) | Gate | Cross-artifact verification gate (reusable) | `verdict@1` |
-| [`delta`](./plugins/delta/) | Ship | Commits, PRs, changelogs, and release notes | `release-artifact@1` |
+| [`delta`](./plugins/delta/) | Ship | Commits, PRs, changelogs, and release notes | `release-artifact@2` |
 | [`proof`](./plugins/proof/) | Audit | Fast cross-language bug scan before any release | `finding-report@1` |
 | [`basis`](./plugins/basis/) | Meta | Scaffolds and audits new plugins | — |
 
@@ -93,12 +93,12 @@ All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use J
 | `research-report@1` | trace | canon |
 | `spec@1` | canon | vector, axiom |
 | `plan@1` | vector | lambda |
-| `changeset@1` | lambda | delta, axiom |
+| `changeset@2` | lambda | delta, axiom |
 | `verdict@1` | axiom | any gate consumer |
 | `finding-report@1` | proof | delta, humans, architect |
 | `field-survival-map@1` | boundary-tracer | adversary |
 | `mutation-report@1` | mutator | exit-gate, implementer |
-| `release-artifact@1` | delta | humans |
+| `release-artifact@2` | delta | humans |
 
 ---
 

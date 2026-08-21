@@ -7,9 +7,9 @@
     {
       "id": "basis",
       "name": "basis",
-      "version": "1.2.0",
+      "version": "2.0.0",
       "path": "./plugins/basis",
-      "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts.",
+      "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent.",
       "supersedes": "agent-plugin-builder"
     },
     {
@@ -34,9 +34,9 @@
     {
       "id": "graph",
       "name": "graph",
-      "version": "1.2.0",
+      "version": "2.0.0",
       "path": "./plugins/graph",
-      "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker that produces the requirement@1 schema."
+      "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker that produces the requirement@1 schema. Skills: capture-need, clarify-requirement, prioritize-backlog, connect-requirement, audit-backlog."
     },
     {
       "id": "trace",
@@ -48,9 +48,9 @@
     {
       "id": "canon",
       "name": "canon",
-      "version": "1.4.0",
+      "version": "2.0.0",
       "path": "./plugins/canon",
-      "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code. Skills: draft, review, verify, changeset."
+      "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, gate-spec, correct-spec, architect."
     },
     {
       "id": "vector",
@@ -69,9 +69,9 @@
     {
       "id": "delta",
       "name": "delta",
-      "version": "1.3.0",
+      "version": "2.0.0",
       "path": "./plugins/delta",
-      "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, review, receive, changeset, release."
+      "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, changeset, receive-feedback, post-review, release."
     }
   ]
 }

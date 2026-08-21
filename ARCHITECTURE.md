@@ -55,12 +55,12 @@ flowchart LR
     tr -->|"research-report@1"| ca["**canon**\nspec"]
     ca -->|"spec@1"| ve["**vector**\nplan"]
     ve -->|"plan@1"| la["**lambda**\ncode"]
-    la -->|"changeset@1"| de["**delta**\nship"]
+    la -->|"changeset@2"| de["**delta**"]
     de -. iterate .-> gr
 
     ax(["**axiom**\ngate"])
     ca -.->|"spec@1"| ax
-    la -.->|"changeset@1"| ax
+    la -.->|"changeset@2"| ax
     ax -.->|"verdict@1"| de
 
     pr(["**proof**\naudit"]) -.->|"finding-report@1"| de
