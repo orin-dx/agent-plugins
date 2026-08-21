@@ -1,0 +1,307 @@
+Did we really need a release for just doc updates?
+
+---
+
+We should leave it for this one, but we need to make sure that this doesn’t happen in the future
+
+---
+
+FYI the trace mermaid diagram has a typo and is not rendering. How do we check on mermaid diagrams like this? We make these mistakes every now and again.
+
+---
+
+We should finish setting up the recommended bits from GH community: https://github.com/orin-dx/agent-plugins/community
+
+---
+
+Did we base these on some of the industry best ones? specially the code of conduct?
+
+---
+
+Let's fix that please
+
+---
+
+I'm creating emails for gabe@orin-dx.com admin@orin-dx.com and security@orin-dx.com. We should use the admin and security emails in the docs
+
+---
+
+Looks like we don't have the security policy set
+
+---
+
+I think you need to research and consider what we should use. We want this kind of setup for all our repos right?
+
+---
+
+<task-notification>
+<task-id>a0d2a22f146a98a62</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a0d2a22f146a98a62.output</output-file>
+<status>completed</status>
+<summary>Agent "Research best-practice PR/issue templates" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Research: PR/issue template best practices + org-wide defaults
+
+**Directive:** research real, verified examples of great PR/issue templates and confirm GitHub's org-wide `.github` default-file mechanism, to inform an org-wide setup decision for orin-dx.
+
+### Sources checked (all fetched live, not recalled)
+
+- **Kubernetes** (`kubernetes/kubernetes/.github/PULL_REQUEST_TEMPLATE.md`, verified via raw.githubusercontent.com) — has a real, elaborate template: `/kind bug`/`/kind feature`/etc. label-command section, "why we need it," linked-issue with auto-close convention (`Fixes #N`), "special notes for reviewer," and a structured `release-note` block that must say `NONE` or contain real release-note text. That last piece is functionally the same idea as a changeset — a forced author decision at PR time about user-facing impact.
+- **rust-lang/rust**, **microsoft/vscode**, **vercel/next.js** — checked all three directly, **none has a `PULL_REQUEST_TEMPLATE.md`** (confirmed 404, not an error). Real, consistent signal: heavy PR templates are not universal best practice among top-tier projects — Kubernetes's is specifically built around its Prow bot's label-command workflow, not a generic pattern to imitate wholesale.
+- **microsoft/vscode issue templates** (`.github/ISSUE_TEMPLATE/`, verified via GitHub API contents listing) — still plain Markdown (`bug_report.md`, `feature_request.md`, `config.yml`), **not** YAML issue forms, despite VS Code's scale and resources. Tempers the "GitHub recommends YAML forms" framing from earlier this session — forms are a legitimate option for structured cases, not a requirement even top projects follow.
+- **GitHub's org-wide default community health files docs** (via WebSearch, docs.github.com — direct fetch 404'd, search snippet quotes the doc directly): mechanism confirmed —
+  - Precedence per repo: `.github/` folder → repo root → `docs/` folder → **then** the org's `.github` repo (same order) as fallback.
+  - **Issue templates are all-or-nothing per repo**: if a repo has *any* file in its own `.github/ISSUE_TEMPLATE/` (including just a `config.yml`), **none** of the org default's `ISSUE_TEMPLATE` folder applies — no merging.
+  - The org's `.github` repo **must be public** for issue/PR templates specifically to apply org-wide (internal doesn't count for these two file types, unlike some other health files).
+
+### What a genuinely strong PR template includes (synthesized, not just "adequate")
+
+- A **type-of-change signal** the author sets, not just prose (Kubernetes: label commands; simpler version: a checkbox list)
+- **Why**, separate from what — the diff already shows what
+- **Linked issue with auto-close convention** (`Fixes #N` / `Closes #N`)
+- A **forced user-facing-impact decision** — Kubernetes forces either `NONE` or real release-note text in a dedicated block; can't be skipped silently
+- **Reviewer-facing notes** section (context a reviewer needs that isn't in the diff)
+- Optional space for docs/spec links
+
+### Recommendation: org-level generic vs. repo-specific override
+
+**Org-level `orin-dx/.github` generic defaults** (true across Rust CLI tools and TS/agent-plugin repos alike):
+- `CODE_OF_CONDUCT.md` — Contributor Covenant is genuinely universal, zero repo-specific content
+- `CONTRIBUTING.md` skeleton — dev-environment-agnostic parts only (PR workflow, conventional commits, where to file security reports)
+- A **generic PR template** — type-of-change checkbox, why, linked issue, reviewer notes, forced user-facing-impact line. This is the one worth building as the shared default; every repo in the org benefits from it structurally even though the exact "impact" mechanism differs (agent-plugins has changesets; lumen/prism don't).
+- `SECURITY.md` skeleton — reporting address, response-time commitment; **not** the threat-model section, that's inherently repo-specific
+
+**Must stay as local repo overrides, never centralized:**
+- **agent-plugins' PR template** — it's deliberately identical to what `pr-narrator` produces; an org-generic template would break that intentional match. Given the all-or-nothing rule, if agent-plugins keeps *any* local file, it should keep its whole `PULL_REQUEST_TEMPLATE.md`, not partially inherit.
+- **Issue templates** — the all-or-nothing rule means a repo can't mix org-default and local; agent-plugins' `feature_request.md` is deliberately free-text to match `graph`'s intake design, so it needs to stay a full local override, not a partial one.
+- **SECURITY.md's Scope section** — agent-plugins' threat model (prompt injection, schema bypass) is meaningless for lumen/prism (Rust CLI tools); each repo needs its own Scope block even if it inherits the reporting-address skeleton.
+
+Not evaluated: whether lumen/prism/callisto/michi/monokl want the org default's PR template at all, or would rather keep none (matching rust-lang/rust's and vscode's actual practice) — that's a judgment call for the parent to make with the user, not something the research settles.</result>
+<usage><subagent_tokens>822064</subagent_tokens><tool_uses>7</tool_uses><duration_ms>91413</duration_ms></usage>
+</task-notification>
+
+---
+
+Or should we setup the appropriate things in each repo???
+
+---
+
+Can that be setup at the org vs creating a new repo???
+
+---
+
+Yes, go ahead
+
+---
+
+<task-notification>
+<task-id>a5781337fcfcf6450</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a5781337fcfcf6450.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for lumen" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Task**: set up GitHub community health files for `lumen` (Code of Conduct, Security policy, PR template, issue templates), tailored to the actual repo rather than copied from `agent-plugins`.
+
+**What lumen is**: a Rust CLI/workspace that parses AI coding agent transcript logs (Claude Code, Antigravity, Codex, OpenCode) via a SIMD streaming parser, normalizes them into a canonical representation, computes prompt-cache economics, and detects circular tool-call loops via Tarjan SCC. Pre-1.0 (`0.1.0`), pure Rust (no `package.json`), `unsafe_code = "forbid"` enforced at the workspace lint level.
+
+**PR template decision**: kept it lightweight — type-of-change checkbox, why (not what), a test-plan checklist matching `CONTRIBUTING.md`'s exact commands (`cargo test --workspace`, `cargo clippy ... -D warnings`, `cargo fmt --all -- --check`), linked issue. Skipped a Kubernetes-style forced release-note block: no `CHANGELOG.md` or release convention exists in the repo to hook into, and this session's own research found even rust-lang/rust and VS Code ship no PR template at all — proportional beats heavy.
+
+**SECURITY.md scope**: grounded in what's real, not boilerplate — untrusted transcript parsing (`simd-json`/`memmap2` on files that may come from an untrusted source), `lumen-store`'s local SQLite data-at-rest, Cargo supply chain, and the `unsafe_code = "forbid"` lint explicitly narrowing the memory-safety surface.
+
+Files: `CODE_OF_CONDUCT.md`, `SECURITY.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/{bug_report,feature_request}.md`, `CONTRIBUTING.md` (one-line pointer added). Committed locally, not pushed: `c40c2af`.</result>
+<usage><subagent_tokens>851580</subagent_tokens><tool_uses>13</tool_uses><duration_ms>130188</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ab0ada784f767645c</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/ab0ada784f767645c.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for michi" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>michi is the response-formatting layer for the orin-axi agent-tooling suite — TOON (Token-Optimized Object Notation) rendering/parsing, truncation, retry/resilience math, and core AXI response types, as a Cargo workspace plus a Node.js NAPI package (`@orin-axi/michi`), AGPL-3.0-or-later, not yet published.
+
+PR template kept lightweight (type-of-change checkbox, why, `just check-all` test-plan item, linked issue) — this session's own research found rust-lang/rust, VS Code, and Next.js all ship with no PR template at all, so a heavy one wasn't warranted here either.
+
+Committed locally only, not pushed: `8cac684` on `main`.
+- `CODE_OF_CONDUCT.md` (new, verbatim Contributor Covenant 2.1)
+- `SECURITY.md` (new, scope grounded in real invariants: zero-panic library code, UTF-8 truncation boundary, `unsafe` restricted to `src/napi.rs`, resilience/retry math, mixed Cargo+npm supply chain)
+- `.github/PULL_REQUEST_TEMPLATE.md` (new)
+- `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md` (new, plain Markdown+frontmatter)
+- `CONTRIBUTING.md` (modified — one-line pointer to the two new files)
+
+Pre-existing untracked `.changeset/*.md` files in the repo were left alone — unrelated to this task, not mine to touch.</result>
+<usage><subagent_tokens>853620</subagent_tokens><tool_uses>17</tool_uses><duration_ms>249505</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>af6aff7a75baef4d2</task-id>
+<tool-use-id>toolu_01SPzuaQ8R9dNHLfHtohD5wa</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/af6aff7a75baef4d2.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for prism" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Setup for `prism` (`/Users/gabe/Projects/prism`) — GitHub community health files, tailored not copied.
+
+**What prism is**: a Rust CLI evaluation/regression runner for AI coding agents and plugins — spawns Claude CLI/AGY/Anthropic API drivers against fixture repos in an ephemeral `/tmp` sandbox, replays frozen VCR cassettes for cheap CI gating, and depends on the sibling `lumen` repo via a local path dependency.
+
+**Files added** (commit `51399b8`, not pushed):
+- `CODE_OF_CONDUCT.md` — verbatim Contributor Covenant 2.1 text, admin@orin-dx.com
+- `SECURITY.md` — scope grounded in real architecture read from `docs/01-core-evaluation-and-vcr-cassettes.md`: sandbox escape, untrusted execution during grading, VCR cassette tampering, and the `lumen` path-dependency supply chain — not boilerplate
+- `.github/PULL_REQUEST_TEMPLATE.md` — kept lightweight (type of change, why, `cargo test`/`clippy`/`fmt` checklist), no invented release-note mechanism since prism has no existing changelog convention to hook into — matches the research finding that rust-lang/rust, VS Code, and Next.js all ship with no PR template at all
+- `.github/ISSUE_TEMPLATE/bug_report.md` + `feature_request.md` — plain Markdown, fields tailored to debugging a CLI eval tool (crate, command/config, environment)
+- One-line pointer added to `CONTRIBUTING.md`
+
+**Left untouched**: the working tree had substantial pre-existing uncommitted changes unrelated to this task (`Cargo.toml`, several driver/grader source files, `.claude/`/`.codex/`/`.moon/`/etc. tool-config directories) — none of that was staged or touched.</result>
+<usage><subagent_tokens>855079</subagent_tokens><tool_uses>17</tool_uses><duration_ms>272992</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a12cffddc4b65c37b</task-id>
+<tool-use-id>toolu_017jSFD9oGuX3AM1wsJKZ7cs</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a12cffddc4b65c37b.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for monokl" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Directive: set up GitHub community health files for `monokl` at `/Users/gabe/Projects/monokl`.
+
+**What monokl is:** An AST-aware semantic code search tool for TS/JS/Rust, built specifically for AI agents to consume (structured JSON output, not human-readable reports). Currently spec-stage — no code exists yet, only a full design in `docs/spec/`.
+
+**PR template decision:** Kept it lightweight rather than elaborate — this session's own research found `rust-lang/rust`, VS Code, and Next.js all ship with no PR template at all, so heavy isn't automatically better. Included a "spec change" type-of-change option (since right now that's the only kind of PR possible) alongside a code test-plan checklist scoped to the workspace's actual tooling (`cargo nextest`, `clippy`, `insta`) for when implementation starts.
+
+**Files added:** `CODE_OF_CONDUCT.md` (verbatim Contributor Covenant 2.1), `SECURITY.md` (scope grounded in monokl's real threat model — parser exploitation via crafted source, path traversal, agent-facing output manipulation, parser supply chain), `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/{bug_report.md, feature_request.md, config.yml}`, and a one-line pointer added to `CONTRIBUTING.md`.
+
+Repo had substantial unrelated in-progress work (other `.claude/plans/`, `.claude/specs/`, modified `ARCHITECTURE.md`) — staged and committed only the 7 files from this directive, left everything else untouched.
+
+**Commit:** `ba9d09f` on `main`, local only — not pushed.</result>
+<usage><subagent_tokens>856689</subagent_tokens><tool_uses>15</tool_uses><duration_ms>291832</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a7914b1f93b85badf</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a7914b1f93b85badf.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for callisto" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Directive: set up GitHub community health files for `callisto` at `/Users/gabe/Projects/callisto`, tailored to the actual repo, committed locally only (no push).
+
+**What callisto is:** a Rust CLI release-automation engine for polyglot monorepos — replaces `@changesets/cli`/`release-please` with a native binary that discovers workspace packages, computes version bumps via a dependency graph solver, edits `Cargo.toml`/`package.json` with format-preserving CST parsers, and publishes to Cargo/npm/PyPI from CI. Its own release workflow (`.github/workflows/callisto-release.yml`) runs with `contents: write`/`pull-requests: write` and holds `CARGO_REGISTRY_TOKEN`/`NPM_TOKEN` secrets.
+
+**PR template decision:** kept it lightweight (type-of-change checkbox, why, test plan, linked issue) rather than Kubernetes-style elaborate, per this session's research that even rust-lang/rust and VS Code ship with none at all. One repo-specific addition earned its place, not guessed: a "did you add a changeset" checkbox, since callisto has its own real changeset wizard (`callisto add`) documented in `CONTRIBUTING.md` — the tool eating its own dog food.
+
+**SECURITY.md scope**, grounded in the actual release workflow file (read, not assumed): registry token exposure, workflow/action injection, manifest-parser safety (crafted `Cargo.toml`/`package.json` breaking the CST/atomic-write guarantees), version/changelog spoofing, and git-operation safety via `gix`. Noted that dependency advisories are already covered by `just audit` (cargo-deny) in CI, so a report duplicating that isn't new — a bypass of that check would be.
+
+**Files added/changed** (commit `cc7c10d` on the currently-checked-out branch `release-pipeline-and-matrix-hardening`, **not** `main` — flagging since that wasn't specified in the directive and may need rebasing before merge):
+- `CODE_OF_CONDUCT.md` (new)
+- `SECURITY.md` (new)
+- `.github/PULL_REQUEST_TEMPLATE.md` (new)
+- `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md` (new, plain Markdown + YAML frontmatter, reused existing `bug`/`enhancement` labels)
+- `CONTRIBUTING.md` (one-line pointer added)
+
+Not pushed, per directive.</result>
+<usage><subagent_tokens>861151</subagent_tokens><tool_uses>17</tool_uses><duration_ms>277335</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>adc6825a5bc873630</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/adc6825a5bc873630.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for oxc-react-codegen" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>docs: add community health files (commit `567317c`).
+
+**What this repo is:** `oxc-react-docgen` — a Rust-native TypeScript/TSX parser (via OXC) that extracts React component prop types for docs/Storybook tooling, exposed as a CLI, NAPI binding, and Vite plugin. Pre-1.0, not yet published to npm.
+
+**PR template decision:** kept it lightweight (type-of-change checkbox, why, test-plan checklist, linked issue) rather than an elaborate Kubernetes-style template — this session's own research found even rust-lang/rust and VS Code ship no PR template at all, so a heavy one isn't automatically better; matched the checklist items to the real commands already in `CONTRIBUTING.md` (`cargo test -p oxc-react-docgen-core`, `cargo clippy ... -D warnings`, `cargo insta review`, the Vite plugin's pnpm test) instead of inventing generic ones. No release-note block — found no changelog/release convention in the repo to hook into.
+
+**Also tailored:** `SECURITY.md`'s scope to the real attack surface (malicious/adversarial TS/TSX input against the parser; `crates/binding` flagged explicitly as the one crate without `#![forbid(unsafe_code)]`, since it's the NAPI FFI boundary — `core` and `cli` do have the forbid attribute, confirmed by reading the source, not assumed); bug-report template leads with a minimal-repro TSX field; reused the repo's existing `bug`/`enhancement` labels rather than creating duplicates.
+
+Left untouched, not mine to touch: pre-existing uncommitted changes to `release.yml`, two `Cargo.toml` files, `vite-plugin/package.json`, and untracked `.changeset/`/`.entire/`/`.gemini/`/`callisto.toml` — staged and committed only the 6 files this directive covers.</result>
+<usage><subagent_tokens>860334</subagent_tokens><tool_uses>18</tool_uses><duration_ms>264502</duration_ms></usage>
+</task-notification>
+
+---
+
+For the plugins, we might have to do some more tweaking for changesets. In callisto you created one giant changeset that had muliple versions on a locked group.
+
+That seems wrong as the changesets should be feature/change-based and not just lumped together right? After a lot of proding this is what you suggested:
+
+I've now traced the real diff since the last release (f40d87b8, 376 commits) rather than working from the bundled file's prose alone. Here's the accurate per-topic package attribution, verified against actual git diff per track/commit-range (not guessed):
+
+New changeset: fixed-group-convergence.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 1: fixed-group siblings converge to one target; pre_mutation_checks/divergence wiring; ConflictingGroupMembership detection; this
+session's [[fixed-group]] config + no-compounding test
+────────────────────────────────────────
+New changeset: platform-manifest-planning.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 2: real platform_writes/optional_dep_updates planning logic
+────────────────────────────────────────
+New changeset: cascade-severity-fixes.md
+Packages (severity): callisto-graph (patch)
+Scope: Track 9: peer-escalation respects true severity; cross-ecosystem rewrite-key fix
+────────────────────────────────────────
+New changeset: identity-ecosystem-resolution.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 3a/3b1: workspace-membership filtering, ecosystem-prefixed identity, cross-ecosystem promotion, fallback removal
+────────────────────────────────────────
+New changeset: release-pipeline-contract.md
+Packages (severity): callisto-model, callisto-graph, callisto-cli, callisto-moon (minor)
+Scope: Track 4 + Track 6-mechanical + SPEC-005: tag-sha fix, status --check fix, JSON report renames, ReleaseEntry.is_prerelease + Action rewrite
+────────────────────────────────────────
+New changeset: changelog-pr-body-rendering.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 5: one renderer everywhere, ChangeSource constr
+────────────────────────────────────────
+New changeset: callisto-matrix-command.md
+Packages (severity): callisto-cli, callisto-graph, callisto-model (minor)
+Scope: Track G: callisto matrix napi/maturin discovery
+────────────────────────────────────────
+New changeset: manifest-write-batching.md
+Packages (severity): callisto-graph, callisto-manifests, callisto-model (minor)
+Scope: Spec A + Spec B: Manifest::persist required, write-ba
+────────────────────────────────────────
+New changeset: security-hardening.md
+Packages (severity): callisto-graph, callisto-vcs, callisto-cli (patch), callisto-model (minor — new LeadingHyphen variant)
+Scope: publish name validation, registry allowlist, path traion, tag hyphen rejection, bounded subprocess capture
+────────────────────────────────────────
+New changeset: vcs-conventional-decoupling-and-fixes.md
+Packages (severity): callisto-conventional (minor — CommitWalker decoupling), callisto-vcs, callisto-graph, callisto-model, callisto-format (patch)
+Scope: CommitWalker trait decoupling, GitAccess sharing, cactory fix, BREAKING-CHANGE footer parser, PEP440 normalization,
+caret-range fix, diagnostic-code dedup
+
+One thing I'm not silently guessing on: a few micro-bullets EP503 normalization, npm package-manager auto-detection, Cargo compound dependency-range rewriting) I haven't pinned to an exact file yet — I'll verify each before filing rather than place them by assumption.
+
+callisto-fixtures genuinely has zero diffs in this window — it gets no changeset entry (it'll still bump via fixed-group convergence, which is correct, separate from changeset content).
+
+Want me to proceed with this split, or adjust the grouping f
+
+We should make sure that the skill and agent can appropriately apportion changesets. Do you need more details? Do you need to think more critically and do some research?
+
+---
+
+Is it always one changeset per topic or can related things go into a changeset, it's a bit nebulous on purpose and why AI is good for this right?
+
+---
+
+Say we're doing a push for testing coverage improvement across all packages, that can go in one changeset. Say we're implementing a set of new features together, that can be a changeset.
+
+Agentic work makes this a bit more difficult because the agents do a lot more work quicker, right
+
+---
+
+Yes, If you think that will help its judgement of what goes in a changeset and what gets split into another. We don't want too many changesets either.
