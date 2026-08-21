@@ -2,6 +2,14 @@
 
 — trace
 
+## [1.2.1] - 2026-08-21
+
+### Fixed
+- `skills/trace/SKILL.md` and `README.md` each documented a "Sub-skills" list implying separately-invokable commands (`trace/question`/`trace/prior-art`/`trace/dependency`/`trace/risk` in one file, `trace/survey`/`trace/scan`/`trace/risk` in the other) — the two disagreed with each other, and both were fiction: trace has exactly one skill directory. Replaced both with one honest description of the real four-agent pipeline (recon → reader → synthesizer → risk-assessor), which narrows itself to what's asked instead of exposing named sub-modes.
+- README's version line read `1.0.1`, already stale against `plugin.json`'s `1.2.0` before this fix.
+### Changed
+- README's pipeline section is now a Mermaid flowchart styled with the shared six-color palette (`shared/references/orin-visual-standard.md` §2), replacing the plain-text arrow chain.
+
 ## [1.2.0] - 2026-08-17
 
 ### Changed

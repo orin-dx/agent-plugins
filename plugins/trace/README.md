@@ -1,8 +1,8 @@
 # trace — Research Synthesis
 
-**Stage:** Research · **Output:** `research-report@1` · **Version:** 1.0.1
+**Stage:** Research · **Output:** `research-report@1` · **Version:** 1.2.1
 
-Surveys prior art, existing implementations, and technical risks before a spec is written. Reads internal code, docs, and external sources, then synthesizes findings into a confidence-classified research report. The adversarial risk assessor reviews the proposed approach before any spec is committed to.
+One skill, one pipeline: map sources, read only what the map points at, synthesize into a report that separates confirmed findings from assumptions, then adversarially assess risk on the resulting approach. Use trace before a spec gets written, not after — a spec built on unverified assumptions fails the moment implementation reveals reality.
 
 ---
 
@@ -17,31 +17,47 @@ Surveys prior art, existing implementations, and technical risks before a spec i
 
 ---
 
-## Sub-skills
-
-| Sub-skill | What it does |
-| :--- | :--- |
-| `trace/survey` | Full pipeline — maps sources, reads them, synthesizes findings, assesses risks |
-| `trace/scan` | Targeted scan of a specific source type (internal code, docs, or external references) |
-| `trace/risk` | Adversarial risk assessment of a proposed approach without a full research sweep |
-
----
-
 ## Subagents
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `recon` | Source Mapper | haiku / low | Maps available sources — internal code, docs, and external search terms — without reading them. No content analysis. |
-| `reader` | Source Reader | sonnet / medium | Reads each source identified by recon and extracts relevant findings with confidence classification. |
-| `synthesizer` | Synthesizer | sonnet / medium | Aggregates findings across all sources into a coherent `research-report@1`. Resolves contradictions and notes open questions. |
-| `risk-assessor` | Risk Assessor | sonnet / medium | Reviews the proposed approach for technical risks before the spec is written. Surfaces risks neutrally without recommending whether to proceed. |
+| `recon` | Source Mapper | haiku / low | Maps available sources — internal specs/docs/code, dependency manifests, external search terms — without reading them. Narrows scope to `internal`, `external`, or `both` based on what the question actually needs. |
+| `reader` | Source Reader | sonnet / medium | Reads each source recon mapped and extracts findings with confidence classification. Reads only what was mapped — no wandering. |
+| `synthesizer` | Synthesizer | sonnet / medium | Aggregates findings into a coherent `research-report@1`. Resolves contradictions and notes open questions. |
+| `risk-assessor` | Risk Assessor | sonnet / medium | Reviews the proposed approach for technical risks before the spec is written. Can run standalone against an already-decided approach, or against synthesizer's own output. Surfaces risks neutrally, no recommendation on whether to proceed. |
+
+There is one skill here, not a menu of commands — trace is this pipeline, and the pipeline adapts to what's asked rather than exposing separate named modes for "full survey" versus "just the risk check."
 
 ---
 
 ## Pipeline
 
-```
-requirement@1 → recon → reader → synthesizer → risk-assessor → research-report@1
+```mermaid
+flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+
+    Req["requirement@1
+    or free-text question"] --> Recon["recon
+    haiku / low"]
+    Recon -->|source map| Reader["reader
+    sonnet / medium"]
+    Reader -->|findings + confidence| Synth["synthesizer
+    sonnet / medium"]
+    Synth -->|research-report@1| Risk["risk-assessor
+    sonnet / medium"]
+    Risk --> Out(["research-report@1
+    + risks"])
+
+    class Req source
+    class Recon store
+    class Reader engine
+    class Synth engine
+    class Risk router
+    class Out output
 ```
 
 Recon runs first and maps all sources before any reading begins. Reader and synthesizer are separate to keep source extraction honest — synthesizer cannot retroactively shape what was read. Risk assessor runs last with full context.
@@ -60,7 +76,7 @@ Each finding is classified as one of:
 | `likely` | Strong inference from multiple sources, no direct verification |
 | `assumed` | Reasonable assumption; no source found — flagged for follow-up |
 
-The risk assessor appends a `risks` section: each risk has a description, likelihood, and suggested mitigation.
+The risk assessor appends a `risks` section: each risk has a description, severity, likelihood, trigger condition, and mitigation sketch.
 
 ---
 
