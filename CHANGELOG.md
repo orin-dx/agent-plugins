@@ -3,6 +3,11 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.2.0] - 2026-08-21 — Topic-Scoped Changesets
+
+### Added
+- **`delta` (v2.1.0)**: `changeset-analyzer` now checks whether a diff contains multiple independent topics before classifying anything, and emits one `changeset@2` per topic instead of a single bundled entry. A single PR still produces exactly one changeset, unchanged — the new behavior only engages on a backlog/catch-up diff spanning several unrelated tracks since the last release. Prompted by a real incident in a sibling repo (`callisto`, a separate release-automation tool) where a large diff got bundled into one changeset covering unrelated tracks with package attribution guessed from a written summary instead of verified per-topic against the actual diff. `changeset-analyzer`'s output contract changes from a single object to an array of one-or-more; `delta/changeset`'s `<io>` section and `shared/references/changesets.md` updated to match, with the split rule stated as a named failure mode (bundling for convenience costs more than a spurious split).
+
 ## [3.1.0] - 2026-08-21 — Honest Sub-Skills, Applied Diagram Palette, Readable READMEs
 
 ### Fixed
