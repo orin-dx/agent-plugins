@@ -1,0 +1,21 @@
+Did we really need a release for just doc updates?
+
+---
+
+We should leave it for this one, but we need to make sure that this doesn’t happen in the future
+
+---
+
+FYI the trace mermaid diagram has a typo and is not rendering. How do we check on mermaid diagrams like this? We make these mistakes every now and again.
+
+---
+
+We should finish setting up the recommended bits from GH community: https://github.com/orin-dx/agent-plugins/community
+
+---
+
+Did we base these on some of the industry best ones? specially the code of conduct?
+
+---
+
+Let's fix that please
