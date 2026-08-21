@@ -38,7 +38,7 @@ Don't describe what the code does (the diff shows that). Write what a reviewer n
 
 ## Voice
 
-Active voice, imperative mood, under 20 words where possible. No banned words: *delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, meticulous, game-changer, utilize* (use "use"). Full standard: `shared/references/docs-voice.md`.
+Active voice, imperative mood. If a sentence keeps running, it's usually doing two jobs — split it rather than trimming words to make it fit. No banned words: *delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, meticulous, game-changer, utilize* (use "use"). Full standard: `shared/references/docs-voice.md`.
 
 ## Scope Conventions (this repo)
 

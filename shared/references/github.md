@@ -19,7 +19,7 @@ Spec: <link to spec doc>
 
 ## Voice
 
-Summary bullets first, test plan as a checklist — never a prose recap of the diff. Lead with the conclusion (why this matters to a reviewer), not a chronology of what was touched. Active voice, ≤20 words/sentence average, no banned words (*delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, meticulous, game-changer, utilize*). Full standard: `shared/references/docs-voice.md`.
+Summary bullets first, test plan as a checklist — never a prose recap of the diff. Lead with the conclusion (why this matters to a reviewer), not a chronology of what was touched. Active voice; if a sentence keeps running, split it rather than trimming words to make it fit. No banned words (*delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, meticulous, game-changer, utilize*). Full standard: `shared/references/docs-voice.md`.
 
 When triaging or drafting comments on someone else's PR, prefix intent: `praise:` `nitpick:` `suggestion:` `issue:` `question:` (Conventional Comments), or `Nit:` / `Optional:` / `FYI:` (Google style) — pick one vocabulary and stay consistent.
 
