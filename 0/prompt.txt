@@ -1,0 +1,5 @@
+Did we really need a release for just doc updates?
+
+---
+
+We should leave it for this one, but we need to make sure that this doesn’t happen in the future
