@@ -3,6 +3,23 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.1.0] - 2026-08-21 — Honest Sub-Skills, Applied Diagram Palette, Readable READMEs
+
+### Fixed
+- `proof`, `vector`, `lambda`, `axiom`, and `trace` each documented a "Sub-skills" table with slash-path names (`proof/scan`, `vector/decompose`, `axiom/verify-plan`, ...) that read exactly like `delta/commit` or `canon/draft-spec` — real, independently invokable skills. None of these five plugins is actually split; each has exactly one skill directory, and those names never routed to anything. `axiom` and `trace` were worse: their own `SKILL.md` and `README.md` each documented two *different*, both-fictional lists that didn't agree with each other. All five replaced with one honest description of the plugin's real pipeline and how it adapts to what's asked, grounded in each plugin's actual agent files.
+- `vector`'s README wrongly listed `challenger` as `opus/high`; the agent file says `sonnet/medium`. Corrected.
+- `axiom`'s and `trace`'s README version lines were stale — both said `1.0.1` while `plugin.json` was already at `1.2.0`. `proof`'s and `lambda`'s had the same drift (`2.0.0` vs `2.2.0`, `1.2.0` vs `1.4.1`). All corrected.
+- `axiom`'s description in both `marketplace.json` and `.claude-plugin/marketplace.json` repeated the same fictional six-item sub-skill list — fixed in both.
+
+### Changed
+- Applied `orin-visual-standard.md`'s six-color Mermaid palette — documented since this session's earlier work but never actually used anywhere in this repo's own diagrams — to every plugin pipeline diagram plus the root `README.md`/`ARCHITECTURE.md` diagrams. One consistent color-to-role mapping across all of them: indigo for entry points, violet for analysis/engine stages, slate for mechanical/storage roles, amber for routing/judgment decisions, emerald for verified output, rose for failure/escalation.
+- `ARCHITECTURE.md`'s axiom-gate-protocol diagram, and `lambda`'s plugin pipeline, now use a subgraph to separate a linear check/loop chain from the retry logic around it — `orin-visual-standard.md`'s Subgraph Styling Spec, defined earlier this session, used for the first time here.
+- Several plain-text ASCII pipeline diagrams (`graph`'s hand-aligned box art in particular — fragile, the next label edit would have misaligned it) converted to real Mermaid flowcharts.
+- All nine plugin READMEs passed against `docs-voice.md` for scannability: dense paragraphs split into bullets, filler cut, banned words checked.
+
+### Known follow-up, not fixed here
+- `lambda`'s skill frontmatter `description` — the text that actually decides when the skill activates, not just its body documentation — still advertises "generate tests," "explain," and "refactor" as request shapes with no agent behind any of them. Left untouched since narrowing live routing behavior deserves its own explicit decision, not a side effect of a docs pass.
+
 ## [3.0.0] - 2026-08-21 — Multi-Skill Plugins, Consumer-Scaled Changesets, and a Voice Standard
 
 ### Breaking Changes
