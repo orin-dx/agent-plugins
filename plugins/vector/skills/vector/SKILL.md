@@ -2,7 +2,7 @@
 name: plan
 description: >-
   Trigger this skill when the user says "write a plan for X", "how do we implement this spec", "break this down into tasks", "what are the implementation steps", "create an implementation plan", or "plan this out". Also activate when a spec (spec@1) exists and the user is ready to move to implementation but hasn't broken it down yet. Produces a plan@1 artifact where every task includes exact file paths, TDD steps with failing test first, exact implementation code, expected test output, a conventional commit message, and covers_criteria linking the task to specific acceptance criteria. spec_file_path and linked_requirement are propagated from the source spec. No TBDs. No "implement as appropriate." Every step is mechanically executable by a developer with zero domain context.
-version: 1.4.0
+version: 1.4.1
 ---
 
 # Vector Planning Skill
@@ -13,21 +13,17 @@ Vector decomposes a spec@1 into a sequenced, bite-sized plan@1 that a developer 
 
 ---
 
-<sub_skills>
+<behavior>
 
-### vector/plan
-Invoke planner to decompose a spec@1 into an ordered sequence of implementation tasks. Each task includes exact file paths, a failing test, minimal implementation, expected test output, a commit message, and covers_criteria linking it to specific acceptance criteria. Reads the spec from disk at spec_file_path when set, and propagates spec_file_path, spec_hash, and linked_requirement into the plan@1 output. Also runs in amend mode: given an existing plan@1, a corrected spec@1, and the criterion_ids that changed, patches only the affected tasks instead of re-decomposing the whole plan.
+vector is one skill. Behavior adapts to what's asked, dispatching to whichever agent below fits the request — there is no separate `vector/plan`, `vector/estimate`, or `vector/challenge` skill to invoke.
 
-### vector/estimate
-Invoke estimator to assign effort estimates (in minutes) to each task in a plan@1, identify parallelizable tasks, and surface blocking dependencies.
+- **Decompose a spec into a plan** — `planner` reads a spec@1, produces an ordered sequence of implementation tasks (exact file paths, a failing test, minimal implementation, expected test output, a commit message, covers_criteria), and groups tasks into cohesive Subsystem Batches aligned with crate/package compilation boundaries as part of that decomposition — not a separate step. Reads the spec from disk at spec_file_path when set, and propagates spec_file_path, spec_hash, and linked_requirement into the plan@1 output. Also runs in amend mode: given an existing plan@1, a corrected spec@1, and the criterion_ids that changed, patches only the affected tasks instead of re-decomposing the whole plan.
 
-### vector/challenge
-Invoke challenger to adversarially review a plan@1 for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, and acceptance criteria orphaned from every task's covers_criteria. An amended plan (from vector/plan's amend mode) is not exempt from this review.
+- **Estimate an existing plan** — `estimator` assigns effort estimates (in minutes) to each task in a plan@1, identifies parallelizable tasks, and surfaces blocking dependencies.
 
-### vector/decompose
-Group tasks into cohesive Subsystem Batches aligned with transactional crate/package compilation boundaries. Ensures that each milestone represents a compiling, testable subsystem unit rather than arbitrary micro-slices.
+- **Challenge a draft plan** — `challenger` adversarially reviews a plan@1 for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, and acceptance criteria orphaned from every task's covers_criteria. An amended plan (from planner's amend mode) is not exempt from this review.
 
-</sub_skills>
+</behavior>
 
 ---
 

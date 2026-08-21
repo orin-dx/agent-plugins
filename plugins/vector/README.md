@@ -1,8 +1,10 @@
 # vector — Implementation Planning
 
-**Stage:** Plan · **Output:** `plan@1` · **Version:** 1.2.0
+**Stage:** Plan · **Output:** `plan@1` · **Version:** 1.4.1
 
 Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a failing test, the minimal implementation to pass it, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without making a design decision. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
+
+One skill, not several — see [Behavior](#behavior) below for how it adapts to the request.
 
 ---
 
@@ -17,13 +19,13 @@ Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task
 
 ---
 
-## Sub-skills
+## Behavior
 
-| Sub-skill | What it does |
-| :--- | :--- |
-| `vector/plan` | Decomposes a spec into ordered, self-contained implementation tasks |
-| `vector/estimate` | Produces per-task time estimates, identifies parallelizable tasks, and lists blocking dependencies |
-| `vector/challenge` | Adversarially reviews a draft plan for missing tasks, wrong ordering, under-specified steps, and missing error handling |
+`vector` is one skill (directory `skills/vector/`), not several — there is no separate `vector/plan`, `vector/estimate`, or `vector/challenge` skill to invoke. Behavior adapts to what's asked, dispatching to whichever agent below fits the request:
+
+- **Decompose a spec into a plan** → `planner`
+- **Estimate an existing plan** → `estimator`
+- **Challenge a draft plan** → `challenger`
 
 ---
 
@@ -31,19 +33,36 @@ Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `planner` | Planner | sonnet / medium | Decomposes the spec into ordered tasks. Each task has exact file paths, a failing test, minimal implementation, and a conventional commit message. |
+| `planner` | Planner | sonnet / medium | Decomposes the spec into ordered tasks, grouped into Subsystem Batches by compilation boundary. Each task has exact file paths, a failing test, minimal implementation, and a conventional commit message. Also runs in amend mode after a spec correction. |
 | `estimator` | Estimator | sonnet / medium | Produces per-task time estimates, identifies parallelizable tasks, and lists blocking dependencies. |
-| `challenger` | Challenger | opus / high | Adversarially reviews the plan for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, and acceptance criteria orphaned from every task's `covers_criteria`. |
+| `challenger` | Challenger | sonnet / medium | Adversarially reviews the plan for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, and acceptance criteria orphaned from every task's `covers_criteria`. Capped at 2 review rounds. |
 
 ---
 
 ## Pipeline
 
-```
-spec@1 → planner → challenger → [estimator] → plan@1
+```mermaid
+flowchart LR
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
+
+    Spec[spec@1] --> Planner[planner]
+    Planner --> Challenger[challenger]
+    Challenger -.->|findings: targeted fix| Planner
+    Challenger --> Plan([plan@1])
+    Plan -.->|optional| Estimator[estimator]
+
+    class Spec source
+    class Planner engine
+    class Challenger router
+    class Plan output
+    class Estimator store
 ```
 
-`estimator` is optional — run it when scheduling matters. The challenger always runs; its findings are fed back to the planner for targeted fixes.
+`estimator` is optional — run it when scheduling matters. `challenger` always runs; its findings are fed back to `planner` for targeted fixes, capped at 2 rounds before minor disagreements are demoted to non-blocking.
 
 ---
 

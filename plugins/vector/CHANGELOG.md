@@ -2,6 +2,14 @@
 
 — vector
 
+## [1.4.1] - 2026-08-21
+
+### Fixed
+- SKILL.md and README.md documented a fictional "Sub-skills" list (`vector/plan`, `vector/estimate`, `vector/challenge`, and SKILL.md additionally `vector/decompose`) that read like independently invokable skills — the way `delta/commit` or `canon/draft-spec` genuinely are, one directory per skill. `vector` has exactly one skill directory; nothing routes to those names. `vector/decompose` had no agent behind it at all — the Subsystem Batch grouping it described is something `planner` already does as part of producing the plan, not a separate mode. Replaced with an honest description: one skill, adaptive behavior, three agents.
+- README's Subagents table listed `challenger` as `opus / high` — the actual agent frontmatter (`plugins/vector/agents/challenger.md`) says `sonnet / medium`. Corrected.
+### Changed
+- README's plain-text pipeline is now a Mermaid flowchart styled with the palette from `shared/references/orin-visual-standard.md`, and shows the challenger → planner feedback loop the prose already described but the old diagram didn't.
+
 ## [1.4.0] - 2026-08-17
 
 ### Added
