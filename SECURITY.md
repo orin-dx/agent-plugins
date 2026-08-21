@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-Email **gabe@techworx.dev** — don't open a public issue for anything that could be exploited before a fix ships.
+Email **security@orin-dx.com** — don't open a public issue for anything that could be exploited before a fix ships.
 
 Include:
 - What plugin, agent, or schema is affected
