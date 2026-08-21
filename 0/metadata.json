@@ -1,0 +1,76 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0JW6V2NBAB33R92F2RDVGCR",
+  "session_id": "bbc88500-1c22-4b17-a7aa-f01c453ffafa",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-21T19:19:21.498036Z",
+  "branch": "main",
+  "checkpoints_count": 8,
+  "save_step_count": 1,
+  "files_touched": [
+    "plugins/basis/README.md",
+    "plugins/canon/README.md",
+    "plugins/delta/README.md",
+    "plugins/graph/README.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "d3b45d513194",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 832,
+    "cache_creation_tokens": 3008297,
+    "cache_read_tokens": 153205859,
+    "output_tokens": 366556,
+    "api_call_count": 416
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01Ceji4FyqdZb3WPd7vQeMiy",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "d3b45d513194",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1731,
+        "end": 1732,
+        "entry_ids": [
+          "ea19d1e0-3d11-4a98-b2fa-f528617695bd"
+        ],
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 36
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-21T19:19:21.289779Z",
+    "agent_lines": 81,
+    "agent_removed": 21,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 81,
+    "total_lines_changed": 102,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
