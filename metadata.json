@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0HE67H1142WS95Y8XPW3XFD",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 16,
+  "files_touched": [
+    "plugins/basis/CHANGELOG.md",
+    "plugins/basis/README.md",
+    "plugins/basis/agents/auditor.md",
+    "plugins/basis/agents/scaffolder.md",
+    "plugins/basis/plugin.json",
+    "plugins/basis/skills/audit-plugin/SKILL.md",
+    "plugins/basis/skills/basis/SKILL.md",
+    "plugins/basis/skills/design-schema/SKILL.md",
+    "plugins/basis/skills/scaffold-plugin/SKILL.md",
+    "plugins/basis/skills/scaffold-subagent/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 4,
+    "cache_creation_tokens": 1367,
+    "cache_read_tokens": 965565,
+    "output_tokens": 741,
+    "api_call_count": 2
+  }
+}
