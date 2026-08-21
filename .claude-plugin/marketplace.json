@@ -29,7 +29,7 @@
     },
     {
       "name": "axiom",
-      "description": "Cross-cutting verification gate. Confirms that any stage artifact meets its criteria before the next stage begins. Skills: verify-requirement, verify-spec, verify-plan, verify-implementation, verify-pr, exit-gate.",
+      "description": "Cross-cutting verification gate. Confirms that any stage artifact meets its criteria before the next stage begins. One skill, one recon-verify-judge pipeline, reused unchanged against any artifact type.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
