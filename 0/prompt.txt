@@ -1,0 +1,21 @@
+Shall we tag a release and push?
+
+---
+
+Why v3? did we ever release v2? You have a habbit of skipping over versions
+
+---
+
+We should backfill and keep versioning consistent please
+
+---
+
+Ready to push to main and "release" it?
+
+---
+
+We've setup patterns for our docs and a color pallete for our diagrams that we can see in the lumen and prism repos. Can you check and see how we can improve our own setup?
+
+---
+
+yes and consider if there are better ways to represent our diagram info
