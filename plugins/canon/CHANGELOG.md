@@ -2,6 +2,15 @@
 
 — canon
 
+## [2.0.0] - 2026-08-20
+
+### Breaking
+- Single `spec` skill replaced by seven targeted skills: `draft-spec`, `verify-spec`, `spec-drift`, `audit-spec`, `gate-spec`, `correct-spec`, `architect`. Anything invoking `/canon:canon` (or the old sub-skill markdown headers) must switch to the new per-skill names.
+- `audit` and `gate` were the natural bare-word names for two of these but collide with existing plugin-level skills (`proof`'s `audit`, `axiom`'s `gate`) — named `audit-spec` and `gate-spec` instead, per the amended constitution Skill Names rule (specific multi-word name over a `<plugin>-<stage>` prefix).
+- A follow-up pass renamed `draft` → `draft-spec`, `verify` → `verify-spec`, `drift` → `spec-drift`, `correct` → `correct-spec`: the plugin id `canon` doesn't hint at "spec" the way `delta` hints at "shipping," so bare verbs left the skill's object ambiguous in slash-command autocomplete. `architect` stayed bare — distinctive enough on its own.
+### Fixed
+- `plugin.json`'s `description` listed stale skills (`review`, `changeset`) that never existed in canon — corrected to the real list.
+
 ## [1.4.0] - 2026-08-17
 
 ### Added
@@ -20,7 +29,7 @@
 
 ## [1.2.0] - 2026-08-11
 ### Added
-- `canon/correct` sub-skill — given a spec_file_path, criterion_id, and a contradiction report from implementer, revises the affected criterion (and dependents) and returns a corrected spec@1 with `revision_note` set; the correction re-enters the standard verify → audit → gate pipeline before overwriting the file
+- `canon/correct-spec` sub-skill — given a spec_file_path, criterion_id, and a contradiction report from implementer, revises the affected criterion (and dependents) and returns a corrected spec@1 with `revision_note` set; the correction re-enters the standard verify → audit → gate pipeline before overwriting the file
 - `revision_note` field in `spec@1` schema — set only on corrections, describes what changed and why
 - Spec file commit step in orchestration — the skill orchestrator now commits `.claude/specs/<id>.json` to version control after writing it, not just to the working tree; an uncommitted spec is invisible to drift-checker and a future session
 ### Changed
@@ -30,15 +39,15 @@
 - `drift-checker` now carries the trust-boundary defense for workspace-reading agents — code comments and documentation claiming a criterion is satisfied are treated as untrusted data, not evidence
 - `drift-checker` accepts a prior changeset's `criteria_evidence` as an optional starting pointer — but always re-reads and independently reconfirms each location rather than trusting that it is still accurate
 ### Fixed
-- A second spec_contradiction on the same criterion_id after correction now escalates to a human instead of looping back to canon/correct indefinitely
+- A second spec_contradiction on the same criterion_id after correction now escalates to a human instead of looping back to canon/correct-spec indefinitely
 - `drift-checker`'s `covered` output entries now use the same structured evidence shape as changeset@1's criteria_evidence (test/implementation file and line) instead of a free-text `evidence` string, so a drift check's freshly-confirmed pointers can be handed forward to the next check or exit gate
-- Repaired pre-existing hard-wrapped paragraphs in drafter.md (backstory, goal, output) and canon SKILL.md (overview, canon/draft, canon/audit, canon/architect) left over from before this session
+- Repaired pre-existing hard-wrapped paragraphs in drafter.md (backstory, goal, output) and canon SKILL.md (overview, canon/draft-spec, canon/audit, canon/architect) left over from before this session
 
 ## [1.1.0] - 2026-08-10
 ### Added
 - `drift-checker` agent (opus/high) — on-demand post-implementation drift detection; reads spec from disk, classifies criteria as covered, uncovered, or drifted
 - `spec_file_path` field in `spec@1` schema — workspace-relative path set by the skill orchestrator after gate pass; downstream agents read the spec from disk rather than context
-- `canon/drift` sub-skill in SKILL.md dispatching to `drift-checker`
+- `canon/spec-drift` sub-skill in SKILL.md dispatching to `drift-checker`
 - Post-gate orchestration instruction in SKILL.md — explicit step for writing spec to `.claude/specs/<id>.json` and setting `spec_file_path` after exit-gate passes
 ### Changed
 - `verifier` is now grounding-only (pre-implementation); post-implementation drift checking is handled by the new `drift-checker`
