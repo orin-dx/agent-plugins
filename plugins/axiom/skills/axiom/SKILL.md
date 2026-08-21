@@ -29,6 +29,8 @@ Do not activate for: general code questions, exploratory research, or authoring 
 
 <three_stage_flow>
 
+One skill, one three-agent pipeline, reused against whatever artifact type it's handed — requirement, spec, plan, implementation, PR, changeset, finding-report. `recon`'s job is exactly to work out what it's looking at and what criteria apply, so the same chain runs unchanged regardless of artifact type — there is no separate sub-skill or agent set per type.
+
 | Stage | Agent | Model | Effort | Responsibility |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 — Recon | `recon` | haiku | low | Inventory the artifact: type, location, criteria list, source files to read. No judgment. |
@@ -48,23 +50,6 @@ The protocol output is a `verdict@1` object: `pass` or `fail`, with `blockers` o
 **Retry behavior**: Up to 3 retries. On each failure, the specific blockers are returned to the producing agent. At retry 3, escalate to the caller — do not loop indefinitely. Track `retry_count` in the verdict.
 
 </axiom_protocol>
-
----
-
-<sub_skills>
-
-| Sub-skill | Artifact Type | Pipeline |
-| :--- | :--- | :--- |
-| `verify-requirement` | Requirements document | haiku/low → sonnet/medium → opus/high |
-| `verify-spec` | Design specification | haiku/low → sonnet/medium → opus/high |
-| `verify-plan` | Implementation plan | haiku/low → sonnet/medium → opus/high |
-| `verify-implementation` | Code implementation | haiku/low → sonnet/medium → opus/high |
-| `verify-pr` | Pull request | haiku/low → sonnet/medium → opus/high |
-| `exit-gate` | Final verdict assembly (all types) | haiku/low → sonnet/medium → opus/high |
-
-</sub_skills>
-
----
 
 ---
 

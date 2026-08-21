@@ -2,6 +2,15 @@
 
 — axiom
 
+## [1.2.1] - 2026-08-21
+
+### Fixed
+- `SKILL.md` and `README.md` each documented a "sub-skills" table, and the two disagreed with each other — `SKILL.md` listed six (`verify-requirement`, `verify-spec`, `verify-plan`, `verify-implementation`, `verify-pr`, `exit-gate`), `README.md` listed two (`axiom/gate`, `axiom/verify`). Both were fiction: axiom has exactly one skill directory and one three-agent pipeline (`recon` → `verifier` → `exit-gate`), reused unchanged against whatever artifact type it's handed. Replaced both with one consistent description.
+- `README.md`'s version line said `1.0.1`; `plugin.json` was already at `1.2.0`. Corrected.
+- Copy-paste typo in `README.md`'s standalone-installation note ("`exit-gate` and `exit-gate` are separate agents") — meant canon's and lambda's own exit-gate agents.
+### Changed
+- `README.md`'s plain-text pipeline is now a Mermaid flowchart styled with `orin-visual-standard.md`'s palette, matching how `ARCHITECTURE.md`'s axiom-gate-protocol diagram already renders it.
+
 ## [1.2.0] - 2026-08-17
 
 ### Changed
