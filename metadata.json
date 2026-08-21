@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0JW5D7CP9E5ECT5BXDAFTAK",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 8,
+  "files_touched": [
+    "plugins/vector/CHANGELOG.md",
+    "plugins/vector/README.md",
+    "plugins/vector/plugin.json",
+    "plugins/vector/skills/vector/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 824,
+    "cache_creation_tokens": 3005448,
+    "cache_read_tokens": 150397937,
+    "output_tokens": 364477,
+    "api_call_count": 412
+  }
+}
