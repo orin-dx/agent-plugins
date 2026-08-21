@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.10.3-nightly.202608200613.91a7fd7fc",
+  "checkpoint_id": "01M0HE4TBT0GG46CZVWTFYFDEG",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 16,
+  "files_touched": [
+    "plugins/delta/CHANGELOG.md",
+    "plugins/delta/README.md",
+    "plugins/delta/agents/changeset-analyzer.md",
+    "plugins/delta/agents/pr-narrator.md",
+    "plugins/delta/agents/release-summarizer.md",
+    "plugins/delta/plugin.json",
+    "plugins/delta/skills/changeset/SKILL.md",
+    "plugins/delta/skills/commit/SKILL.md",
+    "plugins/delta/skills/delta/SKILL.md",
+    "plugins/delta/skills/post-review/SKILL.md",
+    "plugins/delta/skills/pr/SKILL.md",
+    "plugins/delta/skills/receive-feedback/SKILL.md",
+    "plugins/delta/skills/release/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2,
+    "cache_creation_tokens": 422,
+    "cache_read_tokens": 479365,
+    "output_tokens": 107,
+    "api_call_count": 1
+  }
+}
