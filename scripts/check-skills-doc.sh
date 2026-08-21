@@ -10,7 +10,10 @@
 # Usage: scripts/check-skills-doc.sh
 
 set -euo pipefail
-cd "$(dirname "$0")/.."
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=lib/report.sh
+source "$script_dir/lib/report.sh"
+cd "$script_dir/.."
 
 fail=0
 count=0
@@ -39,10 +42,6 @@ for plugin_json in plugins/*/plugin.json; do
   fi
 done
 
-echo ""
-if [[ $fail -eq 0 ]]; then
-  echo "OK: $count plugin(s), every documented skill has a matching skills/ directory."
-else
-  echo "FAILED: $fail of $count plugin(s) document skills with no matching directory. Fix and re-run."
-  exit 1
-fi
+report_check "$fail" "$count" \
+  "plugin(s), every documented skill has a matching skills/ directory." \
+  "plugin(s) document skills with no matching directory. Fix and re-run."

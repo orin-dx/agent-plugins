@@ -9,7 +9,10 @@
 # Usage: scripts/check-mermaid.sh
 
 set -euo pipefail
-cd "$(dirname "$0")/.."
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=lib/report.sh
+source "$script_dir/lib/report.sh"
+cd "$script_dir/.."
 
 workdir="$(mktemp -d)"
 trap 'rm -rf "$workdir"' EXIT
@@ -46,10 +49,6 @@ while IFS= read -r -d '' file; do
   done < "$file"
 done < <(find . -name '*.md' -not -path './.git/*' -not -path '*/node_modules/*' -not -path '*/target/*' -print0)
 
-echo ""
-if [[ $fail -eq 0 ]]; then
-  echo "OK: $count mermaid block(s) across the repo, all render cleanly."
-else
-  echo "FAILED: $fail of $count mermaid block(s) did not render. Fix and re-run."
-  exit 1
-fi
+report_check "$fail" "$count" \
+  "mermaid block(s) across the repo, all render cleanly." \
+  "mermaid block(s) did not render. Fix and re-run."

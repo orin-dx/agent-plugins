@@ -8,7 +8,10 @@
 # Usage: scripts/check-versions.sh
 
 set -euo pipefail
-cd "$(dirname "$0")/.."
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=lib/report.sh
+source "$script_dir/lib/report.sh"
+cd "$script_dir/.."
 
 fail=0
 count=0
@@ -40,10 +43,6 @@ for plugin_json in plugins/*/plugin.json; do
   fi
 done
 
-echo ""
-if [[ $fail -eq 0 ]]; then
-  echo "OK: $count plugin(s), all versions agree across plugin.json/README/CHANGELOG/marketplace.json."
-else
-  echo "FAILED: $fail of $count plugin(s) have version drift. Fix and re-run."
-  exit 1
-fi
+report_check "$fail" "$count" \
+  "plugin(s), all versions agree across plugin.json/README/CHANGELOG/marketplace.json." \
+  "plugin(s) have version drift. Fix and re-run."
