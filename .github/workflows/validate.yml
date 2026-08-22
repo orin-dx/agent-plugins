@@ -1,0 +1,28 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate plugin manifests
+        run: |
+          jq . marketplace.json > /dev/null
+          jq . .claude-plugin/marketplace.json > /dev/null
+          jq . plugins/*/plugin.json > /dev/null
+          jq . shared/schemas/*.json > /dev/null
+
+      - name: Check version consistency
+        run: ./scripts/check-versions.sh
+
+      - name: Check skill doc accuracy
+        run: ./scripts/check-skills-doc.sh
+
+      - name: Check Mermaid diagrams render
+        run: ./scripts/check-mermaid.sh

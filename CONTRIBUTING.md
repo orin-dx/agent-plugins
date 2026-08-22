@@ -172,3 +172,5 @@ jq . plugins/*/plugin.json > /dev/null
 # Check schema files parse correctly
 jq . shared/schemas/*.json > /dev/null
 ```
+
+All of the above run automatically in CI (`.github/workflows/validate.yml`) on every PR and every push to `main`.
