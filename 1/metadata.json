@@ -1,0 +1,104 @@
+{
+  "cli_version": "0.10.3-nightly.202608220610.6bf587d66",
+  "checkpoint_id": "01M0PBV49TE8MZ90FV0MQTX2P5",
+  "session_id": "bbc88500-1c22-4b17-a7aa-f01c453ffafa",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T03:50:18.163686Z",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "save_step_count": 1,
+  "files_touched": [
+    "plugins/axiom/CHANGELOG.md",
+    "plugins/axiom/README.md",
+    "plugins/axiom/plugin.json",
+    "plugins/axiom/skills/axiom/SKILL.md",
+    "plugins/basis/README.md",
+    "plugins/canon/README.md",
+    "plugins/graph/README.md",
+    "plugins/lambda/CHANGELOG.md",
+    "plugins/lambda/README.md",
+    "plugins/lambda/plugin.json",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/proof/CHANGELOG.md",
+    "plugins/proof/README.md",
+    "plugins/proof/plugin.json",
+    "plugins/proof/skills/proof/SKILL.md",
+    "plugins/trace/CHANGELOG.md",
+    "plugins/trace/plugin.json",
+    "plugins/trace/skills/trace/SKILL.md",
+    "plugins/vector/CHANGELOG.md",
+    "plugins/vector/plugin.json"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "03e8b74550af",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 1356,
+    "cache_creation_tokens": 3378448,
+    "cache_read_tokens": 310175042,
+    "output_tokens": 557811,
+    "api_call_count": 678
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01Ceji4FyqdZb3WPd7vQeMiy",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "03e8b74550af",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1731,
+        "end": 1732,
+        "entry_ids": [
+          "ea19d1e0-3d11-4a98-b2fa-f528617695bd"
+        ],
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01Ceji4FyqdZb3WPd7vQeMiy"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 66
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T03:50:17.857628Z",
+    "agent_lines": 65,
+    "agent_removed": 30,
+    "human_added": 747,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 812,
+    "total_lines_changed": 1514,
+    "agent_percentage": 6.274768824306473,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    }
+  ]
+}
