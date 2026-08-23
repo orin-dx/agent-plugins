@@ -30,6 +30,40 @@
       "api_call_count": 26
     }
   },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01NCFdEqb6Q1MTWbhX5baCAu",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "691d899558fa",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1910,
+        "end": 1911,
+        "entry_ids": [
+          "00ce13c8-d302-4847-b617-2388dd6423f6"
+        ],
+        "tool_use_id": "toolu_01NCFdEqb6Q1MTWbhX5baCAu"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01NCFdEqb6Q1MTWbhX5baCAu"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
   "session_metrics": {
     "turn_count": 8
   },
