@@ -1,0 +1,235 @@
+{
+  "cli_version": "0.10.3-nightly.202608220610.6bf587d66",
+  "checkpoint_id": "01M0RF9X4B4EVCQQ1FD473M03V",
+  "session_id": "da5f8841-096a-4b09-8f58-04074bff697a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T23:29:17.413358Z",
+  "branch": "main",
+  "checkpoints_count": 16,
+  "save_step_count": 8,
+  "files_touched": [
+    ".github/workflows/validate.yml",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "marketplace.json",
+    "plugins/basis/CHANGELOG.md",
+    "plugins/basis/README.md",
+    "plugins/basis/agents/auditor.md",
+    "plugins/basis/agents/scaffolder.md",
+    "plugins/basis/plugin.json",
+    "plugins/canon/CHANGELOG.md",
+    "plugins/canon/README.md",
+    "plugins/canon/agents/auditor.md",
+    "plugins/canon/plugin.json",
+    "plugins/delta/CHANGELOG.md",
+    "plugins/delta/README.md",
+    "plugins/delta/plugin.json",
+    "plugins/delta/skills/receive-feedback/SKILL.md",
+    "plugins/graph/CHANGELOG.md",
+    "plugins/graph/README.md",
+    "plugins/graph/agents/auditor.md",
+    "plugins/graph/plugin.json",
+    "plugins/graph/skills/audit-backlog/SKILL.md",
+    "plugins/graph/skills/connect-requirement/SKILL.md",
+    "plugins/lambda/CHANGELOG.md",
+    "plugins/lambda/README.md",
+    "plugins/lambda/plugin.json",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/proof/CHANGELOG.md",
+    "plugins/proof/README.md",
+    "plugins/proof/agents/adversary.md",
+    "plugins/proof/agents/exit-gate.md",
+    "plugins/proof/plugin.json",
+    "plugins/proof/skills/proof/SKILL.md",
+    "plugins/trace/CHANGELOG.md",
+    "plugins/trace/README.md",
+    "plugins/trace/agents/recon.md",
+    "plugins/trace/agents/synthesizer.md",
+    "plugins/trace/plugin.json",
+    "shared/constitution.md",
+    "shared/references/workspace-conventions.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "5ff5f0697da5",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 226,
+    "cache_creation_tokens": 897618,
+    "cache_read_tokens": 41594495,
+    "output_tokens": 247979,
+    "api_call_count": 113,
+    "subagent_tokens": {
+      "input_tokens": 4,
+      "cache_creation_tokens": 5388,
+      "cache_read_tokens": 1030615,
+      "output_tokens": 2927,
+      "api_call_count": 2
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01LjRBtGLKTopWrZK9wMPPca",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "5ff5f0697da5",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 119,
+        "end": 120,
+        "entry_ids": [
+          "8ba22d76-1623-4d9a-9e64-7c91b27d9331"
+        ],
+        "tool_use_id": "toolu_01LjRBtGLKTopWrZK9wMPPca"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01LjRBtGLKTopWrZK9wMPPca"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01HDxGCQyW54gG6rUQSSmcML",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-diagramming"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "5ff5f0697da5",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 176,
+        "end": 177,
+        "entry_ids": [
+          "f2f5c075-8cd3-4a8e-93c9-432ab294d2a4"
+        ],
+        "tool_use_id": "toolu_01HDxGCQyW54gG6rUQSSmcML"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01HDxGCQyW54gG6rUQSSmcML"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-diagramming",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 16
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T23:29:17.236071Z",
+    "agent_lines": 225,
+    "agent_removed": 67,
+    "human_added": 49,
+    "human_modified": 8,
+    "human_removed": 0,
+    "total_committed": 282,
+    "total_lines_changed": 349,
+    "agent_percentage": 83.66762177650429,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 9,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        "plugins/lambda/skills/lambda/SKILL.md": 2
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 64,
+      "user_lines_removed": 8,
+      "agent_lines_added": 62,
+      "agent_lines_removed": 27,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        ".github/workflows/validate.yml": 3,
+        "CONTRIBUTING.md": 5,
+        "plugins/basis/agents/scaffolder.md": 1,
+        "plugins/canon/agents/auditor.md": 1,
+        "plugins/graph/agents/auditor.md": 4,
+        "plugins/trace/agents/recon.md": 4,
+        "plugins/trace/agents/synthesizer.md": 24,
+        "shared/references/workspace-conventions.md": 15
+      },
+      "user_removed_per_file": {
+        "plugins/basis/agents/scaffolder.md": 1,
+        "plugins/canon/agents/auditor.md": 1,
+        "plugins/trace/agents/synthesizer.md": 6
+      }
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

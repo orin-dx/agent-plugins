@@ -1,0 +1,11 @@
+{
+  "tool_use_id": "toolu_01DwXcxhxq7gJBvp2eihJrVQ",
+  "subagent_type": "general-purpose",
+  "task_description": "Verify opencode migration specifics with real web research",
+  "files": [
+    "plugins/lambda/skills/lambda/SKILL.md"
+  ],
+  "started_at": "2026-08-23T16:18:12.563834-07:00",
+  "completed_at": "2026-08-23T16:18:12.571512-07:00",
+  "transcript_unavailable_reason": "transcript path unresolvable"
+}
