@@ -2,6 +2,12 @@
 
 — lambda
 
+## [1.6.0] - 2026-08-23
+
+### Added
+- **`implementer`**: default posture for any criterion whose value can be absent, wrong, or stale, especially at a process, crate, or serialization boundary — a sum type, discriminated union, or Result-shaped representation, not a raw value paired with a separate boolean. See `shared/references/boundary-value-shapes.md` (new).
+- `needs_architecture` status and `architecture_escalation` output object — `implementer` reports these instead of implementing the unsafe shape when the safe one needs a change beyond the current task's own scope; escalates toward `canon:architect`.
+
 ## [1.5.0] - 2026-08-22
 
 ### Added

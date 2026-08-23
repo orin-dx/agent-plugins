@@ -1,6 +1,6 @@
 # lambda — Implementation
 
-**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 1.5.0
+**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 1.6.0
 
 One skill, one strict TDD pipeline. Give it a `plan@1` and it executes every task in order — failing test, minimal code, green, commit — then gates the result with mutation testing and an adversarial exit check before handing off. No plan yet? Give it a `spec@1` directly.
 
@@ -96,7 +96,7 @@ On fail, blockers go back to `implementer` for a targeted fix — three retries,
 | Subagent | Role | Tier | What it does |
 | :--- | :--- | :--- | :--- |
 | `recon` | Workspace Recon | haiku / low | Detects language, test runner, build tool. Inventories plan files. Confirms the baseline passes before any code is written. Flags `spec_drift_warning` if the plan's `spec_hash` no longer matches the spec file on disk. |
-| `implementer` | TDD Executor | sonnet / medium | Executes one task: failing test, minimal code, green, commit. Absorbs precision tests from `mutator` when supplied. Reports `spec_contradiction` instead of forcing an implementation that satisfies neither the criterion nor reality. |
+| `implementer` | TDD Executor | sonnet / medium | Executes one task: failing test, minimal code, green, commit. Absorbs precision tests from `mutator` when supplied. Reports `spec_contradiction` instead of forcing an implementation that satisfies neither the criterion nor reality. Defaults any absent/wrong/stale boundary value to a sum type over a raw value-plus-boolean pair, reporting `needs_architecture` when a single task's scope can't get there. |
 | `mutator` | Mutation Gate | sonnet / medium | Runs mutation testing on the task's changed files. Designs a precision test for every surviving mutant. |
 | `reviewer` | Pre-Gate Review | sonnet / medium | Neutral check before the exit gate: scope adherence, non-negotiable violations, sibling gaps, test quality. |
 | `exit-gate` | Adversarial Verifier | opus / high | Independent, from-scratch verification that every criterion is implemented, tested, and passing, with no regressions. Produces `verdict@1`. |

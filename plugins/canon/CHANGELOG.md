@@ -2,6 +2,14 @@
 
 — canon
 
+## [2.2.0] - 2026-08-23
+
+### Added
+- **`auditor`**: seventh audit dimension, `boundary-round-trip` — flags a field a spec introduces or changes on a type another spec persists, serializes, or transmits, when the far-side spec carries no matching round-trip criterion and the gap isn't named on purpose.
+
+### Fixed
+- `auditor` never stated where to find other gated specs for the `scope-overlap` check — a pre-existing gap, more consequential now that `boundary-round-trip` depends on the same lookup. Added `<load_first>` pointing to `<workspace_root>/.claude/specs/*.json`, where `canon/gate-spec` writes every spec once it passes, with the caveat that a spec still in draft won't appear there.
+
 ## [2.1.0] - 2026-08-22
 
 ### Added

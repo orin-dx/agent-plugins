@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v2.0.0-success.svg" alt="Marketplace v2.0.0" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v3.4.0-success.svg" alt="Marketplace v3.4.0" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
@@ -138,6 +138,8 @@ Runtime-pullable guides in `shared/references/`. Agents pull these themselves du
 | `changesets.md` | Changeset vs commit distinction, semver decision guide | delta |
 | `mcp-protocol.md` | MCP server lifecycle, tool definition format, A2A AgentCard | — |
 | `modern-cli-tools.md` | ripgrep, fd, bat, jq, delta, fzf usage patterns | — |
+| `interface-implementers.md` | Deterministic pre-scan for enumerating trait/interface implementers per language | challenger |
+| `boundary-value-shapes.md` | Sum-type-over-bool default posture for boundary-crossing values, per-language examples | implementer |
 
 ---
 

@@ -3,6 +3,19 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.4.0] - 2026-08-23 — Shift-Left Defect Checks
+
+### Added
+- **`vector` (v1.5.0)**: `challenger` gained an eighth review dimension, `interface-incompleteness` — a task touching one implementer of a shared trait/interface/protocol must cover every other known implementer or say why not, checked via a deterministic pre-scan rather than recalled from memory.
+- **`canon` (v2.2.0)**: `auditor` gained a seventh audit dimension, `boundary-round-trip` — a field a spec adds or changes on a type another spec persists, serializes, or transmits needs a matching round-trip criterion on the far side, or the gap must be named on purpose.
+- **`lambda` (v1.6.0)**: `implementer` now defaults any criterion whose value can be absent, wrong, or stale at a boundary to a sum type, discriminated union, or Result — not a raw value next to a separate boolean — escalating to `canon:architect` (via a new `needs_architecture` status) only when a single task's own scope can't reach that shape.
+- **`shared/references/interface-implementers.md`**: deterministic implementer-enumeration patterns (grep/AST) per language, loaded by `challenger`.
+- **`shared/references/boundary-value-shapes.md`**: the sum-type-over-bool default posture, with Rust/TypeScript before-after examples, loaded by `implementer`.
+
+### Fixed
+- `canon:auditor` never stated where gated specs live in the workspace, a pre-existing gap behind its `scope-overlap` dimension since before this change. Now points to `.claude/specs/*.json`, where `canon/gate-spec` writes every passed spec.
+- Root `README.md`'s Shared References table was missing the two new files above; its marketplace badge was still pinned to `v2.0.0` while `marketplace.json` had already moved through several major/minor bumps — corrected to `v3.4.0`.
+
 ## [3.3.0] - 2026-08-22 — Constitution Section & Reader-Scoped Writing
 
 ### Added

@@ -1,6 +1,6 @@
 # vector — Implementation Planning
 
-**Stage:** Plan · **Output:** `plan@1` · **Version:** 1.4.2
+**Stage:** Plan · **Output:** `plan@1` · **Version:** 1.5.0
 
 Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a failing test, the minimal implementation to pass it, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without making a design decision. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
 
@@ -35,7 +35,7 @@ One skill, not several — see [Behavior](#behavior) below for how it adapts to 
 | :--- | :--- | :--- | :--- |
 | `planner` | Planner | sonnet / medium | Decomposes the spec into ordered tasks, grouped into Subsystem Batches by compilation boundary. Each task has exact file paths, a failing test, minimal implementation, and a conventional commit message. Also runs in amend mode after a spec correction. |
 | `estimator` | Estimator | sonnet / medium | Produces per-task time estimates, identifies parallelizable tasks, and lists blocking dependencies. |
-| `challenger` | Challenger | sonnet / medium | Adversarially reviews the plan for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, and acceptance criteria orphaned from every task's `covers_criteria`. Capped at 2 review rounds. |
+| `challenger` | Challenger | sonnet / medium | Adversarially reviews the plan for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, acceptance criteria orphaned from every task's `covers_criteria`, and a task touching one implementer of a shared trait/interface/protocol without covering its known siblings (checked via a deterministic pre-scan, not memory). Capped at 2 review rounds. |
 
 ---
 

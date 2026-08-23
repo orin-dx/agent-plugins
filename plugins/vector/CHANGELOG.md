@@ -2,6 +2,11 @@
 
 — vector
 
+## [1.5.0] - 2026-08-23
+
+### Added
+- **`challenger`**: eighth review dimension, `interface-incompleteness` — flags a task that modifies one implementer of a shared trait, interface, or protocol without covering every other known implementer or stating why not. Backed by a deterministic pre-scan (`shared/references/interface-implementers.md`, new) run before the agent's own reasoning, not recalled from memory.
+
 ## [1.4.2] - 2026-08-22
 
 ### Changed
