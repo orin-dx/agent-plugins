@@ -1,0 +1,337 @@
+{
+  "cli_version": "0.10.3-nightly.202608220610.6bf587d66",
+  "checkpoint_id": "01M0PBV49TE8MZ90FV0MQTX2P5",
+  "session_id": "486ef10f-4007-4f9a-8f61-0f909b76893e",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-23T03:50:17.347694Z",
+  "branch": "main",
+  "checkpoints_count": 17,
+  "save_step_count": 16,
+  "files_touched": [
+    "AGENTS.md",
+    "ARCHITECTURE.md",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "docs/adr/001-four-part-agent-structure.md",
+    "docs/adr/006-constitution-section-five-part-structure.md",
+    "marketplace.json",
+    "plugins/axiom/CHANGELOG.md",
+    "plugins/axiom/README.md",
+    "plugins/axiom/agents/exit-gate.md",
+    "plugins/axiom/agents/recon.md",
+    "plugins/axiom/agents/verifier.md",
+    "plugins/axiom/plugin.json",
+    "plugins/axiom/skills/axiom/SKILL.md",
+    "plugins/basis/CHANGELOG.md",
+    "plugins/basis/README.md",
+    "plugins/basis/agents/auditor.md",
+    "plugins/basis/agents/scaffolder.md",
+    "plugins/basis/agents/schema-designer.md",
+    "plugins/basis/plugin.json",
+    "plugins/basis/skills/scaffold-plugin/SKILL.md",
+    "plugins/basis/skills/scaffold-subagent/SKILL.md",
+    "plugins/canon/CHANGELOG.md",
+    "plugins/canon/README.md",
+    "plugins/canon/agents/architect.md",
+    "plugins/canon/agents/auditor.md",
+    "plugins/canon/agents/drafter.md",
+    "plugins/canon/agents/drift-checker.md",
+    "plugins/canon/agents/exit-gate.md",
+    "plugins/canon/agents/verifier.md",
+    "plugins/canon/plugin.json",
+    "plugins/canon/skills/gate-spec/SKILL.md",
+    "plugins/delta/CHANGELOG.md",
+    "plugins/delta/README.md",
+    "plugins/delta/agents/changeset-analyzer.md",
+    "plugins/delta/agents/commit-analyzer.md",
+    "plugins/delta/agents/pr-narrator.md",
+    "plugins/delta/agents/release-summarizer.md",
+    "plugins/delta/agents/review-preprocessor.md",
+    "plugins/delta/plugin.json",
+    "plugins/delta/skills/changeset/SKILL.md",
+    "plugins/graph/CHANGELOG.md",
+    "plugins/graph/README.md",
+    "plugins/graph/agents/auditor.md",
+    "plugins/graph/agents/clarifier.md",
+    "plugins/graph/agents/intake.md",
+    "plugins/graph/agents/prioritizer.md",
+    "plugins/graph/plugin.json",
+    "plugins/lambda/CHANGELOG.md",
+    "plugins/lambda/README.md",
+    "plugins/lambda/agents/exit-gate.md",
+    "plugins/lambda/agents/implementer.md",
+    "plugins/lambda/agents/mutator.md",
+    "plugins/lambda/agents/recon.md",
+    "plugins/lambda/agents/reviewer.md",
+    "plugins/lambda/plugin.json",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/proof/CHANGELOG.md",
+    "plugins/proof/README.md",
+    "plugins/proof/agents/adversary.md",
+    "plugins/proof/agents/boundary-tracer.md",
+    "plugins/proof/agents/exit-gate.md",
+    "plugins/proof/agents/recon.md",
+    "plugins/proof/agents/scanner.md",
+    "plugins/proof/plugin.json",
+    "plugins/proof/skills/proof/SKILL.md",
+    "plugins/trace/CHANGELOG.md",
+    "plugins/trace/README.md",
+    "plugins/trace/agents/reader.md",
+    "plugins/trace/agents/recon.md",
+    "plugins/trace/agents/risk-assessor.md",
+    "plugins/trace/agents/synthesizer.md",
+    "plugins/trace/plugin.json",
+    "plugins/trace/skills/trace/SKILL.md",
+    "plugins/vector/CHANGELOG.md",
+    "plugins/vector/README.md",
+    "plugins/vector/agents/challenger.md",
+    "plugins/vector/agents/estimator.md",
+    "plugins/vector/agents/planner.md",
+    "plugins/vector/plugin.json",
+    "scripts/check-reference-size.sh",
+    "shared/agent-best-practices.md",
+    "shared/constitution.md",
+    "shared/references/code-comments.md",
+    "shared/references/docs-voice.md",
+    "shared/references/rust-hazards-t7-t10.md",
+    "shared/references/rust-hazards.md",
+    "shared/references/rust.md",
+    "shared/references/typescript-hazards-t7-t10.md",
+    "shared/references/typescript-hazards.md",
+    "shared/references/typescript.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "b572e2d46f1b",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 368,
+    "cache_creation_tokens": 1818312,
+    "cache_read_tokens": 53983387,
+    "output_tokens": 264341,
+    "api_call_count": 184
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01Lc8o4F7GFzWABrX21zNAuF",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "proof:proof"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "b572e2d46f1b",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1498,
+        "end": 1499,
+        "entry_ids": [
+          "7378a737-3adc-449e-a064-1177bd2fb247"
+        ],
+        "tool_use_id": "toolu_01Lc8o4F7GFzWABrX21zNAuF"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01Lc8o4F7GFzWABrX21zNAuF"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: proof:proof",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 17
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-23T03:50:17.209944Z",
+    "agent_lines": 813,
+    "agent_removed": 703,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 813,
+    "total_lines_changed": 1516,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 49,
+      "agent_lines_removed": 1,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 49,
+      "agent_lines_removed": 1,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 49,
+      "agent_lines_removed": 1,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 49,
+      "agent_lines_removed": 1,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 49,
+      "agent_lines_removed": 1,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 121,
+      "agent_lines_removed": 10,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 119,
+      "agent_lines_removed": 32,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 119,
+      "agent_lines_removed": 32,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 10,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 170,
+      "agent_lines_removed": 461,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 11,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 170,
+      "agent_lines_removed": 461,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 12,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 663,
+      "agent_lines_removed": 652,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 13,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 670,
+      "agent_lines_removed": 659,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 14,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 670,
+      "agent_lines_removed": 659,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 15,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 670,
+      "agent_lines_removed": 659,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 16,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 707,
+      "agent_lines_removed": 675,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 17,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 813,
+      "agent_lines_removed": 703,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    }
+  ]
+}
