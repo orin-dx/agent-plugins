@@ -1,0 +1,59 @@
+Let's address what is still open. I wasn't aware we had anything
+
+---
+
+<task-notification>
+<task-id>ab0ce4940f5c67968</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/57009568-ab00-48b8-8bfe-fdb7614d6930/tasks/ab0ce4940f5c67968.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit delta plugin for wiring gaps" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Delta plugin audit — read-only, no files changed.**
+
+**Main finding — `receive-feedback` promises a capability `review-preprocessor` doesn't have, in 3 places:**
+
+- `plugins/delta/skills/receive-feedback/SKILL.md:4` (description) and `:11` (overview) both say it "categorizes incoming review comments as must-fix, suggestion, or question."
+- `plugins/delta/README.md:31,44` repeats the same claim in both the Skills and Subagents tables.
+- But `plugins/delta/agents/review-preprocessor.md` never implements it: its own frontmatter description doesn't list "incoming review comments" as an input at all (only diff, spec, test results, open questions); its output schema (lines 33-45) has no must-fix/suggestion/question field, only `open_questions: []`; and its `&lt;judgment&gt;` explicitly states "NEVER make judgments about the change quality — assemble only what is given" (line 51) — directly contradicting a "must-fix vs. suggestion" categorization, which is a judgment call.
+
+This isn't a documented gap like lambda's "Capability Gaps" table — it's an active misrepresentation of what the agent does, repeated in 3 files, that would surprise a caller expecting triage output. Fix direction: either add real triage logic + an output field to `review-preprocessor` (using the `github.md` Conventional Comments/Google vocabulary it doesn't currently load for this purpose), or narrow the SKILL.md/README claims to match reality (assembly only) — same two-way choice lambda already made explicitly for its own gaps.
+
+**Everything else checked clean:**
+
+- Output→input chaining across `commit-analyzer → (none)`, `changeset-analyzer → pr-narrator`/`release-summarizer`, `release-summarizer` end state: every field one agent requires is actually produced upstream. `release-summarizer` correctly does not re-derive `consumer_impact`/`semver_impact` (matches its own judgment section and `changesets.md`'s "machine-enforced" framing).
+- `changeset@1` is consistently framed as superseded-but-legacy everywhere it's mentioned (README, schema description) — no live code treats it as current.
+- `&lt;load_first&gt;` references are appropriate per agent — `review-preprocessor` and `commit-analyzer`/`pr-narrator` load only what they need; `post-review` has no agent (correctly, per its own SKILL.md reasoning) and no `&lt;load_first&gt;` needed.
+- Model/effort tiers (haiku/low for mechanical assembly, sonnet/medium for classification/narrative work) are consistent with the rest of the repo's tiering convention — no obvious right-sizing issue.
+- No redundant re-computation found — each stage consumes prior output directly rather than re-deriving it.</result>
+<usage><subagent_tokens>302038</subagent_tokens><tool_uses>14</tool_uses><duration_ms>42458</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a6597794a5192f214</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/57009568-ab00-48b8-8bfe-fdb7614d6930/tasks/a6597794a5192f214.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit basis plugin against today's new conventions" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Task:** Audit `basis` plugin (scaffolder/auditor/schema-designer + their SKILL.md/README/CHANGELOG) for whether it knows about the `&lt;load_first&gt;` convention and orchestration-completeness checks established/reinforced this session.
+
+**Verdict: basis is a structural linter, not a conformance safety net for either convention.** Two concrete gaps, both would let today's exact mistakes recur silently in every future scaffolded/audited agent:
+
+1. **`&lt;load_first&gt;` is entirely unknown to basis.**
+   - `plugins/basis/agents/scaffolder.md:30` mandates "exactly these sections, in order: constitution, backstory, goal, judgment, output" — no optional 6th section, so scaffolder cannot generate a `&lt;load_first&gt;` block even when a new agent's task obviously needs one (cites a shared reference, does a pre-scan, etc.).
+   - `plugins/basis/agents/auditor.md:30` mirrors this: "body contains exactly constitution, backstory, goal, judgment, output sections, in that order." An audited agent with a `&lt;load_first&gt;` block (challenger.md, implementer.md, auditor.md, scanner.md, reviewer.md — 5+ real agents today) either fails this literal check or is silently unrecognized; auditor has no rule verifying a `&lt;load_first&gt;` actually exists when needed, or that its referenced file (`shared/references/...`) is real.
+   - Fix direction: add `&lt;load_first&gt;` as an optional 6th section (after constitution) to both agents' section-order rules, plus an auditor check that any `shared/references/*.md` path named in `&lt;load_first&gt;` resolves to a real file.
+
+2. **No orchestration-completeness check exists anywhere in basis:auditor's 7 categories** (`auditor.md:7`: plugin.json fields, subagent presence, frontmatter completeness, SKILL.md word count, 5-part structure, symlink validity, schema presence for produces/consumes). None of these cross-reference an agent's own output status enum (e.g. a new `needs_architecture`-style value) against its plugin's SKILL.md routing prose. The exact gap I found and fixed today in `plugins/lambda/skills/lambda/SKILL.md` would have passed a full basis:auditor run with zero findings.
+   - Fix direction: 8th check — for each status/enum value an agent's `&lt;output&gt;` can emit, confirm the plugin's SKILL.md names a routing action for it (or explicitly marks it terminal).
+
+**Not an issue:** `basis`'s own README/CHANGELOG/plugin.json version (2.0.1) agree with each other; scaffold-plugin vs scaffold-subagent split is a reasonable, already-documented scope division, no redundant round-trips observed. `schema-designer.md` looks conformant.</result>
+<usage><subagent_tokens>289361</subagent_tokens><tool_uses>7</tool_uses><duration_ms>33196</duration_ms></usage>
+</task-notification>
+
+---
+
+Anything that is not following our constitution or other guidelines per basis?
