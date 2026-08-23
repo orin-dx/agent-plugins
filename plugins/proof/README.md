@@ -1,6 +1,6 @@
 # proof — Adversarial Bug Hunting
 
-**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.2.2
+**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.2.3
 
 Adversarial bug hunting on live code, for Rust, TypeScript, and JavaScript — language is auto-detected from `Cargo.toml` or `package.json`.
 
@@ -100,7 +100,7 @@ Recon inspects the workspace root automatically:
 
 `finding-report@1` — see `shared/schemas/finding-report@1.json`
 
-Each confirmed finding requires:
+Each finding requires:
 
 | Field | Description |
 | :--- | :--- |
@@ -109,9 +109,9 @@ Each confirmed finding requires:
 | `file` | File path |
 | `line` | Line number |
 | `severity` | `critical`, `high`, `medium`, or `low` |
-| `trigger_condition` | The exact condition under which the bug fires |
+| `trigger_condition` | The exact condition under which the bug fires — for `plausible` findings, the suspected condition, since reachability can't be confirmed from the code alone |
 | `root_cause` | Why it exists |
-| `verdict` | `confirmed` |
+| `verdict` | `confirmed` — adversary could not refute it and stated a concrete failing scenario. `plausible` — adversary could not refute it either, but reachability depends on state outside the code (config, an external caller, environment); carried into `exit-gate`'s verdict as `flagged_for_review` rather than treated as a remediation target. |
 
 ---
 

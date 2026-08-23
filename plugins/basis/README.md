@@ -1,6 +1,6 @@
 # basis — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.0.1
+**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.1.0
 
 The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 
@@ -46,14 +46,17 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 
 | Check | Rule |
 | :--- | :--- |
-| Manifest fields | `plugin.json` has all required fields: `id`, `name`, `version`, `description`, `author`, `skills`, `agents` |
+| Manifest fields | `plugin.json` has all required fields: `id`, `name`, `version`, `description`, `author`, `skills`, `agents` — checked by running `scripts/check-versions.sh` and reading this plugin's own result, not re-derived |
 | Skill file | `skills/<id>/SKILL.md` exists with valid YAML frontmatter and a `description` trigger string |
 | Agent files | All agents listed in `plugin.json` have a corresponding `.md` file |
 | Agent descriptions | 80–200 words each; start with "Delegate to this subagent when…" |
-| 5-part body structure | Agent body has exactly: constitution (byte-identical to the rest of the ecosystem), backstory, goal, judgment, output — no success_criteria, no role sections, EARS only in constitution/output |
+| 5-part body structure | Agent body has: constitution (byte-identical to the rest of the ecosystem), backstory, goal, judgment, output, in that order, with an optional `<load_first>` immediately after constitution — no success_criteria, no role sections, EARS only in constitution/output |
+| `<load_first>` correctness | Present whenever an agent's goal implies a lookup it can't do from memory; its named reference file actually resolves |
+| Orchestration completeness | Every status an agent's own output can emit has a routing entry in its plugin's SKILL.md, or is documented as terminal |
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
 | No authoring-time refs | Agent bodies do not reference `shared/agent-best-practices.md` at runtime |
+| Reference file size | Every `shared/references/*.md` file stays at or under 120 lines — checked via `scripts/check-reference-size.sh`, not re-derived |
 
 ---
 

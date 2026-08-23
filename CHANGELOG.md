@@ -3,6 +3,25 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.5.0] - 2026-08-23 — Basis Conformance Overhaul & Cross-Plugin Doc Accuracy
+
+A follow-up audit across the six plugins not touched in `v3.4.0` (`graph`, `trace`, `delta`, `axiom`, `proof`, `basis`) found the same class of gap recurring — `basis`, the meta-plugin meant to keep every other agent conformant, had itself fallen behind twice: it couldn't generate or check `<load_first>` (a real CONTRIBUTING.md requirement since before this session), and had no check for orchestration completeness (an agent's output status with no SKILL.md routing) — the exact defect fixed by hand in `lambda` this session. Root `CHANGELOG.md`'s own `v3.3.0` entry already documents this happening once before. This release fixes the specific findings and the root cause.
+
+### Added
+- **`basis` (v2.1.0)**: `scaffolder` generates `<load_first>` and drafts SKILL.md routing entries; `auditor` gained `<load_first>`-correctness and orchestration-completeness checks, and now runs the repo's own validation scripts for what they already check deterministically instead of re-deriving it through reasoning.
+- **`proof` (v2.2.3)**: `adversary` gained a genuine `plausible` verdict path (the schema promised this since it was written; adversary was strictly binary). `exit-gate` gained `flagged_for_review` to carry plausible findings for human review without blocking on them.
+- **`shared/references/workspace-conventions.md`**: consolidates the "gated specs live at `.claude/specs/*.json`" fact, now cited by `canon:auditor`, `graph:auditor`, and `trace:recon` instead of restated three times.
+- **`shared/constitution.md`**: new rule — a new agent-authoring convention must update `basis:scaffolder`/`basis:auditor` in the same change, or it's documented, not enforced.
+- **`CONTRIBUTING.md`**: new Capability Change Checklist — the full list of docs/versions a capability change touches, distilled from this session's own work.
+- **`.github/workflows/validate.yml`**, **`CONTRIBUTING.md`**: `scripts/check-reference-size.sh` was written and documented in `CLAUDE.md` but wired into neither CI nor the local dev-setup command list. Added to both.
+
+### Fixed
+- **`delta` (v2.1.3)**: `receive-feedback` and its own `README.md` claimed automated must-fix/suggestion/question comment triage in 6 places; `review-preprocessor`'s own `<judgment>` explicitly forbids that call. Narrowed to what it does — package assembly.
+- **`graph` (v2.0.2)**: `auditor` (and its SKILL.md/README) claimed to search "specs, plans, and implementation" for coverage; `plan@1` is never persisted to disk, so the claim was unfulfillable. Scoped to specs and implementation.
+- **`trace` (v1.2.3)**: `synthesizer`'s `<output>` now shows a literal JSON template matching its three siblings, instead of prose-only.
+- **`canon` (v2.2.1)**, **`graph`**, **`trace`**: each agent's own restatement of the spec-location fact replaced with a citation to the new shared reference.
+- **`lambda` (v1.6.1)**: `needs_architecture` (added in `v1.6.0`) had no SKILL.md routing, unlike its `needs_context`/`spec_contradiction` siblings — added the same re-entry sequence.
+
 ## [3.4.0] - 2026-08-23 — Shift-Left Defect Checks
 
 ### Added

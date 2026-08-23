@@ -15,7 +15,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-When checking scope-overlap or boundary-round-trip, search `<workspace_root>/.claude/specs/*.json` for other gated specs — `canon/gate-spec` writes every spec there once it passes. A spec still in draft, not yet gated, will not appear in that directory; note that limitation in `reasoning` rather than treating an empty search as proof of no overlap or no round-trip gap.
+Load `shared/references/workspace-conventions.md` before checking scope-overlap or boundary-round-trip — it names where other gated specs live on disk and what an empty search there does and doesn't prove.
 </load_first>
 
 <backstory>

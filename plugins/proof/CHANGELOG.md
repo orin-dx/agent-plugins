@@ -2,6 +2,15 @@
 
 — proof
 
+## [2.2.3] - 2026-08-23
+
+### Added
+- **`adversary`**: genuine `plausible` verdict path — `finding-report@1` has promised this value since it was defined, but adversary was strictly binary (confirm-with-scenario or refute) and could never emit it. Now emits `plausible` when no refutation can be constructed but reachability depends on state outside the code (config, an external caller, environment) rather than stretching thin evidence into `confirmed`.
+- **`exit-gate`**: `flagged_for_review` in the verdict output — carries `plausible` findings forward for human judgment without treating them as remediation targets or blockers.
+
+### Fixed
+- `README.md`'s Output Schema table documented only `verdict: confirmed`; corrected to cover both verdict values.
+
 ## [2.2.2] - 2026-08-22
 
 ### Changed

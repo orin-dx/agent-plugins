@@ -232,3 +232,5 @@ WHEN the top-level language index file (`rust.md`, `typescript.md`) is reference
 WHEN a plugin is published, it SHALL include a `README.md` with: purpose, when-to-use trigger phrases, agent table with modes and tiers, pipeline diagram, output schema reference, and install instructions.
 
 WHEN CONTRIBUTING.md is updated, it SHALL reflect the current authoring checklist — not the authoring conventions from a prior era.
+
+WHEN a new agent-authoring convention is added to this constitution or to CONTRIBUTING.md's checklist — a new required section, a new required check — THE SYSTEM SHALL update `basis:scaffolder` and `basis:auditor` in the same change. A convention `basis` cannot generate or verify is documented, not enforced, and every plugin scaffolded before the update inherits the gap silently.

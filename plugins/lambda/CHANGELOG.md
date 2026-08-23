@@ -2,6 +2,11 @@
 
 — lambda
 
+## [1.6.1] - 2026-08-23
+
+### Fixed
+- `needs_architecture` had no routing in the skill's `<context_management>` — unlike its `needs_context`/`spec_contradiction` siblings, a caller had no defined next step for it. Added the same re-entry sequence as `spec_contradiction`: wrap `architecture_escalation` into a single-finding `finding-report@1`, route to `canon/architect`, then `gate-spec` → `planner` (amend) → `challenger` before resuming.
+
 ## [1.6.0] - 2026-08-23
 
 ### Added

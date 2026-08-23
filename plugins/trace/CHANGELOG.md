@@ -2,6 +2,14 @@
 
 — trace
 
+## [1.2.3] - 2026-08-23
+
+### Added
+- `recon` gained a `<load_first>` citing the new `shared/references/workspace-conventions.md` — it needed to map internal spec sources but had no stated location for them on disk.
+
+### Changed
+- `synthesizer`'s `<output>` now shows a literal `research-report@1` JSON template, matching its three siblings (`recon`, `reader`, `risk-assessor`) instead of describing required elements in prose only.
+
 ## [1.2.2] - 2026-08-22
 
 ### Changed

@@ -2,6 +2,14 @@
 
 — graph
 
+## [2.0.2] - 2026-08-23
+
+### Fixed
+- `auditor`, both its `audit-backlog`/`connect-requirement` SKILL.md files, and `README.md` claimed coverage checking against "specs, plans, and implementation files" — `plan@1` is never persisted to disk anywhere in this pipeline, so plan coverage was never actually checkable. Scoped the claim down to specs and implementation.
+
+### Added
+- `auditor` gained a `<load_first>` citing the new `shared/references/workspace-conventions.md` — it previously had no stated location for gated specs on disk.
+
 ## [2.0.1] - 2026-08-22
 
 ### Changed

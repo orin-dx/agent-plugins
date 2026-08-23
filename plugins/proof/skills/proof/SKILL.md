@@ -1,7 +1,7 @@
 ---
 name: audit
 description: >-
-  Trigger this skill when the user asks to perform a bug hunt, code audit, find bugs, security audit, defect scan, vulnerability scan, code review for bugs, or asks "what's wrong with this code." Activate for any codebase language — Rust, TypeScript, or JavaScript. 5-phase pipeline: (1) recon builds a verified module manifest and detects the primary language; (2) scanner reads language-specific hazard taxonomies and emits candidates in live files only; (3) boundary-tracer (conditional) traces field survival for T7/T10 candidates; (4) adversary refutes each candidate by tracing control flow — only unrebutted findings with concrete failing scenarios survive; (5) exit-gate re-reads code from scratch, checks sibling gaps, confirms compile/tests pass, and escalates after 3 failed retries. Never reports bugs in dead or unreachable code. Output follows finding-report@1.
+  Trigger this skill when the user asks to perform a bug hunt, code audit, find bugs, security audit, defect scan, vulnerability scan, code review for bugs, or asks "what's wrong with this code." Activate for any codebase language — Rust, TypeScript, or JavaScript. 5-phase pipeline: (1) recon builds a verified module manifest and detects the primary language; (2) scanner reads language-specific hazard taxonomies and emits candidates in live files only; (3) boundary-tracer (conditional) traces field survival for T7/T10 candidates; (4) adversary refutes each candidate by tracing control flow — unrebutted candidates survive as confirmed (concrete failing scenario stated) or plausible (no refutation, but reachability depends on state outside the code); (5) exit-gate re-reads code from scratch, verifies confirmed findings are resolved, checks sibling gaps, confirms compile/tests pass, carries plausible findings forward for human review without blocking on them, and escalates after 3 failed retries. Never reports bugs in dead or unreachable code. Output follows finding-report@1.
 version: 2.2.1
 ---
 
@@ -29,8 +29,8 @@ workspace → recon → scanner → [boundary-tracer?] → adversary → exit-ga
 1. **Recon** — builds verified manifest: live files, dead files, entry points, language.
 2. **Scan** — loads language-specific hazard reference, runs grep patterns against live files only, emits candidate@1 list.
 3. **Boundary Tracer** *(conditional)* — traces field survival for T7 and T10 candidates. Skipped for all other taxonomies.
-4. **Adversary** — reads actual code, traces control flow, and refutes candidates. Batched by crate/module to evaluate multiple candidate signals in one pass, minimizing subagent overhead. Confirms only when a concrete failing scenario can be stated.
-5. **Exit Gate** — after remediation, re-reads code from scratch, checks all confirmed findings are gone, scans for sibling gaps, verifies compile and tests. Escalates to human when retry_count exceeds 3.
+4. **Adversary** — reads actual code, traces control flow, and refutes candidates. Batched by crate/module to evaluate multiple candidate signals in one pass, minimizing subagent overhead. Confirms when a concrete failing scenario can be stated; emits plausible when no refutation exists but reachability depends on state outside the code (config, an external caller, environment).
+5. **Exit Gate** — after remediation, re-reads code from scratch, checks all confirmed findings are gone, scans for sibling gaps, verifies compile and tests. Plausible findings pass through to the verdict for human review, never as remediation targets. Escalates to human when retry_count exceeds 3.
 
 ---
 

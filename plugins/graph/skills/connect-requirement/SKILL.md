@@ -1,7 +1,7 @@
 ---
 name: connect-requirement
 description: >-
-  Trigger when the user asks whether a specific requirement already exists or relates to other work: "is this already captured?", "does this overlap with an existing requirement?", "what does this relate to?". Given one requirement@1 (or a small named set), searches the workspace for related specs, plans, and implementation files, and checks for duplicate or overlapping requirements. Returns coverage status and duplicate_of references scoped to just the requirement(s) given — not a full backlog sweep.
+  Trigger when the user asks whether a specific requirement already exists or relates to other work: "is this already captured?", "does this overlap with an existing requirement?", "what does this relate to?". Given one requirement@1 (or a small named set), searches the workspace for related specs and implementation files, and checks for duplicate or overlapping requirements. Returns coverage status and duplicate_of references scoped to just the requirement(s) given — not a full backlog sweep.
 version: 2.0.0
 ---
 

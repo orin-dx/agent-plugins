@@ -2,6 +2,11 @@
 
 — delta
 
+## [2.1.3] - 2026-08-23
+
+### Fixed
+- `receive-feedback` (SKILL.md description/overview/dispatch/io) and `README.md` (When to Use, Skills table, Subagents table) all claimed `review-preprocessor` categorizes incoming comments as must-fix/suggestion/question. It never did — its own `<judgment>` explicitly forbids making that call, and its output schema has no such field. Narrowed all six claims to what the agent actually does: assemble a review package; the caller applies `shared/references/github.md`'s vocabulary by hand.
+
 ## [2.1.2] - 2026-08-22
 
 ### Changed

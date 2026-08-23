@@ -2,7 +2,15 @@
 
 — basis
 
-## [2.0.1] - 2026-08-22
+## [2.1.0] - 2026-08-23
+
+### Added
+- **`scaffolder`**: generates an optional `<load_first>` block (immediately after `<constitution>`) whenever a scaffolded agent's task implies a lookup, and drafts SKILL.md routing entries for any output status that isn't a single terminal pass/fail — both were previously unhandled, meaning every plugin scaffolded before this version could ship with either gap silently.
+- **`auditor`**: two new checks — `<load_first>` correctness (present when needed, target resolves) and orchestration completeness (every output status routed in SKILL.md, or documented terminal). The second check exists specifically because this pattern shipped unfixed in `lambda` this session before being caught by hand.
+- **`auditor`**: version agreement, reference-file size, and schema JSON validity are now checked by running `scripts/check-versions.sh`, `scripts/check-reference-size.sh`, and `jq` directly and reading this plugin's own result, instead of re-deriving the same judgment through reasoning — removes a redundant, driftable second source of truth for facts the repo's own scripts already check deterministically.
+
+### Fixed
+- `scaffolder`'s and `auditor`'s own frontmatter descriptions exceeded the 80-200 word guideline they enforce on every other agent (233 and 221 words) after the additions above — trimmed both back under 200.
 
 ### Fixed
 - **`auditor`**: the 5th `<constitution>` section (ADR-006) meant its own conformance check — "body contains exactly backstory, goal, judgment, output sections" — would have failed every conformant agent in the ecosystem. Now checks for the 5-part structure and verifies `<constitution>` is byte-identical to a reference agent's, not just present.

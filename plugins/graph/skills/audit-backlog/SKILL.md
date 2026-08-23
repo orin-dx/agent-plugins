@@ -1,7 +1,7 @@
 ---
 name: audit-backlog
 description: >-
-  Trigger when the user asks about overall backlog health: "what's in the backlog", "audit the backlog", "what requirements are missing coverage". Cross-references all open requirement@1 objects against existing specs, plans, and implementation files. Returns per-requirement status (covered, partial, missing, duplicate) with evidence, plus a structured summary — per-status counts and an optional one-clause note, not a prose paragraph. Named audit-backlog rather than bare audit because that word is already proof's plugin-level skill name (code/bug auditing) — a different domain entirely.
+  Trigger when the user asks about overall backlog health: "what's in the backlog", "audit the backlog", "what requirements are missing coverage". Cross-references all open requirement@1 objects against existing specs and implementation files. Returns per-requirement status (covered, partial, missing, duplicate) with evidence, plus a structured summary — per-status counts and an optional one-clause note, not a prose paragraph. Named audit-backlog rather than bare audit because that word is already proof's plugin-level skill name (code/bug auditing) — a different domain entirely.
 version: 2.0.0
 ---
 
@@ -14,7 +14,7 @@ The full-backlog version of `graph/connect-requirement` — same agent, wider sc
 <dispatch>
 | Agent | Model / Effort | Delegate When |
 | :--- | :--- | :--- |
-| **auditor** | sonnet / medium | All open requirement@1 objects need cross-referencing against specs, plans, and implementation for coverage and duplicates. |
+| **auditor** | sonnet / medium | All open requirement@1 objects need cross-referencing against specs and implementation for coverage and duplicates. |
 </dispatch>
 
 <references>

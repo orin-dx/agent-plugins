@@ -2,6 +2,11 @@
 
 — canon
 
+## [2.2.1] - 2026-08-23
+
+### Changed
+- `auditor`'s `<load_first>` now cites the new `shared/references/workspace-conventions.md` instead of restating the `.claude/specs/*.json` location inline — the same fact `graph:auditor` and `trace:recon` also needed, now sourced once.
+
 ## [2.2.0] - 2026-08-23
 
 ### Added

@@ -136,6 +136,23 @@ Add an entry to the `"plugins"` array:
 
 ---
 
+## Capability Change Checklist
+
+When you add or change what an existing agent can do — a new dimension, a new output status, a new default posture — the code change alone leaves the ecosystem inconsistent. Work through this list in the same change:
+
+- [ ] Frontmatter `description` reflects the new capability
+- [ ] If the agent's output gained a new status/enum value, the plugin's `SKILL.md` names what the caller does with it — or states it's terminal
+- [ ] If a new `shared/references/*.md` file was added, it's listed in root `README.md`'s Shared References table
+- [ ] Plugin `README.md`'s Subagents table row describes the new behavior
+- [ ] Plugin `CHANGELOG.md` gets a new dated entry
+- [ ] `plugin.json` version bumped (see the Semver Decision Guide in `shared/references/changesets.md`)
+- [ ] Root `marketplace.json`'s matching plugin entry version bumped to the same value
+- [ ] `basis:scaffolder`/`basis:auditor` updated if the change introduces a new *structural* convention (a new required section, a new required check) rather than just a new capability within existing structure — see `shared/constitution.md`'s Documentation section
+
+This isn't automated. `basis:audit-plugin` checks structural conformance; it does not (yet) check that every downstream doc/version file was updated to match a capability change. Until it does, this checklist is the thing standing between "the agent works" and "the ecosystem knows the agent works."
+
+---
+
 ## Engineering Invariants
 
 1. **No absolute paths** — all paths in prompts and skill files must be relative
@@ -169,6 +186,11 @@ jq . plugins/*/plugin.json > /dev/null
 
 # Check every skill a README documents actually has a skills/ directory
 ./scripts/check-skills-doc.sh
+
+# Check every shared/references/ file stays at or under the 120-line cap —
+# a reference loaded via <load_first> is a fixed tax on every agent
+# invocation that loads it.
+./scripts/check-reference-size.sh
 
 # Check schema files parse correctly
 jq . shared/schemas/*.json > /dev/null

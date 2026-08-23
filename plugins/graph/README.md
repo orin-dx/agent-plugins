@@ -1,6 +1,6 @@
 # graph — Need Definition
 
-**Stage:** Need · **Output:** `requirement@1` · **Version:** 2.0.1
+**Stage:** Need · **Output:** `requirement@1` · **Version:** 2.0.2
 
 Converts a raw need statement — a one-liner, a vague complaint, a stakeholder ask — into a structured `requirement@1` artifact that a spec writer can act on without asking a single follow-up question. Works with GitHub Issues by default; any issue tracker that emits `requirement@1` can substitute.
 
@@ -28,7 +28,7 @@ Five independently-triggered skills, not a linear pipeline — pick the one that
 | `graph/clarify-requirement` | Identifies the most critical gap in a draft and asks one focused question, or returns it complete with `out_of_scope` populated | `clarifier` |
 | `graph/prioritize-backlog` | Ranks a set of requirement drafts by impact, urgency, and dependency order, with a rationale per ranking | `prioritizer` |
 | `graph/connect-requirement` | Checks one requirement (or a small set) against the workspace for coverage, duplicates, and related artifacts | `auditor` (connect mode) |
-| `graph/audit-backlog` | Cross-references all open requirements against specs, plans, and implementation files — gaps, coverage, duplicates | `auditor` |
+| `graph/audit-backlog` | Cross-references all open requirements against specs and implementation files — gaps, coverage, duplicates | `auditor` |
 
 `audit-backlog` is not bare `audit` — that word is already `proof`'s plugin-level skill name (code/bug auditing). See `shared/constitution.md`'s Skill Names rule.
 
@@ -41,7 +41,7 @@ Five independently-triggered skills, not a linear pipeline — pick the one that
 | `intake` | Intake Structurer | sonnet / medium | Converts free text into a `requirement@1` draft. Infers all fields it can; leaves gaps noted in `reasoning`. |
 | `clarifier` | Clarifier | sonnet / medium | Identifies the most critical gap in the draft and asks one focused question, or returns the completed requirement if all dimensions are met. One question per invocation. |
 | `prioritizer` | Backlog Prioritizer | sonnet / medium | Ranks requirement@1 drafts by impact, urgency, and dependency order — a dependency overrides an otherwise higher impact/urgency score. |
-| `auditor` | Requirement Coverage Auditor | sonnet / medium | Cross-references requirement@1 objects against specs, plans, and implementation files for coverage and duplicates. Runs at full-backlog scope (`audit-backlog`) or single-requirement scope (`connect-requirement`) — same agent, same output shape, different input size. |
+| `auditor` | Requirement Coverage Auditor | sonnet / medium | Cross-references requirement@1 objects against specs and implementation files for coverage and duplicates (`plan@1` isn't persisted to disk, so plan coverage isn't checkable). Runs at full-backlog scope (`audit-backlog`) or single-requirement scope (`connect-requirement`) — same agent, same output shape, different input size. |
 
 ---
 

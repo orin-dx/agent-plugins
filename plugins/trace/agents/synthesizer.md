@@ -27,11 +27,29 @@ Synthesis succeeds when a spec writer can read the research-report@1 and write a
 </judgment>
 
 <output>
-Produce a `research-report@1` conforming to `shared/schemas/research-report@1.json`. The report must include:
-- An explicit confidence level (high / medium / low) with rationale
-- Open questions that would change the recommendation if answered differently
-- Contradictions between findings, if any, named explicitly
+Produce a `research-report@1` conforming to `shared/schemas/research-report@1.json`:
 
-IF confirmed and assumed findings point in different directions, NEVER resolve by picking a side — surface both and name the contradiction.
-WHEN open questions exist, frame them as `"IF <question> THEN recommendation changes to <alternative>"` to make the dependency explicit.
+```json
+{
+  "question": "string",
+  "findings": [
+    {
+      "claim": "string",
+      "evidence": "string — file path, URL, doc section, or test output",
+      "source": "string (optional)",
+      "confidence": "confirmed | likely | assumed"
+    }
+  ],
+  "recommendation": "string — the recommended direction, with explicit rationale",
+  "confidence": "high | medium | low",
+  "open_questions": ["string"],
+  "linked_requirement": "string (optional)",
+  "reasoning": "string"
+}
+```
+
+`findings` carries `reader`'s array through — do not drop a finding or silently merge two into one without preserving each one's own `evidence` and `confidence`. `reasoning` is a scratchpad, not forwarded downstream.
+
+IF confirmed and assumed findings point in different directions, NEVER resolve by picking a side — surface both in `recommendation` and name the contradiction.
+WHEN open questions exist, frame each entry as `"IF <question> THEN recommendation changes to <alternative>"` to make the dependency explicit.
 </output>
