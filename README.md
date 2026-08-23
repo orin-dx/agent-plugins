@@ -83,7 +83,8 @@ Four decisions shape how every plugin and agent in this repository is built. The
 - The prompt interior — how the agent searches, reasons, and decides — is intentionally unconstrained
 - EARS is the fence; backstory and goal fill the interior with judgment
 
-**4-part agent structure** — every agent body has exactly four sections; no role labels, no success-criteria checklists.
+**5-part agent structure** — every agent body has exactly five sections; no role labels, no success-criteria checklists.
+- `<constitution>` — ecosystem-wide invariants, byte-identical across every agent (copied verbatim, never authored per-agent)
 - `<backstory>` — experiential perspective that shapes judgment in open situations (not a role label)
 - `<goal>` — intent, not steps
 - `<judgment>` — the specific failure mode that looks like success
@@ -122,14 +123,16 @@ Runtime-pullable guides in `shared/references/`. Agents pull these themselves du
 
 | File | Purpose | Loaded by |
 | :--- | :--- | :--- |
-| `rust-hazards.md` | Rust hazard taxonomies T1–T10, grep patterns, before/after examples | scanner, adversary, boundary-tracer |
+| `rust-hazards.md` | Rust hazard taxonomies T1–T6/T8/T9, grep patterns, before/after examples | scanner (always), adversary (non-T7/T10) |
+| `rust-hazards-t7-t10.md` | Rust taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10) |
 | `rust-smells.md` | Rust architectural smells and resolving trait designs | architect |
 | `rust-tooling.md` | Rust test commands, NAPI rules, non-negotiables | mutator, remediator |
-| `rust.md` | Thin index → routes to the three files above | — |
-| `typescript-hazards.md` | TS hazard taxonomies T1–T10, grep patterns, before/after examples | scanner, adversary, boundary-tracer |
+| `rust.md` | Thin index → routes to the files above | — |
+| `typescript-hazards.md` | TS hazard taxonomies T1–T6/T8/T9, grep patterns, before/after examples | scanner (always), adversary (non-T7/T10) |
+| `typescript-hazards-t7-t10.md` | TS taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10) |
 | `typescript-smells.md` | TS architectural smells and interface/type designs | architect |
 | `typescript-tooling.md` | TS test commands (Stryker, Vitest), non-negotiables | mutator, remediator |
-| `typescript.md` | Thin index → routes to the three files above | — |
+| `typescript.md` | Thin index → routes to the files above | — |
 | `conventional-commits.md` | Type/scope conventions and scope table | delta |
 | `github.md` | PR template, `gh` CLI commands, labels | delta |
 | `changesets.md` | Changeset vs commit distinction, semver decision guide | delta |

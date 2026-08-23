@@ -2,6 +2,16 @@
 
 — lambda
 
+## [1.5.0] - 2026-08-22
+
+### Added
+- **`reviewer`**: now flags doc comments or inline comments that restate a signature, narrate an alternative not taken, or pad a genuinely simple point — see `shared/references/code-comments.md`. Fresh-read backstop for `implementer`'s own comment-writing rule, since a rule stated once at the start of a long TDD loop can't be trusted to hold for the whole task.
+
+### Changed
+- **`implementer`**: writes doc/inline comments per `shared/references/code-comments.md` — states what the comment's reader needs, not a restated signature or narrated process.
+- **`recon`**: `reasoning` scratchpad capped to 1-2 sentences — it's discarded, not read by a human, and this is mechanical enumeration.
+- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006. `implementer`'s frontmatter description tightened; no routing behavior changed.
+
 ## [1.4.2] - 2026-08-21
 
 ### Fixed

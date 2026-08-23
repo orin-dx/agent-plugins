@@ -1,7 +1,7 @@
 ---
 name: changeset
 description: >-
-  Trigger when the user asks to add a changeset or document a change: "add a changeset", "document this change", "what changed here". Extracts the consumer-facing meaning of a diff: classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per the decision table in shared/references/changesets.md, then writes a summary whose detail scales with that classification. On a diff spanning multiple independent topics — the normal case for a single PR is one topic, but a backlog/catch-up run since the last release often isn't — produces one changeset per topic rather than one bundled entry covering all of them. When the change was implemented via lambda, pass along the criteria_evidence implementer collected during the TDD run — changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff.
+  Trigger when the user asks to add a changeset or document a change: "add a changeset", "document this change", "what changed here". Extracts the consumer-facing meaning of a diff: classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per shared/references/changesets.md's decision table, then writes a summary scaled to that classification. A diff spanning multiple independent topics — common on a backlog/catch-up run, not just a single PR — produces one changeset per topic, not one bundled entry. When the change came via lambda, pass along implementer's criteria_evidence — changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff.
 version: 2.1.0
 ---
 

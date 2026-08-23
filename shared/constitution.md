@@ -28,9 +28,11 @@ IF a plugin is superseded by another, it SHALL be deleted from the repository ra
 
 ## Agent Structure
 
-WHEN an agent prompt is authored, it SHALL define four named sections in the body: `<backstory>`, `<goal>`, `<judgment>`, and `<output>`.
+WHEN an agent prompt is authored, it SHALL define five named sections in the body, in this order: `<constitution>`, `<backstory>`, `<goal>`, `<judgment>`, and `<output>`.
 
-WHEN an agent uses a shared reference file during execution, it SHALL declare a `<load_first>` block naming that file before all other sections.
+WHEN an agent body's `<constitution>` section is authored or amended, it SHALL be byte-for-byte identical across every agent file in the ecosystem — this is the shared static prefix the Static Prompt Prefix Invariant depends on; any per-character difference breaks prompt-cache matching for every agent, not just the one edited.
+
+WHEN an agent uses a shared reference file during execution, it SHALL declare a `<load_first>` block naming that file, placed immediately after `<constitution>` and before all other sections.
 
 IF an agent body contains a `<role>` section, it SHALL be replaced with `<backstory>`.
 
@@ -49,7 +51,7 @@ WHEN assigning `model` and `effort`, the author SHALL apply dynamic routing base
 
 ## Static Prompt Prefix Invariant
 
-WHEN authoring agent prompts, THE SYSTEM SHALL maintain an identical static header across all agents in the ecosystem to maximize prompt cache sharing (>95% hit rate).
+WHEN authoring agent prompts, THE SYSTEM SHALL maintain the `<constitution>` section as an identical static header — the first content after frontmatter, byte-for-byte the same across every agent in the ecosystem — to maximize prompt cache sharing.
 
 WHEN executing shell operations, THE SYSTEM SHALL prioritize modern CLI tools (ripgrep `rg`, `fd`, `bat`, `jq`, `delta`, `eza`) over legacy builtins (`grep`, `find`, `sed`, `cat`).
 
@@ -77,9 +79,11 @@ WHILE an agent is in pattern-matching mode (scanner), it SHALL NOT filter, analy
 
 ## EARS Placement
 
-WHEN EARS notation is used in an agent prompt, it SHALL appear only in the `<output>` section for output contracts and never-do rules.
+WHEN EARS notation is used in an agent prompt, it SHALL appear only in `<constitution>` (shared, ecosystem-wide invariants) or `<output>` (this agent's own output contracts and never-do rules).
 
 EARS notation SHALL NOT appear in `<backstory>`, `<goal>`, `<judgment>`, or any implementation guidance — those sections are the interior where agent judgment applies.
+
+IF a rule applies to only some agents rather than the whole ecosystem, it SHALL be placed in that agent's own `<output>` section, not in `<constitution>` — `<constitution>` content must stay identical everywhere, so a conditional or agent-specific rule does not belong there even if phrased as EARS.
 
 ---
 
@@ -166,6 +170,20 @@ WHEN generating inter-agent payloads, reports, or reviews, THE SYSTEM SHALL comm
 - Use exact file and line pointers rather than copy-pasting multi-line code blocks.
 - On artifact revisions, emit delta patches rather than reprinting unchanged content.
 - Keep scratchpad and reasoning fields focused and unpadded without imposing artificial truncations that compromise technical depth.
+
+---
+
+## Reader-Scoped Writing
+
+WHEN an agent writes a doc comment, inline code comment, commit message, PR title/body, or standalone documentation, THE SYSTEM SHALL include only what that artifact's actual reader needs to use, trust, review, or maintain it — and SHALL NOT restate what the signature, diff, or code already shows in readable form.
+
+IF a comment or doc block would only restate the name, type, or control flow a competent reader already sees, THE SYSTEM SHALL omit it rather than write it for completeness.
+
+WHEN a fact is relevant to more than one reader-scoped artifact (e.g. the reasoning behind a change), THE SYSTEM SHALL place it in the artifact whose reader needs it to act — a PR body for a reviewer's approval, a commit message for a future git-blame reader, a doc comment for a caller — and SHALL NOT duplicate it into artifacts whose reader does not need it there.
+
+IF the reader's need genuinely requires extended explanation — a non-obvious invariant, a subtle failure mode, a breaking change's migration path — THE SYSTEM SHALL write the full explanation rather than truncating it to satisfy a brevity expectation. Length SHALL be dictated by what the reader needs, not by a target word count in either direction.
+
+WHEN drafting or auditing `purpose`, `scope`, or `criterion` text in a spec@1 or arch-spec@1, or task descriptions in a plan@1, THE SYSTEM SHALL treat this rule as strict rather than aspirational: a spec's readers are the downstream agents that re-read it from disk at every subsequent pipeline stage, not a single human pass, so unnecessary prose is a cost paid on every read, not once. A criterion or task description being falsifiable/testable does not exempt it from this rule — testability and terseness are independent checks, and passing one does not excuse padding on the other.
 
 ---
 

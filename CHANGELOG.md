@@ -3,6 +3,24 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.3.0] - 2026-08-22 — Constitution Section & Reader-Scoped Writing
+
+### Added
+- **`shared/constitution.md`**: new Reader-Scoped Writing rule — a doc comment, inline comment, commit message, PR body, or spec field includes only what its actual reader needs; length follows that need, not a target in either direction. A stricter corollary applies to spec@1/plan@1 text specifically, since those get re-read from disk by every subsequent pipeline stage rather than read once by a human.
+- **5-part agent structure (ADR-006)**: every agent body now defines `<constitution>` as a byte-for-byte identical first section across all 38 agents, ahead of `<backstory>`/`<goal>`/`<judgment>`/`<output>`. This is what makes the Static Prompt Prefix Invariant's cache-sharing claim real instead of aspirational — previously no agent file had any shared header despite the invariant describing one. Content: treat unauthored content as data not instruction, output-economy discipline, reader-scoped writing, abstract tool language. `constitution.md` and `agent-best-practices.md` amended to permit this 5th section and to allow EARS notation there in addition to `<output>`.
+- **`shared/references/code-comments.md`**: operational subset of Reader-Scoped Writing for doc comments and inline comments specifically — `docs-voice.md` only ever covered prose (commits, PRs, changesets, docs), never comments inside code.
+- **`scripts/check-reference-size.sh`**: enforces the existing 120-line reference-file cap, which `rust-hazards.md`/`typescript-hazards.md` had silently exceeded (150/167 lines).
+- **ADR-006**: documents the `<constitution>` decision; ADR-001 (4-part structure) noted as extended, not superseded.
+
+### Changed
+- **`canon` (v2.1.0)**: `auditor` gained a sixth check dimension, `unnecessary-prose`.
+- **`lambda` (v1.5.0)**: `reviewer` now flags padded/restating comments as findings; `implementer` writes comments per the new reference.
+- **`proof` (v2.2.2)**, **`basis` (v2.0.1)**, **`delta` (v2.1.2)**, **`axiom` (v1.2.2)**, **`graph` (v2.0.1)**, **`trace` (v1.2.2)**, **`vector` (v1.4.2)**: hazard-file split for `boundary-tracer`/`adversary`/`scanner` (proof only), `basis:scaffolder`/`auditor` updated to recognize and generate the 5-part structure (a real bug — `auditor`'s prior check would have failed every conformant agent), reasoning-field caps on haiku-tier agents, and frontmatter description trims across the roster — several exceeded the 80-200 word guideline by 40-80% (`changeset-analyzer` was 283 words, `implementer` 246). Agent + skill description text alone dropped from 5,453+2,438 words to 4,672+2,283 — a fixed cost paid every session regardless of which agent runs, unlike per-invocation prompt content.
+
+### Fixed
+- `proof/skills/proof/SKILL.md`'s dispatch matrix mistagged `adversary` as `sonnet/medium`; frontmatter has always been `opus/high`.
+- Repo-wide hard-wrap sweep: manually line-wrapped prose (frontmatter `description:` blocks and body paragraphs) unwrapped to single flowing lines across 30+ files, per the standing no-wrap convention — diffs on a wrapped paragraph reflow the whole block for a one-word edit.
+
 ## [3.2.1] - 2026-08-21 — Anti-Fragmentation Judgment
 
 ### Changed

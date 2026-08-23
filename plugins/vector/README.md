@@ -1,6 +1,6 @@
 # vector — Implementation Planning
 
-**Stage:** Plan · **Output:** `plan@1` · **Version:** 1.4.1
+**Stage:** Plan · **Output:** `plan@1` · **Version:** 1.4.2
 
 Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a failing test, the minimal implementation to pass it, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without making a design decision. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
 

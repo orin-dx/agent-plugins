@@ -2,6 +2,12 @@
 
 — trace
 
+## [1.2.2] - 2026-08-22
+
+### Changed
+- `recon`'s `reasoning` scratchpad capped to 1-2 sentences — discarded, not read by a human.
+- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006. `trace`'s skill description tightened; no routing behavior changed.
+
 ## [1.2.1] - 2026-08-21
 
 ### Fixed

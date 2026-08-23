@@ -2,6 +2,14 @@
 
 — proof
 
+## [2.2.2] - 2026-08-22
+
+### Changed
+- **Hazard reference split**: T7 and T10 — `boundary-tracer`'s entire scope — extracted into `rust-hazards-t7-t10.md`/`typescript-hazards-t7-t10.md`, both now under 120 lines (were 150/167, over the reference-file cap). `boundary-tracer` loads only the split file instead of the full ten-taxonomy set. `adversary` now branches on the candidate's `taxonomy` field to load only the matching file instead of the full set on every call — real savings on the agent invoked once per candidate, at the opus tier. `scanner` and `reviewer` (lambda) load both files where they need the complete set; behavior and taxonomy coverage are unchanged. Also removed a dead "Workspace Discovery" section neither file's consuming agent ever referenced — recon already provides the same information via its manifest.
+
+### Fixed
+- `skills/proof/SKILL.md`'s dispatch matrix mistagged `adversary` as `sonnet/medium`; its frontmatter has always been `opus/high`. Corrected the doc.
+
 ## [2.2.1] - 2026-08-21
 
 ### Fixed

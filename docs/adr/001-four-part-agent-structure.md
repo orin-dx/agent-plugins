@@ -2,6 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-08-08
+**Extended by:** ADR-006, which adds a 5th `<constitution>` section. The four sections and rationale below are otherwise unchanged.
 
 ## Context
 

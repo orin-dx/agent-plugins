@@ -1,6 +1,6 @@
 # lambda — Implementation
 
-**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 1.4.2
+**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 1.5.0
 
 One skill, one strict TDD pipeline. Give it a `plan@1` and it executes every task in order — failing test, minimal code, green, commit — then gates the result with mutation testing and an adversarial exit check before handing off. No plan yet? Give it a `spec@1` directly.
 

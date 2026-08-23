@@ -1,6 +1,6 @@
 # graph — Need Definition
 
-**Stage:** Need · **Output:** `requirement@1` · **Version:** 2.0.0
+**Stage:** Need · **Output:** `requirement@1` · **Version:** 2.0.1
 
 Converts a raw need statement — a one-liner, a vague complaint, a stakeholder ask — into a structured `requirement@1` artifact that a spec writer can act on without asking a single follow-up question. Works with GitHub Issues by default; any issue tracker that emits `requirement@1` can substitute.
 

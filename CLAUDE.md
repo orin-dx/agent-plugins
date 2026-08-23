@@ -33,6 +33,10 @@ Quick reference guide for Claude Code CLI and Claude AI agents interacting with 
   ```bash
   ./scripts/check-skills-doc.sh
   ```
+- **Reference File Size** (run after editing any file in `shared/references/` — a reference loaded via `<load_first>` is a fixed tax on every agent invocation that loads it, so it stays capped at 120 lines and split by concern):
+  ```bash
+  ./scripts/check-reference-size.sh
+  ```
 
 ---
 
@@ -41,7 +45,7 @@ Quick reference guide for Claude Code CLI and Claude AI agents interacting with 
 All authoring rules and principles are centralized in:
 
 - [**`shared/constitution.md`**](./shared/constitution.md): EARS-format authoritative rules — the fence all plugin development must stay inside. Read this first.
-- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution with examples — 4-part agent structure, EARS placement, cognitive modes, schema-driven handoffs, model/effort tiers.
+- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution with examples — 5-part agent structure, EARS placement, cognitive modes, schema-driven handoffs, model/effort tiers.
 - [**`AGENTS.md`**](./AGENTS.md): Repository standards, directory layout, and new-plugin checklist.
 
 ---

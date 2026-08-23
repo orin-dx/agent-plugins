@@ -1,7 +1,7 @@
 {
   "id": "trace",
   "name": "trace",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Distinguishes confirmed findings from assumptions. Produces research-report@1 for consumption by canon (spec).",
   "author": {
     "name": "Gabriel Castro",

@@ -2,6 +2,11 @@
 
 — delta
 
+## [2.1.2] - 2026-08-22
+
+### Changed
+- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006. `changeset-analyzer`'s and `changeset`'s frontmatter descriptions tightened; no routing or output behavior changed.
+
 ## [2.1.1] - 2026-08-21
 
 ### Changed

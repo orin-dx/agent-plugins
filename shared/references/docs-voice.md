@@ -4,6 +4,8 @@ Canonical voice standard for this repo: commit messages, PR bodies, changesets, 
 
 Agents load only the subset embedded in their own task reference file (`conventional-commits.md`, `github.md`, `changesets.md`) — see each for the operational rules. This file is the full standard, for humans and for `basis` when scaffolding new docs.
 
+Doc comments and inline code comments are a separate reader profile (a caller or a maintainer reading one line, not someone reading prose) — see `code-comments.md` for that operational subset instead.
+
 ## Rules
 
 1. Lead with the conclusion. Answer before justification (inverted pyramid) — readers scan ~20-28% of page text, they don't read top to bottom.

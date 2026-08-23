@@ -1,6 +1,6 @@
 # basis — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.0.0
+**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.0.1
 
 The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 
@@ -50,7 +50,7 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | Skill file | `skills/<id>/SKILL.md` exists with valid YAML frontmatter and a `description` trigger string |
 | Agent files | All agents listed in `plugin.json` have a corresponding `.md` file |
 | Agent descriptions | 80–200 words each; start with "Delegate to this subagent when…" |
-| 4-part body structure | Agent body has exactly: backstory, goal, judgment, output — no success_criteria, no role sections, EARS only in output |
+| 5-part body structure | Agent body has exactly: constitution (byte-identical to the rest of the ecosystem), backstory, goal, judgment, output — no success_criteria, no role sections, EARS only in constitution/output |
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
 | No authoring-time refs | Agent bodies do not reference `shared/agent-best-practices.md` at runtime |
@@ -72,7 +72,7 @@ plugins/<id>/
     └── <agent-name>.md          # one file per agent in plugin.json
 ```
 
-If a plugin's scope later grows to cover several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into multiple directories, one per skill (`skills/<skill-name>/SKILL.md`), each still following the frontmatter and 4-part-body rules. `delta`, `canon`, `graph`, and `basis` itself are all examples.
+If a plugin's scope later grows to cover several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into multiple directories, one per skill (`skills/<skill-name>/SKILL.md`), each still following the frontmatter and 5-part-body rules. `delta`, `canon`, `graph`, and `basis` itself are all examples.
 
 `basis/audit-plugin` checks every `SKILL.md` found under `skills/`, not just one — it doesn't assume the single-directory default.
 

@@ -1,6 +1,6 @@
 # canon — Specification
 
-**Stage:** Spec · **Output:** `spec@1` · **Version:** 2.0.0
+**Stage:** Spec · **Output:** `spec@1` · **Version:** 2.1.0
 
 Turns requirements into unambiguous, testable specs a developer can implement without a single clarifying question — and keeps them that way after implementation starts.
 
@@ -161,8 +161,6 @@ On fail, specific blockers are returned to `canon/draft-spec` or `canon/architec
 
 ## Next Stage
 
-Feed `spec@1` to **[vector](../vector/)** (implementation planning) or run it through
-**[axiom](../axiom/)** for standalone verification against an existing implementation.
+Feed `spec@1` to **[vector](../vector/)** (implementation planning) or run it through **[axiom](../axiom/)** for standalone verification against an existing implementation.
 
-When **[proof](../proof/)** produces a `finding-report@1`, feed it to `canon/architect`
-to design the structural remediation before returning to vector.
+When **[proof](../proof/)** produces a `finding-report@1`, feed it to `canon/architect` to design the structural remediation before returning to vector.

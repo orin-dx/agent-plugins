@@ -1,7 +1,7 @@
 ---
 name: gate-spec
 description: >-
-  Trigger when a spec@1 needs a definitive pass/fail judgment before it enters planning: "gate this spec", "is this spec ready?", "check this spec before we plan it". Default disposition is fail — the spec must earn a pass. Passes only if every acceptance criterion is testable with no vague language, no TBDs remain, error cases are explicitly covered, and scope is narrow enough for one planning cycle. On fail, returns blockers specific enough for canon/draft-spec to act on without further clarification. Named gate-spec rather than gate because the bare word gate is already axiom's plugin-level skill name (cross-cutting artifact verification) — canon's version is spec-specific and always runs as part of the drafting pipeline, not on demand against arbitrary artifacts.
+  Trigger when a spec@1 needs a definitive pass/fail judgment before it enters planning: "gate this spec", "is this spec ready?", "check this spec before we plan it". Default disposition is fail — the spec must earn a pass. Passes only if every acceptance criterion is testable with no vague language, no TBDs remain, error cases are explicitly covered, and scope is narrow enough for one planning cycle. On fail, returns blockers specific enough for canon/draft-spec to act on without further clarification.
 version: 2.0.0
 ---
 

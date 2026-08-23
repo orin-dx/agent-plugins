@@ -2,6 +2,11 @@
 
 — vector
 
+## [1.4.2] - 2026-08-22
+
+### Changed
+- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006. `planner`'s frontmatter description tightened; no routing behavior changed.
+
 ## [1.4.1] - 2026-08-21
 
 ### Fixed

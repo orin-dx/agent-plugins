@@ -1,7 +1,7 @@
 ---
 name: audit
 description: >-
-  Trigger this skill when the user asks to perform a bug hunt, code audit, find bugs, security audit, defect scan, vulnerability scan, code review for bugs, or asks "what's wrong with this code." Activate for any codebase language — Rust, TypeScript, or JavaScript. This skill runs a 5-phase pipeline: (1) recon builds a verified module manifest and detects the primary language from Cargo.toml or package.json; (2) scanner reads language-specific hazard taxonomies from shared/references/rust-hazards.md or shared/references/typescript-hazards.md and emits candidates in live files only; (3) boundary-tracer (conditional) traces field survival for T7 and T10 candidates; (4) adversary attempts to refute each candidate by tracing control flow — only unrebutted findings with concrete failing scenarios survive; (5) exit-gate independently re-reads code from scratch, checks for sibling gaps, confirms compile and tests pass, and escalates to human after 3 failed retries. Proof never reports bugs in dead or unreachable code. Output follows the finding-report@1 schema.
+  Trigger this skill when the user asks to perform a bug hunt, code audit, find bugs, security audit, defect scan, vulnerability scan, code review for bugs, or asks "what's wrong with this code." Activate for any codebase language — Rust, TypeScript, or JavaScript. 5-phase pipeline: (1) recon builds a verified module manifest and detects the primary language; (2) scanner reads language-specific hazard taxonomies and emits candidates in live files only; (3) boundary-tracer (conditional) traces field survival for T7/T10 candidates; (4) adversary refutes each candidate by tracing control flow — only unrebutted findings with concrete failing scenarios survive; (5) exit-gate re-reads code from scratch, checks sibling gaps, confirms compile/tests pass, and escalates after 3 failed retries. Never reports bugs in dead or unreachable code. Output follows finding-report@1.
 version: 2.2.1
 ---
 
@@ -39,9 +39,9 @@ workspace → recon → scanner → [boundary-tracer?] → adversary → exit-ga
 | Agent | Mode | Model / Effort | Loads | Input → Output |
 | :--- | :--- | :--- | :--- | :--- |
 | `recon` | Workspace recon | haiku / low | — | workspace path → live/dead manifest + language |
-| `scanner` | Pattern matching | sonnet / medium | rust-hazards.md or typescript-hazards.md | manifest → candidate@1 list |
-| `boundary-tracer` | Data flow tracing | sonnet / medium | rust-hazards.md or typescript-hazards.md | T7/T10 candidate → field survival map. Conditional. |
-| `adversary` | Adversarial reasoning | sonnet / medium | rust-hazards.md or typescript-hazards.md | batched candidate@1 list → finding-report@1 entries or dismissals |
+| `scanner` | Pattern matching | sonnet / medium | rust-hazards.md (+ rust-hazards-t7-t10.md for a full scan) or the TypeScript equivalents | manifest → candidate@1 list |
+| `boundary-tracer` | Data flow tracing | sonnet / medium | rust-hazards-t7-t10.md or typescript-hazards-t7-t10.md — its entire scope | T7/T10 candidate → field survival map. Conditional. |
+| `adversary` | Adversarial reasoning | opus / high | whichever file has the candidate's one taxonomy — never both | batched candidate@1 list → finding-report@1 entries or dismissals |
 | `exit-gate` | Exit verification | opus / high | — | finding-report@1 → verdict@1 |
 
 ---
@@ -49,8 +49,8 @@ workspace → recon → scanner → [boundary-tracer?] → adversary → exit-ga
 ## Language Detection
 
 Recon inspects the workspace root:
-- `Cargo.toml` present → language: `rust` → scanner and adversary load `shared/references/rust-hazards.md`
-- `package.json` present → language: `typescript` or `javascript` → scanner and adversary load `shared/references/typescript-hazards.md`
+- `Cargo.toml` present → language: `rust` → agents load `shared/references/rust-hazards.md` and/or `rust-hazards-t7-t10.md`, per each agent's own scope
+- `package.json` present → language: `typescript` or `javascript` → agents load `shared/references/typescript-hazards.md` and/or `typescript-hazards-t7-t10.md`, per each agent's own scope
 
 ---
 

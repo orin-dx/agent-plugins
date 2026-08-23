@@ -4,11 +4,18 @@ Developer guide for authoring agents, skills, and plugins in this repository. Re
 
 ---
 
-## 1. The 4-Part Agent Structure
+## 1. The 5-Part Agent Structure
 
-Every agent body uses four named XML sections. This is the only structure — not 5 sections, not a `<role>` block, not a `<success_criteria>` checklist.
+Every agent body uses five named XML sections. This is the only structure — not a `<role>` block, not a `<success_criteria>` checklist, and `<constitution>` is not optional.
 
 ```
+<constitution>
+Byte-for-byte identical across every agent in the ecosystem — see constitution.md's
+Static Prompt Prefix Invariant. Never edit one agent's copy without editing all 38;
+never add agent-specific content here. This is what makes cross-agent prompt-cache
+sharing real instead of aspirational.
+</constitution>
+
 <load_first>
 Read `shared/references/<file>.md` before doing anything else.
 [Only present when the agent uses a shared reference file for its phase.]
@@ -48,6 +55,10 @@ A role label ("Senior Rust Engineer") tells the model what to pretend to be. A b
 
 A checklist of success criteria is theater — the agent can tick every box and still produce wrong output. Judgment names the specific way the agent is most likely to fool itself: "did you execute shell commands or read the code mentally?" A good judgment criterion makes the failure mode visible before it happens.
 
+### Why `<constitution>`, not scattered duplication
+
+Before this section existed, rules genuinely universal to every agent — trust boundaries, output economy, reader-scoped writing, abstract tool language — were either copy-pasted with small wording drift into whichever agents happened to need them, or simply absent from agents whose author forgot to add them. Neither is stable: duplication drifts over time, and omission means an agent silently lacks a rule every other agent has. `<constitution>` fixes both by being the one place ecosystem-wide rules live, propagated by editing all 38 files together rather than one at a time. It also happens to be what makes the Static Prompt Prefix Invariant's cache-sharing claim literally true instead of describing an architecture nobody built.
+
 ---
 
 ## 2. Progressive Context Loading
@@ -65,7 +76,8 @@ rust-smells.md or rust-tooling.md.
 **Why this matters:** attention degrades when a context window contains material the agent won't use. A scanner loading all three reference files will pattern-match less precisely than one that loaded only the hazard file. Load exactly one reference file per agent — the one for its cognitive phase.
 
 **Reference file split by concern:**
-- `rust-hazards.md` / `typescript-hazards.md` — scanner, adversary, boundary-tracer
+- `rust-hazards.md` / `typescript-hazards.md` — scanner (all taxonomies), adversary (non-T7/T10 candidates)
+- `rust-hazards-t7-t10.md` / `typescript-hazards-t7-t10.md` — boundary-tracer's entire scope; also scanner (full scans) and adversary (T7/T10 candidates). Split out from the hazards file specifically so boundary-tracer never pays for the other eight taxonomies it never uses.
 - `rust-smells.md` / `typescript-smells.md` — architect
 - `rust-tooling.md` / `typescript-tooling.md` — mutator, remediator
 
@@ -91,7 +103,7 @@ Do not combine modes in a single agent. A scanner that also verdicts its finding
 
 ## 4. EARS — Where It Belongs
 
-EARS notation (WHEN / IF / WHILE / WHERE / THE SYSTEM SHALL) encodes hard constraints. In agent prompts, it belongs **only** in the `<output>` section for output contracts and never-do rules.
+EARS notation (WHEN / IF / WHILE / WHERE / THE SYSTEM SHALL) encodes hard constraints. In agent prompts, it belongs in exactly two places: `<constitution>` for rules that hold across every agent in the ecosystem, and `<output>` for this agent's own output contracts and never-do rules. A rule that applies to only some agents belongs in that agent's `<output>`, never in `<constitution>` — `<constitution>` must stay byte-identical everywhere, so agent-specific content has no home there even when phrased as EARS.
 
 **Correct use — output contract:**
 ```
@@ -262,7 +274,7 @@ Code-reading agents (scanner, adversary, boundary-tracer, implementer) analyze f
 
 ---
 
-## 11. Writing Quality
+## 16. Writing Quality (Agent Prompts)
 
 - No AI filler: "your job is to", "make sure to", "please ensure", "it's important that"
 - No ALL CAPS except for genuine danger warnings (data loss, security, state corruption)
@@ -271,3 +283,39 @@ Code-reading agents (scanner, adversary, boundary-tracer, implementer) analyze f
 - Backstory and goal should read like a mission brief, not a user manual
 
 The body length signal: if an agent body exceeds 300 words, audit it for steps that should be goal statements.
+
+---
+
+## 17. Reader-Scoped Writing (Generated Docs, Comments, Commits, PRs)
+
+Section 16 is about how *agent prompts* are written. This is about what agents write for humans downstream — doc comments, inline comments, commit messages, PR bodies, standalone docs. Different concern, same repo, so it gets its own section rather than being folded into either.
+
+Every such artifact has exactly one reader with exactly one need. Before writing a line, name both: who reads this, and what do they need to walk away knowing. Content that doesn't serve that need is noise — a restated signature, a narrated alternative ("instead of X we..."), a process log of how the author got here. That kind of content belongs in conversation or a PR body's rationale, not baked into the artifact itself.
+
+This is a scoping discipline, not a brevity target. A doc comment covering a genuinely non-obvious invariant, or a PR body explaining a breaking change's migration path, earns its length — cutting it to hit a word count would just make the reader go find the answer elsewhere. The discipline cuts padding, not substance. `delta/changeset` already applies this per-artifact: a patch-level changeset is one line, a major-version changeset gets full old-behavior-to-new-behavior detail — same principle, scaled to what that changeset's reader needs to decide.
+
+| Artifact | Reader | What they need |
+| :--- | :--- | :--- |
+| Doc comment (`///`, `/**`, docstring) | Caller of this function/type | The contract: non-obvious behavior, invariants, error conditions — not a restatement of the signature |
+| Inline comment | Future maintainer reading this line | Why this line exists when it looks wrong or non-obvious — not what it does if the code already says so |
+| Commit message | Someone running `git blame` or reading changelog later | Why the change was made — the diff already shows what changed |
+| PR title/body | A reviewer with zero context | What changed, why it was needed, how to verify it — enough to approve confidently |
+
+**Before/after** (same information, a third the length — the restated signature, the narrated alternative, and the run-on justification are gone; the contract and the one non-obvious fact a caller needs stay):
+
+```rust
+// Before
+/// This function determines the ordering of packages for publish sequencing.
+/// Rather than using a generic DependencyResolverExt::toposort() call, which
+/// would not correctly account for dev-dependency edges being optional
+/// participants in a cycle, we build a specialized ordering that...
+
+// After
+/// Publish-specific ordering (see `plan_publish`, its only caller).
+///
+/// Prefers `Dev`-inclusive ordering; falls back to cascade's kinds on a
+/// cycle, since mutual dev-only deps between packages are legitimate and
+/// must not hard-fail the whole plan.
+```
+
+**The test**: if deleting a sentence costs the reader nothing they'd act on, delete it. If deleting it leaves a caller guessing about a constraint, a reviewer unsure whether to approve, or a maintainer confused about why a workaround exists — keep it, at whatever length that takes.

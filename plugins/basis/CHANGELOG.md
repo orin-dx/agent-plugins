@@ -2,6 +2,12 @@
 
 — basis
 
+## [2.0.1] - 2026-08-22
+
+### Fixed
+- **`auditor`**: the 5th `<constitution>` section (ADR-006) meant its own conformance check — "body contains exactly backstory, goal, judgment, output sections" — would have failed every conformant agent in the ecosystem. Now checks for the 5-part structure and verifies `<constitution>` is byte-identical to a reference agent's, not just present.
+- **`scaffolder`**: was about to generate new agents missing `<constitution>` entirely. Now generates the 5-part structure and copies `<constitution>` byte-for-byte from an existing agent — explicitly never regenerated or paraphrased, since any deviation breaks prompt-cache sharing across the ecosystem.
+
 ## [2.0.0] - 2026-08-20
 
 ### Breaking

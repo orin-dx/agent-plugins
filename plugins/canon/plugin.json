@@ -1,7 +1,7 @@
 {
   "id": "canon",
   "name": "canon",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Every acceptance criterion is a testable proposition. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, gate-spec, correct-spec, architect.",
   "author": {
     "name": "Gabriel Castro",

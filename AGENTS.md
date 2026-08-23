@@ -41,7 +41,7 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 ## 3. Quick Checklist for Adding New Plugins
 
 1. **Use `basis`** — run `scaffolder` to generate the full directory structure and stubs.
-2. **4-part agent structure** — every agent body: `<backstory>`, `<goal>`, `<judgment>`, `<output>`. No `<role>` body sections. No `success_criteria` checklists.
+2. **5-part agent structure** — every agent body: `<constitution>` (copied byte-for-byte from an existing agent), `<backstory>`, `<goal>`, `<judgment>`, `<output>`. No `<role>` body sections. No `success_criteria` checklists.
 3. **EARS in output only** — WHEN/IF/WHILE/WHERE notation belongs only in `<output>` contracts and never-do rules.
 4. **Progressive context loading** — one `<load_first>` block per agent, naming only the reference file for its cognitive phase.
 5. **Schema-first handoffs** — define `shared/schemas/<name>@<version>.json` before writing the agent that produces it.

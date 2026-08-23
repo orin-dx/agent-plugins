@@ -1,7 +1,7 @@
 ---
 name: scaffold-plugin
 description: >-
-  Trigger when the user asks to build a new plugin from scratch: "build a new plugin", "create a plugin for X", "scaffold a plugin directory". Given a plugin ID and a description of what it should do, generates a complete, installable plugin directory — plugin.json, skills/<id>/SKILL.md, one stub agent file per declared agent using the 4-part structure, and the shared symlink.
+  Trigger when the user asks to build a new plugin from scratch: "build a new plugin", "create a plugin for X", "scaffold a plugin directory". Given a plugin ID and a description of what it should do, generates a complete, installable plugin directory — plugin.json, skills/<id>/SKILL.md, one stub agent file per declared agent using the 5-part structure (constitution copied verbatim from an existing agent, plus backstory/goal/judgment/output), and the shared symlink.
 version: 2.0.0
 ---
 

@@ -1,6 +1,6 @@
 # proof — Adversarial Bug Hunting
 
-**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.2.1
+**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.2.2
 
 Adversarial bug hunting on live code, for Rust, TypeScript, and JavaScript — language is auto-detected from `Cargo.toml` or `package.json`.
 
@@ -91,8 +91,8 @@ Recon inspects the workspace root automatically:
 
 | File found | Language | Hazard reference loaded |
 | :--- | :--- | :--- |
-| `Cargo.toml` | Rust | `shared/references/rust-hazards.md` |
-| `package.json` | TypeScript / JavaScript | `shared/references/typescript-hazards.md` |
+| `Cargo.toml` | Rust | `shared/references/rust-hazards.md` and/or `rust-hazards-t7-t10.md`, per each agent's scope |
+| `package.json` | TypeScript / JavaScript | `shared/references/typescript-hazards.md` and/or `typescript-hazards-t7-t10.md`, per each agent's scope |
 
 ---
 
@@ -119,8 +119,10 @@ Each confirmed finding requires:
 
 | File | Contents | Loaded by |
 | :--- | :--- | :--- |
-| `shared/references/rust-hazards.md` | Rust hazard taxonomies T1-T10, grep patterns, NAPI boundary rules | scanner, boundary-tracer, adversary (Rust workspaces) |
-| `shared/references/typescript-hazards.md` | TypeScript hazard taxonomies T1-T10, grep patterns, unhandled promise patterns | scanner, boundary-tracer, adversary (TS/JS workspaces) |
+| `shared/references/rust-hazards.md` | Rust taxonomies T1-T6, T8, T9, grep patterns, NAPI boundary rules | scanner (always), adversary (non-T7/T10 candidates) |
+| `shared/references/rust-hazards-t7-t10.md` | Rust taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
+| `shared/references/typescript-hazards.md` | TypeScript taxonomies T1-T6, T8, T9, grep patterns, unhandled promise patterns | scanner (always), adversary (non-T7/T10 candidates) |
+| `shared/references/typescript-hazards-t7-t10.md` | TypeScript taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
 | `shared/schemas/candidate@1.json` | Scanner output shape | — |
 | `shared/schemas/finding-report@1.json` | Adversary and exit-gate output shape | — |
 | `shared/schemas/verdict@1.json` | Exit-gate verdict shape | — |

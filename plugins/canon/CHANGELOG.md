@@ -2,6 +2,15 @@
 
 — canon
 
+## [2.1.0] - 2026-08-22
+
+### Added
+- **`auditor`**: sixth audit dimension, `unnecessary-prose` — flags a criterion or section that is fully testable and unambiguous but wrapped in justification, restated context, or hedging a downstream reader doesn't need. A spec is read from disk by every subsequent pipeline stage (verifier, exit-gate, planner, challenger, every implementer task, lambda's exit-gate, drift-checker), so padding is a cost paid on every one of those reads, not once. Passing the existing testability/vagueness checks no longer exempts a criterion from this one.
+
+### Changed
+- **`drafter`**: judgment now names prose padding as a failure mode independent of testability — write for both from the first draft rather than relying on `auditor` to trim it later.
+- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006. `auditor`, `drift-checker`, `drafter` frontmatter descriptions tightened; no routing behavior changed.
+
 ## [2.0.0] - 2026-08-20
 
 ### Breaking

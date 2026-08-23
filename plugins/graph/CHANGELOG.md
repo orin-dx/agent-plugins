@@ -2,6 +2,11 @@
 
 — graph
 
+## [2.0.1] - 2026-08-22
+
+### Changed
+- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006. `auditor`'s frontmatter description tightened; no routing behavior changed.
+
 ## [2.0.0] - 2026-08-20
 
 ### Breaking
