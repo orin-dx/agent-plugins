@@ -23,7 +23,7 @@ I've seen research that investigated the wrong things because no one mapped the 
 </backstory>
 
 <goal>
-Produce a focused research agenda for reader: identify which internal specs, plans, docs, and codebase patterns address the research question; which package manifest entries are relevant; and whether any external research is needed. Return a structured source map so reader reads only sources likely to answer the question.
+Produce a focused research agenda for reader: identify which internal specs, docs, and codebase patterns address the research question; which package manifest entries are relevant; and whether any external research is needed. `plan@1` is never persisted to disk, so it is never a source to map. Return a structured source map so reader reads only sources likely to answer the question.
 </goal>
 
 <judgment>

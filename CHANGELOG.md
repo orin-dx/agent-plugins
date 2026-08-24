@@ -3,6 +3,11 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.5.1] - 2026-08-23 — Missed Instance
+
+### Fixed
+- **`trace` (v1.2.4)**: `recon` still claimed to map "specs, plans, docs" as research sources — missed in `v3.5.0`'s own pass despite that pass touching this same file for its `<load_first>` addition. `plan@1` is never persisted to disk. Found by re-checking for the exact phrase across the repo rather than trusting the earlier sweep was exhaustive.
+
 ## [3.5.0] - 2026-08-23 — Basis Conformance Overhaul & Cross-Plugin Doc Accuracy
 
 A follow-up audit across the six plugins not touched in `v3.4.0` (`graph`, `trace`, `delta`, `axiom`, `proof`, `basis`) found the same class of gap recurring — `basis`, the meta-plugin meant to keep every other agent conformant, had itself fallen behind twice: it couldn't generate or check `<load_first>` (a real CONTRIBUTING.md requirement since before this session), and had no check for orchestration completeness (an agent's output status with no SKILL.md routing) — the exact defect fixed by hand in `lambda` this session. Root `CHANGELOG.md`'s own `v3.3.0` entry already documents this happening once before. This release fixes the specific findings and the root cause.

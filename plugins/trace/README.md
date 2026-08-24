@@ -1,6 +1,6 @@
 # trace — Research Synthesis
 
-**Stage:** Research · **Output:** `research-report@1` · **Version:** 1.2.3
+**Stage:** Research · **Output:** `research-report@1` · **Version:** 1.2.4
 
 One skill, one pipeline: map sources, read only what the map points at, synthesize into a report that separates confirmed findings from assumptions, then adversarially assess risk on the resulting approach. Use trace before a spec gets written, not after — a spec built on unverified assumptions fails the moment implementation reveals reality.
 

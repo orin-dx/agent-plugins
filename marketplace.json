@@ -1,7 +1,7 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "orin-dx-agent-plugins",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
@@ -41,7 +41,7 @@
     {
       "id": "trace",
       "name": "trace",
-      "version": "1.2.3",
+      "version": "1.2.4",
       "path": "./plugins/trace",
       "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Produces research-report@1 for consumption by canon (spec)."
     },

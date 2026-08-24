@@ -2,6 +2,11 @@
 
 — trace
 
+## [1.2.4] - 2026-08-23
+
+### Fixed
+- `recon`'s `<goal>` still claimed to map "specs, plans, docs" as research sources — missed in the `1.2.3` pass despite touching this same file. `plan@1` is never persisted to disk, so it was never a real source to map.
+
 ## [1.2.3] - 2026-08-23
 
 ### Added
