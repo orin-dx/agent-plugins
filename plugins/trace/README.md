@@ -8,7 +8,7 @@ One skill, one pipeline: map sources, read only what the map points at, synthesi
 
 ## When to Use
 
-- You have a requirement and want to understand the technical landscape before designing a solution
+- You have a requirement and want to understand existing patterns and prior art before designing a solution
 - You suspect there are existing patterns in the codebase worth reusing
 - You want a risk assessment of a proposed approach before anyone writes code
 - The domain is unfamiliar and you need a structured prior art survey
