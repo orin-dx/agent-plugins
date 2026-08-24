@@ -3,6 +3,18 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.5.3] - 2026-08-23 — Full-Repo Sweep
+
+`v3.5.2`'s adversarial re-read only covered files touched this session. This pass extended the same scrutiny repo-wide, since the user asked whether *all* plugins — not just the touched ones — are conformant, succinct, and accurate. Ran fresh mechanical checks (constitution byte-identity, section order, banned words, description word counts) across all 38 agents, and two targeted audits: `axiom` (never touched or reviewed all session) and a cross-check of both marketplaces plus every plugin CHANGELOG against actual `plugin.json` state.
+
+### Fixed
+- **`axiom` (v1.2.3)**: `skills/axiom/SKILL.md` linked the authoring-time-only `shared/agent-best-practices.md` — a copy-paste leftover from scaffolding with no runtime purpose for a verification gate.
+- **`basis` (v2.1.2)**: `auditor`'s "no authoring-time refs" check only scanned agent bodies, not `SKILL.md` files — the exact gap that let the `axiom` issue above ship unnoticed. Broadened the check to also scan `SKILL.md`, with `basis`'s own scaffolding skills carved out as the one legitimate exception.
+- **`trace` (v1.2.5)**: README's "When to Use" bullet used the banned word "landscape."
+
+### Verified, not changed
+- Both `proof` and `lambda`'s one-line marketplace descriptions don't mention this session's newest capabilities (the `plausible` verdict path, `needs_architecture`). Left as-is — both marketplace files already agree with each other and with each plugin's own `plugin.json`, and the existing convention already omits other major features at this altitude (e.g. `lambda`'s blurb never mentioned mutation testing either). Padding every one-liner to stay current would fight this repo's own succinctness rule, not serve it.
+
 ## [3.5.2] - 2026-08-23 — Adversarial Re-Read
 
 Four parallel adversarial passes re-read every file touched in `v3.4.0` and `v3.5.x`, explicitly hunting for contradictions rather than confirming things looked fine. Two of the four came back clean. Two surfaced real, fixable defects — one pre-existing, one introduced by this session's own `v3.5.0`/`v3.5.1` work:

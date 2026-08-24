@@ -2,6 +2,11 @@
 
 — trace
 
+## [1.2.5] - 2026-08-23
+
+### Fixed
+- README's "When to Use" bullet used the banned word "landscape" (`docs-voice.md`'s banned-word list). Found by a repo-wide banned-word sweep, not the original authoring pass. Reworded to "existing patterns and prior art."
+
 ## [1.2.4] - 2026-08-23
 
 ### Fixed

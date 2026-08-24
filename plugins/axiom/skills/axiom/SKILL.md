@@ -54,6 +54,5 @@ The protocol output is a `verdict@1` object: `pass` or `fail`, with `blockers` o
 ---
 
 <framework_references>
-- [Agent Best Practices](../../../shared/agent-best-practices.md)
 - [Verdict Schema](../../../shared/schemas/verdict@1.json)
 </framework_references>

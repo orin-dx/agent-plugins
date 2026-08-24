@@ -2,6 +2,11 @@
 
 — axiom
 
+## [1.2.3] - 2026-08-23
+
+### Fixed
+- `skills/axiom/SKILL.md` linked `shared/agent-best-practices.md` — an authoring-time-only guide with no legitimate runtime purpose for a verification gate, unlike `basis`'s scaffolding skills where it's the actual job. Copy-paste leftover from scaffolding. Found by an adversarial audit of the one plugin untouched all session.
+
 ## [1.2.2] - 2026-08-22
 
 ### Changed

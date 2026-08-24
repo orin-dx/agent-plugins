@@ -1,6 +1,6 @@
 # basis — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.1.1
+**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.1.2
 
 The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 
@@ -55,7 +55,7 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | Orchestration completeness | Every status an agent's own output can emit has a routing entry in its plugin's SKILL.md, or is documented as terminal |
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
-| No authoring-time refs | Agent bodies do not reference `shared/agent-best-practices.md` at runtime |
+| No authoring-time refs | Neither agent bodies nor `SKILL.md` reference `shared/agent-best-practices.md` at runtime — except `basis`'s own scaffolding skills, whose job is authoring agents per that guide |
 | Reference file size | Every `shared/references/*.md` file stays at or under 120 lines — checked via `scripts/check-reference-size.sh`, not re-derived |
 
 ---

@@ -2,6 +2,11 @@
 
 — basis
 
+## [2.1.2] - 2026-08-23
+
+### Fixed
+- `auditor`'s "no authoring-time refs" check only grepped agent bodies, not `SKILL.md` files — missed exactly this pattern in `axiom`'s `SKILL.md` (fixed the same day, in `axiom` v1.2.3). Broadened the check to also scan every `SKILL.md` in the audited plugin, carving out the one legitimate exception: `basis`'s own scaffolding skills, whose job is authoring agents per that guide.
+
 ## [2.1.1] - 2026-08-23
 
 ### Fixed

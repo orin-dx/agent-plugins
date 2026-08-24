@@ -1,13 +1,13 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "orin-dx-agent-plugins",
-  "version": "3.5.2",
+  "version": "3.5.3",
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
       "id": "basis",
       "name": "basis",
-      "version": "2.1.1",
+      "version": "2.1.2",
       "path": "./plugins/basis",
       "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent.",
       "supersedes": "agent-plugin-builder"
@@ -26,7 +26,7 @@
     {
       "id": "axiom",
       "name": "axiom",
-      "version": "1.2.2",
+      "version": "1.2.3",
       "path": "./plugins/axiom",
       "description": "Cross-cutting verification gate. Confirms that any stage artifact meets its criteria before the next stage begins. One skill, one recon-verify-judge pipeline, reused unchanged against any artifact type.",
       "supersedes": "verify-first"
@@ -41,7 +41,7 @@
     {
       "id": "trace",
       "name": "trace",
-      "version": "1.2.4",
+      "version": "1.2.5",
       "path": "./plugins/trace",
       "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Produces research-report@1 for consumption by canon (spec)."
     },

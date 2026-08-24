@@ -1,6 +1,6 @@
 # axiom — Verification Gate
 
-**Stage:** Gate · **Output:** `verdict@1` · **Version:** 1.2.2
+**Stage:** Gate · **Output:** `verdict@1` · **Version:** 1.2.3
 
 One skill, one three-agent pipeline, artifact-agnostic. Point axiom at a requirement, spec, plan, implementation, PR, changeset, or finding-report and it returns a binding `verdict@1` — pass or fail, with specific, actionable blockers on fail. Default disposition is **fail**: unverifiable criteria count as failures unless explicitly waived.
 
