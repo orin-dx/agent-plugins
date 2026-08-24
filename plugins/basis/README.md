@@ -1,6 +1,6 @@
 # basis — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.1.0
+**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 2.1.1
 
 The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 

@@ -2,6 +2,11 @@
 
 — proof
 
+## [2.2.4] - 2026-08-23
+
+### Fixed
+- `exit-gate`'s output never actually conformed to `verdict@1.json`: it used `"verdict": "approved|blocked"` against the schema's `"pass|fail"` enum, and a blocker shape (`{type,description,file,line}`) with none of its four keys legal under the schema's `{criterion,finding,location}` (`additionalProperties: false`) — a strict validator rejected every verdict this agent ever produced. This predates this session; `axiom`, `canon`, and `lambda`'s exit-gates already used the schema correctly, so `proof` was the outlier. The `flagged_for_review` field added in `2.2.3` compounded this with a third schema violation, since `verdict@1.json` has no such property. Rather than mutate the shared `verdict@1.json` (schema versions are immutable per `shared/constitution.md`), added `shared/schemas/verdict@2.json` — `verdict@1` plus an optional `flagged_for_review` array — and rewrote `exit-gate`'s output to conform to it literally: `pass|fail`, `{criterion,finding,location}` blockers, and a schema-legal `flagged_for_review` shape. `axiom`, `canon`, and `lambda` are unaffected — they keep using `verdict@1` unchanged. Found by an adversarial re-read of this session's own changes.
+
 ## [2.2.3] - 2026-08-23
 
 ### Added

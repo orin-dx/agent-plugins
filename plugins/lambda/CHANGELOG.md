@@ -2,6 +2,11 @@
 
 — lambda
 
+## [1.6.2] - 2026-08-23
+
+### Fixed
+- The `needs_architecture` → `finding-report@1` field mapping in `skills/lambda/SKILL.md` omitted `id` and `description`, both required by `finding-report@1.json` (`additionalProperties: false`) — a caller following the mapping literally would produce a schema-invalid finding that fails before ever reaching `canon/architect`. Found by an adversarial re-read of this session's own changes, not the original pass. Added both fields to the mapping.
+
 ## [1.6.1] - 2026-08-23
 
 ### Fixed

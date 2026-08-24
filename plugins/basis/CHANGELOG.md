@@ -2,6 +2,14 @@
 
 — basis
 
+## [2.1.1] - 2026-08-23
+
+### Fixed
+- `auditor`'s frontmatter claimed "nine categories" while the README's Conformance Checks table listed 11 and `<goal>` gave a third, shorter count — three disagreeing enumerations of the same check set. Dropped the hard-coded count from the frontmatter (it will drift again the next time a check is added) and pointed it at the README table as the source of truth.
+- `auditor` was never actually instructed to check "no authoring-time references to `shared/agent-best-practices.md`" despite the README's Conformance Checks table promising it — added the missing instruction to `<output>`.
+
+Both found by an adversarial re-read of this session's own `2.1.0` changes, not the original pass.
+
 ## [2.1.0] - 2026-08-23
 
 ### Added

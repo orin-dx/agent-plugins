@@ -3,6 +3,16 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [3.5.2] - 2026-08-23 — Adversarial Re-Read
+
+Four parallel adversarial passes re-read every file touched in `v3.4.0` and `v3.5.x`, explicitly hunting for contradictions rather than confirming things looked fine. Two of the four came back clean. Two surfaced real, fixable defects — one pre-existing, one introduced by this session's own `v3.5.0`/`v3.5.1` work:
+
+### Fixed
+- **`lambda` (v1.6.2)**: the `needs_architecture` → `finding-report@1` field mapping in `SKILL.md` omitted the schema's required `id` and `description` fields — a caller following it literally would produce a schema-invalid finding.
+- **`proof` (v2.2.4)**: `exit-gate`'s output never conformed to `verdict@1.json` — wrong verdict enum, an entirely invalid blocker shape, and (new in `v2.2.3`) a `flagged_for_review` field with no schema counterpart. Added `verdict@2.json` (verdict@1 plus optional `flagged_for_review`) and rewrote `exit-gate` to conform to it literally. `axiom`, `canon`, and `lambda` are unaffected.
+- **`basis` (v2.1.1)**: `auditor`'s frontmatter claimed a check count that disagreed with its own README table, and one check the README promised (no authoring-time references to `shared/agent-best-practices.md`) was never actually instructed anywhere in the agent's `<output>`.
+- **`CONTRIBUTING.md`**: the new Capability Change Checklist (added in `v3.5.0`) had no bullet for "descriptive prose still matches actual behavior" — exactly the defect class that motivated writing the checklist in the first place. Added one.
+
 ## [3.5.1] - 2026-08-23 — Missed Instance
 
 ### Fixed

@@ -1,6 +1,6 @@
 # proof — Adversarial Bug Hunting
 
-**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.2.3
+**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 2.2.4
 
 Adversarial bug hunting on live code, for Rust, TypeScript, and JavaScript — language is auto-detected from `Cargo.toml` or `package.json`.
 
@@ -125,7 +125,7 @@ Each finding requires:
 | `shared/references/typescript-hazards-t7-t10.md` | TypeScript taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
 | `shared/schemas/candidate@1.json` | Scanner output shape | — |
 | `shared/schemas/finding-report@1.json` | Adversary and exit-gate output shape | — |
-| `shared/schemas/verdict@1.json` | Exit-gate verdict shape | — |
+| `shared/schemas/verdict@2.json` | Exit-gate verdict shape (extends verdict@1 with flagged_for_review) | — |
 
 ---
 

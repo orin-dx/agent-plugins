@@ -1,7 +1,7 @@
 {
   "id": "proof",
   "name": "proof",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Cross-language bug hunting. Finds real bugs in live code through recon, hazard scanning, adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/. Supersedes bug-hunter-rust and bug-hunter-ts.",
   "author": {
     "name": "Gabriel Castro",
@@ -18,6 +18,6 @@
   "consumes": [],
   "produces": [
     "finding-report@1",
-    "verdict@1"
+    "verdict@2"
   ]
 }

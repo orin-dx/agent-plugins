@@ -143,7 +143,7 @@ When you add or change what an existing agent can do — a new dimension, a new 
 - [ ] Frontmatter `description` reflects the new capability
 - [ ] If the agent's output gained a new status/enum value, the plugin's `SKILL.md` names what the caller does with it — or states it's terminal
 - [ ] If a new `shared/references/*.md` file was added, it's listed in root `README.md`'s Shared References table
-- [ ] Plugin `README.md`'s Subagents table row describes the new behavior
+- [ ] Every prose description of this agent's actual behavior — the plugin `README.md`'s Subagents table row, its Output Schema table if one exists, `SKILL.md`'s overview/dispatch/io sections — still matches what the agent does now, not what it used to do or was never actually able to do. A narrowed or corrected capability needs this checked as much as an added one; this is the exact defect class found in the delta/graph/trace fixes of 2026-08-23.
 - [ ] Plugin `CHANGELOG.md` gets a new dated entry
 - [ ] `plugin.json` version bumped (see the Semver Decision Guide in `shared/references/changesets.md`)
 - [ ] Root `marketplace.json`'s matching plugin entry version bumped to the same value

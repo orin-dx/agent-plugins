@@ -1,13 +1,13 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "orin-dx-agent-plugins",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
       "id": "basis",
       "name": "basis",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "path": "./plugins/basis",
       "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent.",
       "supersedes": "agent-plugin-builder"
@@ -15,7 +15,7 @@
     {
       "id": "proof",
       "name": "proof",
-      "version": "2.2.3",
+      "version": "2.2.4",
       "path": "./plugins/proof",
       "description": "Cross-language bug hunting plugin. Finds real bugs in live code through recon (workspace manifest), scanning (hazard taxonomies), adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/.",
       "supersedes": [
@@ -62,7 +62,7 @@
     {
       "id": "lambda",
       "name": "lambda",
-      "version": "1.6.1",
+      "version": "1.6.2",
       "path": "./plugins/lambda",
       "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the axiom exit gate."
     },

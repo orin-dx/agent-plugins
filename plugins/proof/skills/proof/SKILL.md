@@ -42,7 +42,7 @@ workspace → recon → scanner → [boundary-tracer?] → adversary → exit-ga
 | `scanner` | Pattern matching | sonnet / medium | rust-hazards.md (+ rust-hazards-t7-t10.md for a full scan) or the TypeScript equivalents | manifest → candidate@1 list |
 | `boundary-tracer` | Data flow tracing | sonnet / medium | rust-hazards-t7-t10.md or typescript-hazards-t7-t10.md — its entire scope | T7/T10 candidate → field survival map. Conditional. |
 | `adversary` | Adversarial reasoning | opus / high | whichever file has the candidate's one taxonomy — never both | batched candidate@1 list → finding-report@1 entries or dismissals |
-| `exit-gate` | Exit verification | opus / high | — | finding-report@1 → verdict@1 |
+| `exit-gate` | Exit verification | opus / high | — | finding-report@1 → verdict@2 |
 
 ---
 
@@ -62,4 +62,4 @@ Proof ONLY reports bugs in live, reachable code. Any file not traceable from an 
 
 ## Output
 
-All confirmed findings conform to the `finding-report@1` schema (`shared/schemas/finding-report@1.json`). The exit-gate verdict conforms to `verdict@1` (`shared/schemas/verdict@1.json`).
+All confirmed findings conform to the `finding-report@1` schema (`shared/schemas/finding-report@1.json`). The exit-gate verdict conforms to `verdict@2` (`shared/schemas/verdict@2.json`), which extends `verdict@1` with the non-blocking `flagged_for_review` channel.

@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v3.5.1-success.svg" alt="Marketplace v3.5.1" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v3.5.2-success.svg" alt="Marketplace v3.5.2" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
@@ -110,6 +110,7 @@ All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use J
 | `plan@1` | vector | lambda |
 | `changeset@2` | lambda | delta, axiom |
 | `verdict@1` | axiom | any gate consumer |
+| `verdict@2` | proof | delta, humans (extends verdict@1 with flagged_for_review) |
 | `finding-report@1` | proof | delta, humans, architect |
 | `field-survival-map@1` | boundary-tracer | adversary |
 | `mutation-report@1` | mutator | exit-gate, implementer |
