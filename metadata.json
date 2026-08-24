@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.10.3-nightly.202608220610.6bf587d66",
+  "checkpoint_id": "01M0RXY79HYJCJP6MF21XD47HE",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 5,
+  "files_touched": [
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "marketplace.json",
+    "plugins/basis/CHANGELOG.md",
+    "plugins/basis/README.md",
+    "plugins/basis/agents/auditor.md",
+    "plugins/basis/plugin.json",
+    "plugins/lambda/CHANGELOG.md",
+    "plugins/lambda/README.md",
+    "plugins/lambda/plugin.json",
+    "plugins/lambda/skills/lambda/SKILL.md",
+    "plugins/proof/CHANGELOG.md",
+    "plugins/proof/README.md",
+    "plugins/proof/agents/exit-gate.md",
+    "plugins/proof/plugin.json",
+    "plugins/proof/skills/proof/SKILL.md",
+    "shared/schemas/verdict@2.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 102,
+    "cache_creation_tokens": 180735,
+    "cache_read_tokens": 7241432,
+    "output_tokens": 45448,
+    "api_call_count": 51,
+    "subagent_tokens": {
+      "input_tokens": 32,
+      "cache_creation_tokens": 458738,
+      "cache_read_tokens": 1202193,
+      "output_tokens": 24223,
+      "api_call_count": 16
+    }
+  }
+}
