@@ -1,6 +1,6 @@
 # Interface Implementers
 
-_Loaded by: vector:challenger, when a plan@1 task modifies a file that implements a shared trait, interface, or protocol — to enumerate every other known implementer before judging interface-incompleteness. This is a deterministic pre-scan: run the search, read the matches, then reason — do not reason first and try to recall siblings from memory._
+_Loaded by: navigator:challenger, when a plan@1 task modifies a file that implements a shared trait, interface, or protocol — to enumerate every other known implementer before judging interface-incompleteness. This is a deterministic pre-scan: run the search, read the matches, then reason — do not reason first and try to recall siblings from memory._
 
 ---
 

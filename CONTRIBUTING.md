@@ -6,7 +6,7 @@ By participating in this project, you agree to abide by the [Code of Conduct](./
 
 ## Authoring a New Plugin
 
-The fastest way to scaffold a new plugin is with the `basis` plugin:
+The fastest way to scaffold a new plugin is with the `mason` plugin:
 
 ```
 "Create a plugin called <id> that does <goal>"
@@ -42,7 +42,7 @@ plugins/<id>/
 
 Organize agents by **cognitive mode**, not pipeline position. A scan agent and an analysis agent require different mental modes — split them even if they run sequentially. Agent files are never prefixed with the plugin id (`worker.md`, not `my-plugin-worker.md`) — Claude Code already namespaces agents as `<plugin_id>:<agent_name>`, so a prefix produces redundant `my-plugin:my-plugin-worker` stuttering. See `shared/agent-best-practices.md`'s Namespacing Rule.
 
-A plugin defaults to this single-skill layout. IF its scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead (see `delta`, `canon`, `graph`, `basis`). A new skill name defaults to a single lifecycle-stage word; go to a specific compound name (`audit-spec`, not `canon-audit`) only when the bare word is ambiguous or collides with another plugin's existing skill name — never resolve a collision by prefixing the plugin id, since `plugin:skill` invocation already disambiguates that. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
+A plugin defaults to this single-skill layout. IF its scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead (see `courier`, `scribe`, `weaver`, `mason`). A new skill name defaults to a single lifecycle-stage word; go to a specific compound name (`audit-spec`, not `scribe-audit`) only when the bare word is ambiguous or collides with another plugin's existing skill name — never resolve a collision by prefixing the plugin id, since `plugin:skill` invocation already disambiguates that. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
 
 ### `plugin.json`
 
@@ -61,7 +61,7 @@ A plugin defaults to this single-skill layout. IF its scope covers several genui
 }
 ```
 
-`skills` is always the path string `"./skills/"` — the loader discovers every `SKILL.md` under it, whether that's one directory or several. `agents` is the explicit list of agent file paths; every file listed must exist, and every file present must be listed (`basis`'s `auditor` checks this).
+`skills` is always the path string `"./skills/"` — the loader discovers every `SKILL.md` under it, whether that's one directory or several. `agents` is the explicit list of agent file paths; every file listed must exist, and every file present must be listed (`mason`'s `auditor` checks this).
 
 ### `SKILL.md`
 
@@ -147,9 +147,9 @@ When you add or change what an existing agent can do — a new dimension, a new 
 - [ ] Plugin `CHANGELOG.md` gets a new dated entry
 - [ ] `plugin.json` version bumped (see the Semver Decision Guide in `shared/references/changesets.md`)
 - [ ] Root `marketplace.json`'s matching plugin entry version bumped to the same value
-- [ ] `basis:scaffolder`/`basis:auditor` updated if the change introduces a new *structural* convention (a new required section, a new required check) rather than just a new capability within existing structure — see `shared/constitution.md`'s Documentation section
+- [ ] `mason:scaffolder`/`mason:auditor` updated if the change introduces a new *structural* convention (a new required section, a new required check) rather than just a new capability within existing structure — see `shared/constitution.md`'s Documentation section
 
-This isn't automated. `basis:audit-plugin` checks structural conformance; it does not (yet) check that every downstream doc/version file was updated to match a capability change. Until it does, this checklist is the thing standing between "the agent works" and "the ecosystem knows the agent works."
+This isn't automated. `mason:audit-plugin` checks structural conformance; it does not (yet) check that every downstream doc/version file was updated to match a capability change. Until it does, this checklist is the thing standing between "the agent works" and "the ecosystem knows the agent works."
 
 ---
 

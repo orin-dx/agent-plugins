@@ -1,0 +1,23 @@
+{
+  "id": "muse",
+  "name": "muse",
+  "version": "1.0.0",
+  "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs — props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning. Audits the spec, not the implementation — see ranger's accessibility hazard taxonomy for code-level scanning.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "agents": [
+    "./agents/auditor.md",
+    "./agents/drafter.md",
+    "./agents/exit-gate.md"
+  ],
+  "consumes": [
+    "requirement@1"
+  ],
+  "produces": [
+    "spec@1",
+    "verdict@1"
+  ]
+}

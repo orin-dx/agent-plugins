@@ -9,10 +9,11 @@ How plugins are structured, how agents communicate, how context is managed, and 
 Context is loaded on demand. Every agent's context window contains only what its current task requires.
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}}}%%
 flowchart TD
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:15px,font-weight:600;
 
     T1["**Tier 1 · Metadata**
     Frontmatter description · 80–200 words
@@ -51,52 +52,73 @@ plugins/<id>/
 
 `plugin.json` fields: `id`, `version` (semver), `description`, `skills` (path to skills dir), `agents` (list of agent file paths).
 
-A plugin defaults to one skill directory named after the plugin id. IF the plugin's scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead; `delta`, `canon`, `graph`, and `basis` all do. The routing key is the directory name, not the frontmatter `name:` field. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
+A plugin defaults to one skill directory named after the plugin id. IF the plugin's scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead; `courier`, `scribe`, `weaver`, and `mason` all do. The routing key is the directory name, not the frontmatter `name:` field. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
 
 ---
 
 ## 3. The Lifecycle Pipeline
 
-Nine plugins form a directed pipeline. Each stage produces a typed artifact consumed by the next.
+Ten plugins form a directed pipeline. Each stage produces a typed artifact consumed by the next.
+
+**The primary flow** — one direction, no side-taps:
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 44, 'rankSpacing': 68}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
-    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#881337,rx:8px,ry:8px;
+    classDef define fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef design fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef build fill:#eff6ff,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a8a,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef ship fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:16px,font-weight:600;
 
-    gr["**graph**\nneed"] -->|"requirement@1"| tr["**trace**\nresearch"]
-    tr -->|"research-report@1"| ca["**canon**\nspec"]
-    ca -->|"spec@1"| ve["**vector**\nplan"]
-    ve -->|"plan@1"| la["**lambda**\ncode"]
-    la -->|"changeset@2"| de["**delta**"]
-    de -. iterate .-> gr
+    we[Weaver\nneed] -->|"requirement@1"| va[Vanguard\nresearch]
+    va -->|"research-report@1"| sc[Scribe\nspec]
+    mu[Muse\ncomponent spec] -->|"spec@1"| na[Navigator\nplan]
+    sc -->|"spec@1"| na
+    na -->|"plan@1"| sm[Smith\ncode]
+    sm -->|"changeset@2"| co[Courier\nship]
+    co -. iterate .-> we
 
-    ax(["**axiom**\ngate"])
-    ca -.->|"spec@1"| ax
-    la -.->|"changeset@2"| ax
-    ax -.->|"verdict@1"| de
-
-    pr(["**proof**\naudit"]) -.->|"finding-report@1"| de
-    pr -.->|"finding-report@1"| ca
-    ba(["**basis**\nmeta"]) -. scaffold .-> gr
-
-    class gr source
-    class tr,ca,ve,la engine
-    class de output
-    class ax router
-    class pr alert
-    class ba store
+    class we,va define
+    class sc,mu design
+    class na,sm build
+    class co ship
 ```
 
-**Composable:** any contiguous subset installs cleanly. Start at `canon` if requirements come from an external tracker. End at `lambda` if automated shipping tooling isn't needed. Layer `axiom` in at any stage for an independent verification pass.
+**Verification** — Sentinel and Ranger attach to the flow above but aren't stops in its sequence; the muted dashed boxes below are the same personas shown only as attachment points:
 
-**Substitutable:** any stage can be replaced by a different implementation that honours the same schema contract. A Jira plugin replacing `graph` just needs to emit `requirement@1`.
+```mermaid
+%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+flowchart LR
+    classDef anchor fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px,color:#64748b,rx:10,ry:10,font-size:13px,stroke-dasharray:4 3;
+    classDef verify fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:15px,font-weight:600;
 
-**Cross-cutting, not inline:** `axiom`'s `plugin.json` declares `consumes: []` — nothing invokes it automatically. `exit-gate` and `exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline axiom formalizes; they do not call into axiom's own agents. Install axiom when you want that protocol available standalone against any artifact, including as a second opinion on top of canon's or lambda's own gate.
+    sc2[Scribe]:::anchor
+    sm2[Smith]:::anchor
+    co2[Courier]:::anchor
+
+    se([Sentinel\ngate])
+    ra([Ranger\naudit])
+
+    sc2 -.->|"spec@1"| se
+    sm2 -.->|"changeset@2"| se
+    se -.->|"verdict@1"| co2
+
+    sm2 -->|"live code"| ra
+    ra -.->|"finding-report@1"| co2
+    ra -.->|"finding-report@1"| sc2
+
+    class se,ra verify
+```
+
+![Define](https://img.shields.io/badge/-Define-6366f1) ![Design](https://img.shields.io/badge/-Design-8b5cf6) ![Build](https://img.shields.io/badge/-Build-3b82f6) ![Verify](https://img.shields.io/badge/-Verify-f59e0b) ![Ship](https://img.shields.io/badge/-Ship-10b981)
+
+*Pill-shaped nodes are cross-cutting checkpoints, not sequence stops. Solid arrows are direct handoffs; dashed arrows are verification side-channels. Ranger's input is the live codebase Smith just wrote, not a schema handoff — the one solid arrow in the second diagram.*
+
+**Composable:** any contiguous subset installs cleanly. Start at `scribe` if requirements come from an external tracker. End at `smith` if automated shipping tooling isn't needed. Layer `sentinel` in at any stage for an independent verification pass.
+
+**Substitutable:** any stage can be replaced by a different implementation that honours the same schema contract. A Jira plugin replacing `weaver` just needs to emit `requirement@1`.
+
+**Cross-cutting, not inline:** `sentinel`'s `plugin.json` declares `consumes: []` — nothing invokes it automatically. `exit-gate` and `exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline sentinel formalizes; they do not call into sentinel's own agents. Install sentinel when you want that protocol available standalone against any artifact, including as a second opinion on top of scribe's or smith's own gate.
 
 ---
 
@@ -117,10 +139,11 @@ Schemas in `shared/schemas/` are the inter-agent API surface. Rules:
 Each subagent declares `model` and `effort` in its frontmatter. These are routing hints. Claude Code honours them directly; AGY applies its own model routing and ignores them.
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}}}%%
 flowchart TD
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:15px,font-weight:600;
 
     H["**haiku · low**
     Mechanical — deterministic enumeration
@@ -146,18 +169,19 @@ Use the lowest tier that produces correct output. Opus is reserved for decisions
 
 ---
 
-## 6. The Axiom Gate Protocol
+## 6. The Sentinel Gate Protocol
 
-`axiom` is a reusable, artifact-agnostic verification gate. Any artifact type — spec, plan, changeset, finding report — can be run through it.
+`sentinel` is a reusable, artifact-agnostic verification gate. Any artifact type — spec, plan, changeset, finding report — can be run through it.
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
-    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#881337,rx:8px,ry:8px;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:13px,font-weight:500;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:1.5px,color:#881337,rx:10,ry:10,font-size:14px,font-weight:600;
 
     Art[artifact + criteria]
 

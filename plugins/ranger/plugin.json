@@ -1,0 +1,23 @@
+{
+  "id": "ranger",
+  "name": "ranger",
+  "version": "3.0.0",
+  "description": "Cross-language bug hunting. Finds real bugs in live code through recon, hazard scanning, adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/. Supersedes bug-hunter-rust and bug-hunter-ts.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "agents": [
+    "./agents/adversary.md",
+    "./agents/boundary-tracer.md",
+    "./agents/exit-gate.md",
+    "./agents/recon.md",
+    "./agents/scanner.md"
+  ],
+  "consumes": [],
+  "produces": [
+    "finding-report@1",
+    "verdict@2"
+  ]
+}

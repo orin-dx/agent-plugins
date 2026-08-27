@@ -3,6 +3,25 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [4.0.0] - 2026-08-27 — Wisp Persona Rename
+
+**BREAKING**: All 9 plugin ids renamed to persona/craft-role names under the umbrella brand **Wisp**, memorability having broken down once the ecosystem passed 9 abstract math-noun ids. A 10th plugin, `muse` (component specification), was added in the same pass. Each plugin's own `plugin.json` `id`/`name` was bumped to its next major version; every cross-plugin reference across agents, skills, shared references, shared schemas, and root docs was updated to match. See `docs/adr/007-wisp-persona-naming.md` for the full rationale.
+
+| Old id | New id | New version |
+|---|---|---|
+| `graph` | `weaver` | 3.0.0 |
+| `trace` | `vanguard` | 2.0.0 |
+| `canon` | `scribe` | 3.0.0 |
+| `vector` | `navigator` | 2.0.0 |
+| `lambda` | `smith` | 2.0.0 |
+| `proof` | `ranger` | 3.0.0 |
+| `axiom` | `sentinel` | 2.0.0 |
+| `delta` | `courier` | 3.0.0 |
+| `basis` | `mason` | 3.0.0 |
+| *(new)* | `muse` | 1.0.0 |
+
+Single-skill plugins also renamed their skill from the old plugin id to a literal action word: `proof/proof` → `ranger/audit`, `trace/trace` → `vanguard/research`, `vector/vector` → `navigator/plan`, `axiom/axiom` → `sentinel/gate`, `lambda/lambda` → `smith/implement`. Multi-skill plugins (`weaver`, `scribe`, `courier`, `mason`) kept their existing skill names — only the plugin-id prefix changed.
+
 ## [3.5.3] - 2026-08-23 — Full-Repo Sweep
 
 `v3.5.2`'s adversarial re-read only covered files touched this session. This pass extended the same scrutiny repo-wide, since the user asked whether *all* plugins — not just the touched ones — are conformant, succinct, and accurate. Ran fresh mechanical checks (constitution byte-identity, section order, banned words, description word counts) across all 38 agents, and two targeted audits: `axiom` (never touched or reviewed all session) and a cross-check of both marketplaces plus every plugin CHANGELOG against actual `plugin.json` state.

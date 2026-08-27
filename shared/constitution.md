@@ -97,7 +97,7 @@ WHERE an agent loads workspace documentation files to extract architectural inva
 
 ---
 
-## Axiom Retry Caller Constraint
+## Sentinel Retry Caller Constraint
 
 WHEN re-submitting an artifact to exit-gate after a fail verdict, the caller SHALL pass only the revised artifact and the prior verdict's blockers array — not the full verification report context.
 
@@ -107,7 +107,7 @@ IF exit-gate emits a blockers array in a fail verdict, the producing agent SHALL
 
 ## Spec Persistence
 
-WHEN exit-gate issues a pass verdict, the canon skill orchestrator SHALL write the spec to `<workspace_root>/.claude/specs/<id>.json`, commit the file to version control, set `spec_file_path` to the workspace-relative path in the spec@1, and pass the updated spec to planner.
+WHEN exit-gate issues a pass verdict, the scribe skill orchestrator SHALL write the spec to `<workspace_root>/.claude/specs/<id>.json`, commit the file to version control, set `spec_file_path` to the workspace-relative path in the spec@1, and pass the updated spec to planner.
 
 WHEN any agent consumes a spec@1 to make implementation or verification decisions, it SHALL read from `spec_file_path` when set — forwarding spec content through conversation context is not a substitute. Context is compressed across long sessions; the file is not.
 
@@ -131,15 +131,15 @@ WHEN spec_drift_warning is set, downstream agents SHALL record a coverage gap no
 
 WHEN implementer determines that an acceptance criterion contradicts observed system behavior, it SHALL emit status spec_contradiction rather than implementing code that satisfies neither the spec nor reality.
 
-WHEN a spec_contradiction is reported, the caller SHALL halt remaining task execution and route the contradiction to canon/correct-spec before any further task in the plan proceeds — an uncorrected spec SHALL NOT continue to govern implementation.
+WHEN a spec_contradiction is reported, the caller SHALL halt remaining task execution and route the contradiction to scribe/correct-spec before any further task in the plan proceeds — an uncorrected spec SHALL NOT continue to govern implementation.
 
-WHEN canon/correct-spec produces a corrected spec@1 that passes exit-gate, the skill orchestrator SHALL overwrite the existing file at the same spec_file_path and commit the change — the file path SHALL NOT change across a correction.
+WHEN scribe/correct-spec produces a corrected spec@1 that passes exit-gate, the skill orchestrator SHALL overwrite the existing file at the same spec_file_path and commit the change — the file path SHALL NOT change across a correction.
 
 WHEN a corrected spec@1 is handed to planner, it SHALL run in amend mode — patching only the tasks tied to the affected criteria — rather than re-decomposing the entire plan.
 
-WHEN an amended plan@1 is produced, it SHALL pass through challenger before lambda resumes — amendment is not exempt from adversarial review.
+WHEN an amended plan@1 is produced, it SHALL pass through challenger before smith resumes — amendment is not exempt from adversarial review.
 
-IF the same criterion_id triggers spec_contradiction a second time after already being corrected via canon/correct-spec, the caller SHALL escalate to a human rather than routing to canon/correct-spec again.
+IF the same criterion_id triggers spec_contradiction a second time after already being corrected via scribe/correct-spec, the caller SHALL escalate to a human rather than routing to scribe/correct-spec again.
 
 ---
 
@@ -157,7 +157,7 @@ WHEN re-evaluating an artifact after a fail verdict, the gatekeeper agent SHALL 
 
 WHEN planner decomposes a spec into an implementation plan@1, it SHALL group tasks into cohesive Subsystem Batches aligned with transactional crate/package compilation boundaries.
 
-WHEN lambda executes a plan@1, it SHALL dispatch one implementer subagent per Subsystem Batch rather than spawning separate subagents for individual 10-line micro-tasks.
+WHEN smith executes a plan@1, it SHALL dispatch one implementer subagent per Subsystem Batch rather than spawning separate subagents for individual 10-line micro-tasks.
 
 WHILE implementing a batch, THE SYSTEM SHALL apply the YAGNI principle: write the minimum viable code diff required to make tests pass, avoiding speculative wrappers and premature abstractions.
 
@@ -215,7 +215,7 @@ WHEN a skill is named in `SKILL.md` frontmatter, it SHALL default to a single li
 
 IF a single word does not communicate what the skill acts on, the plugin author SHALL use a more specific multi-word name instead (e.g. `post-review`, not `post`).
 
-Skill names SHALL NOT be prefixed with their own plugin id to resolve a collision with another plugin's skill name (e.g. `delta-post`) — the plugin-qualified invocation (`<plugin>:<skill>`) already disambiguates two plugins using the same bare skill name, so prefixing the name itself duplicates that and adds no clarity.
+Skill names SHALL NOT be prefixed with their own plugin id to resolve a collision with another plugin's skill name (e.g. `courier-post`) — the plugin-qualified invocation (`<plugin>:<skill>`) already disambiguates two plugins using the same bare skill name, so prefixing the name itself duplicates that and adds no clarity.
 
 ---
 
@@ -233,4 +233,4 @@ WHEN a plugin is published, it SHALL include a `README.md` with: purpose, when-t
 
 WHEN CONTRIBUTING.md is updated, it SHALL reflect the current authoring checklist — not the authoring conventions from a prior era.
 
-WHEN a new agent-authoring convention is added to this constitution or to CONTRIBUTING.md's checklist — a new required section, a new required check — THE SYSTEM SHALL update `basis:scaffolder` and `basis:auditor` in the same change. A convention `basis` cannot generate or verify is documented, not enforced, and every plugin scaffolded before the update inherits the gap silently.
+WHEN a new agent-authoring convention is added to this constitution or to CONTRIBUTING.md's checklist — a new required section, a new required check — THE SYSTEM SHALL update `mason:scaffolder` and `mason:auditor` in the same change. A convention `mason` cannot generate or verify is documented, not enforced, and every plugin scaffolded before the update inherits the gap silently.

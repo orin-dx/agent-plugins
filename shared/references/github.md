@@ -35,7 +35,7 @@ When reviewing a PR:
 
 ```bash
 # Create PR
-gh pr create --title "feat(proof): add cross-language recon agent" --body "$(cat body.md)"
+gh pr create --title "feat(ranger): add cross-language recon agent" --body "$(cat body.md)"
 
 # List open PRs
 gh pr list
@@ -85,7 +85,7 @@ gh issue close <number>
 | `bug` | Confirmed defect |
 | `enhancement` | New feature or improvement |
 | `breaking` | Breaking change |
-| `needs-spec` | Requires a canon spec before implementation |
-| `needs-plan` | Requires a vector plan before implementation |
+| `needs-spec` | Requires a scribe spec before implementation |
+| `needs-plan` | Requires a navigator plan before implementation |
 | `in-progress` | Actively being worked |
 | `blocked` | Cannot proceed without external resolution |

@@ -2,7 +2,7 @@
 
 A concrete example tracing one feature request through the full lifecycle pipeline. The scenario: *"requests to our upstream API sometimes hang forever — we need configurable timeouts."*
 
-This walkthrough shows the actual schema shapes at each handoff, why typed contracts matter, and how the proof audit loop feeds back into the design stage.
+This walkthrough shows the actual schema shapes at each handoff, why typed contracts matter, and how the ranger audit loop feeds back into the design stage.
 
 ---
 
@@ -10,13 +10,13 @@ This walkthrough shows the actual schema shapes at each handoff, why typed contr
 
 A backend team files an issue: requests to an upstream service occasionally stall with no response. The fix is adding a configurable timeout to the HTTP client. Simple enough — but the most common implementation mistake is capturing the timeout in a config struct and never passing it to the actual HTTP call. The hazard has a name: **T7 (Write-Only Fields / Intent-Capture-to-Execution Discard)**.
 
-This walkthrough shows how the pipeline catches that bug before it ships, and how proof's finding feeds back into a structural spec rather than a one-off patch.
+This walkthrough shows how the pipeline catches that bug before it ships, and how ranger's finding feeds back into a structural spec rather than a one-off patch.
 
 ---
 
-## Stage 1 — graph: Need
+## Stage 1 — weaver: Need
 
-The user invokes the `graph` skill. `intake` (sonnet/medium) converts free text into a structured requirement. `clarifier` asks one targeted question if the success condition is ambiguous. `auditor` (sonnet/medium) checks for testability.
+The user invokes the `weaver` skill. `intake` (sonnet/medium) converts free text into a structured requirement. `clarifier` asks one targeted question if the success condition is ambiguous. `auditor` (sonnet/medium) checks for testability.
 
 **Output: `requirement@1`**
 
@@ -40,9 +40,9 @@ The user invokes the `graph` skill. `intake` (sonnet/medium) converts free text 
 
 ---
 
-## Stage 2 — trace: Research
+## Stage 2 — vanguard: Research
 
-`trace` receives `requirement@1`. `recon` (haiku/low) builds a workspace manifest. `reader` (sonnet/medium) reads relevant source files. `risk-assessor` (sonnet/medium) identifies what could go wrong. `synthesizer` (sonnet/medium) produces the research report.
+`vanguard` receives `requirement@1`. `recon` (haiku/low) builds a workspace manifest. `reader` (sonnet/medium) reads relevant source files. `risk-assessor` (sonnet/medium) identifies what could go wrong. `synthesizer` (sonnet/medium) produces the research report.
 
 **Output: `research-report@1`**
 
@@ -73,7 +73,7 @@ The user invokes the `graph` skill. `intake` (sonnet/medium) converts free text 
 
 ---
 
-## Stage 3 — canon: Spec
+## Stage 3 — scribe: Spec
 
 `drafter` (sonnet/medium) turns the requirement and research report into a testable spec. `verifier` (sonnet/medium) checks every acceptance criterion against the source artifacts — not the codebase. `auditor` (sonnet/medium) hunts vague language. `exit-gate` (opus/high) issues a binding pass or fail.
 
@@ -109,11 +109,11 @@ The user invokes the `graph` skill. `intake` (sonnet/medium) converts free text 
 }
 ```
 
-Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires the field to *reach the builder call site*, not just exist in the struct. This is the enforcement the research recommended.
+Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires the field to *reach the builder call site*, not just exist in the struct. This is the enforcement the research recommended.
 
 ---
 
-## Stage 4 — vector: Plan
+## Stage 4 — navigator: Plan
 
 `planner` (sonnet/medium) decomposes the spec into sequenced tasks with TDD steps. `estimator` (sonnet/medium) adds sizing. `challenger` (opus/high) pressure-tests the sequence for hidden dependencies.
 
@@ -153,7 +153,7 @@ Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires th
 
 ---
 
-## Stage 5 — lambda: Code
+## Stage 5 — smith: Code
 
 `recon` (haiku/low) reads the manifest from `plan@1`. `implementer` (sonnet/medium) runs the TDD cycle per task — write failing test, write minimal implementation, confirm green. `mutator` (sonnet/medium) runs cargo-mutants after each task.
 
@@ -197,9 +197,9 @@ Notice `ac-1` directly addresses the T7 risk `trace` found: the spec requires th
 
 ---
 
-## Stage 6 — proof: Audit (cross-cutting)
+## Stage 6 — ranger: Audit (cross-cutting)
 
-**`proof` runs independently of the main pipeline — typically before a release.**
+**`ranger` runs independently of the main pipeline — typically before a release.**
 
 - `recon` (haiku/low) — builds the workspace manifest: live files, dead files, language detection
 - `scanner` (sonnet/medium) — runs hazard taxonomy T1–T10 grep patterns against all live files
@@ -257,7 +257,7 @@ For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct
 
 ---
 
-## The Proof → Canon Loop
+## The Ranger → Scribe Loop
 
 **`architect` designs a structural fix — not a patch.**
 
@@ -291,7 +291,7 @@ For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct
 }
 ```
 
-This spec re-enters the pipeline at `vector` for planning, then `lambda` for implementation. The fix is structural — the next field added to `AccessConfig` reaches the subprocess automatically.
+This spec re-enters the pipeline at `navigator` for planning, then `smith` for implementation. The fix is structural — the next field added to `AccessConfig` reaches the subprocess automatically.
 
 ---
 
@@ -303,4 +303,4 @@ This spec re-enters the pipeline at `vector` for planning, then `lambda` for imp
 | **EARS output contracts** | `spec@1` ac-1 is an EARS statement — it makes the T7 risk machine-checkable, not advisory. |
 | **Cognitive mode separation** | `scanner` found T7 candidates without filtering. `boundary-tracer` traced field survival. `adversary` verdicted. Three agents, three modes, none contaminating the others. |
 | **Mutation gate** | `mutator` caught the slot-swap bug that unit tests missed. The precision test it generated became part of the permanent test suite. |
-| **Proof → canon loop** | The finding didn't produce a patch. `architect` designed a structural fix that makes the whole class of bug a compile error. |
+| **Ranger → scribe loop** | The finding didn't produce a patch. `architect` designed a structural fix that makes the whole class of bug a compile error. |

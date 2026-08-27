@@ -85,7 +85,7 @@
     "linked_findings": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Finding IDs from proof or audit reports that this structural refactor resolves."
+      "description": "Finding IDs from ranger or audit reports that this structural refactor resolves."
     },
     "spec_file_path": {
       "type": "string",

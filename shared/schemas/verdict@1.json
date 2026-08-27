@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "verdict@1",
   "title": "Verdict",
-  "description": "The axiom exit gate result. Pass or fail, with specific blockers on failure.",
+  "description": "The sentinel exit gate result. Pass or fail, with specific blockers on failure.",
   "type": "object",
   "required": ["verdict", "confidence", "verdict_summary"],
   "additionalProperties": false,

@@ -16,17 +16,22 @@ Breaking change: append `!` after type/scope, or add `BREAKING CHANGE:` footer.
 ## Examples
 
 ```
-feat(delta): add changeset generation skill
+feat(courier): add changeset generation skill
 
-fix(axiom): retry gate passes specific failure message to producer
+fix(sentinel): retry gate passes specific failure message to producer
 
 docs(shared): add conventional-commits reference
 
-refactor(proof): extract language detection into recon subagent
+refactor(ranger): extract language detection into recon subagent
 
 feat!: rename bug-hunter-rust to proof
 
 BREAKING CHANGE: plugin ID changed from bug-hunter-rust to proof.
+Update marketplace.json and skill trigger references.
+
+feat!: rename proof to ranger
+
+BREAKING CHANGE: plugin ID changed from proof to ranger.
 Update marketplace.json and skill trigger references.
 ```
 
@@ -44,13 +49,14 @@ Active voice, imperative mood. If a sentence keeps running, it's usually doing t
 
 | Scope | Covers |
 |---|---|
-| `axiom` | axiom plugin and subagents |
-| `proof` | proof plugin and subagents |
-| `delta` | delta plugin and subagents |
-| `graph` | graph plugin and subagents |
-| `canon` | canon plugin and subagents |
-| `trace` | trace plugin and subagents |
-| `vector` | vector plugin and subagents |
-| `lambda` | lambda plugin and subagents |
-| `basis` | basis plugin and subagents |
+| `sentinel` | sentinel plugin and subagents |
+| `ranger` | ranger plugin and subagents |
+| `courier` | courier plugin and subagents |
+| `weaver` | weaver plugin and subagents |
+| `scribe` | scribe plugin and subagents |
+| `vanguard` | vanguard plugin and subagents |
+| `navigator` | navigator plugin and subagents |
+| `smith` | smith plugin and subagents |
+| `mason` | mason plugin and subagents |
+| `muse` | muse plugin and subagents |
 | `shared` | shared schemas, references, agent-best-practices |
