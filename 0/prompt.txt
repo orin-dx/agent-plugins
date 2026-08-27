@@ -1,0 +1,525 @@
+Please read through our plugins to get a deep understandinf or our current state in context to this:
+
+- https://arxiv.org/html/2603.17973v2
+- https://nathanacurtis.substack.com/p/spec-driven-ui-component-development
+
+How can we integrate learnings? What should we adjust, improve, etc? Do deeper research based on the topics you learn from both links. Don't be confined to just I provided. Think for yourself, check yourself, expand on it to form a full opinion and report back.
+
+---
+
+Use agent teams and workflows to wident the search and think through further
+
+---
+
+We should look at expanding our repertoire to include not just tools and backend but support FE development and design also
+
+---
+
+<task-notification>
+<task-id>w0w7l52k3</task-id>
+<tool-use-id>toolu_01VNB2wRmxtnNPym91SsiUzo</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/w0w7l52k3.output</output-file>
+<status>completed</status>
+<summary>Dynamic workflow "Widen research beyond TDAD/spec-driven-UI and synthesize concrete integration proposals for agent-plugins" completed</summary>
+<result>{"synthesis":"# Integration Report: TDAD Regression Prevention &amp; Spec-Driven Schema Governance\n\nScope: 11 surviving recommendations (2 keep, 9 modify) out of 14 reviewed. Modifications applied as specified by the critique.\n\n## Tooling / Scripts (repo-wide, no plugin dependencies — do these first)\n\n**1. `scripts/check-schema-refs.sh`** — new script grepping all `plugins/*/agents/*.md` for `shared/schemas/[a-zA-Z-]+@[0-9]+\\.json` references, dedupes, asserts each resolves on disk; fail with file:line + missing path.\nTarget: `scripts/check-schema-refs.sh`\nEffort: low / Impact: medium\nRationale: nothing today verifies an agent's claimed schema reference still exists after a version bump elsewhere.\n\n**2. `scripts/check-schema-immutability.sh`** (modified) — diffs each `shared/schemas/&lt;name&gt;@N.json` against its merge-base-with-`origin/main` content; flags removed `required` entries, changed `type`s, deleted properties under `additionalProperties:false`, or `additionalProperties` true→false. Must `git fetch origin main --depth=1` first (workflow uses shallow checkout) and print an explicit SKIP (not silent pass) if no base is found.\nTarget: `scripts/check-schema-immutability.sh`, `.github/workflows/validate.yml` (new step), `shared/constitution.md` (one clarifying line: additive optional fields aren't breaking)\nEffort: high / Impact: high\nRationale: constitution states schema immutability but nothing enforces it; this is the buf-breaking/oasdiff pattern applied to this repo's schema shape.\n\n**3. `scripts/check-plugin-agents.sh`** (modified) — bidirectional check: every `plugin.json` `agents[]` entry exists on disk, and every `agents/*.md` file is declared in `plugin.json`.\nTarget: `scripts/check-plugin-agents.sh`, `.github/workflows/validate.yml`, `CONTRIBUTING.md`, `CLAUDE.md` (Quick Reference bullet)\nEffort: low / Impact: medium\nRationale: `basis:auditor` only checks the declared→disk direction manually; disk→declared drift (an added agent file never registered) is currently invisible and unwired anywhere until it's plugged into CI/docs.\n\n## Lambda (regression prevention)\n\n**4. Regression evidence trail for exit-gate** (modified) — new `shared/schemas/verdict@3.json` (extends verdict@1, not verdict@2) adding a `regressions[]` array (test_id, was_passing_at_baseline, now, location), referenced only by `plugins/lambda/agents/exit-gate.md`. `recon.md`'s `baseline_test_summary` must record the actual list of failing/passing test identifiers plus a count — not a content hash, which can't identify which test broke.\nTarget: `shared/schemas/verdict@3.json`, `plugins/lambda/agents/recon.md`, `plugins/lambda/agents/exit-gate.md`\nEffort: medium / Impact: high\nRationale: exit-gate and SKILL.md both claim \"no regressions found\" today with zero structured evidence backing that claim.\n\n**5. Search-backed sibling-gap enumeration** (modified, reviewer.md only) — tighten reviewer.md's `&lt;judgment&gt;` (line 34) and `sibling_gaps` output description (line 56) to require the candidate pool be seeded from an actual search-tool call-site enumeration of touched symbols, with pattern-matching as a filter on top, not the sole source. Plain prose, no EARS. Drop exit-gate.md entirely — it doesn't own sibling detection and duplicating a full enumeration at opus/high tier is wasted cost.\nTarget: `plugins/lambda/agents/reviewer.md`\nEffort: low / Impact: medium\nRationale: a call-graph-connected but stylistically dissimilar caller is invisible to pattern-matching alone today.\n\n## Basis (agent-authoring tooling — sequential pair)\n\n**6. Manual simplification pilot on auditor.md** (modified) — seed 5-10 fixture plugin directories with known conformance defects, iteratively simplify auditor's `&lt;goal&gt;/&lt;judgment&gt;/&lt;output&gt;` prose (never `&lt;constitution&gt;`), keep only simplifications that hold/improve fixture accuracy. Fixtures must live outside `plugins/`'s glob-swept namespace (e.g. `plugins/basis/tests/fixtures/auditor-pilot/`) and be verified not to trip `check-versions.sh`/`check-skills-doc.sh`. Record as a checked-in case study.\nTarget: `plugins/basis/agents/auditor.md`, `plugins/basis/tests/fixtures/auditor-pilot/`, `plugins/basis/CASE-STUDY-auditor-pilot.md`\nEffort: medium / Impact: medium\nRationale: tests whether outcome-measured prompt iteration transfers to this repo before building any automated loop.\n\n**7. `basis:calibrator` agent — contingent on #6 succeeding** (modified) — human-gated agent taking an existing agent file + fixture/outcome corpus, proposing a simplified non-constitution rewrite plus a fixture pass-rate delta for human accept/reject (schema-designer's propose-don't-auto-apply pattern). Never touches `&lt;constitution&gt;`; refuses to run without a real fixture corpus.\nTarget: `plugins/basis/agents/calibrator.md`, `plugins/basis/skills/calibrate-agent/SKILL.md`, `shared/schemas/agent-outcome@1.json` (reuse verdict's `pass`/`fail` enum, not new vocabulary), `plugins/basis/plugin.json`, `plugins/basis/README.md`, `plugins/basis/CHANGELOG.md`\nEffort: high / Impact: high\nRationale: closest fit to the outcome-measured-iteration research finding, but explicitly gated on #6's evidence — don't build ahead of proof.\n\n## Canon (spec drift triage)\n\n**8. Severity tiering for `canon:drift-checker`** (modified, scoped to canon only) — add a `severity` enum (`contract-broken | behavior-narrowed | cosmetic`) to `drifted` entries and an `impact` field to `uncovered` entries in drift-checker's inline output; add a `&lt;judgment&gt;` rule that severity derives from the criterion's observed divergence, not prose tone. Drop the axiom/`verdict@2` leg entirely — axiom's exit-gate consumes verdict@1, not verdict@2 (that's proof-only), so there's no real link to touch.\nTarget: `plugins/canon/agents/drift-checker.md`\nEffort: medium / Impact: high\nRationale: today every divergence — critical or cosmetic — looks identical in the flat `drifted`/`uncovered` arrays, forcing a full re-read to triage.\n\n## Vector (test-design discipline)\n\n**9. Assertion-based tests in planner, not challenger** (modified) — add to `planner.md`'s `&lt;output&gt;`: \"WHEN specifying a failing test, THE SYSTEM SHALL write it as an assertion against a concrete expected value... never a print or log statement.\" Do not add a new check to `challenger.md` — instead reword its existing `under-specified` dimension (frontmatter + output description) to explicitly name print/log-only output as an example of a missing assertion, since challenger already covers this via \"lacking... test assertions.\"\nTarget: `plugins/vector/agents/planner.md`, `plugins/vector/agents/challenger.md`\nEffort: low / Impact: medium\nRationale: planner is the one point that fixes each task's exact test text before implementation exists — the right place to structurally block observational (print-statement) tests from ever reaching lambda.\n\n## Axiom (cross-artifact dependency)\n\n**10. Downstream-consumer check on spec revision** (modified, narrowed) — when axiom gates a revised spec@1 (has `revision_note`), have `recon.md` search only `.claude/specs/*.json` for other specs referencing the changed criterion_id, and pass that list to `verifier.md` as a finding. Drop the plan@1/changeset@2 legs entirely — neither is ever persisted to disk (confirmed in `workspace-conventions.md`), so searching for them is infeasible, and the plan-side risk is already covered by the constitution's mandatory amend+challenger re-review rule.\nTarget: `plugins/axiom/agents/recon.md`, `plugins/axiom/agents/verifier.md`\nEffort: medium / Impact: medium\nRationale: a corrected spec criterion can silently leave other specs referencing stale contract text with nothing surfacing that dependency today.\n\n## Graph (requirement-coverage matching)\n\n**11. Deterministic identifier matching for `graph:auditor`** (modified, single-file) — in `&lt;judgment&gt;`, direct the auditor to search fi
+... (truncated 1879 chars, full result in /private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/w0w7l52k3.output)</result>
+<diagnostics>Per-agent results: /Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/subagents/workflows/wf_220c5062-ffa/journal.jsonl — one {"type":"result",...} line per completed agent with its full return value.
+If the result above is empty or unexpected, Read this file BEFORE diagnosing — do not assume agents returned non-empty results.
+To re-run with edited post-processing: Workflow({scriptPath: '/Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/workflows/scripts/agent-plugins-integration-research-wf_220c5062-ffa.js', resumeFromRunId: 'wf_220c5062-ffa'}) — agents whose (prompt, opts) are unchanged replay from cache.</diagnostics>
+<usage><agent_count>25</agent_count><agents_done>25</agents_done><agents_error>0</agents_error><agents_skipped>0</agents_skipped><agents_empty_result>0</agents_empty_result><subagent_tokens>1283273</subagent_tokens><tool_uses>197</tool_uses><duration_ms>437639</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>w6wiie5hy</task-id>
+<tool-use-id>toolu_01NVHcuodghwn4FYR9bbhuaG</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/w6wiie5hy.output</output-file>
+<status>completed</status>
+<summary>Dynamic workflow "Research frontend/design-system tooling and propose how agent-plugins should expand beyond backend/CLI into FE and design work" completed</summary>
+<result>{"synthesis":"# Frontend Expansion — Prioritized Report\n\nThree proposals survive critique (all `modify`). All six others were rejected — mostly for inventing schemas/plugins (`component-spec@1`, `swatch`) with no producer, consumer, or demonstrated need anywhere in the repo. None of the survivors duplicate the harness's built-in `design`/`dataviz` skills: those generate mockups/charts; everything below scans or specs *existing code* for correctness/consistency, a different job entirely.\n\n## 1. Accessibility hazard taxonomy — extend `proof`\n**Build:** `shared/references/typescript-hazards-a11y.md` (renamed from the original `frontend-a11y-hazards.md` proposal) — six grep-able a11y taxonomies (interactive div/span without role+keyhandler, icon-only control with no accessible name, missing alt text, unreleased focus trap, color-only state signal, missing `aria-live` on async status).\n**Target files:** `shared/references/typescript-hazards-a11y.md` (new), `shared/references/typescript.md` (add index row), `plugins/proof/agents/scanner.md` (include in default TS/JS full scan, not just opt-in focus), `plugins/proof/agents/adversary.md` (add explicit `A`-prefix routing branch alongside the existing T7/T10 binary).\n**Effort:** medium · **Impact:** high\n**Rationale:** Fits proof's existing Signal/Grep/Risk/False-positive taxonomy shape exactly, no schema or agent-model changes — but only works if wired into the *default* scan path and adversary's routing is made explicit, not assumed.\n**Fit:** extension of `proof`, not a new plugin — same pipeline stage, same consumer contract.\n\n## 2. Design-token drift smells — extend `canon` (not `proof`)\n**Build:** Append entries to `shared/references/typescript-smells.md`'s \"Architectural Pattern Smells\" section: hardcoded color bypassing a token system, token imported but unused at the assertion point, and a new \"Local Token/Component Shadow\" smell for locally-redefined constants/components that duplicate a shared export.\n**Target files:** `shared/references/typescript-smells.md` only. (Do **not** touch `scanner.md`/`adversary.md` — drop the original proposal's `design-token-drift.md` hazard file and its off-scale-spacing check entirely: these are static/always-true properties with no trigger condition, a category mismatch with adversary's confirm/refute-with-failing-scenario contract, and the spacing check requires stateful cross-referencing scanner's mechanical-match mandate doesn't support.)\n**Effort:** low · **Impact:** medium\n**Rationale:** These are consistency/architecture smells, correctly homed in the file architect already clusters from, at the correct altitude — not runtime hazards.\n**Fit:** extension of `canon` (architect's clustering input), explicitly *not* `proof`.\n\n## 3. Component-criterion drafting guidance — extend `canon`, no new schema\n**Build:** Add one paragraph to `plugins/canon/agents/drafter.md`'s `&lt;judgment&gt;` section naming the component-criterion failure mode (props/states/ARIA need the same per-state observable-behavior specificity as API status codes/response shapes — \"reflects the disabled state\" is the semantic-model anti-pattern restated for UI), plus one example nominal+error criterion pair in `&lt;output&gt;`'s existing JSON example.\n**Target files:** `plugins/canon/agents/drafter.md` only. No new schema, no new agent, no plugin.json edit, no `auditor.md` change (its observable-behavior test already passes such criteria unmodified).\n**Effort:** low · **Impact:** medium\n**Rationale:** spec@1's `acceptance_criteria`/`api_surface` already fully express component behavior claims — the only real gap is that drafter has no guidance steering it toward that framing, so it can produce vague criteria today.\n**Fit:** extension of `canon`, one file. If real usage later shows spec@1's free-text criteria genuinely can't express a structured need (e.g. a state-machine transition table), *then* define a schema first per the constitution's schema-before-agents rule — not before.\n\n## Explicitly not pursued (do not revisit without new evidence)\n`component-spec@1` schema, `component-architect` agent, `swatch` plugin, lambda's component-spec carve-out, `component-contract-smells.md`, and the `judgment_call`-routing counter-proposal — all rejected for the same root cause: no requirement, producer, or consumer for these artifacts exists anywhere in the repo today. Revisit only if an actual UI-component workload shows up (a real `requirement@1`, a real rendering/diffing harness in a target workspace) — that would justify the schema-first sequence the constitution requires, and only then.\n\n## Build order\n1. **#1 (a11y hazards)** — highest impact, self-contained, exercises proof's existing pipeline immediately.\n2. **#3 (drafter guidance)** — trivial, unblocks better component specs going into #2's audit-relevant work and any future real component pipeline.\n3. **#2 (token-drift smells)** — lowest urgency; append when next touching `typescript-smells.md`, re-check the 120-line cap after appending and split by concern only if exceeded.\n\nNone of these require a new plugin. The right trigger for a dedicated frontend plugin (or the shelved `component-spec@1`/`swatch` ideas) is a real requirement driving actual component/visual-regression work in this repo — not before.","stats":{"findings":24,"proposals":9,"kept":0,"modified":3,"rejected":6}}</result>
+<diagnostics>Per-agent results: /Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/subagents/workflows/wf_01c2ae64-f15/journal.jsonl — one {"type":"result",...} line per completed agent with its full return value.
+If the result above is empty or unexpected, Read this file BEFORE diagnosing — do not assume agents returned non-empty results.
+To re-run with edited post-processing: Workflow({scriptPath: '/Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/workflows/scripts/agent-plugins-fe-design-expansion-wf_01c2ae64-f15.js', resumeFromRunId: 'wf_01c2ae64-f15'}) — agents whose (prompt, opts) are unchanged replay from cache.</diagnostics>
+<usage><agent_count>17</agent_count><agents_done>17</agents_done><agents_error>0</agents_error><agents_skipped>0</agents_skipped><agents_empty_result>0</agents_empty_result><subagent_tokens>856862</subagent_tokens><tool_uses>116</tool_uses><duration_ms>411535</duration_ms></usage>
+</task-notification>
+
+---
+
+I'll be building UIs for lumen so we do want FE bits into consideration too. What would this plugin be called?? Is it more artsy or do we have design/engineer intersection that aligns with the current naming scheme?
+
+---
+
+Muse sounded a bit more winsical than lattice right?
+
+---
+
+That is being boring. I'm the only one using it. Better adjust now before it gets popular??
+
+---
+
+I've used famous engineers before but that is a pattern I used elsewhere already
+
+---
+
+I'm also open to an overall name for the entire bundle of plugins and more literal combined names if it's short and easy to remember while keeping a fun/whimsical vibe
+
+---
+
+What about latin or greek?
+
+---
+
+None of these are vibing with me, don't be constrained to bee. The idea of hive, swarm, a set of helpful assistants. SOmething that is indicative of what the agents/skills really are for us
+
+---
+
+Be more creative here
+
+---
+
+Linking wisp
+
+---
+
+do we go more literal now that we have wisp? or do we tweak the above a little??
+
+---
+
+THink from the POV of someone looking at a new GH repo and trying to understand it
+
+---
+
+Think from the perspective of a user triggering the skills and agents
+
+---
+
+Not completely sold on sleuth
+
+---
+
+scout or ranger seems better
+
+---
+
+find a replacement for atlas and perhaps oracle
+
+---
+
+Herald seems to fit, not sure for atlas. Seems like most of them are personas right? Can we think in that sense?
+
+---
+
+I like weaver and navigator, lamplighter seems off
+
+---
+
+surveyor is closer but not quite
+
+---
+
+These are worse, does speak to whimsy and fun
+
+---
+
+Even worse, you're losing the plot.
+
+---
+
+Even worse, you're losing the plot. These don't inspire
+
+---
+
+vanguard words
+
+---
+
+Now show me the overall list, their jobs and the groupings
+
+---
+
+Does herald make sense in its position? I also don't like warden. That prison narrative is not the vibe
+
+---
+
+scribe and mason it is
+
+---
+
+Much better. Let's do a round or checking the changes we're proposing and what goes in muse. Validate that we still have the right amount of agents and skills, they are focused, follow all our guidelines, etc
+
+---
+
+<task-notification>
+<task-id>a0ac2adfd57972a90</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a0ac2adfd57972a90.output</output-file>
+<status>completed</status>
+<summary>Agent "Design and validate Muse plugin's agent/skill roster" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: design Muse's schema decision, agent roster, skill(s), and plugin.json for the agent-plugins repo, then adversarially self-critique the proposal. Read shared/constitution.md (already in context), spec@1.json, verdict@1.json, finding-report@1.json, all of canon's and proof's agents/plugin.json as templates.
+
+## Schema decision: no new schema
+
+`spec@1.acceptance_criteria` is already an array of free-text testable-proposition strings with `is_error_case`/`judgment_call` flags — nothing about that shape is backend-specific. A component criterion ("when `disabled=true`, the button renders `aria-disabled=\"true\"` and does not fire `onClick`") is exactly as expressible as an API criterion. Inventing `component-spec@1` now would force every downstream consumer (Navigator, Smith, Sentinel) to learn a second spec shape for zero expressive gain — pure cost. **Muse produces `spec@1` and `verdict@1`, same as Scribe (canon).** Revisit only if real Lumen usage hits a criterion shape free text genuinely can't express (e.g. a state-transition table) — not before.
+
+## What Muse does NOT do: scan implementation code
+
+Muse's own brief says "specs and audits UI components." Read literally that risks rebuilding Ranger's (proof's) recon→scanner→adversary→exit-gate hazard pipeline a second time for accessibility hazards — a direct capability duplication. That work correctly stays on Ranger (add an a11y hazard taxonomy reference + wire it into Ranger's default scan/adversary routing, per the earlier session's still-valid recommendation). **"Audits" in Muse's scope means audits the *spec*, not the *code*** — same split as Scribe auditing specs vs. Ranger auditing code. This needs to be explicit in Muse's plugin.json description or it'll get misread.
+
+## Agent roster (3 agents — deliberately smaller than canon's 6)
+
+| Agent | Model/Effort | Cognitive mode | Job |
+|---|---|---|---|
+| `drafter` | sonnet/medium | authorship | Drafts a component spec@1 from a requirement/design intent — props, variants, per-state observable behavior, accessibility criteria as testable propositions |
+| `auditor` | sonnet/medium | adversarial review of the artifact, non-binding | Applies Scribe-auditor's generic tests (testable, unambiguous, no padding) *plus* UI-specific completeness checks (missing interactive states, missing ARIA criteria, invalid prop combinations not marked as error cases) |
+| `exit-gate` | opus/high | binding terminal judgment | Default-fail gate before the spec proceeds to Navigator; same retry_count/escalate-at-3 pattern as every other exit-gate in the ecosystem |
+
+Canon's other three agents (`verifier`, `architect`, `drift-checker`) are deliberately **not duplicated**:
+- `architect` (finding-report@1 → structural spec@1) is domain-agnostic already — a UI architectural finding routes to Scribe's existing architect, not a new one.
+- `drift-checker` (spec@1 vs. workspace) is domain-agnostic already — it works on a component spec exactly as written today with zero changes.
+- `verifier` (criterion grounded in requirement@1?) is deferred, not rejected — real risk it catches (drafter inventing ungrounded criteria to please a stakeholder) is much lower for a single-user workload building Lumen directly. Add it later if drift/scope-creep is actually observed, not preemptively.
+
+## Skill
+
+Single skill, `muse:component` (not `muse:muse`) — matches this session's persona=who/skill=what convention, and the constitution's own carve-out ("if a single word does not communicate what the skill acts on, use a more specific word") for the same reason `post-review` beat `post`.
+
+## plugin.json sketch
+
+```json
+{
+  "id": "muse",
+  "name": "muse",
+  "version": "1.0.0",
+  "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs — props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning. Audits the spec, not the implementation — see proof/Ranger's accessibility hazard taxonomy for code-level scanning.",
+  "skills": "./skills/",
+  "agents": ["./agents/drafter.md", "./agents/auditor.md", "./agents/exit-gate.md"],
+  "consumes": ["requirement@1"],
+  "produces": ["spec@1", "verdict@1"]
+}
+```
+
+## Rejected during self-critique
+
+- **Merge auditor into drafter** — rejected: canon's own backstory names this exact failure mode (a drafter grading its own plausible-sounding work); the ecosystem's established pattern is author/adversary separation.
+- **Merge exit-gate into auditor** — rejected: auditor is advisory ("on the spec's own terms"), exit-gate is binding with retry/escalation semantics — merging would blur an advisory opinion with a gate decision, breaking the pattern every other plugin in the ecosystem follows.
+- **A recon→scanner→adversary hazard pipeline inside Muse** — rejected as direct duplication of Ranger's existing mechanism (see above).
+- **New `component-spec@1` schema** — rejected, no demonstrated expressive gap over `spec@1` (see above).
+- **Duplicate architect/drift-checker inside Muse** — rejected, both of Scribe's are already domain-agnostic; building UI-specific copies would just be two implementations of one job.
+- **Including `verifier` at launch** — deferred rather than rejected outright; flagged as the one candidate addition if real usage shows a gap.
+
+Would pass a conformance audit: 5-part agent structure, byte-identical `&lt;constitution&gt;` block to copy verbatim from any existing agent, schemas referenced (`shared/schemas/spec@1.json`, `shared/schemas/verdict@1.json`) already exist before these prompts reference them, frontmatter fields complete, model/effort tiers match the constitution's dynamic-routing rule (mechanical=none here, analysis=sonnet/medium ×2, terminal judgment=opus/high ×1).</result>
+<usage><subagent_tokens>250632</subagent_tokens><tool_uses>19</tool_uses><duration_ms>137228</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a9ad7548d5173af78</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a9ad7548d5173af78.output</output-file>
+<status>completed</status>
+<summary>Agent "Enumerate every rename touchpoint for the Wisp naming" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Rename checklist — restating task
+
+Directive: produce a complete, concrete checklist of every place in the agent-plugins repo that must change for the graph→Weaver, trace→Vanguard, canon→Scribe, vector→Navigator, lambda→Smith, proof→Ranger, axiom→Sentinel, delta→Courier, basis→Mason rename (plus a new `muse` addition), grouped by surface. Not executing — enumeration only.
+
+**Headline risk**: cross-plugin references are not rare — they are the dominant content of this repo's docs. Every plugin's README, every CHANGELOG (9 plugin-level + 1 root), `ARCHITECTURE.md`, `AGENTS.md`, `CONTRIBUTING.md`, the constitution, and roughly a dozen agent/skill prompt files name other plugins by their bare old id in running prose (not just in tables). A naive find-replace on directory names + `plugin.json` alone will leave the repo internally inconsistent in dozens of places.
+
+---
+
+### 1. Directory structure
+`git mv plugins/{graph,trace,canon,vector,lambda,proof,axiom,delta,basis} plugins/{weaver,vanguard,scribe,navigator,smith,ranger,sentinel,courier,mason}` — 9 moves. Plus create `plugins/muse/` fresh (separate design task).
+
+### 2. Each plugin's own `plugin.json`
+`id` and `name` fields at line 2–3 of every one of the 9 `plugins/&lt;id&gt;/plugin.json` files — both currently equal the old id, both need the new persona word. `version` also needs a bump (see §12). No plugin's own `description` field references its *own* old id by name (they describe function, not name), so no self-referential text fix needed there — but `trace`'s description explicitly says `"...for consumption by canon (spec)"` (`plugins/trace/plugin.json:5`) — cross-reference, needs `canon`→`scribe`.
+
+### 3. Cross-plugin references inside `agents/*.md` prompt bodies — highest risk, easy to miss
+Concrete hits found (not exhaustive of every mention, but every file identified):
+- `plugins/lambda/agents/implementer.md:7` — `"...escalates to canon:architect..."` → `scribe:architect`
+- `plugins/lambda/agents/exit-gate.md:7,26` — references "axiom" conceptually via "the same discipline axiom formalizes" pattern lives in README not this file; verify at execution time.
+- `plugins/canon/agents/architect.md:7,22` — `"...proof has produced a finding-report@1..."`, `"feeds into vector for planning and lambda for implementation"` → `ranger`, `navigator`, `smith`
+- `plugins/canon/agents/exit-gate.md:7` — `"...halts progression to vector..."` → `navigator`
+- `plugins/canon/agents/drift-checker.md:66` — `"...a new lambda task..."` → `smith`
+- `plugins/canon/agents/drafter.md:28` — `"...lambda's exit-gate..."` → `smith`
+- `plugins/canon/agents/verifier.md` — no cross-ref found, clean.
+- `plugins/basis/agents/auditor.md:32` — `"...a canon or lambda agent..."` → `scribe`, `smith`
+- `plugins/delta/agents/changeset-analyzer.md:7,26,77,78` — `"...lambda's criteria_evidence..."` (×4) → `smith`
+- `plugins/trace/agents/synthesizer.md:7` — `"...Route output to canon."` → `scribe`
+- `plugins/proof/agents/adversary.md:41,43` — internal use of word "trace" is the *verb* "trace control flow," not the plugin — **do not rename**, false positive to watch for.
+- `plugins/proof/agents/boundary-tracer.md:24,36,60` and `plugins/proof/agents/recon.md:7,49` — same false-positive pattern, "trace" as common verb/agent-name (`boundary-tracer` itself is unrelated to the `trace` plugin) — leave alone.
+
+**Pattern to generalize at execution time**: grep each of the 9 old ids as a whole word inside every `plugins/*/agents/*.md`, but manually vet every hit — `trace`, `proof`, `canon` (no common-word collision), `vector`, `graph`, `delta`, `basis`, `axiom`, `lambda` (`lambda` has no common-English-word collision either) all appear as both genuine cross-plugin references and, in trace/proof's case, as ordinary English verbs/word-fragments inside unrelated agent names. False-positive risk is concentrated in "trace" (verb) and "delta" (already used generically in the constitution itself, e.g. `shared/constitution.md:152,171` — "blocker delta", "emit delta patches" — **not** the plugin, do not touch these).
+
+### 4. `skills/*/SKILL.md` files — cross-references and `&lt;plugin&gt;:&lt;skill&gt;` examples
+Every plugin with split skills documents `&lt;plugin&gt;/&lt;skill-name&gt;` inline constantly:
+- `plugins/graph/skills/*/SKILL.md` (capture-need, clarify-requirement, prioritize-backlog) — all reference `canon/draft-spec` → `scribe/draft-spec`
+- `plugins/canon/skills/audit-spec/SKILL.md:11` — `"...canon/verify-spec's..."` (self-reference, still needs prefix update to `scribe/verify-spec`)
+- `plugins/canon/skills/architect/SKILL.md:4,11,25,26` — `"proof"`, `"vector"`, `"lambda"` → `ranger`, `navigator`, `smith`
+- `plugins/canon/skills/correct-spec/SKILL.md:4,23` — `"lambda"`, `"vector"`, `"challenger"`, `"lambda"` → `smith`, `navigator`
+- `plugins/canon/skills/gate-spec/SKILL.md:21,25,38` — `"vector"` → `navigator`
+- `plugins/basis/skills/audit-plugin/SKILL.md:4` — `"...already proof's plugin-level skill name..."` → `ranger`
+- `plugins/graph/skills/audit-backlog/SKILL.md:4` — same `proof` reference → `ranger`
+- `plugins/delta/skills/changeset/SKILL.md:4,25` — `"lambda"` (×2) → `smith`
+- `plugins/delta/skills/post-review/SKILL.md:11` — `"...axiom (spec conformance)..."` → `sentinel`
+- `plugins/trace/skills/trace/SKILL.md:4` — `"...so a spec writer (canon) isn't surprised..."` → `scribe`
+- `plugins/lambda/skills/lambda/SKILL.md:4,58,60,74,99,101,24` — dense with `axiom`, `canon`, `vector`, `delta` cross-references — this single file has ~7 distinct cross-plugin mentions, the worst concentration in the repo.
+
+### 5. `marketplace.json` and `.claude-plugin/marketplace.json` — two separate files, two different schemas
+- Root `marketplace.json`: each plugin object has `id`, `name`, `path` (`./plugins/&lt;id&gt;`) — all 9 need updating, plus `trace`'s `description` field (line ~46) contains `"...for consumption by canon (spec)."` → `scribe`, and `lambda`'s description mentions "the axiom exit gate" → `sentinel`.
+- `.claude-plugin/marketplace.json`: **different shape** — uses `name` (not `id`) as identifier and `source.path` (nested, not top-level `path`). Same 9 entries need `name` and `source.path` updated independently; this file is easy to miss since it's dotfile-hidden and structurally distinct from the root one — confirmed by direct inspection, not assumption.
+- Root `marketplace.json`'s top-level `description` ("Nine cooperating plugins...") in `.claude-plugin/marketplace.json` also literally says "Nine cooperating plugins covering the full development lifecycle" — becomes 10 once `muse` lands; update count.
+
+### 6. Root-level docs — grep hit summary
+- `README.md`: mermaid diagram (`~line 34-48`, node ids `gr/tr/ca/ve/la/pr/ax/de/ba`), the plugin table (`~60-68`), the schema-contract table (`~107-117`), install instructions (`~155-192`, both `/plugin install &lt;id&gt;` and `agy-plugin add &lt;id&gt;@orin-dx` forms), and the directory tree (`~209-217`). Every single row needs the new id.
+- `CLAUDE.md`: lines 11-17, Quick Reference install commands for `proof`/`basis` specifically (the two example commands shown) → `ranger`/`mason`.
+- `ARCHITECTURE.md`: mermaid diagram nodes (lines 71-85), prose at lines 54, 95, 97, 99, 149-151 (the whole "Axiom Gate Protocol" section header needs renaming to Sentinel).
+- `AGENTS.md`: line 13 (`shared/debugging-laws.md` description mentions "proof" conceptually — verify), line 35 (names `delta, canon, graph, basis` as multi-skill examples → `courier, scribe, weaver, mason`), line 43 ("Use `basis`" instruction → `mason`).
+- `CONTRIBUTING.md`: lines 9, 45, 64, 146, 150, 152 — same multi-skill example list, plus a `basis:scaffolder`/`basis:auditor` reference at 150/152 → `mason:scaffolder`/`mason:auditor`.
+- `CODE_OF_CONDUCT.md`, `SECURITY.md`: **zero hits**, no changes needed.
+- `docs/pipeline-walkthrough.md`: heavily plugin-name-dependent — stage headers ("Stage 1 — graph: Need" etc.) at lines 17, 43, 76, 116, 156, 200, plus prose throughout (76, 112, 200, 202, 260, 294, 306) including a whole section header "The Proof → Canon Loop" → "The Ranger → Scribe Loop".
+
+### 7. Per-plugin `README.md` vs `CHANGELOG.md`
+Per constitution's Documentation section, **README.md must be updated** (it's the live, current-state doc) — every one of the 9 plugin READMEs is saturated with self-referential `&lt;oldid&gt;/&lt;skill&gt;` invocation examples (e.g. `canon/README.md` alone has ~25 such mentions) and cross-plugin "feed X to [other-plugin]" links.
+**CHANGELOG.md entries should be left untouched** — they are historical record of what happened under the old names, consistent with how this repo already treats history (e.g. it never rewrites past entries when a skill is renamed, per the extensive `graph/CHANGELOG.md`, `canon/CHANGELOG.md` etc. precedent of documenting renames as new entries, not editing old ones). The rename itself should get **one new CHANGELOG entry per plugin** (and one root entry) documenting old-id → new-id, matching the repo's own established pattern for prior renames (`bug-hunter-rust → proof`, `agent-plugin-builder → basis`, both documented as changelog entries, never scrubbed from history).
+
+### 8. `shared/constitution.md`, `shared/references/*.md`, `shared/schemas/*.json`
+- `shared/constitution.md`: line 100 section header "Axiom Retry Caller Constraint" → "Sentinel Retry Caller Constraint"; lines 110, 134, 136, 142 reference `canon`/`planner`/`vector` by name in EARS rules → must become `scribe`/`navigator`; line 160 "`lambda` executes a plan@1" → `smith`; line 236 "`basis:scaffolder` and `basis:auditor`" → `mason:scaffolder`/`mason:auditor`. Lines 152, 171 ("blocker delta", "delta patches") are **not** the plugin — false positives, leave alone (confirmed by reading context).
+- `shared/references/workspace-conventions.md:3,9,11,15` — names `canon:auditor, graph:auditor, trace:recon`, and `vector`/`lambda` by id — all four need updating; this file is explicitly `&lt;load_first&gt;`-loaded by multiple agents, so it's high-traffic.
+- `shared/references/conventional-commits.md:47-55` — a literal scope table mapping `graph|trace|canon|vector|lambda|proof|axiom|delta|basis` to "`&lt;id&gt;` plugin and subagents" — every row needs the new id (commit scope conventions will otherwise reference dead plugin names forever).
+- `shared/references/interface-implementers.md:3` — "`vector:challenger`" → `navigator:challenger`.
+- `shared/references/boundary-value-shapes.md:3` — "`lambda:implementer`... proof and reviewer do not..." → `smith:implementer`, `ranger`.
+- `shared/references/github.md:88-89` — labels table `needs-spec`/`needs-plan` describe "canon"/"vector" → `scribe`/`navigator`.
+- `shared/references/changesets.md:69,72,86` and `mcp-protocol.md:63,65` (a literal URL `https://plugins.orin.dev/axiom`, and `orin-visual-standard.md:3` "Orin Axiom" org name) — flag `orin-visual-standard.md`'s "Orin Axiom" as a possible **separate branded org name**, not just the plugin id — needs a judgment call before blind rename, since it may refer to a different entity than `plugins/axiom/`.
+- `shared/schemas/*.json`: `verdict@1.json:5`, `verdict@2.json:5` ("The axiom exit gate result...") — schema **descriptions** reference the plugin by name in prose; per constitution, schema files are immutable once versioned, so this is a **documentation-only description edit inside an existing version**, not a new schema version — needs explicit confirmation this doesn't count as a "breaking change" under the immutability rule (it's prose, not shape, so should be safe, but flag for the person executing). `changeset@1.json:5`, `changeset@2.json:5` similarly say "Produced by lambda..." and "...consumed by ... axiom" → `smith`, `sentinel`. `arch-spec@1.json:88` says "Finding IDs from proof" → `ranger`.
+
+### 9. `scripts/*.sh` — hardcoded vs. derived ids
+Checked `check-versions.sh` and `check-skills-doc.sh` directly: **both derive `id` dynamically via `basename "$(dirname "$plugin_json")")`** — i.e., they read whatever the directory is actually named, not a hardcoded list. This means **these two scripts require no code change** and will automatically pick up the new names — **but only if `marketplace.json`'s `id` field is updated in the same commit**, since `check-versions.sh` does `jq --arg id "$id" '.plugins[] | select(.id == $id)'` against `marketplace.json` — a stale marketplace.json will make this script fail for every renamed plugin with "no entry for id". `check-reference-size.sh` has no plugin-id logic at all (confirmed by grep, one unrelated hit). `shared/scripts/validate-wiring.sh` — grepped for all 9 ids, **zero hardcoded matches found** — also appears to derive dynamically, but should be read in full before assuming, since it validates `produces`/`consumes` wiring and could reference schema names tied to a specific plugin's own claims.
+
+### 10. `.github/workflows/*.yml`
+Grepped for all 9 old ids — **zero hits**. No CI changes needed.
+
+### 11. ADR
+No ADR currently documents any prior plugin rename (the `bug-hunter-rust→proof` and `agent-plugin-builder→basis` renames are documented only in `CHANGELOG.md`, not as ADRs — precedent suggests a rename alone may not need one). However, given this rename's scope (9 plugins simultaneously, plus a new umbrella brand "Wisp") is qualitatively larger than either prior single-plugin rename, and existing ADRs (`docs/adr/001` through `006`) document structural/architectural decisions of comparable weight, **a new `docs/adr/007-wisp-persona-naming.md` is worth authoring** to record the rationale (memorability, category grouping, persona-per-plugin convention) for future contributors who'll otherwise wonder why plugin ids don't hint at function the way "delta hints at shipping" (a phrase the repo's own CHANGELOGs use unironically about the *old* names).
+
+### 12. Version bump implications
+- **Per-plugin `plugin.json`**: renaming `id` is a breaking change for anyone who installed the plugin under its old id (`claude plugin add orin-dx/agent-plugins/&lt;old-id&gt;` stops resolving) — under this repo's own semver discipline (see `shared/references/conventional-commits.md:27-29`, which documents exactly this precedent: `"feat!: rename bug-hunter-rust to proof"` / `"BREAKING CHANGE: plugin ID changed..."`), **each of the 9 renamed plugins needs a major version bump**, not a patch.
+- **Root `marketplace.json` and `.claude-plugin/marketplace.json`**: both carry their own top-level `version` (root is `3.5.3`) — a rename of this scope (9 plugins + umbrella brand) is at minimum a major bump of the marketplace version too.
+- **`scripts/check-versions.sh` will still pass afterward** *only if* all four of plugin.json/README/CHANGELOG/marketplace.json are bumped to the same new major version together — its logic already enforces exactly that agreement, so it will correctly fail-loud if any one surface is missed, which is a useful safety net during execution, not a blocker to the rename itself.</result>
+<usage><subagent_tokens>299460</subagent_tokens><tool_uses>9</tool_uses><duration_ms>160007</duration_ms></usage>
+</task-notification>
+
+---
+
+Let's execute
+
+---
+
+<task-notification>
+<task-id>a982c590ac69c22e9</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a982c590ac69c22e9.output</output-file>
+<status>completed</status>
+<summary>Agent "Execute the Wisp rename and scaffold Muse" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>All done. Everything validates cleanly and nothing has been committed.
+
+## Summary
+
+Executed the full Wisp persona rename across the repo (~137 files touched per `git status`, including 9 renamed plugin directories and a new 7-file `muse` plugin).
+
+**Done:**
+- All 9 `git mv` directory renames + 5 single-skill directory renames (proof→ranger/audit, trace→vanguard/research, vector→navigator/plan, axiom→sentinel/gate, lambda→smith/implement)
+- All 9 `plugin.json` id/name/version bumps (major) + cross-plugin description fixes
+- Cross-references fixed in agent/skill prompt files across the ecosystem (known list + a full repo-wide sweep that caught additional self-references, e.g. `ranger/agents/recon.md`'s "proof scanning", `mason`'s own scaffold-plugin/scaffold-subagent/design-schema skill headers)
+- Both marketplace files (different schemas) updated, `muse` added, "Nine"→"Ten"
+- Root docs (README, ARCHITECTURE, AGENTS, CONTRIBUTING, pipeline-walkthrough, CLAUDE.md) — delegated to a fork, verified complete
+- `shared/` constitution, references, and schemas — delegated to a fork, verified complete
+- 9 plugin READMEs updated + one new CHANGELOG entry per plugin (history untouched) + root CHANGELOG entry — delegated to a fork, verified complete
+- `muse` scaffolded from scratch: plugin.json, 3 agents (byte-identical `&lt;constitution&gt;` block copied from scribe's agents), `skills/component/SKILL.md`, README, CHANGELOG
+- `docs/adr/007-wisp-persona-naming.md` written
+
+**Two ambiguous judgment calls:**
+1. `shared/references/orin-visual-standard.md`'s "Orin Axiom" — left **unchanged**; it carries a distinct namespace code (`orin-axi`) separate from `orin-dx`, suggesting a genuinely separate branded org/design-system. **Flagged for human review.**
+2. `shared/references/mcp-protocol.md`'s `https://plugins.orin.dev/axiom` — the fork that handled `shared/` determined this was **not actually ambiguous** (surrounding content clearly documents our own verdict@1/verify-spec/axiom plugin as a worked example) and renamed it to `sentinel`. I verified this reasoning by inspection and consider it correct, but flagging since it differs from the original instruction's default-to-caution guidance.
+
+**Validation — all pass:**
+- `./scripts/check-versions.sh` → OK, 10 plugins, all versions agree
+- `./scripts/check-skills-doc.sh` → OK, 10 plugins, every documented skill has a matching directory
+- `./scripts/check-mermaid.sh` → OK, 15 mermaid blocks render cleanly
+- `./scripts/check-reference-size.sh` → OK, 21 reference files at/under 120 lines
+- `./shared/scripts/validate-wiring.sh` → PASS, 0 errors/warnings
+- `jq` on `marketplace.json`, `.claude-plugin/marketplace.json`, and all 10 `plugins/*/plugin.json` → all valid
+
+**Nothing committed** — all changes are uncommitted working-tree changes (`git status --short` shows 137 lines: 25 M, 42 R, 68 RM, 2 `??` for the new `muse/` dir and ADR). One thing worth a human look before committing: `CONTRIBUTING.md:146` retains a historical reference to "delta/graph/trace fixes of 2026-08-23" (the root-docs fork deliberately left it as a historical event description rather than renaming it retroactively) — worth confirming that's the intended treatment.</result>
+<usage><subagent_tokens>174392</subagent_tokens><tool_uses>71</tool_uses><duration_ms>743670</duration_ms></usage>
+</task-notification>
+
+---
+
+Let's check the marketplace files, the changelogs the docs and adjust accordingly please
+
+---
+
+<task-notification>
+<task-id>a6f8ef48a4386b1ed</task-id>
+<tool-use-id>toolu_01So2y2Xr56aGqnEfGrRZnLp</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a6f8ef48a4386b1ed.output</output-file>
+<status>completed</status>
+<summary>Agent "Review and fix marketplace files, changelogs, root docs" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>QA pass complete. Summary:
+
+**Marketplace files** — both correct as-is, no fixes needed. All 10 plugins present, matching ids/paths across both schemas, "Ten cooperating plugins" present, versions consistent.
+
+**CHANGELOGs** — all correct as-is, no fixes needed. Every renamed plugin's top entry matches its actual `plugin.json` version exactly, historical entries below are untouched (still correctly reference old names as historical record), `muse` has a sensible initial 1.0.0 entry, root CHANGELOG table matches.
+
+**Root docs** — found and fixed 2 issues:
+- `AGENTS.md:35` — illustrative anti-pattern example still said `canon-audit`; fixed to `scribe-audit`.
+- `CONTRIBUTING.md:45` — same illustrative example, same fix.
+
+Everything else checked out: README's mermaid diagram/table/schema-table/install-instructions all correctly include `muse` as the 10th plugin; ARCHITECTURE.md has no leftover 2-letter node abbreviations; `docs/pipeline-walkthrough.md` has zero leftover old ids (its absence of `muse` is a legitimate scope choice — it's a single linear worked scenario, not a full-roster doc, so this isn't a gap). All other grep hits on old plugin-name words (`delta` as the git-delta CLI tool, `proof` as "logical proof," the dated historical fix reference) were correctly left alone as false positives.
+
+**Validation after fixes:** `check-versions.sh`, `check-skills-doc.sh`, `check-mermaid.sh` all pass clean. Nothing committed.</result>
+<usage><subagent_tokens>274820</subagent_tokens><tool_uses>11</tool_uses><duration_ms>130701</duration_ms></usage>
+</task-notification>
+
+---
+
+Shalll we update the readme and preatify? include the groupings for the plugins?
+
+---
+
+shall we group them in the diagram?
+
+---
+
+The grouping can be in a single table for the tables, easier to follow
+
+---
+
+For the diagram let's make them more modern. Look at lumen for example: https://github.com/orin-axi/lumen
+
+But I feel we can do even better in terms of color, border-radius, etc
+
+---
+
+The grouping seems to have made the workflow harder to follow. How else can we better inidicate the groupings? Color scheme maybe?
+
+---
+
+What are the best practices for folow diagrams? Design best practices. Font weight, color, font sizing, etc We need to do a lot better
+
+---
+
+Feels like we can improve readability. Bigger boxes, better use of different font sizes and font weight.
+
+---
+
+Is there a better way to layout the flow?
+
+---
+
+Let's fix it
+
+---
+
+I don't think we need the meta one
+
+---
+
+Any other information we should include in this readme? What about the individual readmes? Should we explain the skill -> agents with diagrams too??
+
+---
+
+Let's layout the plugin readmes in the order of importance to users
+
+---
+
+I think we need to udpate the architecture doc too right?
+
+---
+
+<task-notification>
+<task-id>ae6084339ca881d19</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/ae6084339ca881d19.output</output-file>
+<status>completed</status>
+<summary>Agent "Reorder plugin README sections by user priority" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>All 10 READMEs match the target order correctly. Validation scripts both passed. No commits were made.
+
+## Summary
+
+Reordered sections in all 10 plugin READMEs per the priority scheme. Final order per plugin:
+
+- **weaver**: When to Use → Install → Skills → Subagents → Pipeline → Output Schema → Extensibility → Next Stage
+- **vanguard**: When to Use → Install → Subagents → Pipeline → Output Schema → Next Stage (no Skills/reference sections)
+- **scribe**: When to Use → Install → Skills → Subagents → Pipelines → Output Schemas → Exit Gate Conditions → Next Stage
+- **muse**: When to Use → Install → Skills → Subagents → Pipeline → Output Schemas → Next Stage
+- **navigator**: When to Use → Install → Behavior → Subagents → Pipeline → Output Schema → Task Requirements → Next Stage
+- **smith**: When to Use → Install → Subagents → Pipeline → Output Schema → TDD Cycle → Mutation Gate → Exit Gate → Capability Gaps → Next Stage
+- **sentinel**: When to Use → Install → Subagents → How It Works → Output Schema → Retry Protocol → Used By
+- **courier**: When to Use → Install → Skills → Subagents → Pipeline → Output Schemas → References → Previous Stage
+- **ranger**: When to Use → Install → How It Works → Subagents → Pipeline → Output Schema → Dead Code Exclusion → Language Detection → References → Integration
+- **mason**: When to Use → Install → Skills → Subagents → Conformance Checks → Directory Layout → Key Authoring Principles → References (no Pipeline/Output Schema/Next Stage sections in mason)
+
+Non-standard sections and placement decisions:
+- **navigator's "Behavior"** and **ranger's/sentinel's "How It Works"**: these plugins have one skill (no Skills table), so this section fills the "how the single skill dispatches" role at position 5, right after Install.
+- **navigator's "Task Requirements"**: reference material about `plan@1` task fields — placed after Output Schema (zone 9), matching the "reference material for later" rule, though it stayed adjacent to Output Schema since the two are closely related.
+- **smith's "TDD Cycle", "Mutation Gate", "Exit Gate", "Capability Gaps"**: all detailed elaborations of the pipeline mechanics — placed as a block after Output Schema (zone 9), in their original relative order since that mirrors the actual pipeline flow.
+- **sentinel's "Retry Protocol"**: reference material on gate retry/escalation — zone 9, after Output Schema.
+- **sentinel's "Used By"** and **ranger's "Integration"** and **courier's "Previous Stage"**: these are each plugin's ecosystem-pointer equivalent of "Next Stage" — kept last.
+- **mason**: has no Pipeline, Output Schema, or Next Stage sections at all (it's not a linear-pipeline plugin); its Conformance Checks / Directory Layout / Key Authoring Principles / References all landed in zone 9 in original relative order.
+- **scribe's Exit Gate Conditions**: moved to after Output Schemas (it was before, in the original) to satisfy the rule that Output Schemas (8) precedes plugin-specific reference material (9).
+
+Validation:
+- `./scripts/check-skills-doc.sh` → `OK: 10 plugin(s), every documented skill has a matching skills/ directory.`
+- `./scripts/check-mermaid.sh` → `OK: 17 mermaid block(s) across the repo, all render cleanly.`
+
+Note: this session appears to have concurrent agents mid-rename (old plugin names like `graph`, `canon`, `vector`, `lambda`, `axiom`, `delta`, `trace`, `proof` showing up in git's staged index vs. the already-renamed `weaver`/`scribe`/`navigator`/`smith`/`sentinel`/`courier`/`vanguard`/`ranger` on disk). I read and reordered whatever content was on disk at read time (already the new names/versions) — no rename work was done or altered by me, and nothing was committed.</result>
+<usage><subagent_tokens>113854</subagent_tokens><tool_uses>30</tool_uses><duration_ms>383160</duration_ms></usage>
+</task-notification>
+
+---
+
+No mermaid diagrams for all the plugin readmes?
+
+---
+
+<task-notification>
+<task-id>aedab92745c9bd94f</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/aedab92745c9bd94f.output</output-file>
+<status>completed</status>
+<summary>Agent "Refresh plugin README diagrams to modern style" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Good, edit applied correctly. All work confirmed intact; the large surrounding diff is from other concurrent agents' plugin-rename work in this shared session, unrelated to this task. Nothing was committed, per instructions.
+
+## Summary
+
+Refreshed the mermaid diagram styling in all 9 requested plugin READMEs to match `ARCHITECTURE.md`'s visual language:
+- `plugins/weaver/README.md`
+- `plugins/vanguard/README.md`
+- `plugins/scribe/README.md` — note: scribe's "Pipelines" section has only **one** actual ` ```mermaid ` fence (the standard drafting pipeline); the other three "pipelines" (drift check, correction, architectural remediation) are plain-text arrow diagrams in plain ` ``` ` fences, not Mermaid. Only the one real diagram was refreshed; the plain-text blocks were left untouched since they aren't Mermaid and converting them would be a redesign beyond scope.
+- `plugins/muse/README.md`
+- `plugins/navigator/README.md`
+- `plugins/smith/README.md` (also has a `style loop` subgraph border — left its `rx:10px,ry:10px` as-is since `ARCHITECTURE.md`'s own `style` lines use that same `px`-suffixed form, unlike classDefs)
+- `plugins/sentinel/README.md`
+- `plugins/courier/README.md`
+- `plugins/ranger/README.md`
+
+For each: added the `%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': ..., 'rankSpacing': ...}}}%%` line, changed `stroke-width:2px` → `1.5px`, `rx:8px,ry:8px` → `rx:10,ry:10`, and added `font-size`/`font-weight` per classDef — 14px/600 for source and output (and router where it represents a real gate/verdict, e.g. scribe/smith/sentinel/navigator/ranger's exit-gate or challenger/adversary nodes), 13px/500 for engine/store and non-gating router uses (weaver's connect/audit-backlog, courier's receive-feedback/post-review). Colors, node structure, and edges were left untouched.
+
+Created `plugins/mason/README.md`'s new "## Dispatch" section (placed after "## Subagents", before "## Conformance Checks (auditor)", matching the priority-order slot used elsewhere). It shows the two real skill names from mason's own Skills table — `mason/scaffold-plugin` → `scaffolder` and `mason/audit-plugin` → `auditor` — as two disconnected parallel paths (no edge between them), using slate (`#f8fafc`/`#64748b`) for the skill-entry nodes at 14px/600 and violet (`#f5f3ff`/`#8b5cf6`, mason's existing "engine"-family accent) for the subagent nodes at 13px/500, with the same `%%{init}%%`/1.5px/`rx:10,ry:10` styling. A caption notes `design-schema` and `scaffold-subagent` are narrower on-demand skills not depicted.
+
+Validation:
+```
+./scripts/check-mermaid.sh   → OK: 18 mermaid block(s) across the repo, all render cleanly.
+./scripts/check-skills-doc.sh → OK: 10 plugin(s), every documented skill has a matching skills/ directory.
+```
+
+No commits were made. Note: the working tree currently also shows a large, unrelated diff from other concurrent agents' plugin-rename effort in this session (e.g., `proof`→`ranger`, `delta`→`courier`, `basis`→`mason`) — that is not part of this task's changes; my edits target the plugin directories as they currently exist post-rename.</result>
+<usage><subagent_tokens>84188</subagent_tokens><tool_uses>31</tool_uses><duration_ms>215861</duration_ms></usage>
+</task-notification>
