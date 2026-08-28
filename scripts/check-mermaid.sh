@@ -17,6 +17,21 @@ cd "$script_dir/.."
 workdir="$(mktemp -d)"
 trap 'rm -rf "$workdir"' EXIT
 
+# CI runners run jobs as root, where Chrome refuses to start its sandbox
+# without this flag — passed via a puppeteer config file since mmdc has no
+# CLI flag for it directly. Scoped to CI only (GitHub Actions always sets
+# CI=true): a custom puppeteer config on a local machine can interfere with
+# how mermaid-cli resolves an already-cached Chrome binary, so local runs
+# keep using mmdc's own default resolution, which needs no such override.
+mmdc_args=()
+if [[ "${CI:-}" == "true" ]]; then
+  puppeteer_config="$workdir/puppeteer-config.json"
+  cat > "$puppeteer_config" <<'JSON'
+{"args": ["--no-sandbox", "--disable-setuid-sandbox"]}
+JSON
+  mmdc_args=(-p "$puppeteer_config")
+fi
+
 fail=0
 count=0
 
@@ -35,7 +50,7 @@ while IFS= read -r -d '' file; do
       count=$((count + 1))
       mmd="$workdir/block_${count}.mmd"
       printf '%s\n' "$block_content" > "$mmd"
-      if ! npx --yes @mermaid-js/mermaid-cli -i "$mmd" -o "$workdir/block_${count}.svg" > "$workdir/log_${count}.txt" 2>&1; then
+      if ! npx --yes @mermaid-js/mermaid-cli -i "$mmd" -o "$workdir/block_${count}.svg" "${mmdc_args[@]+"${mmdc_args[@]}"}" > "$workdir/log_${count}.txt" 2>&1; then
         fail=$((fail + 1))
         echo "FAIL: $file (block $((block_index + 1)))"
         grep -A2 '^Error' "$workdir/log_${count}.txt" | head -3 | sed 's/^/    /'
