@@ -1,0 +1,9 @@
+Do we improve our logo to give more of a whisp vibe? Are you able to do that well?
+
+---
+
+Give me a summary of wisp and its intent, plugins, etc to help guide claude AI in designing an improved logo
+
+---
+
+validate failed: https://github.com/orin-dx/agent-plugins/pull/1
