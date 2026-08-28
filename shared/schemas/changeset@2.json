@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "changeset@2",
   "title": "Changeset",
-  "description": "Describes what was changed in an implementation and why, classified from a consumer's perspective. Supersedes changeset@1 — adds required consumer_impact and semver_impact, set once at authoring time rather than re-derived at release time. Produced by delta's changeset-analyzer, consumed by delta's release-summarizer and by axiom.",
+  "description": "Describes what was changed in an implementation and why, classified from a consumer's perspective. Supersedes changeset@1 — adds required consumer_impact and semver_impact, set once at authoring time rather than re-derived at release time. Produced by courier's changeset-analyzer, consumed by courier's release-summarizer and by sentinel.",
   "type": "object",
   "required": ["summary", "consumer_impact", "semver_impact", "files_changed", "acceptance_criteria_met"],
   "additionalProperties": false,
@@ -53,7 +53,7 @@
           "implementation_line": { "type": "integer" }
         }
       },
-      "description": "Per-criterion evidence trail: exactly where each acceptance_criteria_met ID is tested and implemented. When sourced from implementer's own TDD cycle, test_line and implementation_line are exact. When reconstructed from a diff with no lambda run behind it, file-level entries without line numbers are acceptable rather than fabricating precision that was never observed. A criterion may have more than one entry when it is proven in more than one place."
+      "description": "Per-criterion evidence trail: exactly where each acceptance_criteria_met ID is tested and implemented. When sourced from implementer's own TDD cycle, test_line and implementation_line are exact. When reconstructed from a diff with no smith run behind it, file-level entries without line numbers are acceptable rather than fabricating precision that was never observed. A criterion may have more than one entry when it is proven in more than one place."
     },
     "breaking_changes": {
       "type": "array",

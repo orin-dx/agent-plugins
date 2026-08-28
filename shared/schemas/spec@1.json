@@ -79,7 +79,7 @@
     },
     "spec_file_path": {
       "type": "string",
-      "description": "Workspace-relative path where this spec is written on disk (e.g. .claude/specs/SPEC-001.json). Set by the canon skill orchestrator after gate passes. Agents resolve it against workspace_root from the recon manifest."
+      "description": "Workspace-relative path where this spec is written on disk (e.g. .claude/specs/SPEC-001.json). Set by the scribe skill orchestrator after gate passes. Agents resolve it against workspace_root from the recon manifest."
     },
     "revision_note": {
       "type": "string",

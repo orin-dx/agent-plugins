@@ -8,10 +8,10 @@ Supersedes `changeset@1` (`shared/schemas/changeset@1.json`, still valid, now le
 
 ```json
 {
-  "summary": "Add cross-language recon agent to proof plugin",
+  "summary": "Add cross-language recon agent to ranger plugin",
   "consumer_impact": "new-capability",
   "semver_impact": "minor",
-  "files_changed": ["plugins/proof/subagents/recon.md"],
+  "files_changed": ["plugins/ranger/subagents/recon.md"],
   "tests_added": [],
   "acceptance_criteria_met": ["SPEC-001-AC-3", "SPEC-001-AC-4"],
   "breaking_changes": [],
@@ -55,12 +55,12 @@ Separate *what changed* (factual) from *why* (one clause) — don't blend them. 
 - **Changeset summary**: for consumers of the package. Explains the user-visible impact.
 
 Same change, two framings:
-- Commit: `refactor(proof): extract language detection into recon subagent`
-- Changeset: `Proof plugin now detects workspace language automatically before scanning`
+- Commit: `refactor(ranger): extract language detection into recon subagent`
+- Changeset: `Ranger plugin now detects workspace language automatically before scanning`
 
 ## Release Notes Generation
 
-The `delta/release` skill aggregates changeset summaries by `semver_impact` (breaking/feature/fix), filtering out `consumer_impact: internal-only` entries:
+The `courier/release` skill aggregates changeset summaries by `semver_impact` (breaking/feature/fix), filtering out `consumer_impact: internal-only` entries:
 
 ```markdown
 ## v2.0.0 (2026-08-04)
@@ -69,8 +69,8 @@ The `delta/release` skill aggregates changeset summaries by `semver_impact` (bre
 - Plugin IDs renamed: bug-hunter-rust → proof, agent-plugin-builder → basis
 
 ### New Features
-- axiom exit gate with retry-with-feedback for all stage transitions
-- proof plugin with cross-language recon and adversarial verification
+- sentinel exit gate with retry-with-feedback for all stage transitions
+- ranger plugin with cross-language recon and adversarial verification
 
 ### Bug Fixes
 - ...
@@ -83,7 +83,7 @@ Write a changeset for every PR that:
 - Changes a subagent's model or effort tier
 - Modifies a shared schema (always breaking if fields removed)
 - Renames a plugin ID
-- Changes the axiom protocol or retry behavior
+- Changes the sentinel protocol or retry behavior
 
 Skip changesets for:
 - Pure documentation changes

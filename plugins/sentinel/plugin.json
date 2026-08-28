@@ -1,0 +1,20 @@
+{
+  "id": "sentinel",
+  "name": "sentinel",
+  "version": "2.0.0",
+  "description": "Cross-cutting verification gate. Confirms any stage artifact meets its criteria before the next stage begins. Implements the sentinel protocol: recon \u2192 verify \u2192 exit-gate with retry-with-feedback.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "agents": [
+    "./agents/exit-gate.md",
+    "./agents/recon.md",
+    "./agents/verifier.md"
+  ],
+  "consumes": [],
+  "produces": [
+    "verdict@1"
+  ]
+}

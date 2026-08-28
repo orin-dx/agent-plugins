@@ -8,13 +8,13 @@ Quick reference guide for Claude Code CLI and Claude AI agents interacting with 
 
 - **Install Plugin in Claude Code**:
   ```bash
-  claude plugin add orin-dx/agent-plugins/proof
-  claude plugin add orin-dx/agent-plugins/basis
+  claude plugin add orin-dx/agent-plugins/ranger
+  claude plugin add orin-dx/agent-plugins/mason
   ```
 - **Install Plugin in AGY**:
   ```bash
-  agy plugin add orin-dx/agent-plugins/proof
-  agy plugin add orin-dx/agent-plugins/basis
+  agy plugin add orin-dx/agent-plugins/ranger
+  agy plugin add orin-dx/agent-plugins/mason
   ```
 - **Local Manifest Validation**:
   ```bash

@@ -155,7 +155,7 @@ description: >-
 ---
 ```
 
-**Namespacing Rule**: Claude Code automatically registers agents as `<plugin_id>:<agent_name>`. Naming an agent `name: drafter` in plugin `canon` results in the clean namespace `canon:drafter`. Never use `name: canon-drafter`, which generates redundant `canon:canon-drafter` stuttering in logs and schemas.
+**Namespacing Rule**: Claude Code automatically registers agents as `<plugin_id>:<agent_name>`. Naming an agent `name: drafter` in plugin `scribe` results in the clean namespace `scribe:drafter`. Never use `name: scribe-drafter`, which generates redundant `scribe:scribe-drafter` stuttering in logs and schemas.
 
 ---
 
@@ -292,7 +292,7 @@ Section 16 is about how *agent prompts* are written. This is about what agents w
 
 Every such artifact has exactly one reader with exactly one need. Before writing a line, name both: who reads this, and what do they need to walk away knowing. Content that doesn't serve that need is noise — a restated signature, a narrated alternative ("instead of X we..."), a process log of how the author got here. That kind of content belongs in conversation or a PR body's rationale, not baked into the artifact itself.
 
-This is a scoping discipline, not a brevity target. A doc comment covering a genuinely non-obvious invariant, or a PR body explaining a breaking change's migration path, earns its length — cutting it to hit a word count would just make the reader go find the answer elsewhere. The discipline cuts padding, not substance. `delta/changeset` already applies this per-artifact: a patch-level changeset is one line, a major-version changeset gets full old-behavior-to-new-behavior detail — same principle, scaled to what that changeset's reader needs to decide.
+This is a scoping discipline, not a brevity target. A doc comment covering a genuinely non-obvious invariant, or a PR body explaining a breaking change's migration path, earns its length — cutting it to hit a word count would just make the reader go find the answer elsewhere. The discipline cuts padding, not substance. `courier/changeset` already applies this per-artifact: a patch-level changeset is one line, a major-version changeset gets full old-behavior-to-new-behavior detail — same principle, scaled to what that changeset's reader needs to decide.
 
 | Artifact | Reader | What they need |
 | :--- | :--- | :--- |

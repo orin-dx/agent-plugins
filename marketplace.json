@@ -1,22 +1,22 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "orin-dx-agent-plugins",
-  "version": "3.5.3",
+  "version": "4.0.0",
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
-      "id": "basis",
-      "name": "basis",
-      "version": "2.1.2",
-      "path": "./plugins/basis",
+      "id": "mason",
+      "name": "mason",
+      "version": "3.0.0",
+      "path": "./plugins/mason",
       "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent.",
       "supersedes": "agent-plugin-builder"
     },
     {
-      "id": "proof",
-      "name": "proof",
-      "version": "2.2.4",
-      "path": "./plugins/proof",
+      "id": "ranger",
+      "name": "ranger",
+      "version": "3.0.0",
+      "path": "./plugins/ranger",
       "description": "Cross-language bug hunting plugin. Finds real bugs in live code through recon (workspace manifest), scanning (hazard taxonomies), adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/.",
       "supersedes": [
         "bug-hunter-rust",
@@ -24,53 +24,60 @@
       ]
     },
     {
-      "id": "axiom",
-      "name": "axiom",
-      "version": "1.2.3",
-      "path": "./plugins/axiom",
+      "id": "sentinel",
+      "name": "sentinel",
+      "version": "2.0.0",
+      "path": "./plugins/sentinel",
       "description": "Cross-cutting verification gate. Confirms that any stage artifact meets its criteria before the next stage begins. One skill, one recon-verify-judge pipeline, reused unchanged against any artifact type.",
       "supersedes": "verify-first"
     },
     {
-      "id": "graph",
-      "name": "graph",
-      "version": "2.0.2",
-      "path": "./plugins/graph",
+      "id": "weaver",
+      "name": "weaver",
+      "version": "3.0.0",
+      "path": "./plugins/weaver",
       "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker that produces the requirement@1 schema. Skills: capture-need, clarify-requirement, prioritize-backlog, connect-requirement, audit-backlog."
     },
     {
-      "id": "trace",
-      "name": "trace",
-      "version": "1.2.5",
-      "path": "./plugins/trace",
-      "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Produces research-report@1 for consumption by canon (spec)."
+      "id": "vanguard",
+      "name": "vanguard",
+      "version": "2.0.0",
+      "path": "./plugins/vanguard",
+      "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Produces research-report@1 for consumption by scribe (spec)."
     },
     {
-      "id": "canon",
-      "name": "canon",
-      "version": "2.2.1",
-      "path": "./plugins/canon",
+      "id": "scribe",
+      "name": "scribe",
+      "version": "3.0.0",
+      "path": "./plugins/scribe",
       "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, gate-spec, correct-spec, architect."
     },
     {
-      "id": "vector",
-      "name": "vector",
-      "version": "1.5.0",
-      "path": "./plugins/vector",
+      "id": "muse",
+      "name": "muse",
+      "version": "1.0.0",
+      "path": "./plugins/muse",
+      "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs — props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning. Audits the spec, not the implementation — see ranger's accessibility hazard taxonomy for code-level scanning."
+    },
+    {
+      "id": "navigator",
+      "name": "navigator",
+      "version": "2.0.0",
+      "path": "./plugins/navigator",
       "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with TDD steps, exact code, and commit messages. No TBDs."
     },
     {
-      "id": "lambda",
-      "name": "lambda",
-      "version": "1.6.2",
-      "path": "./plugins/lambda",
-      "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the axiom exit gate."
+      "id": "smith",
+      "name": "smith",
+      "version": "2.0.0",
+      "path": "./plugins/smith",
+      "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the sentinel exit gate."
     },
     {
-      "id": "delta",
-      "name": "delta",
-      "version": "2.1.3",
-      "path": "./plugins/delta",
+      "id": "courier",
+      "name": "courier",
+      "version": "3.0.0",
+      "path": "./plugins/courier",
       "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, changeset, receive-feedback, post-review, release."
     }
   ]

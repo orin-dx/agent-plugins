@@ -3,7 +3,7 @@
 </div>
 
 <p align="center">
-  <i>Nine cooperating plugins covering the full development lifecycle, connected by shared JSON schemas and a common verification gate.</i>
+  <i>Ten cooperating plugins covering the full development lifecycle, connected by shared JSON schemas and a common verification gate.</i>
 </p>
 
 <p align="center">
@@ -12,60 +12,84 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v3.5.3-success.svg" alt="Marketplace v3.5.3" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.0.0-success.svg" alt="Marketplace v4.0.0" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
 ---
 
-## The Lifecycle Ecosystem
+## Wisp — the Lifecycle Ecosystem
 
-Nine plugins cover the complete path from raw idea to shipped release. Each plugin produces a typed output schema consumed by the next stage. They are composable — install only the stages your workflow needs.
+Ten plugins, each a specialist persona covering one stage of the development lifecycle — together they're **Wisp**. Each produces a typed output schema consumed by the next stage. They're composable: install only the personas your workflow needs.
+
+**The primary flow** — one direction, no side-taps:
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 44, 'rankSpacing': 68}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b,rx:8px,ry:8px;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95,rx:8px,ry:8px;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,rx:8px,ry:8px;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:8px,ry:8px;
-    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#881337,rx:8px,ry:8px;
+    classDef define fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef design fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef build fill:#eff6ff,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a8a,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef ship fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:16px,font-weight:600;
 
-    gr[graph\nneed] -->|"requirement@1"| tr[trace\nresearch]
-    tr -->|"research-report@1"| ca[canon\nspec]
-    ca -->|"spec@1"| ve[vector\nplan]
-    ve -->|"plan@1"| la[lambda\ncode]
-    la -->|"changeset@2"| de[delta]
-    de -. iterate .-> gr
+    we[Weaver\nneed] -->|"requirement@1"| va[Vanguard\nresearch]
+    va -->|"research-report@1"| sc[Scribe\nspec]
+    mu[Muse\ncomponent spec] -->|"spec@1"| na[Navigator\nplan]
+    sc -->|"spec@1"| na
+    na -->|"plan@1"| sm[Smith\ncode]
+    sm -->|"changeset@2"| co[Courier\nship]
+    co -. iterate .-> we
 
-    ax([axiom\ngate])
-    ca -.->|"spec@1"| ax
-    la -.->|"changeset@2"| ax
-    ax -.->|"verdict@1"| de
-
-    pr([proof\naudit]) -.->|"finding-report@1"| de
-    pr -.->|"finding-report@1"| ca
-    ba([basis\nmeta]) -. scaffold .-> gr
-
-    class gr source
-    class tr,ca,ve,la engine
-    class de output
-    class ax router
-    class pr alert
-    class ba store
+    class we,va define
+    class sc,mu design
+    class na,sm build
+    class co ship
 ```
 
-| Plugin | Stage | Purpose | Output |
+**Verification** — Sentinel and Ranger attach to the flow above but aren't stops in its sequence; the muted dashed boxes below are the same personas shown only as attachment points:
+
+```mermaid
+%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+flowchart LR
+    classDef anchor fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px,color:#64748b,rx:10,ry:10,font-size:13px,stroke-dasharray:4 3;
+    classDef verify fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:15px,font-weight:600;
+
+    sc2[Scribe]:::anchor
+    sm2[Smith]:::anchor
+    co2[Courier]:::anchor
+
+    se([Sentinel\ngate])
+    ra([Ranger\naudit])
+
+    sc2 -.->|"spec@1"| se
+    sm2 -.->|"changeset@2"| se
+    se -.->|"verdict@1"| co2
+
+    sm2 -->|"live code"| ra
+    ra -.->|"finding-report@1"| co2
+    ra -.->|"finding-report@1"| sc2
+
+    class se,ra verify
+```
+
+![Define](https://img.shields.io/badge/-Define-6366f1) ![Design](https://img.shields.io/badge/-Design-8b5cf6) ![Build](https://img.shields.io/badge/-Build-3b82f6) ![Verify](https://img.shields.io/badge/-Verify-f59e0b) ![Ship](https://img.shields.io/badge/-Ship-10b981) ![Meta](https://img.shields.io/badge/-Meta-64748b)
+
+*Pill-shaped nodes are cross-cutting checkpoints, not sequence stops. Solid arrows are direct handoffs; dashed arrows are verification and meta side-channels. Ranger's input is the live codebase Smith just wrote, not a schema handoff — the one solid arrow in the second diagram.*
+
+Grouped by what each persona actually does — five bands across the lifecycle, plus one that stands outside it and maintains the rest:
+
+| Category | Persona | Job | Output |
 | :--- | :--- | :--- | :--- |
-| [`graph`](./plugins/graph/) | Need | Captures and structures requirements | `requirement@1` |
-| [`trace`](./plugins/trace/) | Research | Surveys prior art, risks, and patterns | `research-report@1` |
-| [`canon`](./plugins/canon/) | Spec | Drafts and gates unambiguous specifications | `spec@1` |
-| [`vector`](./plugins/vector/) | Plan | Decomposes specs into sequenced, testable tasks | `plan@1` |
-| [`lambda`](./plugins/lambda/) | Code | Implements tasks via TDD, gates on exit | `changeset@2` |
-| [`axiom`](./plugins/axiom/) | Gate | Cross-artifact verification gate (reusable) | `verdict@1` |
-| [`delta`](./plugins/delta/) | Ship | Commits, PRs, changelogs, and release notes | `release-artifact@2` |
-| [`proof`](./plugins/proof/) | Audit | Fast cross-language bug scan before any release | `finding-report@1` |
-| [`basis`](./plugins/basis/) | Meta | Scaffolds and audits new plugins | — |
+| **Define** | [`weaver`](./plugins/weaver/) | Captures and structures scattered need into requirements | `requirement@1` |
+| **Define** | [`vanguard`](./plugins/vanguard/) | Goes first — researches prior art, risk, and patterns before anyone commits to a direction | `research-report@1` |
+| **Design** | [`scribe`](./plugins/scribe/) | Drafts and gates the unambiguous, binding spec | `spec@1` |
+| **Design** | [`muse`](./plugins/muse/) | Drafts and gates component specs — props, variants, per-state behavior, accessibility | `spec@1` |
+| **Build** | [`navigator`](./plugins/navigator/) | Decomposes the spec into an exact, step-by-step plan | `plan@1` |
+| **Build** | [`smith`](./plugins/smith/) | Implements via TDD — failing test, minimal code, green, commit | `changeset@2` |
+| **Verify** | [`sentinel`](./plugins/sentinel/) | Cross-cutting gate — confirms any artifact meets its criteria before the next stage begins | `verdict@1` |
+| **Verify** | [`ranger`](./plugins/ranger/) | Hunts down real bugs through adversarial, evidence-based verification | `finding-report@1` |
+| **Ship** | [`courier`](./plugins/courier/) | Commits, opens PRs, responds to review, writes changelogs and release notes | `release-artifact@2` |
+| **Meta** | [`mason`](./plugins/mason/) | Lays the foundation — scaffolds new plugins, audits the rest for conformance | — |
 
 ---
 
@@ -104,17 +128,17 @@ All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use J
 
 | Schema | Produced by | Consumed by |
 | :--- | :--- | :--- |
-| `requirement@1` | graph | trace, canon |
-| `research-report@1` | trace | canon |
-| `spec@1` | canon | vector, axiom |
-| `plan@1` | vector | lambda |
-| `changeset@2` | lambda | delta, axiom |
-| `verdict@1` | axiom | any gate consumer |
-| `verdict@2` | proof | delta, humans (extends verdict@1 with flagged_for_review) |
-| `finding-report@1` | proof | delta, humans, architect |
+| `requirement@1` | weaver | vanguard, scribe |
+| `research-report@1` | vanguard | scribe |
+| `spec@1` | scribe, muse | navigator, sentinel |
+| `plan@1` | navigator | smith |
+| `changeset@2` | smith | courier, sentinel |
+| `verdict@1` | sentinel | any gate consumer |
+| `verdict@2` | ranger | courier, humans (extends verdict@1 with flagged_for_review) |
+| `finding-report@1` | ranger | courier, humans, architect |
 | `field-survival-map@1` | boundary-tracer | adversary |
 | `mutation-report@1` | mutator | exit-gate, implementer |
-| `release-artifact@2` | delta | humans |
+| `release-artifact@2` | courier | humans |
 
 ---
 
@@ -134,9 +158,9 @@ Runtime-pullable guides in `shared/references/`. Agents pull these themselves du
 | `typescript-smells.md` | TS architectural smells and interface/type designs | architect |
 | `typescript-tooling.md` | TS test commands (Stryker, Vitest), non-negotiables | mutator, remediator |
 | `typescript.md` | Thin index → routes to the files above | — |
-| `conventional-commits.md` | Type/scope conventions and scope table | delta |
-| `github.md` | PR template, `gh` CLI commands, labels | delta |
-| `changesets.md` | Changeset vs commit distinction, semver decision guide | delta |
+| `conventional-commits.md` | Type/scope conventions and scope table | courier |
+| `github.md` | PR template, `gh` CLI commands, labels | courier |
+| `changesets.md` | Changeset vs commit distinction, semver decision guide | courier |
 | `mcp-protocol.md` | MCP server lifecycle, tool definition format, A2A AgentCard | — |
 | `modern-cli-tools.md` | ripgrep, fd, bat, jq, delta, fzf usage patterns | — |
 | `interface-implementers.md` | Deterministic pre-scan for enumerating trait/interface implementers per language | challenger |
@@ -152,20 +176,21 @@ Add this repo as a marketplace, then install the plugins you need:
 
 ```
 /plugin marketplace add orin-dx/agent-plugins
-/plugin install graph
-/plugin install trace
-/plugin install canon
-/plugin install vector
-/plugin install lambda
-/plugin install axiom
-/plugin install delta
+/plugin install weaver
+/plugin install vanguard
+/plugin install scribe
+/plugin install muse
+/plugin install navigator
+/plugin install smith
+/plugin install sentinel
+/plugin install courier
 ```
 
-Install `proof` and `basis` as needed:
+Install `ranger` and `mason` as needed:
 
 ```
-/plugin install proof
-/plugin install basis
+/plugin install ranger
+/plugin install mason
 ```
 
 ### Antigravity (AGY)
@@ -181,15 +206,16 @@ Or use [`agy-plugins-cli`](https://github.com/ZaunEkko/agy-plugins-cli) for an i
 ```bash
 npm install -g agy-plugins-cli
 agy-plugin marketplace add orin-dx/agent-plugins
-agy-plugin add graph@orin-dx
-agy-plugin add trace@orin-dx
-agy-plugin add canon@orin-dx
-agy-plugin add vector@orin-dx
-agy-plugin add lambda@orin-dx
-agy-plugin add axiom@orin-dx
-agy-plugin add delta@orin-dx
-agy-plugin add proof@orin-dx
-agy-plugin add basis@orin-dx
+agy-plugin add weaver@orin-dx
+agy-plugin add vanguard@orin-dx
+agy-plugin add scribe@orin-dx
+agy-plugin add muse@orin-dx
+agy-plugin add navigator@orin-dx
+agy-plugin add smith@orin-dx
+agy-plugin add sentinel@orin-dx
+agy-plugin add courier@orin-dx
+agy-plugin add ranger@orin-dx
+agy-plugin add mason@orin-dx
 ```
 
 ---
@@ -206,15 +232,16 @@ agent-plugins/
 │   ├── references/               ← Runtime-pullable domain guides (split by concern)
 │   └── agent-best-practices.md  ← Authoring-time principles
 └── plugins/
-    ├── graph/                    ← Requirement capture
-    ├── trace/                    ← Research synthesis
-    ├── canon/                    ← Specification drafting and gating
-    ├── vector/                   ← Implementation planning
-    ├── lambda/                   ← TDD implementation
-    ├── axiom/                    ← Verification gate
-    ├── delta/                    ← Ship tooling
-    ├── proof/                    ← Fast cross-language bug scan
-    └── basis/                    ← Plugin scaffolding
+    ├── weaver/                    ← Requirement capture
+    ├── vanguard/                  ← Research synthesis
+    ├── scribe/                    ← Specification drafting and gating
+    ├── muse/                      ← Component spec drafting and gating
+    ├── navigator/                 ← Implementation planning
+    ├── smith/                     ← TDD implementation
+    ├── sentinel/                  ← Verification gate
+    ├── courier/                   ← Ship tooling
+    ├── ranger/                    ← Fast cross-language bug scan
+    └── mason/                     ← Plugin scaffolding
 ```
 
 ---

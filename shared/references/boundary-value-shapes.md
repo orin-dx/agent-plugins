@@ -1,6 +1,6 @@
 # Boundary Value Shapes
 
-_Loaded by: lambda:implementer, whenever a task's acceptance criterion involves a value that can be absent, wrong, or stale — especially where it crosses a process, crate, or serialization boundary. Not a bug-hunting taxonomy — proof and reviewer do not load this file._
+_Loaded by: smith:implementer, whenever a task's acceptance criterion involves a value that can be absent, wrong, or stale — especially where it crosses a process, crate, or serialization boundary. Not a bug-hunting taxonomy — ranger and reviewer do not load this file._
 
 ---
 

@@ -32,7 +32,7 @@ plugins/<plugin-id>/
     └── exit-gate.md              <-- opus/high  — binding judgment
 ```
 
-A plugin defaults to one skill directory named after the plugin id, as above. IF the plugin's scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<plugin-id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead. `delta`, `canon`, `graph`, and `basis` are examples. The skill-routing key is the directory name, not the frontmatter `name:` field. A new skill name defaults to a single lifecycle-stage word; only go to a specific compound name (`audit-spec`, not `canon-audit`) when the bare word is ambiguous or collides with another plugin's existing skill name. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
+A plugin defaults to one skill directory named after the plugin id, as above. IF the plugin's scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<plugin-id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead. `courier`, `scribe`, `weaver`, and `mason` are examples. The skill-routing key is the directory name, not the frontmatter `name:` field. A new skill name defaults to a single lifecycle-stage word; only go to a specific compound name (`audit-spec`, not `scribe-audit`) when the bare word is ambiguous or collides with another plugin's existing skill name. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
 
 Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, systemic, behavioral, judgment, repair) — not by pipeline position. See `shared/constitution.md` for the model/effort tier rules.
 
@@ -40,7 +40,7 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 
 ## 3. Quick Checklist for Adding New Plugins
 
-1. **Use `basis`** — run `scaffolder` to generate the full directory structure and stubs.
+1. **Use `mason`** — run `scaffolder` to generate the full directory structure and stubs.
 2. **5-part agent structure** — every agent body: `<constitution>` (copied byte-for-byte from an existing agent), `<backstory>`, `<goal>`, `<judgment>`, `<output>`. No `<role>` body sections. No `success_criteria` checklists.
 3. **EARS in output only** — WHEN/IF/WHILE/WHERE notation belongs only in `<output>` contracts and never-do rules.
 4. **Progressive context loading** — one `<load_first>` block per agent, naming only the reference file for its cognitive phase.

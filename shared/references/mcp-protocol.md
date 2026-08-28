@@ -22,7 +22,7 @@ Model Context Protocol (MCP) is the cross-platform protocol for exposing tools a
 
 ```json
 {
-  "name": "axiom_verify",
+  "name": "sentinel_verify",
   "description": "Verify an artifact against its criteria. Returns a verdict@1 schema.",
   "inputSchema": {
     "type": "object",
@@ -60,9 +60,9 @@ For cross-service discovery, plugins publish an AgentCard at `/.well-known/agent
 
 ```json
 {
-  "name": "axiom",
+  "name": "sentinel",
   "description": "Cross-cutting verification gate for the Orin DX plugin ecosystem",
-  "url": "https://plugins.orin.dev/axiom",
+  "url": "https://plugins.orin.dev/sentinel",
   "version": "1.0.0",
   "capabilities": {
     "streaming": false,

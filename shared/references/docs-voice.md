@@ -1,8 +1,8 @@
 # Documentation Voice Reference
 
-Canonical voice standard for this repo: commit messages, PR bodies, changesets, release notes, and prose docs (READMEs, `basis`-scaffolded plugin docs). Succinct, engineering-focused, scannable. No AI slop.
+Canonical voice standard for this repo: commit messages, PR bodies, changesets, release notes, and prose docs (READMEs, `mason`-scaffolded plugin docs). Succinct, engineering-focused, scannable. No AI slop.
 
-Agents load only the subset embedded in their own task reference file (`conventional-commits.md`, `github.md`, `changesets.md`) — see each for the operational rules. This file is the full standard, for humans and for `basis` when scaffolding new docs.
+Agents load only the subset embedded in their own task reference file (`conventional-commits.md`, `github.md`, `changesets.md`) — see each for the operational rules. This file is the full standard, for humans and for `mason` when scaffolding new docs.
 
 Doc comments and inline code comments are a separate reader profile (a caller or a maintainer reading one line, not someone reading prose) — see `code-comments.md` for that operational subset instead.
 
