@@ -1,0 +1,22 @@
+<task-notification>
+<task-id>a6597794a5192f214</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/57009568-ab00-48b8-8bfe-fdb7614d6930/tasks/a6597794a5192f214.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit basis plugin against today's new conventions" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Task:** Audit `basis` plugin (scaffolder/auditor/schema-designer + their SKILL.md/README/CHANGELOG) for whether it knows about the `&lt;load_first&gt;` convention and orchestration-completeness checks established/reinforced this session.
+
+**Verdict: basis is a structural linter, not a conformance safety net for either convention.** Two concrete gaps, both would let today's exact mistakes recur silently in every future scaffolded/audited agent:
+
+1. **`&lt;load_first&gt;` is entirely unknown to basis.**
+   - `plugins/basis/agents/scaffolder.md:30` mandates "exactly these sections, in order: constitution, backstory, goal, judgment, output" — no optional 6th section, so scaffolder cannot generate a `&lt;load_first&gt;` block even when a new agent's task obviously needs one (cites a shared reference, does a pre-scan, etc.).
+   - `plugins/basis/agents/auditor.md:30` mirrors this: "body contains exactly constitution, backstory, goal, judgment, output sections, in that order." An audited agent with a `&lt;load_first&gt;` block (challenger.md, implementer.md, auditor.md, scanner.md, reviewer.md — 5+ real agents today) either fails this literal check or is silently unrecognized; auditor has no rule verifying a `&lt;load_first&gt;` actually exists when needed, or that its referenced file (`shared/references/...`) is real.
+   - Fix direction: add `&lt;load_first&gt;` as an optional 6th section (after constitution) to both agents' section-order rules, plus an auditor check that any `shared/references/*.md` path named in `&lt;load_first&gt;` resolves to a real file.
+
+2. **No orchestration-completeness check exists anywhere in basis:auditor's 7 categories** (`auditor.md:7`: plugin.json fields, subagent presence, frontmatter completeness, SKILL.md word count, 5-part structure, symlink validity, schema presence for produces/consumes). None of these cross-reference an agent's own output status enum (e.g. a new `needs_architecture`-style value) against its plugin's SKILL.md routing prose. The exact gap I found and fixed today in `plugins/lambda/skills/lambda/SKILL.md` would have passed a full basis:auditor run with zero findings.
+   - Fix direction: 8th check — for each status/enum value an agent's `&lt;output&gt;` can emit, confirm the plugin's SKILL.md names a routing action for it (or explicitly marks it terminal).
+
+**Not an issue:** `basis`'s own README/CHANGELOG/plugin.json version (2.0.1) agree with each other; scaffold-plugin vs scaffold-subagent split is a reasonable, already-documented scope division, no redundant round-trips observed. `schema-designer.md` looks conformant.</result>
+<usage><subagent_tokens>289361</subagent_tokens><tool_uses>7</tool_uses><duration_ms>33196</duration_ms></usage>
+</task-notification>
