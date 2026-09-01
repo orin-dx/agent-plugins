@@ -1,0 +1,6 @@
+Please read through our plugins to get a deep understandinf or our current state in context to this:
+
+- https://arxiv.org/html/2603.17973v2
+- https://nathanacurtis.substack.com/p/spec-driven-ui-component-development
+
+How can we integrate learnings? What should we adjust, improve, etc? Do deeper research based on the topics you learn from both links. Don't be confined to just I provided. Think for yourself, check yourself, expand on it to form a full opinion and report back.
