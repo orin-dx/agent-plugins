@@ -1,0 +1,3 @@
+Let's do some research on what's new with plugins out there. Plugins for claude, agy, codex and opencode. I'd like to find out what's the best harness too. I do love the claude code harness and maybe using qwen, kimi k, glm on it would be nice since i like the plugin/agent/skill setup.
+
+Do extensive research, focus on what's new and give me a good perspective. Consider novel UIs too. We want the best DX. Use agent teams and workflows with the most appropriate mmodel and context to maximize quality and minimize cost.
