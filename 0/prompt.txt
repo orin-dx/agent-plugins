@@ -1,0 +1,1 @@
+It seems to all be wrapped up in the ship skill which encompasses too much all at once right? Shouldn't we have one for receiving feedback? one for giving feedback, one for writing the changeset and one for creating a PR?
