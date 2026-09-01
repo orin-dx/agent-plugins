@@ -1,0 +1,143 @@
+Some feedback from another agent regarding improvements we can make:
+
+What the Audit Teaches
+
+The 8 critical bugs share a single underlying pattern, with three variants:
+
+Pattern A — Intent-capture-to-execution discard (CB1, CB2, CB3):
+A value is stored in a plan/config struct with user intent (NpmPublish::tag, PypiPublish::index, _pre), but the function that drives the actual effect receives a stripped-down signature and never reads the field. The compiler doesn't warn because the field is set, not unused.
+
+Pattern B — False-success mutation (CB4):
+A Result<(), E>-returning function named update_* or write_* returns Ok(()) on a code path that performed no mutation, so the caller believes the write succeeded.
+
+Pattern C — Incomplete conversion coverage (F02, CB7):
+A from_path() or matches() function covers a subset of an enum's variants or uses == where a domain-specific comparator is needed. Both cause silently wrong behavior at runtime with no warning.
+
+None of these are currently in the Rust reference taxonomy, and none are in the scanner agent's explicit search patterns.
+
+---
+Improvements to shared/references/rust.md
+
+Three new taxonomies and one expanded smell, as concrete additions:
+
+Taxonomy 7 — Write-Only Fields (new)
+### 7. Write-Only Fields
+- **Signal:** A struct field is set in one module but the consuming function's
+  signature only takes (id, version) or similar — the field is never read at
+  the execution boundary.
+- **Search:**
+  1. Find plan/config structs with fields named `tag`, `index`, `registry`,
+     `access`, `dist_tag`, `repository`, `token`, or any `Option<String>`.
+  2. Find where the struct is *constructed* (grep for `Struct { field: value, ..}`).
+  3. Find the function that *executes* the action — confirm it reads the field.
+  4. Flag any field that is set but absent from the execution call site.
+- **Risk:** User-specified routing (private registry, dist-tag, access level)
+  is silently overridden by a hardcoded default in the execution layer.
+- **False positive check:** Is the field intentionally unused because the
+  execution layer has its own default? Document it if so.
+
+Taxonomy 8 — False-Success Mutation (new)
+### 8. False-Success Mutation
+- **Signal:** A function named `update_*`, `write_*`, `set_*`, or `bump_*`
+  returns `Result<(), E>` and has a code path ending in `return Ok(());`
+  that was reached without performing any visible mutation.
+- **Search:** `fn (update|write|set|bump)_\w+.*Result<\(\), ` combined with
+  `return Ok\(\(\)\);` in the same function body.
+- **Risk:** Caller believes the write succeeded; dependency graph or manifest
+  is silently in the wrong state going forward.
+- **False positive check:** Does the function document an "already in desired
+  state → Ok(())" contract? Is there a caller-side check after the call?
+  If neither, the silent Ok is a bug.
+
+Taxonomy 9 — Duplicate Diagnostic Codes (new)
+### 9. Duplicate Diagnostic Codes
+- **Signal:** Two or more error variants share the same `#[diagnostic(code(...))]`
+  or `#[error(code = ...)]` annotation.
+- **Search:** `diagnostic\(code\(` — collect all code values and check for
+  duplicates across the file and across modules in the same crate.
+- **Risk:** Tooling and CI that dispatches on diagnostic codes can't distinguish
+  the two errors; one is silently lost.
+- **False positive check:** None. Duplicate codes are always wrong.
+
+Expand existing Architectural Smell — "Missing BTreeMap":
+Add a sub-point:
+- HashSet in error payloads: an error type that derives PartialEq/Eq/Hash and
+  contains a HashSet or HashMap field has non-deterministic equality, breaking
+  snapshot tests and any consumer comparing error values. Use BTreeSet/BTreeMap.
+- HashSet.into_iter().collect::<Vec>(): any HashSet converted to a Vec for
+  inclusion in an error, log entry, or user-visible output produces a
+  non-deterministic ordering. Collect into BTreeSet first, then Vec.
+
+Expand existing Smell — "Raw String Identity" → rename to "Domain Method vs PartialEq Confusion":
+### Domain Method vs PartialEq Confusion
+- `entry.name == pkg.id.to_string()` — bare string comparison on a newtype
+- `id == &pkg.id` where `PackageId::matches()` has broader semantics
+- `version == req.version` where `VersionReq::matches()` is the correct predicate
+- **Search:** `==` on types that have a named domain method (`matches`,
+  `satisfies`, `equivalent`, `covers`) — the `PartialEq` impl often tests
+  structural identity while the domain method tests semantic equivalence.
+
+---
+Improvements to bug-hunter-rust Plugin
+
+Scanner agent — expand search patterns:
+
+Add to the <goal> and <execution_strategy>:
+- **Taxonomy 7**: Write-only struct fields — trace every field of plan/config
+  structs from construction site to execution function. Flag fields that are set
+  but absent from the execution call site or subprocess argument list.
+- **Taxonomy 8**: False-success mutations — fn update_*/write_*/set_*/bump_*
+  returning Result<(), _> that contain `return Ok(());` paths not guarded by
+  an "already-correct" invariant check.
+- **Taxonomy 9**: Duplicate diagnostic codes — `#[diagnostic(code(...))]`
+  shared by more than one variant.
+- **Incomplete conversion coverage**: `from_path`, `from_str`, `try_from`
+  functions whose match arms are fewer than the number of variants in the
+  source enum. Search: match arms followed by `_ => Err(Unknown...)`.
+
+Adversary agent — add explicit cross-boundary field tracing:
+
+The adversary's current "End-to-End Tracing" step is underspecified for this failure mode. Add:
+- **Field survival check**: For every plan/config struct passed across a module
+  boundary, confirm each field is present in the downstream function's
+  parameter list or is explicitly read before the subprocess is invoked.
+  The specific failure mode to look for: RegistryClient::publish receives only
+  (id, version) while the PublishPlan struct carries index/registry/tag/access
+  — none of those fields can reach the subprocess through a (id, version) sig.
+
+Architect agent — add a sixth smell:
+
+6. **Test Fixture Drift Smell**: Hardcoded JSON/TOML/YAML string literals in
+   test files that use field names no longer matching the production serde struct.
+   After any schema change (adding a field, renaming a key, changing Vec to HashMap),
+   search test files for string literals that embed the old schema shape. Confirm
+   each literal's keys match the current `#[serde(rename = "...")]` or field names.
+
+Consider a new role: bug-hunter-boundary-tracer-rust
+
+The four most damaging findings (CB1, CB2, CB3, CB4) all share the same mechanism but are currently split across the scanner's Taxonomy 1 check and the adversary's end-to-end tracing. A dedicated boundary-tracer agent, focused exclusively on "does every field of this plan/config struct survive to where it's needed?", would be more systematic than embedding the check as a footnote in each. It could run targeted field-survival traces on all types matching Plan, Config, Options, Publish*, Pre* in any codebase — a two-hour audit that would have caught CB1 through CB4 outright.
+
+---
+Summary
+
+┌─────────────────────────────────────────────┬────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────┐
+│                   Finding                   │                       Missed by                        │                       Root cause                        │
+├─────────────────────────────────────────────┼────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+│ CB1, CB2 (write-only fields)                │ Scanner + Adversary                                    │ No Taxonomy 7; End-to-End Tracing doesn't enumerate     │
+│                                             │                                                        │ fields                                                  │
+├─────────────────────────────────────────────┼────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+│ CB3 (_pre ignored)                          │ Scanner catches _param, but not "field set, never      │ Taxonomy 1 searches function params, not struct fields  │
+│                                             │ read"                                                  │                                                         │
+├─────────────────────────────────────────────┼────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+│ CB4 (false-success Ok)                      │ Neither agent                                          │ No Taxonomy 8                                           │
+├─────────────────────────────────────────────┼────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+│ CB7 (== vs matches())                       │ Architect has the smell but Scanner doesn't search for │ Smell defined but not wired to a search pattern         │
+│                                             │  it                                                    │                                                         │
+├─────────────────────────────────────────────┼────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+│ F02, F03, F04 (missing arms, duplicate      │ All agents                                             │ Taxonomies 9 and "incomplete conversion" are absent     │
+│ codes)                                      │                                                        │                                                         │
+├─────────────────────────────────────────────┼────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+│ CB8 (fixture drift)                         │ Mutator (closest, but doesn't check schema key names)  │ No fixture-drift smell in Architect or Mutator          │
+└─────────────────────────────────────────────┴────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────┘
+
+The rust.md reference is also anchored to NAPI patterns (#[napi], catch_unwind) that don't apply to this codebase. Worth having callisto's project-level bug-hunter override strip those and replace them with the CLI-tool-specific additions above.
