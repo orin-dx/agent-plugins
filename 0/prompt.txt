@@ -1,0 +1,20 @@
+<task-notification>
+<task-id>a927682ccc9a6afe4</task-id>
+<tool-use-id>toolu_01AvocDBAmDxHC1B1pfeF3RW</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a927682ccc9a6afe4.output</output-file>
+<status>completed</status>
+<summary>Agent "Polish canon README for scannability" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Reads cleanly end to end. Stopping here.
+
+**Task**: Polish `plugins/canon/README.md` for readability/scannability (accuracy already correct from earlier this session).
+
+Changes:
+- Opening description: collapsed a 5-sentence dense paragraph into one lead sentence + 4 bullets (docs-voice rule 4/1) — was doing five separate jobs in one block, now scannable at a glance.
+- Converted the primary "Standard drafting pipeline" from ASCII arrows to a real Mermaid flowchart, styled with `orin-visual-standard.md`'s six-color `classDef` palette (source/engine/router/output roles), matching the convention already applied to root `README.md`/`ARCHITECTURE.md` this session.
+- Left the three secondary pipelines (drift check, correction, architectural remediation) as ASCII — they're on-demand/less-trafficked flows, converting all four would be more clutter than clarity, per the directive's own guidance.
+- Everything else (Skills table, Subagents table, Exit Gate Conditions, Output Schemas, Install, Next Stage) was already clean — left untouched rather than rewritten for its own sake.
+
+No commit made — file edited only, not staged/committed (parent didn't ask for that in this directive).</result>
+<usage><subagent_tokens>676938</subagent_tokens><tool_uses>6</tool_uses><duration_ms>44037</duration_ms></usage>
+</task-notification>
