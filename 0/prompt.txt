@@ -1,0 +1,1 @@
+Have we addressed all of the defects found in the adversarial analysis?
