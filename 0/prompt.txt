@@ -1,0 +1,1 @@
+Can you add sonnet 4.6 and opus 4.6 to the list of allowed models? The list is an override so you need to also include the current models
