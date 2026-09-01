@@ -1,0 +1,203 @@
+{
+  "cli_version": "0.10.3-nightly.202608260614.6561a64b8",
+  "checkpoint_id": "01M1F94BKDQHRWM8TWF5MQ8Q6F",
+  "session_id": "5ecd9de8-2c05-4dfb-95d2-d928d11fdf96",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-01T20:03:54.696074Z",
+  "branch": "feat/drop-test-first-ordering",
+  "checkpoints_count": 5,
+  "save_step_count": 3,
+  "files_touched": [
+    "plugins/muse/agents/auditor.md",
+    "plugins/muse/agents/drafter.md",
+    "plugins/muse/agents/exit-gate.md",
+    "plugins/ranger/agents/adversary.md",
+    "plugins/ranger/agents/exit-gate.md",
+    "plugins/ranger/agents/scanner.md",
+    "plugins/scribe/agents/auditor.md",
+    "plugins/scribe/agents/drafter.md",
+    "plugins/scribe/agents/drift-checker.md",
+    "plugins/smith/agents/exit-gate.md",
+    "plugins/smith/agents/mutator.md",
+    "plugins/smith/agents/recon.md",
+    "plugins/smith/agents/reviewer.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "43c821d08778",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 578,
+    "cache_creation_tokens": 1810665,
+    "cache_read_tokens": 117948599,
+    "output_tokens": 360544,
+    "api_call_count": 289,
+    "subagent_tokens": {
+      "input_tokens": 34,
+      "cache_creation_tokens": 179630,
+      "cache_read_tokens": 821102,
+      "output_tokens": 4661,
+      "api_call_count": 17
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01442xYsCwUw7oLLCcdD4jDB",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-diagramming"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "174617551cc2",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 728,
+        "end": 729,
+        "entry_ids": [
+          "29705317-e6c7-4585-b065-a7ab9719e1a2"
+        ],
+        "tool_use_id": "toolu_01442xYsCwUw7oLLCcdD4jDB"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01442xYsCwUw7oLLCcdD4jDB"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-diagramming",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01Kn3jcgvpfThAvN2cVtte9F",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "artifact-design"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "56b88c9fd6a9",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1124,
+        "end": 1125,
+        "entry_ids": [
+          "bcd39f33-faf3-4e59-ba02-d5a9e7a43797"
+        ],
+        "tool_use_id": "toolu_01Kn3jcgvpfThAvN2cVtte9F"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01Kn3jcgvpfThAvN2cVtte9F"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: artifact-design",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 69
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-01T20:03:54.528071Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 94,
+    "human_modified": 51,
+    "human_removed": 0,
+    "total_committed": 94,
+    "total_lines_changed": 154,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 62,
+      "user_lines_removed": 20,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        "plugins/ranger/agents/adversary.md": 6,
+        "plugins/ranger/agents/exit-gate.md": 5,
+        "plugins/ranger/agents/scanner.md": 5,
+        "plugins/scribe/agents/auditor.md": 6,
+        "plugins/scribe/agents/drafter.md": 4,
+        "plugins/scribe/agents/drift-checker.md": 6,
+        "plugins/smith/agents/exit-gate.md": 7,
+        "plugins/smith/agents/mutator.md": 5,
+        "plugins/smith/agents/recon.md": 5,
+        "plugins/smith/agents/reviewer.md": 6
+      },
+      "user_removed_per_file": {
+        "plugins/ranger/agents/adversary.md": 1,
+        "plugins/ranger/agents/exit-gate.md": 1,
+        "plugins/ranger/agents/scanner.md": 1,
+        "plugins/scribe/agents/auditor.md": 10,
+        "plugins/scribe/agents/drafter.md": 2,
+        "plugins/scribe/agents/drift-checker.md": 1,
+        "plugins/smith/agents/exit-gate.md": 1,
+        "plugins/smith/agents/mutator.md": 1,
+        "plugins/smith/agents/recon.md": 1,
+        "plugins/smith/agents/reviewer.md": 1
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 55,
+      "agent_lines_removed": 20,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 79,
+      "user_lines_removed": 20,
+      "agent_lines_added": 55,
+      "agent_lines_removed": 20,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        "plugins/courier/agents/changeset-analyzer.md": 7,
+        "plugins/courier/agents/pr-narrator.md": 5,
+        "plugins/courier/agents/release-summarizer.md": 6,
+        "plugins/courier/agents/review-preprocessor.md": 6,
+        "plugins/mason/agents/auditor.md": 6,
+        "plugins/mason/agents/scaffolder.md": 7,
+        "plugins/muse/agents/auditor.md": 6,
+        "plugins/muse/agents/drafter.md": 5,
+        "plugins/muse/agents/exit-gate.md": 7,
+        "plugins/navigator/agents/challenger.md": 5,
+        "plugins/navigator/agents/estimator.md": 6,
+        "plugins/navigator/agents/planner.md": 6
+      },
+      "user_removed_per_file": {
+        "plugins/courier/agents/changeset-analyzer.md": 1,
+        "plugins/courier/agents/pr-narrator.md": 1,
+        "plugins/courier/agents/release-summarizer.md": 1,
+        "plugins/courier/agents/review-preprocessor.md": 1,
+        "plugins/mason/agents/auditor.md": 1,
+        "plugins/mason/agents/scaffolder.md": 1,
+        "plugins/muse/agents/auditor.md": 8,
+        "plugins/muse/agents/drafter.md": 2,
+        "plugins/muse/agents/exit-gate.md": 1,
+        "plugins/navigator/agents/challenger.md": 1,
+        "plugins/navigator/agents/estimator.md": 1,
+        "plugins/navigator/agents/planner.md": 1
+      }
+    }
+  ]
+}
