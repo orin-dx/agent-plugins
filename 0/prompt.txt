@@ -1,0 +1,3 @@
+consider we might want to have a changeset analyzer who's goal is to determine what changed from the perspective of a consumer, not just what changed internally. Remembering that a changeset is a changelog entry (or can be combined into one entry for a version).
+
+We want to consider how to determine the semver and scale the details in the changeset based on how complex and how big the version bump is. How dow we want to write this skill?
