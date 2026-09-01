@@ -1,0 +1,18 @@
+<task-notification>
+<task-id>a457f3787d4632457</task-id>
+<tool-use-id>toolu_01UYkRLr4VcVQuLgyna4oWGP</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a457f3787d4632457.output</output-file>
+<status>completed</status>
+<summary>Agent "Polish delta README for scannability" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: Polish `plugins/delta/README.md` for readability/scannability (pure polish, no accuracy issues to fix).
+
+The README already followed `docs-voice.md` well — active voice, tables over prose, no banned words, no filler. Made one substantive change plus verified the rest:
+
+- Converted the "Pipeline" section from hand-aligned ASCII box-drawing art (fragile across renderers, hard to maintain) to a real Mermaid flowchart styled with `orin-visual-standard.md`'s six-color palette — indigo for inputs (`git diff`, `PR comments`), violet for the three drafting/analysis skills (`changeset`, `pr`, `release`), amber for the two triage/gate skills (`receive-feedback`, `post-review`), emerald for terminal outputs. Left `fix code` unstyled deliberately — it's the one step outside delta's scope, and the missing color reads as a signal, not an omission.
+- Added one clarifying sentence under the diagram noting `fix code` is a human/lambda step, not delta's.
+- Everything else (intro paragraphs, tables, section structure) already read cleanly — left unchanged rather than rewriting for its own sake.
+
+Not committed — no commit made, per no explicit instruction to commit in this directive.</result>
+<usage><subagent_tokens>675378</subagent_tokens><tool_uses>5</tool_uses><duration_ms>56609</duration_ms></usage>
+</task-notification>
