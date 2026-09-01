@@ -1,0 +1,26 @@
+<task-notification>
+<task-id>a34b1cb402b2a2379</task-id>
+<tool-use-id>toolu_01Vrd3r6WvdBUHq68HBCzSJz</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a/tasks/a34b1cb402b2a2379.output</output-file>
+<status>completed</status>
+<summary>Agent "Rewrite axiom, graph, basis plugin agents with 4-part structure" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>All 9 agents have exactly the 4 required sections. Here is a summary of what was done:
+
+---
+
+**9 agent files rewritten** across axiom, graph, and basis. Every file now has exactly `&lt;backstory&gt;`, `&lt;goal&gt;`, `&lt;judgment&gt;`, `&lt;output&gt;` — no `&lt;role&gt;`, `&lt;context&gt;`, `&lt;execution_strategy&gt;`, `&lt;success_criteria&gt;`, or `&lt;heuristics&gt;` sections remain. EARS notation appears only inside `&lt;output&gt;` blocks.
+
+**Notable changes per plugin:**
+
+- **axiom**: All three agents already had correct model/effort tiers (haiku/sonnet/opus). Rewrote bodies to replace the old ad-hoc sections (`&lt;heuristics&gt;`, `&lt;output_shape&gt;`, plain prose) with the 4-part structure. The exit-gate backstory and judgment now make the "default fail / unverifiable = failure" disposition experiential rather than declarative.
+
+- **graph**: `graph-intake` was promoted from `haiku / low` to `sonnet / medium` — intake requires inferring why and stakeholder context from free text, which is analysis not mechanical enumeration. The README subagent table was updated to match. `graph-auditor` had a structural bug (nested `&lt;/output&gt;` tags and a stray `&lt;process&gt;` section) — corrected.
+
+- **basis**: All three agents removed `&lt;role&gt;`, `&lt;context&gt;`, `&lt;execution_strategy&gt;`, and the `- [ ]` success_criteria checklist from basis-auditor. The auditor description was updated to reference the 4-part structure instead of 7-check categories. Scaffolder description updated to reference "4-part structure" instead of "5-section Superpowers framework."
+
+**3 SKILL.md files updated** — dispatch matrices in all three now include Model and Effort columns. The axiom three-stage flow became a structured table. The graph and basis sub-skill lists became tables with agent, model, and effort columns. References to "5-section Superpowers framework" in basis replaced with "4-part structure (backstory, goal, judgment, output)."
+
+**2 README.md files updated** — graph README: graph-intake tier corrected to `sonnet / medium`. Basis README: "5-section Superpowers framework" replaced with "4-part structure" in two places; conformance check row updated to describe the 4-part body structure requirement.</result>
+<usage><subagent_tokens>53596</subagent_tokens><tool_uses>41</tool_uses><duration_ms>548255</duration_ms></usage>
+</task-notification>
