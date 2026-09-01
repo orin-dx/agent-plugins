@@ -1,0 +1,1 @@
+We should finish setting up the recommended bits from GH community: https://github.com/orin-dx/agent-plugins/community
