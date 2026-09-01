@@ -1,0 +1,1 @@
+For the boundary tracer, etc let’s do what’s best for results and keeping with best practices including sdd and ears
