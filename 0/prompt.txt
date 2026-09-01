@@ -1,0 +1,46 @@
+<task-notification>
+<task-id>a0d2a22f146a98a62</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a0d2a22f146a98a62.output</output-file>
+<status>completed</status>
+<summary>Agent "Research best-practice PR/issue templates" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Research: PR/issue template best practices + org-wide defaults
+
+**Directive:** research real, verified examples of great PR/issue templates and confirm GitHub's org-wide `.github` default-file mechanism, to inform an org-wide setup decision for orin-dx.
+
+### Sources checked (all fetched live, not recalled)
+
+- **Kubernetes** (`kubernetes/kubernetes/.github/PULL_REQUEST_TEMPLATE.md`, verified via raw.githubusercontent.com) — has a real, elaborate template: `/kind bug`/`/kind feature`/etc. label-command section, "why we need it," linked-issue with auto-close convention (`Fixes #N`), "special notes for reviewer," and a structured `release-note` block that must say `NONE` or contain real release-note text. That last piece is functionally the same idea as a changeset — a forced author decision at PR time about user-facing impact.
+- **rust-lang/rust**, **microsoft/vscode**, **vercel/next.js** — checked all three directly, **none has a `PULL_REQUEST_TEMPLATE.md`** (confirmed 404, not an error). Real, consistent signal: heavy PR templates are not universal best practice among top-tier projects — Kubernetes's is specifically built around its Prow bot's label-command workflow, not a generic pattern to imitate wholesale.
+- **microsoft/vscode issue templates** (`.github/ISSUE_TEMPLATE/`, verified via GitHub API contents listing) — still plain Markdown (`bug_report.md`, `feature_request.md`, `config.yml`), **not** YAML issue forms, despite VS Code's scale and resources. Tempers the "GitHub recommends YAML forms" framing from earlier this session — forms are a legitimate option for structured cases, not a requirement even top projects follow.
+- **GitHub's org-wide default community health files docs** (via WebSearch, docs.github.com — direct fetch 404'd, search snippet quotes the doc directly): mechanism confirmed —
+  - Precedence per repo: `.github/` folder → repo root → `docs/` folder → **then** the org's `.github` repo (same order) as fallback.
+  - **Issue templates are all-or-nothing per repo**: if a repo has *any* file in its own `.github/ISSUE_TEMPLATE/` (including just a `config.yml`), **none** of the org default's `ISSUE_TEMPLATE` folder applies — no merging.
+  - The org's `.github` repo **must be public** for issue/PR templates specifically to apply org-wide (internal doesn't count for these two file types, unlike some other health files).
+
+### What a genuinely strong PR template includes (synthesized, not just "adequate")
+
+- A **type-of-change signal** the author sets, not just prose (Kubernetes: label commands; simpler version: a checkbox list)
+- **Why**, separate from what — the diff already shows what
+- **Linked issue with auto-close convention** (`Fixes #N` / `Closes #N`)
+- A **forced user-facing-impact decision** — Kubernetes forces either `NONE` or real release-note text in a dedicated block; can't be skipped silently
+- **Reviewer-facing notes** section (context a reviewer needs that isn't in the diff)
+- Optional space for docs/spec links
+
+### Recommendation: org-level generic vs. repo-specific override
+
+**Org-level `orin-dx/.github` generic defaults** (true across Rust CLI tools and TS/agent-plugin repos alike):
+- `CODE_OF_CONDUCT.md` — Contributor Covenant is genuinely universal, zero repo-specific content
+- `CONTRIBUTING.md` skeleton — dev-environment-agnostic parts only (PR workflow, conventional commits, where to file security reports)
+- A **generic PR template** — type-of-change checkbox, why, linked issue, reviewer notes, forced user-facing-impact line. This is the one worth building as the shared default; every repo in the org benefits from it structurally even though the exact "impact" mechanism differs (agent-plugins has changesets; lumen/prism don't).
+- `SECURITY.md` skeleton — reporting address, response-time commitment; **not** the threat-model section, that's inherently repo-specific
+
+**Must stay as local repo overrides, never centralized:**
+- **agent-plugins' PR template** — it's deliberately identical to what `pr-narrator` produces; an org-generic template would break that intentional match. Given the all-or-nothing rule, if agent-plugins keeps *any* local file, it should keep its whole `PULL_REQUEST_TEMPLATE.md`, not partially inherit.
+- **Issue templates** — the all-or-nothing rule means a repo can't mix org-default and local; agent-plugins' `feature_request.md` is deliberately free-text to match `graph`'s intake design, so it needs to stay a full local override, not a partial one.
+- **SECURITY.md's Scope section** — agent-plugins' threat model (prompt injection, schema bypass) is meaningless for lumen/prism (Rust CLI tools); each repo needs its own Scope block even if it inherits the reporting-address skeleton.
+
+Not evaluated: whether lumen/prism/callisto/michi/monokl want the org default's PR template at all, or would rather keep none (matching rust-lang/rust's and vscode's actual practice) — that's a judgment call for the parent to make with the user, not something the research settles.</result>
+<usage><subagent_tokens>822064</subagent_tokens><tool_uses>7</tool_uses><duration_ms>91413</duration_ms></usage>
+</task-notification>
