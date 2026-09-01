@@ -1,0 +1,1 @@
+What else can you infer further about TS and rust that can help further improve our agents and skills? Do we want to split work into more specific agents?
