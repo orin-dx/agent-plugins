@@ -1,0 +1,1 @@
+I do think we want to split the giant skill into smaller and more targeted skills right? Have we done the same in other plugins? Overloading it might result in less effective actions right?
