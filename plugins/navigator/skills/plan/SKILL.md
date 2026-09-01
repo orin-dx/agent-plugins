@@ -53,14 +53,14 @@ navigator is one skill, `plan`. Behavior adapts to what's asked, dispatching to 
 Every task in a plan@1 specifies, in this order:
 
 1. A brief implementation approach — decided before the test steps are written, so the tests prove a chosen design rather than locking one in by accident
-2. The exact implementation code
+2. The exact implementation code — a concrete baseline proving the task is achievable within its file targets and scope, not a shape smith's implementer must copy verbatim
 3. The exact tests proving each of this task's covers_criteria criteria
 4. The command confirming the full suite passes
 5. The conventional commit message
 
 Test steps are not required to precede implementation steps within a task. Smith's mutation-testing gate — not step order — is what verifies a test would actually catch a wrong implementation; a controlled comparison found no quality advantage from write-test-first ordering for agent-written code, at several times the token cost, and found it suppressed upfront design work agents otherwise did well ([Böckeler, "TDD inside the agent loop"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)).
 
-A task that specifies implementation code with no corresponding test proving a covers_criteria criterion violates this requirement — the criterion has no evidence, regardless of write order.
+A task that specifies implementation code with no corresponding test proving a covers_criteria criterion violates this requirement — the criterion has no evidence, regardless of write order. Smith's implementer may still adapt the baseline's shape at execution time, provided the same files, criteria, and tests are satisfied — see [ADR-009](../../../../docs/adr/009-implementer-shape-latitude.md).
 
 </implementation_requirement>
 

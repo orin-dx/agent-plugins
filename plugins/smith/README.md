@@ -1,6 +1,6 @@
 # smith — Implementation
 
-**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 2.1.0
+**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 2.2.0
 
 One skill, one pipeline. Give it a `plan@1` and it executes every task in order — design, implement, test comprehensively, commit — then gates the result with mutation testing and an adversarial exit check before handing off. Test quality is enforced by the mutation-testing gate, not by mandating tests be written before the code they cover — see [Implementation Cycle](#implementation-cycle-per-task). No plan yet? Give it a `spec@1` directly.
 
@@ -100,7 +100,7 @@ Each `implementer` task also returns `criteria_evidence` — one `{criterion_id,
 No shortcuts, but no mandated write-order either — tests are validated by the mutation gate below, not by which came first:
 
 1. Read the task's covers_criteria acceptance criteria from the spec before writing any code.
-2. Design the approach — for anything beyond a trivial change, decide the shape of the solution before locking it in through a test. Forcing a failing test into existence before any design work tends to freeze the implementation onto whatever shape that first test happened to imply.
+2. Design the approach — for anything beyond a trivial change, decide the shape of the solution before locking it in through a test. Forcing a failing test into existence before any design work tends to freeze the implementation onto whatever shape that first test happened to imply. The plan's own code is a concrete baseline, not a mandate — use a better-shaped approach if implementing reveals one, as long as it satisfies the same file targets, `covers_criteria`, and tests, and note the deviation in `concerns`. See [ADR-009](../../docs/adr/009-implementer-shape-latitude.md).
 3. Write the implementation.
 4. Write comprehensive tests proving every covers_criteria criterion. Tests may be written alongside or after the implementation — what matters is that they'd fail if the implementation were wrong, not the order they were written in.
 5. Run the full suite — confirm every test passes, with no regressions.

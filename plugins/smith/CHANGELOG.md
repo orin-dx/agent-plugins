@@ -2,6 +2,12 @@
 
 — smith
 
+## [2.2.0] - 2026-09-01
+
+### Changed
+- `implementer` may now adapt the plan's exact code to a better-shaped approach at execution time, provided the same file targets, `covers_criteria`, and tests are still satisfied — the plan's code is a concrete baseline proving the task is achievable, not a transcript to copy verbatim. Deviations are recorded in `concerns`. See [ADR-009](../../docs/adr/009-implementer-shape-latitude.md).
+- Also bulletized `implementer`'s `<judgment>` section (missed in the earlier ecosystem-wide bulletization pass) and fixed a stray formatting artifact in `navigator`'s README's Task Requirements list.
+
 ## [2.1.0] - 2026-09-01
 
 ### Changed

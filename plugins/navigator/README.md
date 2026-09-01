@@ -1,8 +1,8 @@
 # navigator — Implementation Planning
 
-**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.1.0
+**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.2.0
 
-Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a brief implementation approach, the exact implementation, the exact tests proving each criterion, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without making a design decision. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
+Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a brief implementation approach, exact implementation code as a concrete baseline, the exact tests proving each criterion, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without needing to decide what to build or which criteria it must satisfy — [smith](../smith/) may still adapt the baseline's shape, provided the same files, criteria, and tests are satisfied. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
 
 One skill, not several — see [Behavior](#behavior) below for how it adapts to the request.
 
@@ -93,12 +93,12 @@ Every task in `plan@1` must include all of the following. Tasks missing any fiel
 
 - **Exact file paths** to create or modify (no "create a file for X")
 - **A brief implementation approach**, decided before the test steps are written
-- **The exact implementation code**
+- **The exact implementation code** — a concrete baseline proving the task is achievable within its file targets and scope, not a shape smith's implementer must copy verbatim
 - **The exact tests** proving each of the task's `covers_criteria` criteria, with the command confirming the full suite passes
 - **A conventional commit message** for the task
-
-Tests are not required to precede the implementation steps within a task — [smith](../smith/)'s mutation-testing gate verifies test quality, not step order. See [ADR-008](../../docs/adr/008-drop-test-first-ordering.md) and smith's [Implementation Cycle](../smith/README.md#implementation-cycle-per-task) for the rationale.
 - **`covers_criteria`** — the acceptance criterion IDs from the spec this task addresses
+
+Tests are not required to precede the implementation steps within a task — [smith](../smith/)'s mutation-testing gate verifies test quality, not step order. See [ADR-008](../../docs/adr/008-drop-test-first-ordering.md) and smith's [Implementation Cycle](../smith/README.md#implementation-cycle-per-task) for that rationale, and [ADR-009](../../docs/adr/009-implementer-shape-latitude.md) for why the implementation code is a baseline smith's implementer may adapt rather than a mandate.
 
 No TBDs. No "the implementer will decide." Every acceptance criterion must appear in at least one task's `covers_criteria` — `challenger` flags any criterion that appears in none as `orphaned-criteria`.
 

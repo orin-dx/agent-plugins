@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.1.0-success.svg" alt="Marketplace v4.1.0" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.2.0-success.svg" alt="Marketplace v4.2.0" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 

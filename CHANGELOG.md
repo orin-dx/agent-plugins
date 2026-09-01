@@ -3,6 +3,10 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [4.2.0] - 2026-09-01 — Implementer shape latitude, compilation-boundary task sizing
+
+`smith` (2.2.0) and `navigator` (2.2.0): `planner`'s exact implementation code is now a concrete baseline `smith`'s implementer may adapt in shape (not scope) at execution time, with deviations recorded transparently — fixing an over-prescription pattern that echoed the same premature-shape-locking problem the previous release fixed for tests. Task sizing changed from a "under fifteen minutes" clock-time estimate to compilation-boundary cohesion, resolving a standing inconsistency with `shared/agent-best-practices.md`'s own batching rule. Also bulletized `implementer`'s `<judgment>` section, missed in the prior ecosystem-wide pass. See `docs/adr/009-implementer-shape-latitude.md`.
+
 ## [4.1.0] - 2026-09-01 — Drop mandatory write-test-first ordering
 
 `smith` (2.1.0) and `navigator` (2.1.0): dropped the requirement that a task's test be written and confirmed failing before its implementation. Tasks now specify a brief implementation approach, the exact implementation, and the exact tests proving each criterion — test quality is verified by `smith`'s existing mutation-testing gate, not by write order. Rationale is a controlled comparison finding no quality advantage from write-test-first ordering for agent-written code, at several times the token cost, and that it suppressed upfront design work agents otherwise did well. See `docs/adr/008-drop-test-first-ordering.md`.

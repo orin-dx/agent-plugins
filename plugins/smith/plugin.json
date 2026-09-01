@@ -1,8 +1,8 @@
 {
   "id": "smith",
   "name": "smith",
-  "version": "2.1.0",
-  "description": "Implementation plugin. Executes plans by designing the approach, implementing, and writing comprehensive tests proving each acceptance criterion — verified by mutation testing, not a write-test-first mandate. Produces committed, tested code verified by the sentinel exit gate.",
+  "version": "2.2.0",
+  "description": "Implementation plugin. Executes plans by designing the approach, implementing, and writing comprehensive tests proving each acceptance criterion — verified by mutation testing, not a write-test-first mandate. The plan's code is a baseline implementer may improve on in shape, not scope. Produces committed, tested code verified by the sentinel exit gate.",
   "author": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"

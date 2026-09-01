@@ -79,7 +79,7 @@
     },
     {
       "name": "navigator",
-      "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with an implementation approach, exact code, and the tests proving each criterion \u2014 no write-test-first mandate. No TBDs. A developer with zero domain context can execute the plan mechanically.",
+      "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with an implementation approach, exact code as a baseline, and the tests proving each criterion \u2014 no write-test-first mandate. Tasks are sized to compilation boundaries, not a clock-time estimate. No TBDs. A developer with zero domain context can execute the plan mechanically.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
@@ -89,7 +89,7 @@
     },
     {
       "name": "smith",
-      "description": "Implementation plugin. Executes plans by designing the approach, implementing, and writing comprehensive tests proving each acceptance criterion \u2014 verified by mutation testing, not a write-test-first mandate. Produces committed, tested code verified by the sentinel exit gate.",
+      "description": "Implementation plugin. Executes plans by designing the approach, implementing, and writing comprehensive tests proving each acceptance criterion \u2014 verified by mutation testing, not a write-test-first mandate. The plan's code is a baseline implementer may improve on in shape, not scope. Produces committed, tested code verified by the sentinel exit gate.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
