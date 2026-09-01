@@ -1,0 +1,3 @@
+Do we feel confident our plugins have been optimized? THey are following our constitution and best practices? They are succinct, to the point and devoid of unecessary prose or filler words?
+
+The docs are all up-to-date? The plugin files are accurate? The claude and agy marketplaces are correct and up-to-date? The changelog is correct?
