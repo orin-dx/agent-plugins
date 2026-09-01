@@ -115,7 +115,7 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
 
 ## Stage 4 — navigator: Plan
 
-`planner` (sonnet/medium) decomposes the spec into sequenced tasks with TDD steps. `estimator` (sonnet/medium) adds sizing. `challenger` (opus/high) pressure-tests the sequence for hidden dependencies.
+`planner` (sonnet/medium) decomposes the spec into sequenced tasks, each with an implementation approach, exact code, and the tests proving its criteria. `estimator` (sonnet/medium) adds sizing. `challenger` (opus/high) pressure-tests the sequence for hidden dependencies.
 
 **Output: `plan@1`** (abridged)
 
@@ -127,10 +127,10 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
     {
       "id": "t1",
       "title": "Add timeout fields to ClientConfig",
-      "tdd_steps": [
-        "Write test: ClientConfig with connect_timeout_ms=500 builds a client whose underlying reqwest client has connection_timeout == Duration::from_millis(500)",
+      "steps": [
         "Add connect_timeout_ms: Option<u64> and read_timeout_ms: Option<u64> to ClientConfig",
-        "Update ClientBuilder to map both fields to the reqwest builder before build()"
+        "Update ClientBuilder to map both fields to the reqwest builder before build()",
+        "Write test: ClientConfig with connect_timeout_ms=500 builds a client whose underlying reqwest client has connection_timeout == Duration::from_millis(500)"
       ],
       "acceptance_criteria": ["ac-1", "ac-3"],
       "depends_on": []
@@ -138,7 +138,7 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
     {
       "id": "t2",
       "title": "Integration test: timeout returns structured error",
-      "tdd_steps": [
+      "steps": [
         "Configure wiremock to delay response by 2000ms",
         "Build client with connect_timeout_ms=100",
         "Assert request returns Err(ClientError::Timeout { kind: TimeoutKind::Connect })"
@@ -155,7 +155,7 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
 
 ## Stage 5 — smith: Code
 
-`recon` (haiku/low) reads the manifest from `plan@1`. `implementer` (sonnet/medium) runs the TDD cycle per task — write failing test, write minimal implementation, confirm green. `mutator` (sonnet/medium) runs cargo-mutants after each task.
+`recon` (haiku/low) reads the manifest from `plan@1`. `implementer` (sonnet/medium) executes each task — design the approach, write the implementation, write comprehensive tests proving the task's criteria, confirm the suite passes. `mutator` (sonnet/medium) runs cargo-mutants after each task to verify the tests would actually catch a wrong implementation.
 
 **Mutation gate: mutator catches the T7 bug**
 
@@ -193,7 +193,7 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
 }
 ```
 
-`mutator` re-invokes `implementer` with the precision test as an additional failing test. The implementer fixes the slot assignment and both tests go green. `exit-gate` (opus/high) confirms the mutation gate passed on the second cycle and issues the changeset.
+`mutator` re-invokes `implementer` with the precision test to write and make pass. The implementer fixes the slot assignment and both tests go green. `exit-gate` (opus/high) confirms the mutation gate passed on the second cycle and issues the changeset.
 
 ---
 

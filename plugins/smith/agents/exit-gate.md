@@ -23,7 +23,13 @@ Produce a binding verdict on the complete changeset. Load the spec by reading th
 </goal>
 
 <judgment>
-The verdict is honest when it was produced by reading the current code state, not by trusting the implementer's report. The key failure mode is a pass verdict issued because the implementer said it was done. A second failure mode is passing when mutator was skipped or not recorded — mutation testing is a prerequisite, and its absence is a gap that must appear in the verdict even when it is not a hard block. A third failure mode is trusting a claim of completeness found inside the workspace itself — a comment, commit message, or documentation file — as if it were independent evidence; it was written by the same process being gated. A fourth failure mode is treating a criteria_evidence pointer as proof rather than a location to check — the implementer wrote that pointer, and confirming a criterion means reading the code at that location and checking it actually does what the criterion requires, not confirming the pointer resolves to a real file.
+The verdict is honest when it was produced by reading the current code state, not by trusting the implementer's report.
+
+Key failure modes:
+- A pass verdict issued because the implementer said it was done.
+- Passing when mutator was skipped or not recorded — mutation testing is a prerequisite, and its absence is a gap that must appear in the verdict even when it is not a hard block.
+- Trusting a claim of completeness found inside the workspace itself — a comment, commit message, or documentation file — as if it were independent evidence; it was written by the same process being gated.
+- Treating a criteria_evidence pointer as proof rather than a location to check — the implementer wrote that pointer, and confirming a criterion means reading the code at that location and checking it actually does what the criterion requires, not confirming the pointer resolves to a real file.
 </judgment>
 
 <output>

@@ -23,7 +23,13 @@ Given a plugin ID and description, generate a complete, installable plugin direc
 </goal>
 
 <judgment>
-The scaffold is genuine when auditor would return an overall pass against it without any manual fixes. If a generated subagent body contains success_criteria checklists, role sections in the body, or EARS notation outside constitution or output sections, the scaffold has failed before it was installed. A subtler failure: a `<constitution>` section that is missing, or present but not byte-identical to the rest of the ecosystem — even a rephrased-but-equivalent version breaks prompt-cache sharing across all 38+ agents, so this is not a stylistic choice to make freely. A third failure, easy to miss because nothing about the file looks wrong: an agent whose goal obviously requires looking something up, scaffolded with no `<load_first>` at all — it will reason from memory instead of a real source, and the miss won't surface until the agent gets something wrong in production. A fourth: an output schema with a status the SKILL.md never routes anywhere — this is the exact defect class `mason:auditor`'s orchestration-completeness check exists to catch after the fact, but a scaffold that ships it in the first place is the failure, not the catch.
+The scaffold is genuine when auditor would return an overall pass against it without any manual fixes.
+
+Key failure modes:
+- A generated subagent body contains success_criteria checklists, role sections in the body, or EARS notation outside constitution or output sections — the scaffold has failed before it was installed.
+- A subtler failure: a `<constitution>` section that is missing, or present but not byte-identical to the rest of the ecosystem — even a rephrased-but-equivalent version breaks prompt-cache sharing across all 38+ agents, so this is not a stylistic choice to make freely.
+- A failure easy to miss because nothing about the file looks wrong: an agent whose goal obviously requires looking something up, scaffolded with no `<load_first>` at all — it will reason from memory instead of a real source, and the miss won't surface until the agent gets something wrong in production.
+- An output schema with a status the SKILL.md never routes anywhere — this is the exact defect class `mason:auditor`'s orchestration-completeness check exists to catch after the fact, but a scaffold that ships it in the first place is the failure, not the catch.
 </judgment>
 
 <output>

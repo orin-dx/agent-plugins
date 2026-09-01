@@ -2,6 +2,16 @@
 
 — navigator
 
+## [2.2.0] - 2026-09-01
+
+### Changed
+- `planner`'s exact implementation code is now explicitly a concrete baseline, not a mandate `smith`'s implementer must copy verbatim — implementer may adapt its shape provided the same file targets, `covers_criteria`, and tests are satisfied. Task sizing changed from a "under fifteen minutes" clock-time estimate to "one independently reviewable unit of change, sized to its Subsystem Batch's compilation boundary" — this also resolves a standing inconsistency with `shared/agent-best-practices.md`'s Subsystem Compilation Batching rule, which already argued against clock-time sizing. See [ADR-009](../../docs/adr/009-implementer-shape-latitude.md).
+
+## [2.1.0] - 2026-09-01
+
+### Changed
+- Dropped the requirement that every task specify "a failing test written before any implementation code" with "expected failure output." Tasks now specify a brief implementation approach (decided first), the exact implementation, and the exact tests proving each `covers_criteria` criterion — order between implementation and test steps is no longer mandated. See [ADR-008](../../docs/adr/008-drop-test-first-ordering.md); rationale is a controlled comparison finding no quality advantage from write-test-first ordering for agent-written code, at several times the token cost, and that it suppressed upfront design work.
+
 ## [2.0.0] - 2026-08-27
 
 ### Changed

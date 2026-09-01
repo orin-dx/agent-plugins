@@ -2,6 +2,17 @@
 
 — smith
 
+## [2.2.0] - 2026-09-01
+
+### Changed
+- `implementer` may now adapt the plan's exact code to a better-shaped approach at execution time, provided the same file targets, `covers_criteria`, and tests are still satisfied — the plan's code is a concrete baseline proving the task is achievable, not a transcript to copy verbatim. Deviations are recorded in `concerns`. See [ADR-009](../../docs/adr/009-implementer-shape-latitude.md).
+- Also bulletized `implementer`'s `<judgment>` section (missed in the earlier ecosystem-wide bulletization pass) and fixed a stray formatting artifact in `navigator`'s README's Task Requirements list.
+
+## [2.1.0] - 2026-09-01
+
+### Changed
+- Dropped the mandatory write-test-first ordering. `implementer` now designs the approach, writes the implementation, and writes comprehensive tests proving each `covers_criteria` criterion — tests may be written alongside or after the implementation. Test quality is enforced by `mutator`'s mutation-testing gate (unchanged), not by which came first. Rationale: a controlled comparison found agent-written code got no measurable quality advantage from write-test-first ordering, at 3–9x the token cost, and that forcing a failing test into existence before any design work suppressed the upfront design agents otherwise did well ([Böckeler, "TDD inside the agent loop"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)). Everything downstream of "tests pass and mutation-test clean" — `reviewer`, `exit-gate`, `criteria_evidence` — is unchanged.
+
 ## [2.0.0] - 2026-08-27
 
 ### Changed

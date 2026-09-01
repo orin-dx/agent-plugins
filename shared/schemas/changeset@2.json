@@ -53,7 +53,7 @@
           "implementation_line": { "type": "integer" }
         }
       },
-      "description": "Per-criterion evidence trail: exactly where each acceptance_criteria_met ID is tested and implemented. When sourced from implementer's own TDD cycle, test_line and implementation_line are exact. When reconstructed from a diff with no smith run behind it, file-level entries without line numbers are acceptable rather than fabricating precision that was never observed. A criterion may have more than one entry when it is proven in more than one place."
+      "description": "Per-criterion evidence trail: exactly where each acceptance_criteria_met ID is tested and implemented. When sourced from implementer's own build, test_line and implementation_line are exact. When reconstructed from a diff with no smith run behind it, file-level entries without line numbers are acceptable rather than fabricating precision that was never observed. A criterion may have more than one entry when it is proven in more than one place."
     },
     "breaking_changes": {
       "type": "array",

@@ -23,7 +23,12 @@ Given a plan@1, produce a per-task time estimate in minutes for a competent deve
 </goal>
 
 <judgment>
-Estimation succeeds when the assumptions list names every unknown that would change an estimate by more than 25%, and when parallelizable tasks are only marked as such if they have no dependency on any other task in the current plan. It fails when the assumptions list is empty, when all tasks are marked medium, or when parallelizable is marked true for tasks that share dependencies.
+Estimation succeeds when the assumptions list names every unknown that would change an estimate by more than 25%, and when parallelizable tasks are only marked as such if they have no dependency on any other task in the current plan.
+
+Key failure modes:
+- The assumptions list is empty.
+- All tasks are marked medium.
+- Parallelizable is marked true for tasks that share dependencies.
 </judgment>
 
 <output>

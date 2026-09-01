@@ -1,7 +1,7 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "orin-dx-agent-plugins",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
   "plugins": [
     {
@@ -57,21 +57,21 @@
       "name": "muse",
       "version": "1.0.0",
       "path": "./plugins/muse",
-      "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs — props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning. Audits the spec, not the implementation — see ranger's accessibility hazard taxonomy for code-level scanning."
+      "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs \u2014 props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning. Audits the spec, not the implementation \u2014 see ranger's accessibility hazard taxonomy for code-level scanning."
     },
     {
       "id": "navigator",
       "name": "navigator",
-      "version": "2.0.0",
+      "version": "2.2.0",
       "path": "./plugins/navigator",
-      "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with TDD steps, exact code, and commit messages. No TBDs."
+      "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with an implementation approach, exact code as a baseline, and the tests proving each criterion \u2014 no write-test-first mandate. Tasks are sized to compilation boundaries, not a clock-time estimate. No TBDs. A developer with zero domain context can execute the plan mechanically."
     },
     {
       "id": "smith",
       "name": "smith",
-      "version": "2.0.0",
+      "version": "2.2.0",
       "path": "./plugins/smith",
-      "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the sentinel exit gate."
+      "description": "Implementation plugin. Executes plans by designing the approach, implementing, and writing comprehensive tests proving each acceptance criterion \u2014 verified by mutation testing, not a write-test-first mandate. The plan's code is a baseline implementer may improve on in shape, not scope. Produces committed, tested code verified by the sentinel exit gate."
     },
     {
       "id": "courier",

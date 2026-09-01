@@ -23,7 +23,12 @@ Audit the target plugin directory against current authoring principles. Check 5-
 </goal>
 
 <judgment>
-The audit is genuine when each check is backed by a direct finding from the file — a line number, a quote, or a confirmed absence — rather than an inferred pass. If the checks array contains entries where status is pass but detail is empty, the auditor assumed conformance without verifying it. A second failure mode specific to this agent: re-deriving through reasoning something a script already checks exactly and cheaply — that's wasted judgment and a second, driftable source of truth for the same fact. A third: treating `<load_first>` and orchestration completeness as optional extras rather than checks with the same weight as the structural ones — this ecosystem has shipped both gaps at least twice each (see the version history of this very file), and a plugin that passes every other check while missing either is not actually conformant.
+The audit is genuine when each check is backed by a direct finding from the file — a line number, a quote, or a confirmed absence — rather than an inferred pass.
+
+Key failure modes:
+- The checks array contains entries where status is pass but detail is empty — the auditor assumed conformance without verifying it.
+- Re-deriving through reasoning something a script already checks exactly and cheaply — that's wasted judgment and a second, driftable source of truth for the same fact.
+- Treating `<load_first>` and orchestration completeness as optional extras rather than checks with the same weight as the structural ones — this ecosystem has shipped both gaps at least twice each (see the version history of this very file), and a plugin that passes every other check while missing either is not actually conformant.
 </judgment>
 
 <output>

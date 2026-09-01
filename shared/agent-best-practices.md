@@ -95,7 +95,7 @@ Agents are dispatched by the cognitive mode they require, not by pipeline positi
 | Systemic | Cross-finding pattern recognition | architect |
 | Behavioral testing | Tool execution and gap identification | mutator |
 | Judgment | Weighing competing evidence for a binding decision | exit-gate, verifier |
-| Repair | Minimum change + red-green verification | remediator, implementer |
+| Repair | Minimum change, verified by tests | remediator, implementer |
 
 Do not combine modes in a single agent. A scanner that also verdicts its findings is worse at both jobs.
 
@@ -165,7 +165,7 @@ Anthropic models cache prompt tokens strictly on an **exact, byte-for-byte prefi
 
 1. **Standardized Static Header**: Every agent prompt starts with an identical header containing the shared constitution rules, base tool schemas, and core behavioral invariant. This guarantees >95% cache hit rates across all subagent invocations.
 2. **Dynamic Content at the Tail**: Dynamic task inputs (`task_id`, `spec_file_path`, `criterion_id`, prior `blockers` arrays, and target code snippets) MUST be placed strictly at the end of the prompt after the static cache breakpoint.
-3. **Model Homogeneity**: Prompts cannot share cache across different model tiers (Sonnet cache != Opus cache). Run pipelines in model-homogeneous lanes (e.g. pure Sonnet for drafting, planning, and TDD implementation) and invoke Opus only at the terminal architectural exit gate.
+3. **Model Homogeneity**: Prompts cannot share cache across different model tiers (Sonnet cache != Opus cache). Run pipelines in model-homogeneous lanes (e.g. pure Sonnet for drafting, planning, and implementation) and invoke Opus only at the terminal architectural exit gate.
 
 ---
 
@@ -178,10 +178,10 @@ To minimize token cost and maintain clean context across multi-agent pipelines, 
    - Use exact file and line pointers rather than copy-pasting unchanged code blocks.
    - On artifact revisions, emit delta patches rather than full re-prints.
 2. **Minimal Viable Diffs (YAGNI)**:
-   - Write the minimum viable code diff required to satisfy the failing test.
+   - Write the minimum viable code diff required to satisfy the task's acceptance criteria.
    - Reject speculative helper functions, unnecessary generic abstractions, and defensive wrapper bloat.
 3. **Targeted Tool Execution & Windowing**:
-   - Execute targeted tests for the specific module under active development rather than running unbounded workspace-wide suites during inner TDD cycles.
+   - Execute targeted tests for the specific module under active development rather than running unbounded workspace-wide suites during inner development cycles.
    - Window large file reads using line ranges to prevent context window saturation.
 
 ---
@@ -190,7 +190,7 @@ To minimize token cost and maintain clean context across multi-agent pipelines, 
 
 ## 9. Subsystem Compilation Batching & Circuit Breakers
 
-1. **Subsystem Compilation Batching**: Decompose plans by transactional crate/package compilation boundaries rather than arbitrary 15-minute intervals. Dispatch 1 implementer subagent per Subsystem Batch to execute the full TDD cycle, followed by 1 mutation gate and 1 review pass per batch.
+1. **Subsystem Compilation Batching**: Decompose plans by transactional crate/package compilation boundaries rather than arbitrary 15-minute intervals. Dispatch 1 implementer subagent per Subsystem Batch to implement it (design, code, comprehensive tests — see ADR-008 on why write-test-first ordering is no longer mandated), followed by 1 mutation gate and 1 review pass per batch.
 2. **2-Round Circuit Breaker**: Pure-prose review loops (drafter ↔ auditor, planner ↔ challenger) are capped at a maximum of 2 rounds. On round 2, minor disputes regarding private helper names or non-essential line citations are demoted to non-blocking `api_notes` and passed.
 
 ---
