@@ -1,0 +1,37 @@
+Update three plugin subagent definitions — vector:challenger, canon:audit-spec, and
+lambda:implementer — to catch architectural/semantic-model defects (sibling drift across
+trait implementers, cross-layer round-trip gaps) at spec/plan time instead of after code
+is written. Full rationale and sourced findings: https://claude.ai/code/artifact/8dffec3b-bc4b-4664-a5eb-602c92d40b78
+
+These are Claude Code plugin agent definitions, not part of any project repo — locate them
+first (likely markdown files with YAML frontmatter, under wherever `/plugin` installed the
+marketplace on this machine — search by agent name, don't assume a path). If you can't find
+editable source for one of them, say so plainly instead of reporting success.
+
+Read each target file fully before editing — match its existing structure, tone, and format
+exactly. Don't restructure anything unrelated.
+
+Make exactly these three edits:
+
+1. vector:challenger — add an 8th review dimension, "interface-incompleteness": when a task
+   modifies one implementer of a shared trait/interface/protocol, the plan must cover every
+   other known implementer or explicitly state why not. This check must be backed by a
+   deterministic pre-scan (grep/AST enumeration of implementers) run before the agent's own
+   reasoning — not an LLM asked to "remember" siblings.
+
+2. canon:audit-spec — add a 6th audit dimension, "boundary round-trip coverage": when a
+   criterion introduces or changes a field on a type that another spec persists, serializes,
+   or transmits, that far-side spec needs a matching round-trip criterion, or the gap must be
+   named on purpose.
+
+3. lambda:implementer — add a default-posture instruction: when a criterion involves a value
+   that can be absent, wrong, or stale — especially at a process/crate/serialization boundary
+   — prefer a sum type / discriminated union / Result-shaped representation over a raw
+   value-plus-boolean pair, in whatever language the task is in. Escalate to canon:architect
+   only when a single-instance fix can't achieve this within the task's own scope.
+
+Show me the diff for each file before calling this done.
+
+Explicitly out of scope — flag as a possible follow-up, don't build it now: the two-gate
+human checkpoint protocol (a workflow habit I'll apply manually) and loop-back automation
+(proof→architect on ≥2× recurrence, periodic drift-checker/audit-backlog runs).
