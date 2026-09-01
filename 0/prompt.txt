@@ -1,0 +1,18 @@
+<task-notification>
+<task-id>a299c691b625a8f6f</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a299c691b625a8f6f.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix lambda's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: fix `lambda`'s fictional sub-skills documentation and polish README. Complete, not committed (no commit instruction given).
+
+**Version:** 1.4.1 → 1.4.2 (patch, doc-accuracy fix).
+
+**Summary:** `SKILL.md`'s `&lt;sub_skills&gt;` block and `README.md`'s "Sub-skills" table both listed `lambda/implement`/`generate-tests`/`explain`/`refactor` as if independently invokable — lambda has one skill directory, and no agent implements the latter three as distinct modes (confirmed via `implementer.md` — scoped strictly to one TDD task, no test-only/explain-only/refactor-only path). Replaced both with an honest description of the single real pipeline, added a "Capability Gaps" table in the README naming which trigger phrases have no agent behind them, fixed a stale version line (README said 1.2.0, `plugin.json` was already 1.4.1), and converted the plain-text pipeline into a Mermaid diagram styled with `orin-visual-standard.md`'s palette, using a subgraph to separate the per-task loop from the one-time `recon`/`exit-gate` bookends. Added `CHANGELOG.md` entry, bumped `plugin.json`.
+
+**One thing outside my directive's scope, flagging for the parent:** the skill's frontmatter `description` (the actual trigger routing text) still advertises "generate tests for X"/"explain what this code does"/"refactor this without changing behavior" as activation phrases — I didn't touch frontmatter since that affects live routing and wasn't in scope, but it's the same fiction one layer up. Worth a follow-up decision on whether to narrow the trigger phrasing to match what's actually implemented.
+
+**Files touched:** `plugins/lambda/skills/lambda/SKILL.md`, `plugins/lambda/README.md`, `plugins/lambda/plugin.json`, `plugins/lambda/CHANGELOG.md`. No commits made.</result>
+<usage><subagent_tokens>686777</subagent_tokens><tool_uses>11</tool_uses><duration_ms>128559</duration_ms></usage>
+</task-notification>
