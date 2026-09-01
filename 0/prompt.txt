@@ -1,0 +1,3 @@
+Should we use toon instead of JSON for more compact context? https://toonformat.dev
+
+You might have to get a full understing of toon and maybe look for libraries to read/write it?? Not sure what is best here. Do comprehensive research.
