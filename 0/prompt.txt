@@ -1,0 +1,1 @@
+1, your recommendation works, 2, let's go with the separate agent, graceful degradation seems best but enforcing the entry point, right?
