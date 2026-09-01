@@ -1,0 +1,1 @@
+Can we make the design principles in the readme more scanable without losing fidelity? It's a big wall of text right now
