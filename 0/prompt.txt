@@ -1,0 +1,35 @@
+<task-notification>
+<task-id>aedab92745c9bd94f</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/aedab92745c9bd94f.output</output-file>
+<status>completed</status>
+<summary>Agent "Refresh plugin README diagrams to modern style" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Good, edit applied correctly. All work confirmed intact; the large surrounding diff is from other concurrent agents' plugin-rename work in this shared session, unrelated to this task. Nothing was committed, per instructions.
+
+## Summary
+
+Refreshed the mermaid diagram styling in all 9 requested plugin READMEs to match `ARCHITECTURE.md`'s visual language:
+- `plugins/weaver/README.md`
+- `plugins/vanguard/README.md`
+- `plugins/scribe/README.md` — note: scribe's "Pipelines" section has only **one** actual ` ```mermaid ` fence (the standard drafting pipeline); the other three "pipelines" (drift check, correction, architectural remediation) are plain-text arrow diagrams in plain ` ``` ` fences, not Mermaid. Only the one real diagram was refreshed; the plain-text blocks were left untouched since they aren't Mermaid and converting them would be a redesign beyond scope.
+- `plugins/muse/README.md`
+- `plugins/navigator/README.md`
+- `plugins/smith/README.md` (also has a `style loop` subgraph border — left its `rx:10px,ry:10px` as-is since `ARCHITECTURE.md`'s own `style` lines use that same `px`-suffixed form, unlike classDefs)
+- `plugins/sentinel/README.md`
+- `plugins/courier/README.md`
+- `plugins/ranger/README.md`
+
+For each: added the `%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': ..., 'rankSpacing': ...}}}%%` line, changed `stroke-width:2px` → `1.5px`, `rx:8px,ry:8px` → `rx:10,ry:10`, and added `font-size`/`font-weight` per classDef — 14px/600 for source and output (and router where it represents a real gate/verdict, e.g. scribe/smith/sentinel/navigator/ranger's exit-gate or challenger/adversary nodes), 13px/500 for engine/store and non-gating router uses (weaver's connect/audit-backlog, courier's receive-feedback/post-review). Colors, node structure, and edges were left untouched.
+
+Created `plugins/mason/README.md`'s new "## Dispatch" section (placed after "## Subagents", before "## Conformance Checks (auditor)", matching the priority-order slot used elsewhere). It shows the two real skill names from mason's own Skills table — `mason/scaffold-plugin` → `scaffolder` and `mason/audit-plugin` → `auditor` — as two disconnected parallel paths (no edge between them), using slate (`#f8fafc`/`#64748b`) for the skill-entry nodes at 14px/600 and violet (`#f5f3ff`/`#8b5cf6`, mason's existing "engine"-family accent) for the subagent nodes at 13px/500, with the same `%%{init}%%`/1.5px/`rx:10,ry:10` styling. A caption notes `design-schema` and `scaffold-subagent` are narrower on-demand skills not depicted.
+
+Validation:
+```
+./scripts/check-mermaid.sh   → OK: 18 mermaid block(s) across the repo, all render cleanly.
+./scripts/check-skills-doc.sh → OK: 10 plugin(s), every documented skill has a matching skills/ directory.
+```
+
+No commits were made. Note: the working tree currently also shows a large, unrelated diff from other concurrent agents' plugin-rename effort in this session (e.g., `proof`→`ranger`, `delta`→`courier`, `basis`→`mason`) — that is not part of this task's changes; my edits target the plugin directories as they currently exist post-rename.</result>
+<usage><subagent_tokens>84188</subagent_tokens><tool_uses>31</tool_uses><duration_ms>215861</duration_ms></usage>
+</task-notification>
