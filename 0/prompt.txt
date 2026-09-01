@@ -1,0 +1,1 @@
+Are the install methods correct for claude and agy?
