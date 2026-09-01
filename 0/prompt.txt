@@ -1,0 +1,25 @@
+<task-notification>
+<task-id>a7914b1f93b85badf</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a7914b1f93b85badf.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for callisto" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Directive: set up GitHub community health files for `callisto` at `/Users/gabe/Projects/callisto`, tailored to the actual repo, committed locally only (no push).
+
+**What callisto is:** a Rust CLI release-automation engine for polyglot monorepos — replaces `@changesets/cli`/`release-please` with a native binary that discovers workspace packages, computes version bumps via a dependency graph solver, edits `Cargo.toml`/`package.json` with format-preserving CST parsers, and publishes to Cargo/npm/PyPI from CI. Its own release workflow (`.github/workflows/callisto-release.yml`) runs with `contents: write`/`pull-requests: write` and holds `CARGO_REGISTRY_TOKEN`/`NPM_TOKEN` secrets.
+
+**PR template decision:** kept it lightweight (type-of-change checkbox, why, test plan, linked issue) rather than Kubernetes-style elaborate, per this session's research that even rust-lang/rust and VS Code ship with none at all. One repo-specific addition earned its place, not guessed: a "did you add a changeset" checkbox, since callisto has its own real changeset wizard (`callisto add`) documented in `CONTRIBUTING.md` — the tool eating its own dog food.
+
+**SECURITY.md scope**, grounded in the actual release workflow file (read, not assumed): registry token exposure, workflow/action injection, manifest-parser safety (crafted `Cargo.toml`/`package.json` breaking the CST/atomic-write guarantees), version/changelog spoofing, and git-operation safety via `gix`. Noted that dependency advisories are already covered by `just audit` (cargo-deny) in CI, so a report duplicating that isn't new — a bypass of that check would be.
+
+**Files added/changed** (commit `cc7c10d` on the currently-checked-out branch `release-pipeline-and-matrix-hardening`, **not** `main` — flagging since that wasn't specified in the directive and may need rebasing before merge):
+- `CODE_OF_CONDUCT.md` (new)
+- `SECURITY.md` (new)
+- `.github/PULL_REQUEST_TEMPLATE.md` (new)
+- `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md` (new, plain Markdown + YAML frontmatter, reused existing `bug`/`enhancement` labels)
+- `CONTRIBUTING.md` (one-line pointer added)
+
+Not pushed, per directive.</result>
+<usage><subagent_tokens>861151</subagent_tokens><tool_uses>17</tool_uses><duration_ms>277335</duration_ms></usage>
+</task-notification>
