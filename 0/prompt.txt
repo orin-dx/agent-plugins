@@ -1,0 +1,3 @@
+If we consider we want more native orchestration for kimi, GLM, Qwen is that possible in Claude? I thought some of them had more native orchestration support. What about GPT models in claude?
+
+Can all of the models work better together in another orchestrator? What about Block's Buzz? Or what Stripe is doing with OpenRouter? OpenHands, Cline, Aider, Goose, Qwen code, continue.dev, Pi, Cursor, Augment Code,
