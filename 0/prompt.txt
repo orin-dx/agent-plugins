@@ -1,0 +1,171 @@
+This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.
+
+Summary:
+1. Primary Request and Intent:
+
+The user wants a comprehensive overhaul of the `orin-dx/agent-plugins` repository, applying principles developed across multiple sessions:
+
+- **Delete deprecated plugins**: `agent-plugin-builder` (superseded by `basis`), `bug-hunter-rust` and `bug-hunter-ts` (superseded by `proof`) — all three are now deleted
+- **Apply 4-part agent structure (backstory/goal/judgment/output) to ALL 9 lifecycle plugins**: `graph`, `trace`, `canon`, `vector`, `lambda`, `axiom`, `delta`, `proof`, `basis` — replacing the old role/success_criteria format
+- **Apply EARS notation** only to output contracts and never-do rules (in `<output>` sections) — NOT to implementation steps
+- **Extend `proof`** with a new conditional agent: `proof-boundary-tracer` (traces field survival for T7/T10 candidates, runs before adversary)
+- **Extend `canon`** with a new agent: `canon-architect` (takes `finding-report@1`, produces `spec@1` for structural remediation — closes the proof→design→implement loop)
+- **Extend `lambda`** with a new agent: `lambda-mutator` (runs cargo-mutants/Stryker, mutation coverage gate that feeds back into implementer if survivors found)
+- **Create `shared/constitution.md`** — EARS-format authoritative rules for all plugin development (DONE)
+- **Rewrite `shared/agent-best-practices.md`** — encode current principles, remove old Superpowers/Antigravity content
+- **Update `AGENTS.md`** to reference the constitution
+- **Update root README** to remove bug-hunter-* references (they're deleted) and fix shared references table
+
+The user explicitly said: "Tackle it all together" and confirmed the architect→canon, mutator→lambda placement with "Yes. That sounds great."
+
+User's key correction: "Stop, we are removing the deprecated plugins bug hunter but our other plugins had names right? Stop rushing and think and plan first" — I had been wrong to un-deprecate and improve the deprecated plugins instead of deleting them.
+
+2. Key Technical Concepts:
+
+- **4-part agent structure**: `<backstory>` (2-4 sentences experiential perspective) / `<goal>` (intent not steps) / `<judgment>` (key failure mode) / `<output>` (schema-referenced structured output + EARS contracts)
+- **EARS notation**: WHEN/IF/WHERE/WHILE — belongs ONLY in `<output>` sections for output contracts and never-do rules; NOT in implementation guidance
+- **Progressive context loading**: `<load_first>` block per agent naming only the reference file for that agent's cognitive phase
+- **Cognitive mode dispatch**: agents dispatched by cognitive mode (pattern matching, data flow tracing, adversarial reasoning, systemic analysis, behavioral testing, code repair) — not taxonomy number
+- **Model/effort tiers**: haiku/low (deterministic enumeration), sonnet/medium (analysis/scanning/drafting), opus/high (adversarial judgment/exit gates/binding verdicts)
+- **Schema-driven handoffs (SDD)**: `candidate@1` → `finding-report@1` → `verdict@1`; new handoffs need schema before prompt
+- **Split reference files**: `rust-hazards.md`, `rust-smells.md`, `rust-tooling.md`; `typescript-hazards.md`, `typescript-smells.md`, `typescript-tooling.md` — thin indexes `rust.md`/`typescript.md` redirect to split files
+- **T10 Error Downgrade (Rust)**: `map_err(|_|` — underscore signals deliberate source discard; `.to_string()` in error position loses structured context
+- **T10 Error Suppression (TS)**: `.catch(() => {})`, empty catch blocks, logging-only catch — error swallowed without signaling
+- **Invisible Invariants (Rust Smell 8 / TS Smell 7)**: architectural constraints in CLAUDE.md/AGENTS.md with no machine enforcer
+- **Constitution sweep**: adversary agents check project constitution file before any candidate verification; flag invariants with no enforcer
+- **EARS test naming**: before writing test code, write WHEN [trigger] THE SYSTEM SHALL [expected] as the test name
+- **Lifecycle pipeline**: graph→trace→canon→vector→lambda→axiom→delta, with proof (cross-cutting audit) and basis (meta-scaffolding)
+- **Skill names**: lifecycle-stage words for pipeline plugins (need, research, spec, plan, code, gate, ship, audit, meta); plugin-id names when collision would occur (specialized plugins)
+- **Architect in canon**: takes `finding-report@1`, designs structural fix, produces `spec@1` — closes the loop proof→canon→vector→lambda
+- **Mutator in lambda**: runs cargo-mutants/Stryker after implementation, before exit gate; convergence loop feeds survivors back to implementer
+- **Boundary-tracer in proof**: conditional on T7/T10 candidates; traces field survival map; feeds adversary
+
+3. Files and Code Sections:
+
+- **`/Users/gabe/Projects/agent-plugins/shared/constitution.md`** — CREATED. EARS-format authoritative rules for all plugin development. Covers: plugin structure, agent structure, frontmatter, progressive context loading, EARS placement, schema-driven handoffs, tool language, skill names, reference files, documentation. Key rules:
+  - `WHEN an agent prompt is authored, it SHALL define four named sections: <backstory>, <goal>, <judgment>, and <output>`
+  - `WHEN EARS notation is used in an agent prompt, it SHALL appear only in the <output> section`
+  - `IF a plugin is superseded by another, it SHALL be deleted from the repository rather than marked deprecated`
+
+- **`/Users/gabe/Projects/agent-plugins/shared/references/rust-hazards.md`** — MODIFIED. Added T10 Error Downgrade & Source Erasure after T6:
+  ```
+  ### 10. Error Downgrade & Source Erasure ← distinct from T4
+  - Signal: map_err(|_err| or map_err(|_| — underscore on closure parameter
+  - Grep: map_err\(\|_ and \.to_string\(\) inside map_err\( or adjacent to Err(
+  - Distinguisher from T4: T4 is accidental (let _ = result); T10 is intentional-but-lossy
+  ```
+
+- **`/Users/gabe/Projects/agent-plugins/shared/references/rust-smells.md`** — MODIFIED. Extended Smell 2 with multi-writer sub-pattern; added Smell 8 Invisible Invariants:
+  ```
+  ### 8. Invisible Invariants
+  - Sweep: Read project constitution file (CLAUDE.md, AGENTS.md)
+  - For each invariant: check for #[test], cargo-deny rule, clippy lint, or CI step
+  - Resolution: Write enforcement first — test that fails when invariant violated
+  ```
+
+- **`/Users/gabe/Projects/agent-plugins/shared/references/typescript-hazards.md`** — MODIFIED. Added T10 Error Suppression & Downgrade:
+  ```
+  ### T10. Error Suppression & Downgrade ← distinct from T2
+  - Signal: .catch(() => {}), try { } catch { }, logging-only catch
+  - Distinguisher: T2 has no catch; T10 actively hides the error from caller
+  ```
+
+- **`/Users/gabe/Projects/agent-plugins/shared/references/typescript-smells.md`** — MODIFIED. Added Smell 7 Invisible Invariants (same pattern as Rust Smell 8 but references ESLint/dependency-cruiser).
+
+- **`/Users/gabe/Projects/agent-plugins/ARCHITECTURE.md`** — MODIFIED:
+  - §2 Plugin Structure: updated `subagents/*.md` → `agents/*.md`; added `CHANGELOG.md`
+  - §7 renamed "Subagent Authoring" → "Agent Authoring"; full rewrite with 4-part structure table, cognitive mode dispatch, progressive context loading, EARS placement, schema-driven handoffs
+
+- **`/Users/gabe/Projects/agent-plugins/CONTRIBUTING.md`** — MODIFIED:
+  - Plugin structure: `agents/` not `subagents/`; added "organize by cognitive mode" guidance
+  - Authoring checklist: fully rewritten with backstory/goal/judgment/output; `<load_first>`; EARS placement; corrected "No `<role>` section in the body — the frontmatter `role:` field is platform metadata and should be kept"
+
+- **`/Users/gabe/Projects/agent-plugins/README.md`** — MODIFIED:
+  - Shared references table: split into rows for each split file with "Loaded by" column
+  - Added bug-hunter-* as "Specialized deep auditors" section (THIS NEEDS TO BE REMOVED — those plugins are now deleted)
+  - Repository structure updated to include bug-hunter-* (ALSO NEEDS REMOVAL)
+
+- **`/Users/gabe/Projects/agent-plugins/shared/agent-best-practices.md`** — READ but NOT YET MODIFIED. Still contains old content: "Universal AI Context Engineering & Agent Authoring Manual", "Superpowers 5-Section Subagent Framework" with context/role/goal/execution_strategy/success_criteria sections, "Google Antigravity (`agy`) vs Claude Code Operational Guide". 257 lines, all stale. Needs full rewrite.
+
+- **DELETED**: `plugins/agent-plugin-builder/` (entire directory)
+- **DELETED**: `plugins/bug-hunter-rust/` (entire directory)
+- **DELETED**: `plugins/bug-hunter-ts/` (entire directory)
+
+4. Errors and Fixes:
+
+- **Wrong direction: un-deprecated bug-hunter plugins instead of deleting them**: Spent significant session time creating READMEs, adding model/effort, updating plugin.json for deprecated plugins that should have been deleted. User corrected: "Stop, we are removing the deprecated plugins bug hunter." Fixed by deleting both directories.
+
+- **Naming collision: changed skill names to "hunt"**: Changed both `bug-hunter-rust` and `bug-hunter-ts` skill names from `bug-hunter-rust`/`bug-hunter-ts` to `hunt`, causing a collision if both installed. User said: "I'm confused, we had plugin names before wtf." Reverted to original plugin-id names (then plugins were deleted entirely).
+
+- **CONTRIBUTING.md said "No `role:` field"**: Should have been "No `<role>` section in the body." The frontmatter `role:` field is a legitimate platform metadata field used by Claude Code/AGY for routing. Fixed in CONTRIBUTING.md.
+
+- **Constitution sweep and EARS test naming added to bug-hunter agents**: Added `<constitution_sweep>` and `<test_spec>` blocks to bug-hunter-adversary and bug-hunter-remediator — but those plugins were then deleted. These improvements need to land in `proof`'s agents instead (handled by the running agent).
+
+- **Edit tool string not found error**: When trying to add T10 to Rust SKILL.md, the exact string `### 6. Unsafe Boundary Violations\n\`unsafe\` blocks outside an explicit FFI/NAPI boundary.` wasn't found because the actual text was `### 5 & 6. Integer Overflow / Unsafe Boundary Violations`. Fixed by reading the file first to find the actual text.
+
+- **SKILL.md hazard summary entries for T10**: Successfully added after finding the correct existing text.
+
+5. Problem Solving:
+
+- **Where do architect and mutator cognitive modes belong?**: Decided by examining their output schemas. Architect produces design recommendations (not `finding-report@1`) → belongs in `canon` where spec/design work happens. Mutator produces coverage gap reports → belongs in `lambda` as a quality gate. Both fit existing schemas and strengthen the pipeline.
+
+- **Proof boundary-tracer integration**: Fits as a conditional pre-step in proof's pipeline — invoked only when T7/T10 candidates found, provides field survival map to adversary before it evaluates the candidate. Clean SDD contract.
+
+- **Lifecycle vs specialized naming**: Lifecycle plugins use single lifecycle-stage words (need, research, spec, plan, code, gate, ship, audit, meta) because each occupies a unique stage. Specialized plugins (if they existed) would use plugin-id names to avoid collision. Since bug-hunter-* are deleted, proof (audit) remains the correct audit plugin with the correct skill name.
+
+6. All User Messages:
+
+- "Some feedback from another agent regarding improvements we can make: [Callisto findings]"
+- "We should include an update to the readme, arch, contributing docs right? The docs for each plugin?"
+- "help me decide here" (on plugin strategy question)
+- "We should cleanup what's deprecated so we don't keep getting confused"
+- "Did we keep our naming scheme? Or adjust it at least?"
+- "I'm confused, we had plugin names before wtf"
+- "Did we deprecate those or adjust????"
+- "Stop, we are removing the deprecated plugins bug hunter but our other plugins had names right? Stop rushing and think and plan first"
+- "Are we not adjusting our other plugins based on EARS?"
+- "For the boundary tracer, etc let's do what's best for results and keeping with best practices including sdd and ears"
+- "Does it belong in another plugin?"
+- "Yes. That sounds great"
+- "Tackle it all together. What else did you find and suggest that you just dropped?"
+- "Did we keep our naming scheme or at least adjust it" (second time asking)
+
+7. Pending Tasks:
+
+- **Wait for 5 parallel agents to complete** their rewrites of all lifecycle plugin agents + new agents
+- **Rewrite `shared/agent-best-practices.md`** — 257 lines of stale content (Superpowers framework, AGY matrix) needs full replacement with current principles: 4-part structure, EARS placement, cognitive modes, progressive context, schema-driven handoffs, constitution reference
+- **Update `AGENTS.md`** to reference `shared/constitution.md` as the authoritative rules source
+- **Fix root `README.md`** — remove the "Specialized deep auditors" section and bug-hunter-* directory entries that were added for the now-deleted plugins
+- **Add TS multi-writer file race** to `typescript-smells.md` (only added Rust version to rust-smells.md)
+- **Verify proof/README.md** is updated by the running agent to reference split files
+- **`plugins/plugin-author/`** — not yet created (planned in holistic plan, lower priority)
+- **`shared/schemas/eval@1.json`** — not yet created (planned in holistic plan, lower priority)
+- **`AGENTS.md`** update — not yet done
+
+8. Current Work:
+
+Immediately before compaction, 5 background agents were launched in parallel to rewrite all lifecycle plugin agents:
+
+1. **proof agent**: Rewriting proof-recon, proof-scanner, proof-adversary, proof-exit-gate; CREATING proof-boundary-tracer (sonnet/medium, conditional on T7/T10); updating proof/skills/proof/SKILL.md dispatch matrix with 5-agent table + model/effort column; updating proof/README.md
+2. **canon agent**: Rewriting canon-drafter, canon-verifier, canon-auditor, canon-exit-gate; CREATING canon-architect (opus/high, takes finding-report@1, produces spec@1); updating canon SKILL.md and README
+3. **lambda agent**: Rewriting lambda-recon, lambda-implementer, lambda-reviewer, lambda-exit-gate; CREATING lambda-mutator (sonnet/medium, cargo-mutants/Stryker, convergence loop); updating lambda SKILL.md and README
+4. **axiom/graph/basis agent**: Rewriting axiom-exit-gate, axiom-recon, axiom-verifier, graph-intake, graph-clarifier, graph-auditor, basis-scaffolder, basis-auditor, basis-schema-designer; updating 3 SKILL.md files and 3 READMEs
+5. **trace/vector/delta agent**: Rewriting trace-recon, trace-reader, trace-risk-assessor, trace-synthesizer, vector-planner, vector-estimator, vector-challenger, delta-changeset-analyzer, delta-commit-analyzer, delta-pr-narrator, delta-release-summarizer, delta-review-preprocessor; updating 3 SKILL.md files and 3 READMEs
+
+`shared/constitution.md` was written directly (complete).
+
+`shared/agent-best-practices.md` was read and found to be 257 lines of stale content — not yet rewritten.
+
+9. Optional Next Step:
+
+The most immediate next step once the 5 parallel agents complete is to:
+
+1. Verify their work (spot-check key agents for correct 4-part structure, EARS placement, model/effort)
+2. Rewrite `shared/agent-best-practices.md` — the current content references the old "Superpowers 5-Section Subagent Framework" (context/role/goal/execution_strategy/success_criteria) and the old AGY/Claude Code operational matrix. It needs to be replaced with: the 4-part agent structure, cognitive mode dispatch, EARS-for-edges principle, progressive context loading, schema-driven handoffs, model/effort tiering guide, and a pointer to `shared/constitution.md` as the authoritative rules source.
+3. Fix root `README.md` to remove the bug-hunter-* entries
+4. Update `AGENTS.md` to reference the constitution
+
+This directly follows the user's most recent confirmed plan: "Tackle it all together" and the identification of dropped work including "shared/agent-best-practices.md — stale, needs rewrite" and "AGENTS.md — mentioned as needing update, never read or changed."
+
+If you need specific details from before compaction (like exact code snippets, error messages, or content you generated), read the full transcript at: /Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a.jsonl
+Continue the conversation from where it left off without asking the user any further questions. Resume directly — do not acknowledge the summary, do not recap what was happening, do not preface with "I'll continue" or similar. Pick up the last task as if the break never happened.
