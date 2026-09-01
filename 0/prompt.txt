@@ -1,0 +1,1 @@
+Let's audit the relationship and coordination between the skills and plugins too. We want to ensure everything keeps working as well together
