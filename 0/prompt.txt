@@ -1,0 +1,1 @@
+I think you need to research and consider what we should use. We want this kind of setup for all our repos right?
