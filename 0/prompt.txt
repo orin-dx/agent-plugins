@@ -1,0 +1,3 @@
+<command-name>/compact</command-name>
+            <command-message>compact</command-message>
+            <command-args>but keep the context of knowledge to allow us to do the more adversarial analysis re-read of everything.</command-args>
