@@ -1,0 +1,29 @@
+I've noticed that as we write our code we're not being succinct with our TSdoc/jsdoc/rsdoc. How can we improve that in how our plugins act/write code/respond? Some context.....
+
+ Question, are we being too wordy with or rust docs? We want to be succinct, precise, eng focused but avoid wall of text, filler words, AI slop or word salad. We want scannable and easily readable/understandable
+
+Yes, fair callout — that last doc comment was a wall of text. Looking back at it, it had run-on justifications, restated obvious things, and process narration ("rather than a generic DependencyResolverExt::toposort()...") that belongs in the PR description, not the code. Here's a much tighter version:
+
+/// Cascade/version-bump propagation's ordering constraints — a `Dev`-only
+/// change must not force a consumer's version to bump.
+const CASCADE_ORDERING_KINDS: &[DepKind] = &[DepKind::Runtime, DepKind::Build, DepKind::Optional];
+
+/// Publish ordering's constraints. Includes `Dev`: `cargo publish` (no
+/// `--no-verify`) rebuilds the packaged tarball, which needs dev-deps
+/// resolvable from the registry too.
+const PUBLISH_ORDERING_KINDS: &[DepKind] =
+    &[DepKind::Runtime, DepKind::Build, DepKind::Optional, DepKind::Dev];
+
+/// Publish-specific ordering (see `plan_publish`, its only caller).
+///
+/// Prefers `Dev`-inclusive ordering; falls back to cascade's kinds on a
+/// cycle, since mutual dev-only deps between packages are legitimate and
+/// must not hard-fail the whole plan.
+fn publish_order<D: DependencyResolver + ?Sized>(
+    resolver: &D,
+    subset: &HashSet<PackageId>,
+) -> Result<Vec<PackageId>, GraphError> {
+    ...
+}
+
+Same information, about a third the length. Want me to apply this, and should I sweep the rest of this session's other doc comments (the toposort_impl one, the changeset files, etc.) for the same tightening?
