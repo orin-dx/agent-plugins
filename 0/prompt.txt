@@ -1,0 +1,20 @@
+<task-notification>
+<task-id>aab837f40886d1b45</task-id>
+<tool-use-id>toolu_013naRAJ9aoYoK7RktVgBZmf</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/aab837f40886d1b45.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix trace's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>`trace` documentation fixed: SKILL.md and README.md documented two different, both-fictional "sub-skills" lists (`trace/question` etc. vs `trace/survey` etc.) — replaced both with one honest description of the real four-agent pipeline (recon → reader → synthesizer → risk-assessor). Also polished README for docs-voice scannability and added a Mermaid diagram styled with the shared palette, replacing the plain-text pipeline arrow chain.
+
+**Version:** `plugin.json` was actually `1.2.0` already (not `1.0.1` as assumed — that number only appeared in README's stale version line, itself part of the bug). Bumped to **1.2.1** (patch, doc/accuracy fix per `changesets.md`'s semver table).
+
+Files changed (uncommitted, no commit made per scope — not asked to commit):
+- `plugins/trace/skills/trace/SKILL.md` — removed fictional `&lt;sub_skills&gt;` block, replaced with an honest one-pipeline description in `&lt;overview&gt;`, version → 1.2.1
+- `plugins/trace/README.md` — removed fictional "Sub-skills" table, rewrote lead paragraph and Subagents description for docs-voice compliance, replaced plain-text pipeline with a palette-styled Mermaid flowchart, fixed stale version line
+- `plugins/trace/plugin.json` — version 1.2.0 → 1.2.1
+- `plugins/trace/CHANGELOG.md` — added `[1.2.1]` entry documenting the fix
+
+Verified: `jq . plugins/trace/plugin.json` passes, Mermaid fence balanced, zero remaining references to any of the fictional sub-skill names.</result>
+<usage><subagent_tokens>683058</subagent_tokens><tool_uses>14</tool_uses><duration_ms>87511</duration_ms></usage>
+</task-notification>
