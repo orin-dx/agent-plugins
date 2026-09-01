@@ -1,0 +1,18 @@
+<task-notification>
+<task-id>adc6825a5bc873630</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/adc6825a5bc873630.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for oxc-react-codegen" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>docs: add community health files (commit `567317c`).
+
+**What this repo is:** `oxc-react-docgen` — a Rust-native TypeScript/TSX parser (via OXC) that extracts React component prop types for docs/Storybook tooling, exposed as a CLI, NAPI binding, and Vite plugin. Pre-1.0, not yet published to npm.
+
+**PR template decision:** kept it lightweight (type-of-change checkbox, why, test-plan checklist, linked issue) rather than an elaborate Kubernetes-style template — this session's own research found even rust-lang/rust and VS Code ship no PR template at all, so a heavy one isn't automatically better; matched the checklist items to the real commands already in `CONTRIBUTING.md` (`cargo test -p oxc-react-docgen-core`, `cargo clippy ... -D warnings`, `cargo insta review`, the Vite plugin's pnpm test) instead of inventing generic ones. No release-note block — found no changelog/release convention in the repo to hook into.
+
+**Also tailored:** `SECURITY.md`'s scope to the real attack surface (malicious/adversarial TS/TSX input against the parser; `crates/binding` flagged explicitly as the one crate without `#![forbid(unsafe_code)]`, since it's the NAPI FFI boundary — `core` and `cli` do have the forbid attribute, confirmed by reading the source, not assumed); bug-report template leads with a minimal-repro TSX field; reused the repo's existing `bug`/`enhancement` labels rather than creating duplicates.
+
+Left untouched, not mine to touch: pre-existing uncommitted changes to `release.yml`, two `Cargo.toml` files, `vite-plugin/package.json`, and untracked `.changeset/`/`.entire/`/`.gemini/`/`callisto.toml` — staged and committed only the 6 files this directive covers.</result>
+<usage><subagent_tokens>860334</subagent_tokens><tool_uses>18</tool_uses><duration_ms>264502</duration_ms></usage>
+</task-notification>
