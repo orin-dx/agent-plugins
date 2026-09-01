@@ -1,0 +1,3 @@
+Say we're doing a push for testing coverage improvement across all packages, that can go in one changeset. Say we're implementing a set of new features together, that can be a changeset.
+
+Agentic work makes this a bit more difficult because the agents do a lot more work quicker, right
