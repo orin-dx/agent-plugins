@@ -1,0 +1,40 @@
+<task-notification>
+<task-id>ae6084339ca881d19</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/ae6084339ca881d19.output</output-file>
+<status>completed</status>
+<summary>Agent "Reorder plugin README sections by user priority" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>All 10 READMEs match the target order correctly. Validation scripts both passed. No commits were made.
+
+## Summary
+
+Reordered sections in all 10 plugin READMEs per the priority scheme. Final order per plugin:
+
+- **weaver**: When to Use → Install → Skills → Subagents → Pipeline → Output Schema → Extensibility → Next Stage
+- **vanguard**: When to Use → Install → Subagents → Pipeline → Output Schema → Next Stage (no Skills/reference sections)
+- **scribe**: When to Use → Install → Skills → Subagents → Pipelines → Output Schemas → Exit Gate Conditions → Next Stage
+- **muse**: When to Use → Install → Skills → Subagents → Pipeline → Output Schemas → Next Stage
+- **navigator**: When to Use → Install → Behavior → Subagents → Pipeline → Output Schema → Task Requirements → Next Stage
+- **smith**: When to Use → Install → Subagents → Pipeline → Output Schema → TDD Cycle → Mutation Gate → Exit Gate → Capability Gaps → Next Stage
+- **sentinel**: When to Use → Install → Subagents → How It Works → Output Schema → Retry Protocol → Used By
+- **courier**: When to Use → Install → Skills → Subagents → Pipeline → Output Schemas → References → Previous Stage
+- **ranger**: When to Use → Install → How It Works → Subagents → Pipeline → Output Schema → Dead Code Exclusion → Language Detection → References → Integration
+- **mason**: When to Use → Install → Skills → Subagents → Conformance Checks → Directory Layout → Key Authoring Principles → References (no Pipeline/Output Schema/Next Stage sections in mason)
+
+Non-standard sections and placement decisions:
+- **navigator's "Behavior"** and **ranger's/sentinel's "How It Works"**: these plugins have one skill (no Skills table), so this section fills the "how the single skill dispatches" role at position 5, right after Install.
+- **navigator's "Task Requirements"**: reference material about `plan@1` task fields — placed after Output Schema (zone 9), matching the "reference material for later" rule, though it stayed adjacent to Output Schema since the two are closely related.
+- **smith's "TDD Cycle", "Mutation Gate", "Exit Gate", "Capability Gaps"**: all detailed elaborations of the pipeline mechanics — placed as a block after Output Schema (zone 9), in their original relative order since that mirrors the actual pipeline flow.
+- **sentinel's "Retry Protocol"**: reference material on gate retry/escalation — zone 9, after Output Schema.
+- **sentinel's "Used By"** and **ranger's "Integration"** and **courier's "Previous Stage"**: these are each plugin's ecosystem-pointer equivalent of "Next Stage" — kept last.
+- **mason**: has no Pipeline, Output Schema, or Next Stage sections at all (it's not a linear-pipeline plugin); its Conformance Checks / Directory Layout / Key Authoring Principles / References all landed in zone 9 in original relative order.
+- **scribe's Exit Gate Conditions**: moved to after Output Schemas (it was before, in the original) to satisfy the rule that Output Schemas (8) precedes plugin-specific reference material (9).
+
+Validation:
+- `./scripts/check-skills-doc.sh` → `OK: 10 plugin(s), every documented skill has a matching skills/ directory.`
+- `./scripts/check-mermaid.sh` → `OK: 17 mermaid block(s) across the repo, all render cleanly.`
+
+Note: this session appears to have concurrent agents mid-rename (old plugin names like `graph`, `canon`, `vector`, `lambda`, `axiom`, `delta`, `trace`, `proof` showing up in git's staged index vs. the already-renamed `weaver`/`scribe`/`navigator`/`smith`/`sentinel`/`courier`/`vanguard`/`ranger` on disk). I read and reordered whatever content was on disk at read time (already the new names/versions) — no rename work was done or altered by me, and nothing was committed.</result>
+<usage><subagent_tokens>113854</subagent_tokens><tool_uses>30</tool_uses><duration_ms>383160</duration_ms></usage>
+</task-notification>
