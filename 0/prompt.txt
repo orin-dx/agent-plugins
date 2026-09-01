@@ -1,0 +1,478 @@
+<task-notification>
+<task-type>artifact-watch-lifecycle</task-type>
+<summary>Stopped watching Artifact: "Wisp Marks" (connection lost)</summary>
+<event>Watch on https://claude.ai/code/artifact/37342e5c-8038-4700-a719-9188d03f4a62 ended — the live connection kept failing and reconnecting has stopped. This session will no longer hear when it is republished; watch it again if you still need that.</event>
+</task-notification>
+
+---
+
+If we want to add a11y audit and understanding to our plugins where do we do that? What part of the workflow? Can you research WCAG along with industry accepted leaders like BBC, NNGroup and widely accepted UX and a11y experts for input on how to best guide LLMs and agents through building accessible software?
+
+Do wide ranging research, understand how to account for a11y in original designs as well as how to audit individual parts of a codebase or the entirety of it. Not just from the UI perspective but also from a CLI if at all possible. Consider accessible interfaces good UX.
+
+Research, think through our current plugins, skills and agents and present a report and proposal.
+
+---
+
+<task-notification>
+<task-id>a47c40b69aae73c07</task-id>
+<tool-use-id>toolu_01FXzMNEWdzEejTbr4TszcXN</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a47c40b69aae73c07.output</output-file>
+<status>completed</status>
+<summary>Agent "Research WCAG and machine-checkable a11y rules" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I now have enough well-sourced material to compile the findings report.
+
+## WCAG Research Findings Report
+
+### 1. WCAG 2.2 structure
+
+WCAG's requirements are organized under four principles, **POUR**:
+- **Perceivable** — information/UI must be presentable in ways users can perceive (text alternatives, captions, contrast, adaptable presentation)
+- **Operable** — UI and navigation must be operable (keyboard access, timing, seizure avoidance, navigability, input modalities)
+- **Understandable** — content and operation must be understandable (readable text, predictable behavior, input assistance)
+- **Robust** — content must work with a wide range of current and future user agents/assistive tech (valid parsing, name/role/value exposure)
+
+Three cumulative **conformance levels**: A (minimum) → AA (the level almost all legal mandates, e.g. ADA/EN 301 549, require) → AAA (highest, rarely required site-wide).
+
+**WCAG 2.2 has 86 total success criteria**: 31 at Level A, 24 at Level AA, 31 at Level AAA. Because conformance is cumulative, "AA conformance" = all 31 A criteria + all 24 AA criteria = 55 criteria total. ([W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/), [TestParty — 87 SC breakdown](https://testparty.ai/blog/wcag-22-success-criteria-list), [Eye-Able](https://eye-able.com/blog/wcag-a-aa-aaa))
+
+### 2. Automatable vs. judgment-required criteria
+
+Consistent estimate across sources: **roughly 30–40% of WCAG success criteria are reliably machine-checkable**; the rest need a human. Deque's own volume-weighted analysis claims ~57% of *issue instances* (not SCs) are caught by automation — a higher number because a few automatable rules (contrast, alt presence) fire very frequently in the wild — but by *success-criterion* count the automatable fraction is much smaller, and **no SC required for AA can be fully satisfied by automated testing alone** (Deque itself states this). ([Deque WCAG 2.1 support blog](https://www.deque.com/blog/support-for-wcag-2-1-in-axe-core/), [UK Intelligence Community Design System — automated testing limitations](https://design.sis.gov.uk/accessibility/testing/automated-testing-limitation/))
+
+**Most machine-checkable success criteria** (what an automated check concretely looks for):
+
+| SC | Name | What an automated check looks for |
+|---|---|---|
+| **1.1.1** | Non-text Content | `&lt;img&gt;`/`area`/`input[type=image]` missing `alt` attribute, or empty `alt` on a non-decorative-looking image (presence only — *not* whether the alt text is meaningful) |
+| **1.3.1** | Info and Relationships | Missing table headers (`&lt;th&gt;`/`scope`), missing `&lt;label for&gt;`/`aria-label` on form controls, heading level skips (h1→h3), list markup misuse |
+| **1.4.3** | Contrast (Minimum) | Computed foreground/background color luminance ratio &lt; 4.5:1 (or 3:1 for large text) — fully algorithmic |
+| **1.4.4 / 1.4.10** | Resize Text / Reflow | Fixed px units preventing 200% zoom without horizontal scroll, viewport meta blocking zoom |
+| **2.1.1 / 2.4.3** | Keyboard / Focus Order | Elements with `tabindex` &gt; 0, positive tabindex misuse, `onclick` on non-interactive elements with no keyboard handler |
+| **2.4.2** | Page Titled | Missing/empty `&lt;title&gt;` |
+| **2.4.4 / 2.4.9** | Link Purpose | Empty link text, generic text like "click here" with no accessible name, duplicate link text pointing to different destinations |
+| **3.1.1** | Language of Page | Missing/invalid `lang` attribute on `&lt;html&gt;` |
+| **4.1.1** | Parsing (deprecated in 2.2 but still checked) | Duplicate IDs, unclosed/malformed tags |
+| **4.1.2** | Name, Role, Value | Custom widgets/ARIA roles missing required name/role/state (e.g., `role="button"` with no accessible name), invalid ARIA attribute values, ARIA on unsupported elements |
+
+**Requires human judgment (cannot be reliably automated):**
+- Whether alt text is *meaningfully descriptive* vs. just present (1.1.1)
+- Whether reading order and focus order make logical *sense* (1.3.2, 2.4.3)
+- Whether a workflow, instructions, or error message is genuinely *understandable* (3.3.x, 3.1.5)
+- Whether content requiring user input has adequate context/help (3.3.5)
+- Meaningful sequence and purpose of gestures/motion (2.5.x)
+- Whether captions/audio descriptions are accurate (1.2.x)
+- Consistent navigation and identification *in a meaningful sense* (3.2.3/3.2.4) — structurally checkable but semantically judged
+
+### 3. Automated tool rule structures
+
+**axe-core (Deque)** — the most detailed public model. A rule is JSON with: `id`, `impact` (minor/serious/critical, sometimes "moderate"), `selector` (CSS/DOM-path matcher), `matches` (a named function for extra filtering logic beyond the selector), `tags` (WCAG SC mapping like `wcag2aa`, `wcag143`, plus `EN-301-549`, `ACT`, best-practice tags), `actIds` (links to W3C ACT test rules), `metadata.description` / `metadata.help` (human-readable explanation), and `all`/`any`/`none` arrays of atomic **checks** that combine to a pass/fail. Real example (`color-contrast.json`):
+
+```json
+{
+  "id": "color-contrast",
+  "impact": "serious",
+  "matches": "color-contrast-matches",
+  "excludeHidden": false,
+  "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c",
+           "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"],
+  "actIds": ["afw4f7", "09o5cg"],
+  "metadata": {
+    "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    "help": "Elements must meet minimum color contrast ratio thresholds"
+  },
+  "all": [],
+  "any": ["color-contrast"],
+  "none": []
+}
+```
+This id→impact→WCAG-SC-tag→description→matcher-logic shape is a strong direct model for a "hazard taxonomy" entry: taxonomy_id, severity, SC mapping(s), human-readable description, and a matching/detection rule. ([axe-core rule-development.md](https://github.com/dequelabs/axe-core/blob/master/doc/rule-development.md), [color-contrast.json](https://github.com/dequelabs/axe-core/blob/develop/lib/rules/color-contrast.json))
+
+**pa11y** is a runner, not its own engine — it drives headless Chrome via Puppeteer and delegates rule evaluation to a pluggable engine, either **axe-core** or **HTML_CodeSniffer** (WCAG2/Section 508 rulesets); it adds orchestration (CLI/CI config, `pa11y.json`, `--ignore`/`--threshold` flags) but no rules of its own. ([pa11y GitHub](https://github.com/pa11y/pa11y))
+
+**Lighthouse** (Google) wraps axe-core-derived audits into its accessibility category, scoring 0–100 and grouping by impact.
+
+**WAVE** (WebAIM) uses its own proprietary rule engine with icon-based annotations (errors, alerts, features, structural elements, ARIA) overlaid directly on the rendered page rather than a JSON rule export.
+
+### 4. WCAG 3.0 ("Silver")
+
+Still an **early-stage W3C Working Draft** — not stable enough to plan against yet:
+- Latest Working Draft published **September 2025** (updated March 2026); explicitly **not a Recommendation** and not to be used for compliance.
+- Replaces binary pass/fail SCs with an **outcomes-based scoring model**: each of **174 outcomes** (vs. 86 SCs in 2.2) is scored 0–4 rather than pass/fail.
+- Replaces A/AA/AAA with **Bronze/Silver/Gold** conformance; Bronze requires an average score ≥3.5 across all outcomes with the same floor in every functional category.
+- Timeline: Candidate Recommendation expected ~late 2027, final publication targeted ~late 2029.
+- No law anywhere currently references WCAG 3.0; WCAG 2.x remains the compliance target for the foreseeable future — **do not architect the pipeline around WCAG 3.0's schema yet**, but the outcomes/scoring shift is worth tracking since it changes "pass/fail" into a graded score, which may map better onto an LLM-based hazard-confidence model. ([WCAG 3.0 explainer — webability.io](https://www.webability.io/blog/wcag-3-0-explained), [web-accessibility-checker.com preparation guide](https://web-accessibility-checker.com/en/blog/wcag-3-0-preparation-guide), [accessibility.com — First Public Working Draft](https://www.accessibility.com/blog/silver-wcag-3-0-first-public-working-draft-released))
+
+### 5. LLM/AI-agent accessibility auditing — recent (2025/2026) findings
+
+This is genuinely fast-moving and directly relevant:
+
+- **Microsoft's A11y LLM Eval** (2025/2026, tests GPT-5.x, Claude Haiku/Opus/Sonnet, Gemini 3.x on 32 accessibility test cases across React/Vanilla JS): **baseline LLM-generated code passes only ~12%** of accessibility checks with no guidance; giving models a detailed WCAG 2.2 instruction set raises the pass rate to **~60%** (a 48.5-point jump). Even minimal instructions help (37%). Most common residual failures: color contrast (89% of detected issues), missing ARIA attributes/roles, broken focus management in interactive widgets, and missing helper-text associations. Complex layouts (e.g., shopping pages) scored 0% across all models — implying an agent pipeline needs explicit, structured a11y requirements injected at generation time, not reliance on default model behavior. ([microsoft.github.io/a11y-llm-eval-report](https://microsoft.github.io/a11y-llm-eval-report/))
+
+- **CodeA11y** (CHI 2025, arXiv 2502.10884) — a GitHub Copilot extension using three cooperating LLM agents: a **Responder** (generates accessible code proactively from a system prompt tuned to a11y standards), a **Correction agent** (parses axe DevTools linter output and proposes fixes), and a **Reminder agent** (flags manual-check-only items, e.g. meaningful alt text, that automation can't verify). This maps closely onto a coding-agent pipeline design: generate-with-guidance → automated-scan → LLM-mediated-fix-suggestion → flag-for-human-review on judgment items. Finding: LLM-assisted code can match or exceed human-written accessibility in some cases but still fails on compliance depth; novice developers using AI assistants still omit key practices. ([CodeA11y paper](https://arxiv.org/html/2502.10884), [CHI 2025 ACM record](https://dl.acm.org/doi/10.1145/3706598.3713335))
+
+- **A11yN** ("aligning LLMs for accessible web UI code generation") — trains/aligns a code-generating LLM via a reward function that penalizes WCAG violations, with penalty severity scaled to violation severity as scored by an accessibility testing engine (i.e., RL/DPO-style alignment against axe-core-style scoring, not just prompting).
+
+- **A11YRepair** (arXiv 2606.21926, "knowledge-enhanced divide-and-conquer repair") and the related "Blind Edits to Verified Repair" work (arXiv 2608.24913) converge on the same architecture recommendation: **never let an LLM patch blind** — apply candidate fix → re-run an automated auditor (axe-core plus computed-style probes) → accept only if detected violations strictly decrease → otherwise roll back and reprompt with the specific violation findings as feedback. This "generate → scan → gate → loop" pattern is the clearest concrete blueprint found for how a coding-agent pipeline should structure its accessibility remediation loop.
+
+- General 2026 framing: audits still find **&gt;90% of public web pages contain detectable violations**; the consensus across these papers is that AI hasn't replaced accessibility specialists but "made their expertise scalable" — i.e., automation should surface candidates and human/specialist judgment should remain the gate for anything above the machine-checkable ~30–40% of criteria.
+
+### Implication for pipeline design
+
+- **Requirements drafting**: for each generated component, inject the machine-checkable SC list (1.1.1 presence, 1.3.1 structure, 1.4.3 contrast, 2.4.2 title, 4.1.2 name/role/value, etc.) as concrete, falsifiable generation constraints — this is what took Microsoft's eval from 12%→60%.
+- **Scanning**: model the hazard taxonomy directly on axe-core's rule shape (id, impact, SC-tag, description, matcher) — it's already a proven, widely-adopted format and would let the pipeline optionally shell out to real axe-core/pa11y for the machine-checkable half rather than reinventing detection logic.
+- **Judgment items**: don't let the scanner claim confidence on alt-text quality, workflow understandability, or meaningful reading order — flag these explicitly as "needs human/specialist review," mirroring CodeA11y's Reminder agent and A11y LLM Eval's finding that passing automated checks doesn't guarantee WCAG conformance.
+- **Repair loop**: adopt the generate→scan→gate(strictly-decreasing-violations)→rollback-and-reprompt pattern from A11YRepair rather than one-shot fixes.</result>
+<usage><subagent_tokens>57808</subagent_tokens><tool_uses>12</tool_uses><duration_ms>103036</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>af1ce9dc00a2592e6</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/af1ce9dc00a2592e6.output</output-file>
+<status>completed</status>
+<summary>Agent "Research BBC, NN/g, and leading a11y/UX experts" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I now have solid, sourced material across all four areas. Compiling the findings report.
+
+## Findings Report: Accessibility as a Design Discipline (for Spec-Time Reasoning)
+
+### 1. BBC — Accessibility Design Review (pre-code process)
+
+BBC's practice is documented publicly at [bbc.github.io/accessibility-news-and-you](https://bbc.github.io/accessibility-news-and-you/guides/accessibility-design-review.html) (repo: [bbc/accessibility-news-and-you](https://github.com/bbc/accessibility-news-and-you/blob/master/accessibility-news-and-designers.md)) plus their formal [BBC Mobile Accessibility Standards and Guidelines](https://www.usabilityinciviclife.org/bibliography/bbc-mobile-accessibility-standards-and-guidelines-v1-0/) and a current supplier framework for accessibility consultancy/review effective Jan 2025 ([find-tender.service.gov.uk notice](https://www.find-tender.service.gov.uk/Notice/001914-2025/PDF)).
+
+Key mechanism — a **structured design review that happens before sign-off, before any code**:
+- An "accessibility champion" (any discipline, not necessarily an a11y specialist) pairs with the designer for 1–2 hours per component.
+- Five-step review: visual inspection → check against key user-group considerations → compare against known best-practice references (e.g., Home Office Digital / Barclays accessibility posters) → verify user research included participants with access needs → **write out the intended screen-reader experience narrative** for the component.
+- That screen-reader narrative is the deliverable that crosses the design→dev boundary — it tells developers what semantics/behavior to build to, before a line of code exists.
+- Designer's own checklist requires, at design time: standard link/focus/hover states; 4.5:1 contrast (tool-checked); color-blindness simulation; explicit decision on whether icons need visually-hidden text; explicit call on heading structure/ARIA landmarks (discussed *with* developers pre-build); logical tab order; and an explicit answer to "does this degrade gracefully without JS."
+
+**Relevance to spec-writing agents**: BBC's model proves the "screen reader experience script" is a legitimate, testable spec artifact — a designer/spec-writer states expected role/name/state announcements before implementation, which is directly falsifiable later against actual AT output.
+
+### 2. Nielsen Norman Group — accessibility as inseparable from UX quality
+
+Sources: [NN/g Accessibility and Inclusivity: Study Guide](https://www.nngroup.com/articles/accessibility-inclusivity-study-guide/), [NN/g accessibility topic/reports hub](https://www.nngroup.com/reports/topic/accessibility/), [Beyond Accessibility: Treating Users with Disabilities as People](https://www.nngroup.com/articles/beyond-accessibility-treating-users-with-disabilities-as-people/), [Inclusive Design: Part 2](https://www.nngroup.com/articles/inclusive-design-part-2/).
+
+Core argument: NN/g explicitly frames **accessibility and inclusivity as branches of usability, not compliance categories** — "mindsets rather than collections of procedures, regulations, or checklists." Their stated rationale for why accessible design is just better design: features built for access needs (contrast, clear labeling, keyboard operability, predictable structure) measurably help everyone, not only disabled users — captured in their framing "accessible solutions benefit everyone." They cite population scale (an estimated 15–20% of people live with a disability, and a similar proportion is neurodiverse) as the business/design case for treating this as core UX, not edge-case handling.
+
+Process guidance for starting-early rather than retrofitting: (a) test with actual users with disabilities early, not just automated/heuristic checks — "the only way to know if designs are accessible and usable... is to test them with this population"; (b) NN/g's "Beyond Accessibility" piece pushes teams to treat disabled users as people with goals and context, not a checkbox demographic, which argues for accessibility being part of persona/scenario work at the requirements stage, not appended later; (c) inclusive design should start at the "organizational"/planning level (Part 2, drawing on Tognazzini) — embedded in foundational project structure rather than bolted onto a finished design.
+
+**Relevance**: Justifies a design principle for the pipeline: accessibility considerations belong in the same acceptance-criteria pass as any other UX quality bar — not a separate "a11y section" appended afterward — and that criteria should reference real assistive-tech user validation, not just automated-checker pass/fail, wherever feasible.
+
+### 3. Other frameworks and practitioner sources
+
+- **Microsoft Inclusive Design Toolkit** ([inclusive.microsoft.design](https://inclusive.microsoft.design/), [Inclusive 101 guidebook](https://inclusive.microsoft.design/articles/inclusive-101-guidebook)): three core principles — *recognize exclusion; learn from diversity; solve for one, extend to many*. The 2nd-edition toolkit (design-for-cognition) adds: understand user motivation/goals/tasks; assess cognitive load of the mismatch; co-create with a diverse community. Trained ~80,000 Microsoft employees and taught at 60+ universities — a widely-adopted framework for translating "who is excluded by this design decision" into an explicit design-time question, which maps well onto asking a spec-writing agent to state, per feature, who could be excluded and how the spec addresses it.
+
+- **Heydon Pickering, Inclusive Components** ([book.inclusive-components.design](https://book.inclusive-components.design/)): philosophy is "not about wrong and right, but bad to better" — a pragmatic, non-perfectionist stance. Approach: examine one component at a time, ask who could be tripped up by it, and prefer semantic HTML + native behavior over custom JS reimplementation. Explicitly names the tension between logical document structure, visual layout, and interaction, and says compromise is inevitable but "should be an equitable sort of compromise" — useful framing for an agent judging trade-offs rather than treating a11y as pass/fail absolutist.
+
+- **The A11Y Project checklist** ([a11yproject.com/checklist](https://www.a11yproject.com/checklist/)): built directly on WCAG as shared vocabulary, targets AA, and is explicit that "there is no such thing as 100% accessible" — the checklist is a floor for continuous improvement, not a certificate. Values noted: person-first/non-ableist language, and verifying with actual daily AT users, not just automated tooling.
+
+- **WebAIM** ([webaim.org/standards/wcag/checklist](https://webaim.org/standards/wcag/checklist), [WCAG testability](https://webaim.org/blog/wcag-2-testability/)): translates WCAG's formal success criteria into plain-language, verifiable checks organized by the four POUR principles (Perceivable, Operable, Understandable, Robust). Important structural point: **WCAG itself defines "testable" formally** — a criterion must be answerable "yes/no" by a machine, or produce ≥80% agreement among knowledgeable human evaluators (WCAG 2.x tightens this to requiring consistent results across independent testers). This is a ready-made bar for what "testable" means in an accessibility acceptance criterion.
+
+- **GOV.UK Service Manual / GDS Way** ([gov.uk/service-manual](https://www.gov.uk/service-manual/helping-people-to-use-your-service/making-your-service-accessible-an-introduction), [GDS Way accessibility](https://gds-way.digital.cabinet-office.gov.uk/manuals/accessibility.html)): explicit rule that "accessibility cannot be achieved by adding final touches — it must be considered at all stages," and assigns accessibility ownership by role (content/interaction designers avoid inaccessible patterns, researchers test for it, delivery managers ensure it's considered from the start) — a concrete distribution-of-responsibility model rather than leaving it to one specialist.
+
+### 4. Writing testable, falsifiable accessibility acceptance criteria — the key finding
+
+The most directly applicable pattern is **Deque's "a11yAC" (Accessibility Acceptance Criteria)**, part of their "a11yBID" (Accessibility Behavior-Informed Development) methodology — [Deque: Collaborative planning, the forgotten step of accessible development](https://www.deque.com/blog/collaborative-planning-the-forgotten-step-of-accessible-development/). This is the closest real-world analog to what this pipeline needs:
+
+- a11yAC are written in **Gherkin Given-When-Then** form, same as functional acceptance criteria, and live in the same user story — not a separate a11y appendix.
+- Concrete example given:
+  &gt; Given I am a blind screen reader user, and I have submitted the form, and a loading spinner is visible as I await a response from the server, When I navigate to the loading spinner image, Then I hear the image role, and I hear the alt text as "loading."
+- Explicit design rule: a11yAC should be **agnostic to specific assistive-tech key commands** and instead state the expected *semantics* (role, state, property/name) — i.e., criteria are written against the accessibility-tree contract, not against "press NVDA+X and hear Y," which keeps them stable across AT implementations while remaining falsifiable.
+- Process: a "**11y Amigos**" session (analyst/story-writer + developer + tester + designer — a variant of BDD's "three amigos") discovers and documents a11yAC **before development starts**, explicitly because "no single person is expected to know enough about all aspects of accessibility to write quality requirements" — knowledge is distributed across roles rather than assumed to live in one person's head.
+- Stated downstream payoff: developers read a11yAC to know what to build and self-test; testers read them to know what to verify; product owners use them as the bar for accepting the story; future maintainers use them to understand why an accessibility-driven implementation choice was made (preventing accidental regression).
+- Note: design-specific requirements (contrast, color, spacing) are captured in the visual design artifact itself, not in a11yAC — a11yAC exist specifically to cover what a static visual design cannot express: assistive-technology behavior, states, and announcements.
+
+Complementary: **Deque also runs accessibility heuristic evaluations at the design phase itself** ([Supporting Design: Accessibility Heuristics Evaluation](https://www.deque.com/blog/supporting-the-design-phase-with-accessibility-heuristics-evaluations/)), reinforcing that a11y review belongs at the design/spec review gate, not only at code review.
+
+**WCAG's formal testability bar** (from WebAIM) gives a crisp definition an agent can apply when judging whether a proposed criterion is "testable": it must be answerable objectively (automatable) or reach high inter-rater agreement among evaluators — this is a good litmus test to reject vague criteria like "must be accessible" or "should work with screen readers" in favor of Given-When-Then statements naming a specific role/state/name/behavior.
+
+---
+
+### Synthesis for the pipeline's spec-drafting agents
+
+1. **Treat accessibility acceptance criteria as first-class criteria in the same list as functional ones**, written Given-When-Then, naming assistive-technology-observable semantics (role, name, state, announced text, focus behavior) rather than visual description or vague compliance language — directly modeled on Deque's a11yAC pattern and WCAG's testability bar.
+2. **Require an explicit exclusion/persona pass at spec time** ("who could be excluded by this interaction and how does the spec address it") — Microsoft's "recognize exclusion / solve for one, extend to many" gives a concrete prompt shape for this.
+3. **Require a stated assistive-tech experience narrative for any new interactive component**, before implementation — BBC's practice of writing the intended screen-reader experience as a design deliverable is a template for a criterion category: "expected AT narrative."
+4. **Reject "must be accessible"-style criteria outright** as a spec smell — the whole body of sources (WCAG testability rule, Deque's a11yAC, NN/g's rejection of "checklist" thinking) converges on requiring criteria phrased as falsifiable propositions with a stated verification method (automatable check, or a named evaluator procedure with expected agreement).
+5. **Frame accessibility judgment as pragmatic and comparative ("bad to better"), not pass/fail perfectionist** — Heydon Pickering's and A11Y Project's shared stance — useful for an adversarial gate agent (like axiom or canon's auditor) that should flag missing/ambiguous a11y criteria as blockers but not demand an unattainable "100% accessible" bar.
+6. **Assign accessibility review to a broadened cast, not a single specialist** — GOV.UK's per-role responsibility model and Deque's "a11y Amigos" both argue against having accessibility live only in one gate agent's judgment; worth reflecting in how the pipeline distributes accessibility-checking responsibility across draft-spec, audit-spec, and gate-spec rather than concentrating it in one late step.</result>
+<usage><subagent_tokens>63125</subagent_tokens><tool_uses>18</tool_uses><duration_ms>108702</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a812639d94ccb4a15</task-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a812639d94ccb4a15.output</output-file>
+<status>completed</status>
+<summary>Agent "Research CLI and terminal accessibility" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result># CLI/Terminal Accessibility Research Report
+
+## Headline Finding: No WCAG Equivalent Exists
+
+There is no ratified, industry-standard accessibility specification for CLIs or terminal applications comparable to WCAG. There is no standardized "accessibility tree" analogous to the DOM/ARIA — a terminal is structurally an unstructured text stream (CHI '21 paper, confirmed). What exists is a patchwork: one peer-reviewed study, one widely-cited output-style guide that isn't accessibility-focused (clig.dev), independent practitioner checklists (Seirdy, AFixt), one vendor design-system handbook (PatternFly), and after-the-fact vendor engineering blogs (GitHub, 2025).
+
+## Six Topic Areas, With Checkable Rules
+
+**1. Output streams, machine-readability, exit codes** — stdout for primary output, stderr for diagnostics (clig.dev, confirmed); zero/non-zero exit codes (confirmed); `--json`/`--plain` machine-readable modes (confirmed) — these double as the workaround screen-reader users actually rely on (CHI paper). Key gap: TTY-detection alone can't distinguish "human with screen reader" from "human at plain terminal," so accessibility can't hook into TTY checks alone — it needs explicit flags.
+
+**2. Color** — disable color when not a TTY (clig.dev, confirmed); honor `NO_COLOR` (no-color.org, confirmed) and `FORCE_COLOR` (chalk/supports-color convention, confirmed but not a ratified standard like NO_COLOR); never encode meaning in color alone, pair with text labels (PatternFly, confirmed); constrain color to the 16-color ANSI palette since that's the only range terminals let users remap (GitHub engineering blog, confirmed); support `--color=always|never|auto` (Seirdy, confirmed); treat `TERM=dumb` as strip-all-formatting signal (AFixt, confirmed).
+
+**3. Animation/spinners** — the strongest, most repeated confirmed failure pattern. Animated spinners are "extremely problematic for screen readers" (Seirdy); GitHub CLI's braille-character spinner literally confused screen readers and was replaced with static text (GitHub blog, confirmed); Anthropic's own Claude Code has an open issue (#11002) where NVDA freezes during token-streaming/spinner updates, described as "largely unusable" for accessibility-focused Windows users; even GitHub Copilot CLI's shipped `--screen-reader` mode has a live regression re-announcing a status value on every keypress (cli/copilot-cli#1642) — evidence that shipping a flag isn't sufficient without interaction testing.
+
+**4. Structural semantics** — CLIs lack any accessibility-tree equivalent to HTML/DOM (CHI paper, root cause of most other findings); provide text alternatives for ASCII art, opt-in only via flags (AFixt); box-drawing characters get announced verbosely ("box drawing light horizontal") per Claude Code issue #247 (likely, secondary-source only); unstripped ANSI escape codes get read aloud as literal garbage (likely); man pages' standardized, searchable format is a positive pattern worth preserving (Seirdy).
+
+**5. TUI frameworks — the counter-intuitive core finding.** Bubble Tea (Go) has an open, unresolved "is accessibility on the roadmap" issue with no commitment; Ratatui (Rust) has no confirmed accessibility feature and rendered text can't even be copied from the terminal; Textual (Python), the most accessibility-forward framework surveyed, markets high-contrast/colorblind themes but explicitly describes screen-reader integration as still *planned*, not shipped. One critical (non-peer-reviewed) blog post argues modern canvas-redrawing TUI frameworks can be *worse* than old scrollback CLIs because they redraw the whole screen instead of using VT100 scrolling regions. Terminal emulator choice also matters independently: GTK-based terminals (gnome-terminal, xfce4-terminal) are fully accessible; XTerm, urxvt, st, and Konsole are not (blindcomputing.org, confirmed). **Bottom line: a plain, linear, scrollback-based CLI with a static-text screen-reader mode is currently more accessible than a modern full-screen TUI, not less sophisticated.**
+
+**6. Explicit accessibility modes, testing, documentation** — GitHub's `gh a11y` mode (v2.72.0+) and its 2025 accessibility overhaul (screen-reader mode, colorblind theme picker, keyboard-first nav) is the closest thing to a reference implementation that exists; GitHub's own conclusion is that no single "accessible" format works for everyone — customization via explicit flags is necessary; mandate testing with real screen readers or at minimum piping output through `espeak-ng` and listening (Seirdy); document accessibility flags prominently in `--help`, not a separate doc.
+
+## Honest Gap Assessment
+
+- The one peer-reviewed source (CHI '21, Sampath/Merrick/Macvean, ACM DL) had its full text blocked by a 403 on both fetch attempts — findings from it beyond the abstract are secondary paraphrases, not confirmed direct reads.
+- No sustained conference-talk circuit specific to CLI/terminal accessibility was found for 2023–2026; the field runs on one paper, scattered blog posts of uneven rigor, and vendor postmortems rather than proactive research.
+- clig.dev, despite being the most-cited CLI guidelines document, has no dedicated accessibility section — its relevance is incidental.
+
+## Recommendation (medium confidence)
+
+Default new CLI/TUI work to plain/static/structured output (topics 1–4, high-confidence, multiply-corroborated); treat any full-screen TUI framework as accessibility-risk-bearing by default and require a static/linear fallback before shipping (topic 5, weaker per-source but strong in aggregate across four independent frameworks); require real screen-reader or espeak-ng testing as a release gate, since every confirmed production failure found (GitHub Copilot CLI, Claude Code) was interactive/behavioral and passed normal code review undetected.</result>
+<usage><subagent_tokens>70744</subagent_tokens><tool_uses>4</tool_uses><duration_ms>493782</duration_ms></usage>
+</task-notification>
+
+---
+
+How does a11yAC change any of our perspective on the rest of our workflows too?
+
+---
+
+Should it just be constitution level or should we consider BDD more holistically too? How does it work with SDD and TDD? DOes it conflict? How do we account for in the spec of SDD and the testing of TDD?
+
+---
+
+Do more research into how they an all work together. How folks are doing this agentically. What industry leaders are saying. What does Martin Fowler think? What about Kent C. Dodds? NNGroup? Other industry leaders? Other companies leading this type of push?
+
+---
+
+<task-notification>
+<task-id>a2544d508f308d120</task-id>
+<tool-use-id>toolu_014NKkGDq1iUk7deHQiKTRK5</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a2544d508f308d120.output</output-file>
+<status>completed</status>
+<summary>Agent "Research Kent C. Dodds testing philosophy and NN/g crossover" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have enough to compile a solid findings report. Confirmed: no direct Kent Dodds 2026 content specifically merging "testing philosophy + AI agents writing code" beyond general AI-engineering commentary (EpicAI.pro is about AI application architecture/MCP, not testing practice per se), and no NN/g material connects to BDD/structured specs.
+
+# Findings Report
+
+## Part 1 — Kent C. Dodds Testing Philosophy
+
+**1. The Testing Trophy**
+
+Source: [Write tests. Not too many. Mostly integration.](https://kentcdodds.com/blog/write-tests) and [The Testing Trophy and Testing Classifications](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications)
+
+- Dodds explicitly frames this as a reaction to Martin Fowler's classic Testing Pyramid, arguing the pyramid's core assumption — that lower-level tests should dominate because higher-level tests are slow/expensive/brittle — no longer holds: "our tools are awesome now and this assumption is less true."
+- The Trophy shape, bottom to top: **static analysis** (linting/TypeScript) as the base, then a wide band of **integration tests** (the largest recommended investment), a smaller band of **unit tests**, and a thin cap of **end-to-end tests**.
+- This is a direct reaction against strict, unit-test-heavy TDD orthodoxy. He argues unit tests in isolation "doesn't do you any good if you don't also verify that they work together properly," and that chasing 100% unit coverage produces diminishing returns and pushes people toward testing implementation details rather than real behavior. He also argues against heavy mocking, since mocking "removes all confidence in the integration between what you're testing and what's being mocked."
+- Net effect: integration tests (not unit tests) are positioned as the best confidence-to-cost tradeoff — the tagline being "write tests, not too many, mostly integration."
+
+**2. Implementation Details vs. Behavior**
+
+Source: [Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
+
+- Core quote: "The more your tests resemble the way your software is used, the more confidence they can give you."
+- He defines implementation details as "things which users of your code will not typically use, see, or even know about" — and argues testing them causes two failure modes: false negatives (you break the code, the test still passes) and false positives (you refactor safely, the test breaks anyway).
+- His prescription: test observable, user-facing outputs (rendered DOM, exposed props/behavior) rather than internal state/methods (this is the direct rationale behind React Testing Library's design, which he championed).
+- **On BDD specifically**: he does **not** use the literal phrase "test behavior not implementation," and this article makes **no explicit connection to BDD, Cucumber, or Gherkin** — his framing is pragmatic/refactor-safety-driven rather than tied to formal BDD vocabulary or tooling. The philosophical alignment with BDD's "behavior not implementation" principle is real but implicit/convergent, not an explicit citation on his part.
+
+**3. Recent (2024–2026) commentary on AI agents/AI-assisted testing**
+
+- Honest finding: there is **no dedicated Dodds piece specifically reconciling his testing philosophy with AI-agent-generated code**. What exists is adjacent, general AI-engineering commentary:
+  - His current venture, [EpicAI.pro](https://www.epicai.pro/) ([launch post](https://kentcdodds.com/blog/the-next-chapter-epicai-pro)), is about architecting applications for AI interaction (MCP, exposing app capabilities to agents) — not about testing methodology.
+  - Talk: ["How I Build Web Applications in 2026"](https://gitnation.com/contents/how-i-build-web-applications-in-2026) — touches on agent-orchestrated workflows (manual testing, Cursor/browser control, BugBot for review) and a claim that developers are becoming "AI agent managers," but this is workflow/tooling commentary, not a testing-philosophy statement.
+  - Talk: ["The Last Software Engineer"](https://gitnation.com/contents/becoming-product-engineers) — argues the durable skill is deciding *what* to build, not writing code by hand; consistent with (but not an update to) his existing behavior-over-implementation stance.
+  - One surfaced fragment worth flagging with lower confidence: a claim that Dodds has said prompting AI to write tests "improves a lot when sending principles for the tests to follow" — this appeared only in a search-engine synthesis, not verified against a primary source, so treat it as unconfirmed.
+- Bottom line: no evidence he has revised or restated his core testing philosophy in response to LLM code generation; his AI-related public output so far is about *building AI-native applications*, not about *how test-writing changes when AI writes the code*.
+
+## Part 2 — NN/g Crossover Check
+
+Searched: "nngroup.com AI agents", "nngroup.com behavior driven", "nngroup.com structured specification / spec writing AI".
+
+- **No NN/g material connects to BDD, structured specification writing, or software-testing methodology.** This is a real, confirmed negative — not a search gap. NN/g's AI-agent content is entirely UX/design-strategy focused:
+  - [A Concrete Definition of an AI Agent](https://www.nngroup.com/articles/definition-ai-agent/)
+  - [AI Agents as Users](https://www.nngroup.com/articles/ai-agents-as-users/) — fetched and confirmed directly: covers how agents perceive interfaces (vision, accessibility-tree, API access) and design principles for agent-legible UI; explicitly contains no mention of specs, behavior contracts, acceptance criteria, or BDD/Gherkin-style workflows. Its only tangential overlap is that accessibility/semantic-HTML advice happens to also help test automation — coincidental, not a designed connection.
+  - [How Service Design Will Evolve with AI Agents](https://www.nngroup.com/articles/service-design-evolve-ai-agents/)
+  - [A Research Agenda for Generative AI in UX](https://www.nngroup.com/articles/genai-ux-research-agenda/) and [Accelerating Research with AI](https://www.nngroup.com/articles/research-with-ai/) — these are about using AI *to do UX research faster*, not about specifying agent behavior.
+- Recommendation: don't force this connection in any downstream write-up. NN/g's relevant material is squarely about designing interfaces/services for AI-agent consumption (a UX concern), not about software specification methodology or BDD (a dev-process concern). The two bodies of work don't currently intersect.</result>
+<usage><subagent_tokens>55277</subagent_tokens><tool_uses>12</tool_uses><duration_ms>72924</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a077000f6e784d232</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a077000f6e784d232.output</output-file>
+<status>completed</status>
+<summary>Agent "Research Martin Fowler on BDD/TDD/SDD" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have enough material now to compile a thorough, well-cited report. Let me deliver the findings.
+
+# Findings Report: Fowler/ThoughtWorks on BDD, TDD, and Spec-Driven Development
+
+## 1. Fowler's own writing on BDD's relationship to TDD
+
+Fowler does **not** have a dedicated bliki entry titled "Behavior-Driven Development" — I confirmed this by direct search; his closest and most-cited entry is **[Given-When-Then](https://martinfowler.com/bliki/GivenWhenThen.html)**. In it, Fowler:
+- Credits **Daniel Terhorst-North and Chris Matts** as developers of the Given-When-Then style within BDD, noting North himself credits Ivan Moore for "a significant amount of inspiration."
+- Frames Given-When-Then as "a reformulation of the Four-Phase Test pattern" (Meszaros: Setup/Exercise/Verify/Teardown) and notes the equivalent "Arrange, Act, Assert" (Bill Wake) — i.e., Fowler treats BDD's structuring convention as a **parallel naming style**, not a superior method: "Test frameworks tend to follow either naming style of xunit or BDD."
+- Notably, this entry does **not** explicitly argue BDD fixes TDD's problems — that argument lives more with Dan North than with Fowler directly.
+
+Fowler's **[Unit Test](https://martinfowler.com/bliki/UnitTest.html)** bliki entry is relevant background: he calls unit-testing terminology "ill-defined" and suggests "xunit testing" might be a clearer term than "unit testing," tracing the lineage Extreme Programming → xunit-style testing → TDD → (BDD as a naming/vocabulary correction downstream).
+
+His **[Specification By Example](https://martinfowler.com/bliki/SpecificationByExample.html)** entry (he says he coined the term in 2002) is his fullest treatment of the underlying idea BDD formalizes:
+- Pushes back on treating tests as a mere "side effect" of TDD, using the analogy: "if someone offered me a million dollars to hike up a mountain... the side-effect to my wallet is hardly trivial."
+- States the "double-check principle": good TDD practice means you "always say things twice: once in the code and once in the tests" — redundancy via different expression methods catches errors.
+- States explicit limitations: "Specification By Example isn't enough... you need to do more to ensure everything is properly communicated," and "tests are always going to be incomplete." He also flags the classic gaming risk: a supplier could "just return hard-coded responses to the specific test inputs" rather than a general solution.
+- Requires collaborative context to work: needs "both sides... collaborating and not fighting," plus supplementary practices (conversation, DDD, contractual thinking).
+
+**Caveat:** I could not find a Fowler-authored piece that explicitly narrates "BDD emerged to fix TDD misuse" in his own voice with that framing — that specific narrative is Dan North's own account (see #3), which Fowler references/links to but doesn't restate as his own argument. Treat any claim that Fowler personally wrote "BDD fixes TDD's confusion" as **unsupported by what I found** — the framing belongs to North; Fowler's contribution is more the Given-When-Then/Specification-by-Example vocabulary layer.
+
+## 2. Specification by Example / Living Documentation
+
+- Fowler is credited with coining "Specification by Example" in 2002 (per multiple secondary sources, e.g. Gojko Adzic's own retrospective at [gojko.net/2020/03/17/sbe-10-years.html](https://gojko.net/2020/03/17/sbe-10-years.html)).
+- I could **not confirm** that Fowler wrote a foreword to Adzic's 2011 book *Specification by Example: How Successful Teams Deliver the Right Software*. Search results consistently link Fowler to the *term's* origin but never surface foreword/endorsement text. **I'm not able to verify this claim from the sources found — treat it as unconfirmed, possibly conflating "coined the term" with "endorsed the book."**
+- The value/risk framing Fowler gives (his own bliki, not the book) is captured above: value = tests double as specification and catch a class of errors formal specs miss cheaply; risk = incompleteness, the "hard-coded response" gaming risk, and the requirement of genuine collaboration or the technique degrades.
+
+## 3. Dan North's original BDD framing (2006)
+
+From **["Introducing BDD"](https://dannorth.net/blog/introducing-bdd/)** (Better Software magazine, March 2006):
+- The problem BDD solved: "Programmers wanted to know where to start, what to test and what not to test, how much to test in one go, what to call their tests, and how to understand why a test fails." North felt TDD, as commonly taught, "presented itself as a series of pitfalls" rather than a clear path.
+- The fix was largely **linguistic**: replacing "test" with "behaviour" dissolved a category of confusion, because it reoriented developers from "what to test" (an open-ended, anxiety-inducing question) to "what should the system do" (a scoped, natural-language question).
+- Concrete naming convention: "Test method names should be sentences," using a "should" template ("the class should do X") to keep each test single-responsibility.
+- North extended this past unit-test naming into requirements/analysis — proposing a shared "ubiquitous language" so business stakeholders, analysts, testers, and developers describe behavior in the same vocabulary (this is the direct ancestor of Given-When-Then and Gherkin).
+- Background: North started replacing JUnit with **JBehave** at the end of 2003, specifically to strip "testing" vocabulary and rebuild around "verifying behaviour."
+
+So the "BDD is TDD done right" framing is substantiated, but as **North's own claim about his own motivation**, not literally that exact phrase turning up verbatim in what I fetched — it's a fair paraphrase of "TDD but with the confusions removed," which is what North states directly.
+
+## 4. Recent (2024–2026) Fowler/ThoughtWorks writing on AI-assisted development
+
+This is the richest vein, and directly relevant to your use case:
+
+**Martin Fowler's "Exploring Gen AI" series** (martinfowler.com/articles/exploring-gen-ai/) is an ongoing set of memos from Fowler and Thoughtworks colleagues, spanning 2023–2025+.
+
+- **["TDD inside the agent loop – theater or actual value?"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)** by **Birgitta Böckeler** is the single most on-point source found. Key claims:
+  - Empirically (Opus-judged quality comparisons), "there was no clearly discernible difference based on TDD workflow versus no TDD workflow" — non-TDD runs sometimes scored *higher* on design and test quality.
+  - Diagnosis of why: "The way AI agents were trained is that they have seen completed functions and descriptions of those functions. The number of actual step-by-step TDD examples they have seen is a tiny part of the training data" — i.e., the step-by-step red/green/refactor *process* isn't well-represented in training data the way finished code is.
+  - TDD's classic benefits don't clearly transfer to agents: test-tautology avoidance was unresolved (agents wrote self-referential tests anyway), the "small steps for feedback" benefit is questionable when an agent debugs fine without incrementalism, and the confidence-building/psychological benefit of TDD (for a human) doesn't apply to a non-human implementer.
+  - Costs: TDD approaches used 3–8x more tokens; prescriptive TDD prompting requires continuous re-tuning across model versions.
+  - Mutation-testing comparison showed **no regression-quality advantage** for TDD vs non-TDD runs.
+  - Her conclusion: she has "abandoned prescriptive TDD instructions" in favor of mutation testing, static/modularity analysis, an "Approved Scenarios" pattern, and automated refactor triggers. Verbatim: "Whatever ends up giving us trust and confidence in our software in the future — I think the role of TDD as we've known it is significantly smaller than pre-GenAI."
+
+- **["Understanding Spec-Driven Development: Kiro, spec-kit, and Tessl"](https://www.martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)**, also by Böckeler, gives a taxonomy that's become the field's working vocabulary:
+  - **Spec-first**: spec written up front, used to generate code once, then discarded/not maintained.
+  - **Spec-anchored**: spec persists alongside code as the durable source of intent; when requirements change, the spec updates first; agents reading the codebase later are pointed at the spec, not just the code.
+  - **Spec-as-source**: "the spec is the main source file over time, and only the spec is edited by the human, the human never touches the code" — code is generated and marked `// GENERATED FROM SPEC — DO NOT EDIT`.
+  - She notes Kiro's acceptance-criteria format explicitly reuses **Given-When-Then** — a direct, current lineage line from Dan North's 2006 BDD vocabulary into 2025 AI-agent spec tooling.
+  - Stated risks: agents frequently **ignore** detailed specs/notes ("the agent ignored the notes... it just took them as a new specification and generated them all over again, creating duplicates"); a "false control illusion" from elaborate spec workflows that agents don't reliably follow; explicit parallel drawn to historical **Model-Driven Development** failures (inflexibility, overhead); and observed **non-determinism** even at low abstraction — regenerating from the same spec produces different code.
+
+- **ThoughtWorks Technology Radar** (Volume 34, ~April 2026) has a dedicated **["Spec-driven development" entry](https://www.thoughtworks.com/en-us/radar/techniques/spec-driven-development)**:
+  - Frames SDD as "workflows beginning with a structured functional specification, then proceeding through multiple steps to break it down into smaller pieces, solutions and tasks," generally following spec → plan → implement.
+  - Names OpenSpec, GitHub Spec Kit, and Amazon Kiro as tools standardizing the practice.
+  - Frames spec-driven development and Agent Skills as "feedforward controls" and mutation testing as a "feedback control" that triggers self-correction before human review — i.e., ThoughtWorks is explicitly positioning spec-driven practice and mutation testing (not classic TDD) as the emerging AI-era control mechanisms.
+  - The overall Radar release (per Morningstar/ThoughtWorks press coverage) is themed around "a return to engineering fundamentals to combat cognitive debt" as AI accelerates complexity — worth reading if you want the broader framing, but I did not fetch that full press piece for direct quotes.
+  - Also names the "Ralph Loop" pattern (single agent, infinite loop, fresh context per iteration, implementing one spec-piece at a time) as a related emerging pattern.
+
+**Honest gap:** I found no Fowler/ThoughtWorks piece that directly addresses "how does BDD specifically (as opposed to spec-driven development generally) change when an LLM is the implementer." The 2025–2026 material is rich on **TDD vs. agents** and on **spec-driven development taxonomy**, and it explicitly reuses BDD's Given-When-Then vocabulary as the substrate for AI-agent specs — but there is no Fowler/Böckeler article I found that argues, e.g., "here's what happens to the *collaborative discovery* half of BDD when a human isn't the one doing TDD." That synthesis point (BDD's value was always the conversation, not the Gherkin; spec-driven-development-for-agents keeps the artifact but has no equivalent conversational discovery step with an LLM) appears to be a connection **you would be making**, not one I found stated explicitly in the corpus. If that's the thesis of whatever this research feeds into, flag it as your synthesis, not a sourced claim.
+
+## 5. Failure modes / criticism of BDD in practice
+
+From general web sources (not Fowler/ThoughtWorks specifically — these are practitioner writeups, e.g. Andrew Knight's "Airing of Grievances: BDD" and others):
+- **Staleness**: feature files drift as business rules change, becoming "stale, vague, or tightly coupled to UI workflows," producing false confidence.
+- **Translation-layer overhead**: Gherkin/plain-English steps still have to be wired to step-definition code; for teams already writing expressive test code, this is "pure overhead — it adds a translation layer where none is needed and pulls behavior specification away from the design activity it should be part of."
+- **Collaboration-failure is the core failure mode**: "without regular collaboration between product, dev, and QA during scenario writing, BDD becomes a formatting exercise rather than a quality practice" — most stakeholders never actually read or contribute to the Given-When-Then scenarios, and the people writing them are just developers/testers who could have written equally clear tests in code without Gherkin's ceremony.
+- This directly corroborates the thing you flagged wanting to check: the well-known criticism that teams write Given-When-Then syntax as a checkbox without doing the actual collaborative discovery conversation that gives BDD its value — that's the consistent theme across every practitioner source found, though none of it is Fowler/ThoughtWorks-authored specifically.
+
+## Source list
+
+- https://martinfowler.com/bliki/GivenWhenThen.html
+- https://martinfowler.com/bliki/SpecificationByExample.html
+- https://martinfowler.com/bliki/UnitTest.html
+- https://martinfowler.com/bliki/TestDrivenDevelopment.html (checked, no BDD content)
+- https://dannorth.net/blog/introducing-bdd/
+- https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html (Birgitta Böckeler)
+- https://www.martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html (Birgitta Böckeler)
+- https://www.thoughtworks.com/en-us/radar/techniques/spec-driven-development
+- https://gojko.net/2020/03/17/sbe-10-years.html (Adzic's own retrospective, for the "Fowler coined the term" claim)
+- General BDD-criticism sources (non-Fowler): Automation Panda's "Airing of Grievances: BDD," Cucumber's "BDD is not test automation," TDD Buddy's "TDD already does BDD, without the Gherkin"</result>
+<usage><subagent_tokens>62103</subagent_tokens><tool_uses>18</tool_uses><duration_ms>129949</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a63052d5ac7832a83</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a63052d5ac7832a83.output</output-file>
+<status>completed</status>
+<summary>Agent "Research agentic SDD/BDD/TDD industry leaders and companies" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have enough material for a thorough report. Here are the findings.
+
+## Research Findings: SDD + BDD + TDD Convergence for AI Coding Agents (2025–2026)
+
+### 1. Amazon Kiro — spec-driven, EARS not Gherkin
+Kiro (launched July 2025, AWS) runs a three-phase pipeline: requirements → design → tasks, with explicit traceability between phases. Its "Specs" feature converts requirements into **EARS notation** (Easy Approach to Requirements Syntax) — `WHEN [event] THEN [system] SHALL [response]`, plus `IF`/`WHILE`/`WHERE` variants — not Given-When-Then/Gherkin. EARS criteria are deliberately "unambiguous and testable... easy to translate into test cases." Kiro's hook system separately triggers test-file updates on save/change, but this is automation glue, not a BDD layer. **Direct precedent for structured, machine-parseable acceptance-criteria syntax, but Kiro's own choice was EARS over Given-When-Then** — worth noting since your plugin already resembles the EARS style per your own CLAUDE.md ("EARS-format authoritative rules").
+Sources: [kiro.dev/blog/introducing-kiro](https://kiro.dev/blog/introducing-kiro/), [kiro.dev/docs/specs/feature-specs/requirements-first](https://kiro.dev/docs/specs/feature-specs/requirements-first/), [Forbes on Kiro launch](https://www.forbes.com/sites/janakirammsv/2025/07/15/aws-launches-kiro-a-specification-driven-agentic-ide/)
+
+### 2. GitHub Spec Kit — explicit BDD adoption
+GitHub's open-source Spec Kit (Sept 2025) pipeline is spec → plan → tasks → implementation, working with 30+ coding agents. Its spec template **explicitly uses Given/When/Then**: "Acceptance Scenarios" per user story are written in that format, each story independently testable and prioritized (P1/P2/P3), plus tagged functional requirements (FR-NNN) and measurable success criteria (SC-NNN). A community extension (spec-kit-reqnroll-bdd) goes further, converting acceptance criteria directly into Gherkin `.feature` files with `@AC-001`-style tags for full BDD tooling integration. **This is the strongest direct precedent for your question** — a major, widely-adopted spec-driven AI tool chose Given-When-Then as its acceptance-scenario format, not EARS-style SHALL statements.
+Sources: [github.com/github/spec-kit](https://github.com/github/spec-kit), [spec-kit/templates/spec-template.md](https://github.com/github/spec-kit/blob/main/templates/spec-template.md), [github.blog spec-driven-development](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/)
+
+### 3. Tessl (Guy Podjarny) — specs "bolstered by tests," not BDD-branded
+Tessl's framing: agents "hallucinate APIs, claim success when they've failed, and jump straight into coding without clarifying intent." Their fix is specs as the durable artifact, "bolstered by tests and hard guardrails," with the Tessl Framework pairing specs with auto-generated aligned tests to enforce guardrails as the app evolves, plus a Spec Registry (10,000+ specs) preventing library-API hallucination. Podjarny predicts most 2026 development will be "at least spec-assisted." **Tessl does not use Given-When-Then language publicly** — their vocabulary is spec+test pairing, not scenario-based BDD. Testing is positioned as an enforcement mechanism for specs, not a discovery/collaboration practice.
+Sources: [tessl.io/blog/tessl-launches-spec-driven-framework-and-registry](https://tessl.io/blog/tessl-launches-spec-driven-framework-and-registry), [zuplo.com/blog/spec-driven-ai-development](https://zuplo.com/blog/spec-driven-ai-development), [tessl.io/blog/how-tessls-products-pioneer-spec-driven-development](https://tessl.io/blog/how-tessls-products-pioneer-spec-driven-development)
+
+### 4. Other agent products
+- **Cursor**: "Plan Mode" enforces Research → Clarify → Plan → Build, explicitly separating planning from coding ("AI coding usually fails when models plan and code at the same time"). No published BDD/Gherkin convention — plans are freeform, refined through iterative questioning until "no room for misinterpretation."
+- **Cognition/Devin**: Plan → code → test → ship loop with repo-specific "Playbooks" for conventions; no published spec syntax or BDD adoption found.
+- No public methodology found for Windsurf/Cascade, Replit Agent, or Amp specifically addressing BDD/TDD/SDD combination beyond generic "plan then execute" patterns.
+Sources: [cursor.com/blog/agent-best-practices](https://cursor.com/blog/agent-best-practices), [cognition.com/blog/introducing-devin](https://cognition.com/blog/introducing-devin)
+
+### 5. Explicit synthesis arguments (BDD+SDD+TDD composing)
+- **ThoughtWorks** (Nov 2025, placed SDD in Radar "Assess" ring): explicitly states "**TDD is SDD at the unit level**, and SDD extends this thinking to higher levels." "**BDD is the most direct ancestor of modern SDD**, with Gherkin scenarios as executable specifications." Recommends borrowing BDD's Given/When/Then and "domain-oriented ubiquitous language" for spec-writing, while TDD still drives interface design at the unit level — i.e., **three practices at three altitudes, not competing**. Caveats: no systematic way to eval specs yet; spec drift/hallucination hard to avoid; over-formalized specs risk "waterfall's pitfalls."
+- **Sean Grove's "The New Code" (OpenAI, AI Engineer World's Fair 2025)** — the founding talk cited as SDD's origin story: code is only 10-20% of a programmer's value, specs are the real source-of-truth artifact ("shredding the source and carefully version-controlling the binary" describes prompt-then-discard workflows). Doesn't address BDD/TDD directly but is the philosophical root everyone else cites.
+- **TDAD (Test-Driven Agentic Development, arXiv 2603.17973)**: an explicit synthesis paper — behavioral specs compiled into executable test suites by one agent, a second agent iterates implementation against them, mutation testing validates the tests. Reduced regressions 70% (6.08%→1.82%) vs vanilla baseline. This is very close to your ecosystem's spec→plan→TDD→verification-gate shape, and is direct evidence that a BDD-flavored spec layer feeding a TDD implementation loop, closed by a mutation-tested gate, is empirically validated — not just theoretical.
+Sources: [thoughtworks.com spec-driven-development-unpacking](https://www.thoughtworks.com/en-us/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices), [tessl.io on Sean Grove](https://tessl.io/blog/the-most-valuable-developer-skill-in-2025-writing-code-specifications/), [arxiv.org/abs/2603.17973](https://arxiv.org/abs/2603.17973v2)
+
+### 6. Critical/skeptical takes — direct counter-arguments
+- **Martin Fowler's site, "TDD inside the agent loop - theater or actual value?"**: found TDD-in-agent-loop delivers **minimal or no measurable value**, sometimes worse than non-TDD approaches, because "this is very much about managing a human's fear and giving a human permission to relax. **That doesn't transfer when the agent is doing TDD inside of the loop.**" Agents wrote tautological tests validating implementation against itself; enforcing test-first also suppressed upfront design agents otherwise produced well. This is a direct, credible counter-argument to layering ceremony (BDD or strict TDD) onto agent loops purely for the human-psychological benefits TDD was designed around — the benefit doesn't transfer to a non-human implementer. Your ecosystem's lambda pipeline already forces red-green-commit; this source is a reason to make sure that discipline is earning its keep empirically, not just structurally.
+- **"Is SDD Just BDD With an AI Agent?" (isolated-scenario critique, found via search excerpt)**: the core criticism is that BDD's value comes from collaborative *pre-code* discovery among business/dev/test people; when scenarios are written after the fact or unilaterally by/for an AI agent, "they can't serve as specifications, they're just test documentation" — value is lost when the three-amigos collaboration is absent, which is the default case for a solo agent pipeline.
+- **Momentic (pro-AI-BDD) counter**: argues AI actually *revives* BDD's original promise by removing the glue-code barrier, letting non-engineers write/modify scenarios directly — but concedes this only holds if there's still a human product/business participant in the loop, not when scenarios are agent-drafted in isolation.
+- **ThoughtWorks Radar Vol. 33** (general SDD skepticism): elaborate, opinionated workflows produce spec files "hard to review"; deeper worry that heavy upfront spec formalization is "relearning a bitter lesson — that handcrafting detailed rules for AI ultimately doesn't scale."
+- **150–200 standing-instruction degradation finding** (from a dev.to 2026 survey, unverified single-source): frontier models reliably follow ~150-200 standing instructions before compliance degrades — cited as a reason auto-generated, everything-included spec/agent files become "a failure mode wearing a diligence costume." Relevant if adding Given-When-Then to specs meaningfully grows document length/instruction count.
+- **Addy Osmani's practical guidance** (widely cited spec-writing post for AI agents): does **not** recommend Given-When-Then/BDD at all. His structure is commands/testing/project-structure/code-style/git-workflow/boundaries, with the guidance "**one real code snippet showing your style beats three paragraphs describing it**" and "incorporate a test plan or even actual tests in your spec" — a lighter-weight, non-scenario-based alternative from a credible practitioner voice, implicitly arguing scenario ceremony is optional overhead for agent-consumed specs.
+Sources: [martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html), [momentic.ai/blog/behavior-driven-development](https://momentic.ai/blog/behavior-driven-development), [addyosmani.com/blog/good-spec](https://addyosmani.com/blog/good-spec/)
+
+### Bottom line for your decision
+There is real precedent on both sides:
+- **For adopting Given-When-Then**: GitHub Spec Kit (the most directly comparable, widely-used tool) bakes it into every spec template; ThoughtWorks explicitly endorses BDD phrasing as the right vocabulary for the spec layer while TDD stays at the unit level (a layered model that maps cleanly onto your spec→plan→TDD→gate pipeline); TDAD's empirical results support scenario-derived test suites reducing regressions.
+- **Against, or for caution**: Kiro and Tessl — the two other flagship spec-driven tools — deliberately did *not* adopt Given-When-Then (EARS and plain spec+test pairing respectively), suggesting it's not a consensus default even among spec-driven leaders. The Martin Fowler piece is the sharpest specific warning: ceremony designed for human psychological safety (which is what both TDD's red-green ritual and BDD's collaborative-discovery ritual are for) may not transfer value when an agent — not a human — is the one writing and reading the scenarios. And Osmani, a practitioner writing specifically for agent-consumed specs, omits BDD phrasing entirely in favor of terser structured intent + code examples.
+
+The strongest synthesized position (ThoughtWorks) is that GWT-style scenarios are good **spec-layer vocabulary** for capturing acceptance criteria in a form that both humans and agents can read unambiguously and that maps directly to test cases — independent of whether "collaborative discovery" (BDD's original human-team purpose) is present. If your ecosystem adopts it, the citable justification is "GWT as a precise, testable acceptance-criteria syntax that composes with a TDD implementation loop," not "BDD for cross-functional collaboration" — the latter's value proposition doesn't survive contact with a solo-agent pipeline per the isolated-scenario critique.</result>
+<usage><subagent_tokens>67488</subagent_tokens><tool_uses>20</tool_uses><duration_ms>121098</duration_ms></usage>
+</task-notification>
+
+---
+
+I'm wondering what Böckeler's study and findinds actually mean. Is TDD adding more cost or is non-TDD better results but at the higher cost? Cost is a big concern too, right?
+
+---
+
+I wonder if part of that is the red, green flow vs actually writing tests as validation, catch regressions, etc. Would you think so too?
+
+---
+
+I think we can skip the write red tests first and see how it goes. We should adjust smith and any other parts to remove this type of unecessary step now
