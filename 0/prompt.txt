@@ -1,0 +1,1 @@
+Let's make sure we update the claude and agy marketplaces in the repo, bump and push up right? Before pushing make sure all our docs at the top level and plugin level are up-to-date, accurate and follow our tone, voice and succinct goal.
