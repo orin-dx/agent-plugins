@@ -1,0 +1,1 @@
+Do we put this kind of information in a reference that everyone points to? Is that effective? Does that stay in the context long enough?
