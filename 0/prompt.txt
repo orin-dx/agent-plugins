@@ -1,0 +1,3 @@
+Yes but let's be very logical and succinct about this. What kind of script? What language? etc
+
+Speed and maintainability (DX) is a huge concern
