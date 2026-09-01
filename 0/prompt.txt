@@ -1,0 +1,1 @@
+Do we need to dig deeper into open code? Can it be used with claude subscriptiosn without going to API tokens? Those are a lot more expensive and faster to exhaust
