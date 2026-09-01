@@ -1,0 +1,1 @@
+We've setup patterns for our docs and a color pallete for our diagrams that we can see in the lumen and prism repos. Can you check and see how we can improve our own setup?
