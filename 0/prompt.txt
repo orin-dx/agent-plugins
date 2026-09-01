@@ -1,0 +1,95 @@
+<task-notification>
+<task-id>a9ad7548d5173af78</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a9ad7548d5173af78.output</output-file>
+<status>completed</status>
+<summary>Agent "Enumerate every rename touchpoint for the Wisp naming" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Rename checklist — restating task
+
+Directive: produce a complete, concrete checklist of every place in the agent-plugins repo that must change for the graph→Weaver, trace→Vanguard, canon→Scribe, vector→Navigator, lambda→Smith, proof→Ranger, axiom→Sentinel, delta→Courier, basis→Mason rename (plus a new `muse` addition), grouped by surface. Not executing — enumeration only.
+
+**Headline risk**: cross-plugin references are not rare — they are the dominant content of this repo's docs. Every plugin's README, every CHANGELOG (9 plugin-level + 1 root), `ARCHITECTURE.md`, `AGENTS.md`, `CONTRIBUTING.md`, the constitution, and roughly a dozen agent/skill prompt files name other plugins by their bare old id in running prose (not just in tables). A naive find-replace on directory names + `plugin.json` alone will leave the repo internally inconsistent in dozens of places.
+
+---
+
+### 1. Directory structure
+`git mv plugins/{graph,trace,canon,vector,lambda,proof,axiom,delta,basis} plugins/{weaver,vanguard,scribe,navigator,smith,ranger,sentinel,courier,mason}` — 9 moves. Plus create `plugins/muse/` fresh (separate design task).
+
+### 2. Each plugin's own `plugin.json`
+`id` and `name` fields at line 2–3 of every one of the 9 `plugins/&lt;id&gt;/plugin.json` files — both currently equal the old id, both need the new persona word. `version` also needs a bump (see §12). No plugin's own `description` field references its *own* old id by name (they describe function, not name), so no self-referential text fix needed there — but `trace`'s description explicitly says `"...for consumption by canon (spec)"` (`plugins/trace/plugin.json:5`) — cross-reference, needs `canon`→`scribe`.
+
+### 3. Cross-plugin references inside `agents/*.md` prompt bodies — highest risk, easy to miss
+Concrete hits found (not exhaustive of every mention, but every file identified):
+- `plugins/lambda/agents/implementer.md:7` — `"...escalates to canon:architect..."` → `scribe:architect`
+- `plugins/lambda/agents/exit-gate.md:7,26` — references "axiom" conceptually via "the same discipline axiom formalizes" pattern lives in README not this file; verify at execution time.
+- `plugins/canon/agents/architect.md:7,22` — `"...proof has produced a finding-report@1..."`, `"feeds into vector for planning and lambda for implementation"` → `ranger`, `navigator`, `smith`
+- `plugins/canon/agents/exit-gate.md:7` — `"...halts progression to vector..."` → `navigator`
+- `plugins/canon/agents/drift-checker.md:66` — `"...a new lambda task..."` → `smith`
+- `plugins/canon/agents/drafter.md:28` — `"...lambda's exit-gate..."` → `smith`
+- `plugins/canon/agents/verifier.md` — no cross-ref found, clean.
+- `plugins/basis/agents/auditor.md:32` — `"...a canon or lambda agent..."` → `scribe`, `smith`
+- `plugins/delta/agents/changeset-analyzer.md:7,26,77,78` — `"...lambda's criteria_evidence..."` (×4) → `smith`
+- `plugins/trace/agents/synthesizer.md:7` — `"...Route output to canon."` → `scribe`
+- `plugins/proof/agents/adversary.md:41,43` — internal use of word "trace" is the *verb* "trace control flow," not the plugin — **do not rename**, false positive to watch for.
+- `plugins/proof/agents/boundary-tracer.md:24,36,60` and `plugins/proof/agents/recon.md:7,49` — same false-positive pattern, "trace" as common verb/agent-name (`boundary-tracer` itself is unrelated to the `trace` plugin) — leave alone.
+
+**Pattern to generalize at execution time**: grep each of the 9 old ids as a whole word inside every `plugins/*/agents/*.md`, but manually vet every hit — `trace`, `proof`, `canon` (no common-word collision), `vector`, `graph`, `delta`, `basis`, `axiom`, `lambda` (`lambda` has no common-English-word collision either) all appear as both genuine cross-plugin references and, in trace/proof's case, as ordinary English verbs/word-fragments inside unrelated agent names. False-positive risk is concentrated in "trace" (verb) and "delta" (already used generically in the constitution itself, e.g. `shared/constitution.md:152,171` — "blocker delta", "emit delta patches" — **not** the plugin, do not touch these).
+
+### 4. `skills/*/SKILL.md` files — cross-references and `&lt;plugin&gt;:&lt;skill&gt;` examples
+Every plugin with split skills documents `&lt;plugin&gt;/&lt;skill-name&gt;` inline constantly:
+- `plugins/graph/skills/*/SKILL.md` (capture-need, clarify-requirement, prioritize-backlog) — all reference `canon/draft-spec` → `scribe/draft-spec`
+- `plugins/canon/skills/audit-spec/SKILL.md:11` — `"...canon/verify-spec's..."` (self-reference, still needs prefix update to `scribe/verify-spec`)
+- `plugins/canon/skills/architect/SKILL.md:4,11,25,26` — `"proof"`, `"vector"`, `"lambda"` → `ranger`, `navigator`, `smith`
+- `plugins/canon/skills/correct-spec/SKILL.md:4,23` — `"lambda"`, `"vector"`, `"challenger"`, `"lambda"` → `smith`, `navigator`
+- `plugins/canon/skills/gate-spec/SKILL.md:21,25,38` — `"vector"` → `navigator`
+- `plugins/basis/skills/audit-plugin/SKILL.md:4` — `"...already proof's plugin-level skill name..."` → `ranger`
+- `plugins/graph/skills/audit-backlog/SKILL.md:4` — same `proof` reference → `ranger`
+- `plugins/delta/skills/changeset/SKILL.md:4,25` — `"lambda"` (×2) → `smith`
+- `plugins/delta/skills/post-review/SKILL.md:11` — `"...axiom (spec conformance)..."` → `sentinel`
+- `plugins/trace/skills/trace/SKILL.md:4` — `"...so a spec writer (canon) isn't surprised..."` → `scribe`
+- `plugins/lambda/skills/lambda/SKILL.md:4,58,60,74,99,101,24` — dense with `axiom`, `canon`, `vector`, `delta` cross-references — this single file has ~7 distinct cross-plugin mentions, the worst concentration in the repo.
+
+### 5. `marketplace.json` and `.claude-plugin/marketplace.json` — two separate files, two different schemas
+- Root `marketplace.json`: each plugin object has `id`, `name`, `path` (`./plugins/&lt;id&gt;`) — all 9 need updating, plus `trace`'s `description` field (line ~46) contains `"...for consumption by canon (spec)."` → `scribe`, and `lambda`'s description mentions "the axiom exit gate" → `sentinel`.
+- `.claude-plugin/marketplace.json`: **different shape** — uses `name` (not `id`) as identifier and `source.path` (nested, not top-level `path`). Same 9 entries need `name` and `source.path` updated independently; this file is easy to miss since it's dotfile-hidden and structurally distinct from the root one — confirmed by direct inspection, not assumption.
+- Root `marketplace.json`'s top-level `description` ("Nine cooperating plugins...") in `.claude-plugin/marketplace.json` also literally says "Nine cooperating plugins covering the full development lifecycle" — becomes 10 once `muse` lands; update count.
+
+### 6. Root-level docs — grep hit summary
+- `README.md`: mermaid diagram (`~line 34-48`, node ids `gr/tr/ca/ve/la/pr/ax/de/ba`), the plugin table (`~60-68`), the schema-contract table (`~107-117`), install instructions (`~155-192`, both `/plugin install &lt;id&gt;` and `agy-plugin add &lt;id&gt;@orin-dx` forms), and the directory tree (`~209-217`). Every single row needs the new id.
+- `CLAUDE.md`: lines 11-17, Quick Reference install commands for `proof`/`basis` specifically (the two example commands shown) → `ranger`/`mason`.
+- `ARCHITECTURE.md`: mermaid diagram nodes (lines 71-85), prose at lines 54, 95, 97, 99, 149-151 (the whole "Axiom Gate Protocol" section header needs renaming to Sentinel).
+- `AGENTS.md`: line 13 (`shared/debugging-laws.md` description mentions "proof" conceptually — verify), line 35 (names `delta, canon, graph, basis` as multi-skill examples → `courier, scribe, weaver, mason`), line 43 ("Use `basis`" instruction → `mason`).
+- `CONTRIBUTING.md`: lines 9, 45, 64, 146, 150, 152 — same multi-skill example list, plus a `basis:scaffolder`/`basis:auditor` reference at 150/152 → `mason:scaffolder`/`mason:auditor`.
+- `CODE_OF_CONDUCT.md`, `SECURITY.md`: **zero hits**, no changes needed.
+- `docs/pipeline-walkthrough.md`: heavily plugin-name-dependent — stage headers ("Stage 1 — graph: Need" etc.) at lines 17, 43, 76, 116, 156, 200, plus prose throughout (76, 112, 200, 202, 260, 294, 306) including a whole section header "The Proof → Canon Loop" → "The Ranger → Scribe Loop".
+
+### 7. Per-plugin `README.md` vs `CHANGELOG.md`
+Per constitution's Documentation section, **README.md must be updated** (it's the live, current-state doc) — every one of the 9 plugin READMEs is saturated with self-referential `&lt;oldid&gt;/&lt;skill&gt;` invocation examples (e.g. `canon/README.md` alone has ~25 such mentions) and cross-plugin "feed X to [other-plugin]" links.
+**CHANGELOG.md entries should be left untouched** — they are historical record of what happened under the old names, consistent with how this repo already treats history (e.g. it never rewrites past entries when a skill is renamed, per the extensive `graph/CHANGELOG.md`, `canon/CHANGELOG.md` etc. precedent of documenting renames as new entries, not editing old ones). The rename itself should get **one new CHANGELOG entry per plugin** (and one root entry) documenting old-id → new-id, matching the repo's own established pattern for prior renames (`bug-hunter-rust → proof`, `agent-plugin-builder → basis`, both documented as changelog entries, never scrubbed from history).
+
+### 8. `shared/constitution.md`, `shared/references/*.md`, `shared/schemas/*.json`
+- `shared/constitution.md`: line 100 section header "Axiom Retry Caller Constraint" → "Sentinel Retry Caller Constraint"; lines 110, 134, 136, 142 reference `canon`/`planner`/`vector` by name in EARS rules → must become `scribe`/`navigator`; line 160 "`lambda` executes a plan@1" → `smith`; line 236 "`basis:scaffolder` and `basis:auditor`" → `mason:scaffolder`/`mason:auditor`. Lines 152, 171 ("blocker delta", "delta patches") are **not** the plugin — false positives, leave alone (confirmed by reading context).
+- `shared/references/workspace-conventions.md:3,9,11,15` — names `canon:auditor, graph:auditor, trace:recon`, and `vector`/`lambda` by id — all four need updating; this file is explicitly `&lt;load_first&gt;`-loaded by multiple agents, so it's high-traffic.
+- `shared/references/conventional-commits.md:47-55` — a literal scope table mapping `graph|trace|canon|vector|lambda|proof|axiom|delta|basis` to "`&lt;id&gt;` plugin and subagents" — every row needs the new id (commit scope conventions will otherwise reference dead plugin names forever).
+- `shared/references/interface-implementers.md:3` — "`vector:challenger`" → `navigator:challenger`.
+- `shared/references/boundary-value-shapes.md:3` — "`lambda:implementer`... proof and reviewer do not..." → `smith:implementer`, `ranger`.
+- `shared/references/github.md:88-89` — labels table `needs-spec`/`needs-plan` describe "canon"/"vector" → `scribe`/`navigator`.
+- `shared/references/changesets.md:69,72,86` and `mcp-protocol.md:63,65` (a literal URL `https://plugins.orin.dev/axiom`, and `orin-visual-standard.md:3` "Orin Axiom" org name) — flag `orin-visual-standard.md`'s "Orin Axiom" as a possible **separate branded org name**, not just the plugin id — needs a judgment call before blind rename, since it may refer to a different entity than `plugins/axiom/`.
+- `shared/schemas/*.json`: `verdict@1.json:5`, `verdict@2.json:5` ("The axiom exit gate result...") — schema **descriptions** reference the plugin by name in prose; per constitution, schema files are immutable once versioned, so this is a **documentation-only description edit inside an existing version**, not a new schema version — needs explicit confirmation this doesn't count as a "breaking change" under the immutability rule (it's prose, not shape, so should be safe, but flag for the person executing). `changeset@1.json:5`, `changeset@2.json:5` similarly say "Produced by lambda..." and "...consumed by ... axiom" → `smith`, `sentinel`. `arch-spec@1.json:88` says "Finding IDs from proof" → `ranger`.
+
+### 9. `scripts/*.sh` — hardcoded vs. derived ids
+Checked `check-versions.sh` and `check-skills-doc.sh` directly: **both derive `id` dynamically via `basename "$(dirname "$plugin_json")")`** — i.e., they read whatever the directory is actually named, not a hardcoded list. This means **these two scripts require no code change** and will automatically pick up the new names — **but only if `marketplace.json`'s `id` field is updated in the same commit**, since `check-versions.sh` does `jq --arg id "$id" '.plugins[] | select(.id == $id)'` against `marketplace.json` — a stale marketplace.json will make this script fail for every renamed plugin with "no entry for id". `check-reference-size.sh` has no plugin-id logic at all (confirmed by grep, one unrelated hit). `shared/scripts/validate-wiring.sh` — grepped for all 9 ids, **zero hardcoded matches found** — also appears to derive dynamically, but should be read in full before assuming, since it validates `produces`/`consumes` wiring and could reference schema names tied to a specific plugin's own claims.
+
+### 10. `.github/workflows/*.yml`
+Grepped for all 9 old ids — **zero hits**. No CI changes needed.
+
+### 11. ADR
+No ADR currently documents any prior plugin rename (the `bug-hunter-rust→proof` and `agent-plugin-builder→basis` renames are documented only in `CHANGELOG.md`, not as ADRs — precedent suggests a rename alone may not need one). However, given this rename's scope (9 plugins simultaneously, plus a new umbrella brand "Wisp") is qualitatively larger than either prior single-plugin rename, and existing ADRs (`docs/adr/001` through `006`) document structural/architectural decisions of comparable weight, **a new `docs/adr/007-wisp-persona-naming.md` is worth authoring** to record the rationale (memorability, category grouping, persona-per-plugin convention) for future contributors who'll otherwise wonder why plugin ids don't hint at function the way "delta hints at shipping" (a phrase the repo's own CHANGELOGs use unironically about the *old* names).
+
+### 12. Version bump implications
+- **Per-plugin `plugin.json`**: renaming `id` is a breaking change for anyone who installed the plugin under its old id (`claude plugin add orin-dx/agent-plugins/&lt;old-id&gt;` stops resolving) — under this repo's own semver discipline (see `shared/references/conventional-commits.md:27-29`, which documents exactly this precedent: `"feat!: rename bug-hunter-rust to proof"` / `"BREAKING CHANGE: plugin ID changed..."`), **each of the 9 renamed plugins needs a major version bump**, not a patch.
+- **Root `marketplace.json` and `.claude-plugin/marketplace.json`**: both carry their own top-level `version` (root is `3.5.3`) — a rename of this scope (9 plugins + umbrella brand) is at minimum a major bump of the marketplace version too.
+- **`scripts/check-versions.sh` will still pass afterward** *only if* all four of plugin.json/README/CHANGELOG/marketplace.json are bumped to the same new major version together — its logic already enforces exactly that agreement, so it will correctly fail-loud if any one surface is missed, which is a useful safety net during execution, not a blocker to the rename itself.</result>
+<usage><subagent_tokens>299460</subagent_tokens><tool_uses>9</tool_uses><duration_ms>160007</duration_ms></usage>
+</task-notification>
