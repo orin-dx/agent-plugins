@@ -1,0 +1,5 @@
+I got an error trying to install the plugins from our agent-plugins repo (locally at ~/Projects/agent-plugins):
+
+Failed to install: Plugin temp_subdir_1785948316037_jx8yr7 has an invalid manifest file at /Users/gabe/.claude/plugins/cache/temp_subdir_1785948316037_jx8yr7/plugin.json.
+
+Validation errors: author: Invalid input: expected object, received string, agents: Invalid input, skills: Invalid input
