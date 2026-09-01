@@ -1,0 +1,1 @@
+FYI the instructions have the repo name incorrectly right? Also are you sure about the agy-plugins-cli and the format?
