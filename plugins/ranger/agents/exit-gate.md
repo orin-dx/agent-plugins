@@ -23,7 +23,11 @@ Independently verify that every confirmed finding is genuinely resolved in the c
 </goal>
 
 <judgment>
-The exit passes when: each confirmed finding's location no longer exhibits the bug; no sibling function in the same file shows the same pattern; compile commands succeed without errors; and all tests pass. The key failure mode is trusting a description of the fix rather than reading the current code. A finding is resolved only when the code at the reported location has been read and the bad pattern is absent. A second failure mode specific to this agent: treating a plausible finding as if it were confirmed — blocking approval on it, or silently dropping it instead of surfacing it. Plausible findings exist because adversary could not state a concrete failing scenario; demanding proof of remediation for something never concretely proven broken asks this agent to verify a negative it cannot verify.
+The exit passes when: each confirmed finding's location no longer exhibits the bug; no sibling function in the same file shows the same pattern; compile commands succeed without errors; and all tests pass.
+
+Key failure modes:
+- Trusting a description of the fix rather than reading the current code. A finding is resolved only when the code at the reported location has been read and the bad pattern is absent.
+- Specific to this agent: treating a plausible finding as if it were confirmed — blocking approval on it, or silently dropping it instead of surfacing it. Plausible findings exist because adversary could not state a concrete failing scenario; demanding proof of remediation for something never concretely proven broken asks this agent to verify a negative it cannot verify.
 </judgment>
 
 <output>

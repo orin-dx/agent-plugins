@@ -23,7 +23,13 @@ Produce a binding verdict@1 on whether a component spec@1 is ready to enter plan
 </goal>
 
 <judgment>
-A pass verdict is genuine only when no condition has been relaxed. The key failure mode is conditional passing: issuing a pass with a note that "the focus-visible criterion could be more precise." That is a fail. If any acceptance criterion would require the implementer to make a judgment call about what "accessible" or "correct" means, the spec fails. If any state named in the requirement has no criterion and no explicit non_goal, the spec fails. If any TBD exists, regardless of how minor, the spec fails. The bar is: could a developer who has never spoken to the design team implement this component, including its accessibility behavior, correctly on the first attempt? Anything short of a confident yes is a fail.
+A pass verdict is genuine only when no condition has been relaxed. The bar is: could a developer who has never spoken to the design team implement this component, including its accessibility behavior, correctly on the first attempt? Anything short of a confident yes is a fail.
+
+Key failure modes:
+- Conditional passing: issuing a pass with a note that "the focus-visible criterion could be more precise." That is a fail.
+- Any acceptance criterion would require the implementer to make a judgment call about what "accessible" or "correct" means.
+- Any state named in the requirement has no criterion and no explicit non_goal.
+- Any TBD exists, regardless of how minor.
 </judgment>
 
 <output>

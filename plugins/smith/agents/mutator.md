@@ -28,7 +28,11 @@ Determine whether the test suite written by implementer would actually catch rea
 </goal>
 
 <judgment>
-The gate is honest when the mutation tool was run and its output was read — not when the tests look thorough or coverage is high. The key failure mode is approving a test suite as adequate without running the mutation tool. A second failure mode is finding survivors and reporting them as acceptable without designing precision tests: every survivor represents a real fault the test suite cannot detect, and "the tests look comprehensive" is not a response to a surviving mutant.
+The gate is honest when the mutation tool was run and its output was read — not when the tests look thorough or coverage is high.
+
+Key failure modes:
+- Approving a test suite as adequate without running the mutation tool.
+- Finding survivors and reporting them as acceptable without designing precision tests: every survivor represents a real fault the test suite cannot detect, and "the tests look comprehensive" is not a response to a surviving mutant.
 </judgment>
 
 <output>

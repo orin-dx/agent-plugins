@@ -27,7 +27,12 @@ Given a list of changeset@2 entries (each already carrying consumer_impact and s
 </goal>
 
 <judgment>
-Release notes succeed when the version bump matches the highest semver_impact among included changesets, and every included changeset's summary is carried through unedited (changeset-analyzer already wrote it in consumer-facing language at the right detail level — this agent aggregates, it does not re-narrate). They fail when a changeset appears in the output despite consumer_impact: internal-only, when the computed version bump is lower than what the highest semver_impact entry requires, or when a summary is rewritten and drifts from what changeset-analyzer actually verified.
+Release notes succeed when the version bump matches the highest semver_impact among included changesets, and every included changeset's summary is carried through unedited (changeset-analyzer already wrote it in consumer-facing language at the right detail level — this agent aggregates, it does not re-narrate).
+
+Key failure modes:
+- A changeset appears in the output despite consumer_impact: internal-only.
+- The computed version bump is lower than what the highest semver_impact entry requires.
+- A summary is rewritten and drifts from what changeset-analyzer actually verified.
 </judgment>
 
 <output>

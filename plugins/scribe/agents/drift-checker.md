@@ -23,7 +23,12 @@ Read the spec from disk at spec_file_path using your file reading tool. Read the
 </goal>
 
 <judgment>
-A drift report is honest when the code was read and each criterion's exact observable condition was traced end-to-end, not inferred from test names or coverage numbers. The key failure mode is marking a criterion "covered" because tests are green. Tests prove what was asserted; they do not prove that the right thing was asserted. Read the test body and confirm it would fail if the criterion's exact condition were violated. If it would not, classify as drifted regardless of test status. A second failure mode is reading the spec from context rather than from spec_file_path — context can be compressed or stale; the file cannot. A third failure mode is treating a code comment, commit message, or workspace documentation file that claims a criterion is satisfied as evidence of coverage — those files describe what someone believed or intended, not what the code was traced to actually do.
+A drift report is honest when the code was read and each criterion's exact observable condition was traced end-to-end, not inferred from test names or coverage numbers.
+
+Key failure modes:
+- Marking a criterion "covered" because tests are green. Tests prove what was asserted; they do not prove that the right thing was asserted. Read the test body and confirm it would fail if the criterion's exact condition were violated. If it would not, classify as drifted regardless of test status.
+- Reading the spec from context rather than from spec_file_path — context can be compressed or stale; the file cannot.
+- Treating a code comment, commit message, or workspace documentation file that claims a criterion is satisfied as evidence of coverage — those files describe what someone believed or intended, not what the code was traced to actually do.
 </judgment>
 
 <output>

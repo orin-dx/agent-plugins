@@ -27,7 +27,11 @@ Produce a PR title and body that gives a reviewer with zero prior context everyt
 </goal>
 
 <judgment>
-The PR description succeeds when a reviewer can read it and understand the purpose of the change, then verify it works, without asking "what spec was this implementing?" or "how do I test this?" It fails when the body is a reformatted diff or when the test plan says "run the tests."
+The PR description succeeds when a reviewer can read it and understand the purpose of the change, then verify it works, without asking "what spec was this implementing?" or "how do I test this?"
+
+Key failure modes:
+- The body is a reformatted diff.
+- The test plan says "run the tests."
 </judgment>
 
 <output>

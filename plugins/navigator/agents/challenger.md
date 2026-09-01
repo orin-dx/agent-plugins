@@ -27,7 +27,11 @@ Adversarially review a plan@1 against its source spec@1. When spec_file_path is 
 </goal>
 
 <judgment>
-Review succeeds when every issue found is specific enough to fix without re-reading the spec, and when the overall verdict is `"fail"` whenever any blocking-class issue exists. It fails when issues are vague or nitpick non-essential implementation details on round 2. It also fails when interface-incompleteness is judged from memory instead of a fresh deterministic scan — a sibling implementer missed because it wasn't recalled is exactly the failure this dimension exists to catch.
+Review succeeds when every issue found is specific enough to fix without re-reading the spec, and when the overall verdict is `"fail"` whenever any blocking-class issue exists.
+
+Key failure modes:
+- Issues are vague or nitpick non-essential implementation details on round 2.
+- Interface-incompleteness is judged from memory instead of a fresh deterministic scan — a sibling implementer missed because it wasn't recalled is exactly the failure this dimension exists to catch.
 </judgment>
 
 <output>

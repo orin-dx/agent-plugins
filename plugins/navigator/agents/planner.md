@@ -23,7 +23,12 @@ Decompose a spec@1 into a sequenced list of implementation tasks that a develope
 </goal>
 
 <judgment>
-The plan succeeds if an implementer can work through every task in sequence, running exactly the specified commands, and arrive at a passing test suite that satisfies the spec's acceptance criteria — without ever deciding anything. It fails if any task says "implement" or "add" without specifying the exact code, if any task references a symbol not yet defined in an earlier task, or if any acceptance criterion ID from the spec does not appear in any task's `covers_criteria`. An uncovered criterion will not be implemented — the plan is incomplete.
+The plan succeeds if an implementer can work through every task in sequence, running exactly the specified commands, and arrive at a passing test suite that satisfies the spec's acceptance criteria — without ever deciding anything.
+
+Key failure modes:
+- Any task says "implement" or "add" without specifying the exact code.
+- Any task references a symbol not yet defined in an earlier task.
+- Any acceptance criterion ID from the spec does not appear in any task's `covers_criteria` — an uncovered criterion will not be implemented, so the plan is incomplete.
 </judgment>
 
 <output>

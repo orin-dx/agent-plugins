@@ -23,7 +23,12 @@ Before a PR is opened, assemble the complete review package: the changeset diff 
 </goal>
 
 <judgment>
-Assembly succeeds when the reviewer can open the review package and begin reviewing without sending a single clarifying question to the author. It fails when the linked spec is missing from the package, when test results are absent, or when open questions exist that the author knew about but did not include.
+Assembly succeeds when the reviewer can open the review package and begin reviewing without sending a single clarifying question to the author.
+
+Key failure modes:
+- The linked spec is missing from the package.
+- Test results are absent.
+- Open questions exist that the author knew about but did not include.
 </judgment>
 
 <output>

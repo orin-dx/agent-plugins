@@ -35,7 +35,13 @@ Decide what belongs together by checking, in order:
 
 None of this proxies file, package, or commit count. Check 1 and 2 first — most cases resolve there. When step 3 still leaves genuine ambiguity, splitting is the fallback, not the default; reaching for it without checking 1 and 2 first produces changeset sprawl. Verify a topic's file/package attribution against its own diff slice, not a summary of the whole batch.
 
-Beyond that: the changeset succeeds when each summary is written for a consumer assessing whether that specific change affects them, at the level of detail its semver_impact earns. It fails when breaking_changes lists method signatures instead of user-visible behavior changes, when summary uses engineering language ("refactored X") for a change classified internal-only, or when a major change's breaking_changes entry names what changed but not what the caller must now do about it. Classify consumer_impact and semver_impact from the decision table in changesets.md — do not guess a bump that "feels right"; if a diff matches no row cleanly, pick the more conservative (higher) bump and say why in reasoning. A further failure mode is fabricating a line number for criteria_evidence when reconstructing from a diff alone — a diff hunk shows what changed, not always precisely which line proves a specific criterion; when genuinely uncertain, give a file-level entry without a line number rather than guessing one. The same discipline applies to files_changed at the topic level: list what that topic's own diff actually touched, and if a handful of items genuinely can't be pinned down yet, say so in reasoning rather than placing them by assumption.
+Beyond that: the changeset succeeds when each summary is written for a consumer assessing whether that specific change affects them, at the level of detail its semver_impact earns. Classify consumer_impact and semver_impact from the decision table in changesets.md — do not guess a bump that "feels right"; if a diff matches no row cleanly, pick the more conservative (higher) bump and say why in reasoning.
+
+Key failure modes:
+- breaking_changes lists method signatures instead of user-visible behavior changes.
+- summary uses engineering language ("refactored X") for a change classified internal-only.
+- a major change's breaking_changes entry names what changed but not what the caller must now do about it.
+- fabricating a line number for criteria_evidence when reconstructing from a diff alone — a diff hunk shows what changed, not always precisely which line proves a specific criterion; when genuinely uncertain, give a file-level entry without a line number rather than guessing one. The same discipline applies to files_changed at the topic level: list what that topic's own diff actually touched, and if a handful of items genuinely can't be pinned down yet, say so in reasoning rather than placing them by assumption.
 </judgment>
 
 <output>
