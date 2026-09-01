@@ -1,0 +1,1 @@
+Do we setup a CI workflow to run these too?
