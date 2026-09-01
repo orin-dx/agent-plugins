@@ -1,0 +1,21 @@
+<task-notification>
+<task-id>a736dd531ad7c25b5</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a736dd531ad7c25b5.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix axiom's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Task: Fix axiom's documentation (fictional sub-skills accuracy + README readability polish).**
+
+**Version note (correction to directive):** `plugin.json` was already at `1.2.0`, not `1.0.1` — the README's version line was itself stale/wrong (a bonus drift bug, now fixed). Bumped `1.2.0 → 1.2.1`.
+
+**What changed:**
+- `skills/axiom/SKILL.md`: removed the fictional 6-entry `&lt;sub_skills&gt;` table (`verify-requirement`, `verify-spec`, etc. — none real). Merged the "any artifact type" property into the existing accurate `&lt;three_stage_flow&gt;` table instead of adding a redundant new section.
+- `README.md`: removed the fictional 2-entry Sub-skills table (`axiom/gate`, `axiom/verify`), replaced with an honest "How It Works" section (one skill, one 3-agent pipeline, reused per artifact type). Fixed the version-line drift (`1.0.1` → matches `plugin.json`). Fixed a copy-paste typo ("`exit-gate` and `exit-gate` are separate agents" → canon's and lambda's own exit-gates). Rewrote for `docs-voice.md` (lead with conclusion, bullets, no filler). Converted the plain-text pipeline to a Mermaid flowchart using `orin-visual-standard.md`'s palette (`source`/`store`/`engine`/`router`/`output`), matching `ARCHITECTURE.md`'s existing axiom-gate diagram.
+- `plugin.json`: no fictional names found in `description` (already accurate) — only the version bump.
+- `CHANGELOG.md`: new `[1.2.1]` entry, format matches existing entries.
+- `jq . plugins/axiom/plugin.json` — valid.
+
+No commits made (not instructed to commit). Files touched: `plugins/axiom/skills/axiom/SKILL.md`, `plugins/axiom/README.md`, `plugins/axiom/plugin.json`, `plugins/axiom/CHANGELOG.md`.</result>
+<usage><subagent_tokens>684580</subagent_tokens><tool_uses>16</tool_uses><duration_ms>96261</duration_ms></usage>
+</task-notification>
