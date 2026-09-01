@@ -1,0 +1,24 @@
+<task-notification>
+<task-id>a93cc196742c1dfe7</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a93cc196742c1dfe7.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit all agents for output conciseness" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Output economy audit — read all 36 agent files against the constitution's "Output Economy &amp; Communication Density" rule.
+
+**Already disciplined, worth naming:**
+- `proof/adversary.md` — `remediation_sketch: "string (one sentence — direction only, not code)"`. Exact, enforced brevity on the one field most likely to balloon into a code dump.
+- `delta/changeset-analyzer.md` — the only agent in the repo that scales output length to impact explicitly: terse for patch, one sentence for minor, full detail only for major. This is the model other summary-writing agents should match.
+- `trace/reader.md`, `lambda/*` — all fields structured, `reasoning` consistently marked scratchpad-only, no free paragraph fields.
+- `axiom/exit-gate.md` — restates `verdict_summary (max 300 chars)` even though the cap already lives in `shared/schemas/verdict@1.json`. Harmless, mildly helpful redundancy, not a gap.
+
+**Real gaps:**
+- `delta/pr-narrator.md` — `title`/`body` have zero length or structure guidance. In the same plugin as `changeset-analyzer`'s explicit detail-scaling, this is the sharpest inconsistency in the repo: one delta agent enforces terseness by rule, its sibling has none. Fix: cap `body` to summary-bullets-first / test-plan-checklist (which `github.md`'s voice section — already written this session — actually specifies) and reference it in the output contract, not just the loaded reference.
+- `canon/drift-checker.md` and `graph/agents/auditor.md` — both have a `summary` field specified as "one paragraph," and both describe that paragraph's actual content as enumerable (gap count / coverage rate / duplicates for one, covered/uncovered/drifted counts for the other). Per this session's own `docs-voice.md` rule ("bullets over paragraphs whenever the content is enumerable"), these should be a short bulleted breakdown or a capped 1-2 sentence field, not open-ended prose. Neither agent loads a reference file, so nothing constrains length today.
+
+**False alarm, checked and ruled out:** `proof/exit-gate.md` doesn't restate the 300-char cap on `verdict_summary` the way `axiom/exit-gate.md` does — looked like a gap, but the cap is enforced at the schema level (`verdict@1.json`), so every `verdict@1` producer inherits it regardless of whether the prompt repeats it.
+
+**Verdict:** generally disciplined — reasoning fields are uniformly scratchpad-only and excluded from downstream payloads, most structured fields have real shape constraints, and the worst-case pattern (unbounded prose where structure would do) shows up in exactly two spots, not a systemic drift. Fixing `pr-narrator`'s missing length discipline and the two "one paragraph" summary fields would close what's actually open.</result>
+<usage><subagent_tokens>449621</subagent_tokens><tool_uses>42</tool_uses><duration_ms>99884</duration_ms></usage>
+</task-notification>
