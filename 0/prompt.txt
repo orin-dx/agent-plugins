@@ -1,0 +1,1 @@
+We should include an update to the readme, arch, contributing docs right? The docs for each plugin?
