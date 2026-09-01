@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "orin-dx-agent-plugins",
-  "description": "Ten cooperating plugins covering the full development lifecycle — from requirement capture through spec, plan, implementation, verification, and shipping.",
+  "description": "Ten cooperating plugins covering the full development lifecycle \u2014 from requirement capture through spec, plan, implementation, verification, and shipping.",
   "owner": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"
@@ -69,7 +69,7 @@
     },
     {
       "name": "muse",
-      "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs — props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning.",
+      "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs \u2014 props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
@@ -79,7 +79,7 @@
     },
     {
       "name": "navigator",
-      "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with TDD steps, exact code, and commit messages. No TBDs.",
+      "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with an implementation approach, exact code, and the tests proving each criterion \u2014 no write-test-first mandate. No TBDs. A developer with zero domain context can execute the plan mechanically.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",
@@ -89,7 +89,7 @@
     },
     {
       "name": "smith",
-      "description": "Implementation plugin. Executes plans via TDD cycle. Produces committed, tested code verified by the sentinel exit gate.",
+      "description": "Implementation plugin. Executes plans by designing the approach, implementing, and writing comprehensive tests proving each acceptance criterion \u2014 verified by mutation testing, not a write-test-first mandate. Produces committed, tested code verified by the sentinel exit gate.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/orin-dx/agent-plugins.git",

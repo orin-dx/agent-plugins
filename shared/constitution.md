@@ -44,7 +44,7 @@ WHEN an agent is authored, its YAML frontmatter SHALL include: `name`, `role` (s
 
 WHEN assigning `model` and `effort`, the author SHALL apply dynamic routing based on task complexity:
 - `haiku / low` — deterministic enumeration and mechanical validation (recon, formatting, line citation lookups)
-- `sonnet / medium` — analysis and execution (scanning, drafting, planning, TDD implementation, code reviews, standard exit gates)
+- `sonnet / medium` — analysis and execution (scanning, drafting, planning, implementation, code reviews, standard exit gates)
 - `opus / high` — judgment (Tier 3 cross-crate architectural boundary gates, terminal binding verdicts)
 
 ---

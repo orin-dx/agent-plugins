@@ -15,7 +15,7 @@ ls justfile Makefile moonrepo.yml .moon/ 2>/dev/null
 
 1. **Task Runner First**: If a task runner exists (`just`, `moon`, `make`), invoke tests through the task runner using targeted arguments where supported (e.g. `just test <test_name>`).
 2. **Native Fallback**: If no task runner is present, use the project's native test framework (`cargo nextest run <test_name>` or `cargo test -p <crate> --test <target>`).
-3. **Context Efficiency**: Target the specific test or module under active development during inner TDD cycles to avoid flooding context with passing test output.
+3. **Context Efficiency**: Target the specific test or module under active development during inner development cycles to avoid flooding context with passing test output.
 
 ---
 

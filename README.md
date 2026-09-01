@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.0.0-success.svg" alt="Marketplace v4.0.0" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.1.0-success.svg" alt="Marketplace v4.1.0" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
@@ -85,7 +85,7 @@ Grouped by what each persona actually does — five bands across the lifecycle, 
 | **Design** | [`scribe`](./plugins/scribe/) | Drafts and gates the unambiguous, binding spec | `spec@1` |
 | **Design** | [`muse`](./plugins/muse/) | Drafts and gates component specs — props, variants, per-state behavior, accessibility | `spec@1` |
 | **Build** | [`navigator`](./plugins/navigator/) | Decomposes the spec into an exact, step-by-step plan | `plan@1` |
-| **Build** | [`smith`](./plugins/smith/) | Implements via TDD — failing test, minimal code, green, commit | `changeset@2` |
+| **Build** | [`smith`](./plugins/smith/) | Implements — design, code, comprehensive tests, mutation-tested, commit | `changeset@2` |
 | **Verify** | [`sentinel`](./plugins/sentinel/) | Cross-cutting gate — confirms any artifact meets its criteria before the next stage begins | `verdict@1` |
 | **Verify** | [`ranger`](./plugins/ranger/) | Hunts down real bugs through adversarial, evidence-based verification | `finding-report@1` |
 | **Ship** | [`courier`](./plugins/courier/) | Commits, opens PRs, responds to review, writes changelogs and release notes | `release-artifact@2` |
@@ -237,7 +237,7 @@ agent-plugins/
     ├── scribe/                    ← Specification drafting and gating
     ├── muse/                      ← Component spec drafting and gating
     ├── navigator/                 ← Implementation planning
-    ├── smith/                     ← TDD implementation
+    ├── smith/                     ← Implementation, mutation-tested
     ├── sentinel/                  ← Verification gate
     ├── courier/                   ← Ship tooling
     ├── ranger/                    ← Fast cross-language bug scan

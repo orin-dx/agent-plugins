@@ -2,6 +2,11 @@
 
 — smith
 
+## [2.1.0] - 2026-09-01
+
+### Changed
+- Dropped the mandatory write-test-first ordering. `implementer` now designs the approach, writes the implementation, and writes comprehensive tests proving each `covers_criteria` criterion — tests may be written alongside or after the implementation. Test quality is enforced by `mutator`'s mutation-testing gate (unchanged), not by which came first. Rationale: a controlled comparison found agent-written code got no measurable quality advantage from write-test-first ordering, at 3–9x the token cost, and that forcing a failing test into existence before any design work suppressed the upfront design agents otherwise did well ([Böckeler, "TDD inside the agent loop"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)). Everything downstream of "tests pass and mutation-test clean" — `reviewer`, `exit-gate`, `criteria_evidence` — is unchanged.
+
 ## [2.0.0] - 2026-08-27
 
 ### Changed

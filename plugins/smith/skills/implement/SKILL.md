@@ -1,17 +1,17 @@
 ---
 name: implement
 description: >-
-  Activate when the user says "implement this", "execute the plan", "write the code", "build this feature", "generate tests for X", "write tests for this spec", "refactor this without changing behavior", or "explain what this code does" — also when handed a plan@1 to execute, or a spec@1 exists but no plan. Every task is TDD-first: failing test, confirm red, minimal implementation, confirm green, commit. Mutation testing then verifies the test suite would catch real faults — surviving mutants return to the implementer as precision tests before the exit gate runs. The sentinel exit gate verifies all spec criteria independently at the end, reading the codebase from scratch and assuming the implementation is incomplete. Works from plan@1 (preferred) or spec@1 directly.
-version: 1.4.0
+  Activate when the user says "implement this", "execute the plan", "write the code", "build this feature", "generate tests for X", "write tests for this spec", "refactor this without changing behavior", or "explain what this code does" — also when handed a plan@1 to execute, or a spec@1 exists but no plan. Every task: design the approach, write the implementation and comprehensive tests proving the covers_criteria, confirm the full suite passes, commit. Mutation testing then verifies the test suite would catch real faults — not a write-test-first ordering — surviving mutants return to the implementer as precision tests before the exit gate runs. The sentinel exit gate verifies all spec criteria independently at the end, reading the codebase from scratch and assuming the implementation is incomplete. Works from plan@1 (preferred) or spec@1 directly.
+version: 1.5.0
 ---
 
 # Smith — Implementation Skill
 
 <capability>
 
-smith is one skill, not four. Every real invocation runs the same TDD pipeline through `implementer`: read the task's acceptance criteria, write a failing test, confirm red, write the minimal implementation, confirm green, commit — then `mutator` and `reviewer` gate the batch before `exit-gate` runs the final adversarial check.
+smith is one skill, not four. Every real invocation runs the same pipeline through `implementer`: read the task's acceptance criteria, design the approach, write the implementation and comprehensive tests proving each criterion, confirm the full suite passes, commit — then `mutator` and `reviewer` gate the batch before `exit-gate` runs the final adversarial check. Test quality is enforced by mutator's mutation-testing gate (does the test suite actually catch a wrong implementation), not by mandating that tests be written before the code they test.
 
-The frontmatter `description` also triggers on "generate tests for X," "explain what this code does," and "refactor this without changing behavior." None of those have dedicated agent behavior — no agent here writes tests without implementation, produces a plain-language explanation, or runs a refactor-only mode. A request framed that way still routes to `implementer`'s standard TDD cycle; if that's not a fit (there is no failing test to write for "explain this"), say so rather than forcing the pipeline to produce something no agent actually defined.
+The frontmatter `description` also triggers on "generate tests for X," "explain what this code does," and "refactor this without changing behavior." None of those have dedicated agent behavior — no agent here writes tests without implementation, produces a plain-language explanation, or runs a refactor-only mode. A request framed that way still routes to `implementer`'s standard cycle; if that's not a fit (there is no implementation to write for "explain this"), say so rather than forcing the pipeline to produce something no agent actually defined.
 
 </capability>
 
@@ -27,17 +27,20 @@ The frontmatter `description` also triggers on "generate tests for X," "explain 
 
 ---
 
-<tdd_cycle>
+<implementation_cycle>
 
 For every implementation task:
 
-1. Write the failing test exactly as specified.
-2. Run the test — confirm it fails with the expected error (red phase required; a test that passes before implementation is broken).
-3. Write the minimal implementation to make it pass — no more.
-4. Run the test — confirm it passes (green).
-5. Commit with the conventional commit message specified in the task.
+1. Read the task's covers_criteria acceptance criteria from the spec (from disk, when spec_file_path is set) before writing any code.
+2. Design the approach — for anything beyond a trivial change, decide the shape of the solution before locking it in through a test. A test written before any design exists tends to freeze the implementation onto whatever shape that first test happened to imply, and that shape is rarely revisited.
+3. Write the implementation.
+4. Write comprehensive tests proving each covers_criteria criterion — tests may be written alongside or after the implementation. What matters is that they'd actually fail if the implementation were wrong, not the order they were written in.
+5. Run the full suite — confirm every test passes.
+6. Commit with the conventional commit message specified in the task.
 
-</tdd_cycle>
+Regression quality is verified by `mutator`'s mutation-testing gate immediately after (below), not by a write-test-first ritual. A survived mutant is the concrete signal that a test doesn't actually check what it claims to.
+
+</implementation_cycle>
 
 ---
 
@@ -68,7 +71,7 @@ The caller passes the aggregated per-task `criteria_evidence` to `exit-gate` alo
 | Agent | Role | Tier | When to delegate |
 | :--- | :--- | :--- | :--- |
 | **`recon`** | Workspace manifest & baseline | haiku / low | Before any code is written — detect language, test runner, inventory plan files, confirm baseline passes. |
-| **`implementer`** | TDD batch execution | sonnet / medium | Executes a Subsystem Batch (or single task) from plan@1 — full red/green/commit cycle adhering to YAGNI (Ponytail layer). |
+| **`implementer`** | Implementation batch execution | sonnet / medium | Executes a Subsystem Batch (or single task) from plan@1 — design, implement, test comprehensively, commit, adhering to YAGNI. |
 | **`mutator`** | Mutation testing gate | sonnet / medium | After each Subsystem Batch commits — verify the test suite catches real faults; returns precision tests for survivors. |
 | **`reviewer`** | Pre-gate review | sonnet / medium | After batch mutation gate passes — neutral review of batch scope, non-negotiables, sibling gaps, test quality. |
 | **`exit-gate`** | Adversarial exit verification | opus / high | After all batches complete — independent sentinel check against spec; produces verdict@1. |

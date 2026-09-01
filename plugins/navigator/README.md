@@ -1,8 +1,8 @@
 # navigator — Implementation Planning
 
-**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.0.0
+**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.1.0
 
-Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a failing test, the minimal implementation to pass it, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without making a design decision. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
+Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a brief implementation approach, the exact implementation, the exact tests proving each criterion, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without making a design decision. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
 
 One skill, not several — see [Behavior](#behavior) below for how it adapts to the request.
 
@@ -45,7 +45,7 @@ One skill, not several — see [Behavior](#behavior) below for how it adapts to 
 
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
-| `planner` | Planner | sonnet / medium | Decomposes the spec into ordered tasks, grouped into Subsystem Batches by compilation boundary. Each task has exact file paths, a failing test, minimal implementation, and a conventional commit message. Also runs in amend mode after a spec correction. |
+| `planner` | Planner | sonnet / medium | Decomposes the spec into ordered tasks, grouped into Subsystem Batches by compilation boundary. Each task has exact file paths, a brief implementation approach, the exact implementation, the exact tests proving each criterion, and a conventional commit message. Also runs in amend mode after a spec correction. |
 | `estimator` | Estimator | sonnet / medium | Produces per-task time estimates, identifies parallelizable tasks, and lists blocking dependencies. |
 | `challenger` | Challenger | sonnet / medium | Adversarially reviews the plan for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, acceptance criteria orphaned from every task's `covers_criteria`, and a task touching one implementer of a shared trait/interface/protocol without covering its known siblings (checked via a deterministic pre-scan, not memory). Capped at 2 review rounds. |
 
@@ -92,10 +92,12 @@ The plan is an ordered array of tasks. Each task has: `id`, `title`, `files`, `s
 Every task in `plan@1` must include all of the following. Tasks missing any field are rejected:
 
 - **Exact file paths** to create or modify (no "create a file for X")
-- **A failing test** written before any implementation code, with the command to run it
-- **Expected failure output** from the failing test (red phase confirmation)
-- **The minimal implementation** that makes the test pass
+- **A brief implementation approach**, decided before the test steps are written
+- **The exact implementation code**
+- **The exact tests** proving each of the task's `covers_criteria` criteria, with the command confirming the full suite passes
 - **A conventional commit message** for the task
+
+Tests are not required to precede the implementation steps within a task — [smith](../smith/)'s mutation-testing gate verifies test quality, not step order. See [ADR-008](../../docs/adr/008-drop-test-first-ordering.md) and smith's [Implementation Cycle](../smith/README.md#implementation-cycle-per-task) for the rationale.
 - **`covers_criteria`** — the acceptance criterion IDs from the spec this task addresses
 
 No TBDs. No "the implementer will decide." Every acceptance criterion must appear in at least one task's `covers_criteria` — `challenger` flags any criterion that appears in none as `orphaned-criteria`.
@@ -104,4 +106,4 @@ No TBDs. No "the implementer will decide." Every acceptance criterion must appea
 
 ## Next Stage
 
-Feed `plan@1` to **[smith](../smith/)** (TDD implementation).
+Feed `plan@1` to **[smith](../smith/)** (implementation).

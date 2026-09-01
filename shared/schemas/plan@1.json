@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "plan@1",
   "title": "Plan",
-  "description": "A sequenced implementation plan. Every task is bite-sized, TDD-first, with exact code and commit message.",
+  "description": "A sequenced implementation plan. Every task is bite-sized, with an implementation approach, exact code, the tests proving each criterion, and a commit message.",
   "type": "object",
   "required": ["goal", "architecture", "tech_stack", "tasks"],
   "additionalProperties": false,

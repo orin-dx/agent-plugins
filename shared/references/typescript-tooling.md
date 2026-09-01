@@ -21,7 +21,7 @@ ls vitest.config.* jest.config.* bun.test.* moonrepo.yml turbo.json 2>/dev/null
    - Bun: `bun test <file>`
    - Type check: `npx tsc --noEmit`
    - Mutation testing: `npx stryker run`
-3. **Context Efficiency**: Scope test runs to the affected module or file during inner TDD cycles to keep context windows clean.
+3. **Context Efficiency**: Scope test runs to the affected module or file during inner development cycles to keep context windows clean.
 
 ---
 
