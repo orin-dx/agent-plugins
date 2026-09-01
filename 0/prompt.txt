@@ -1,0 +1,45 @@
+<task-notification>
+<task-id>aacba13015f937d0e</task-id>
+<tool-use-id>toolu_01Ddiv97m9Ej1yUqxvG9YVs9</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/aacba13015f937d0e.output</output-file>
+<status>completed</status>
+<summary>Agent "Research documentation voice/tone guidelines" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Report on documentation voice/tone research (task: gather style guide sources, UX scannability research, changelog best practices, and LLM anti-slop prompting technique; synthesize into a checkable guideline list for a `docs-voice.md` reference).
+
+## Sources &amp; concrete rules
+
+**[Google Developer Documentation Style Guide](https://developers.google.com/style/tone)** — conversational but not dry; second person, active voice, present tense; serial comma; "write for scanning first, being read second" mindset; "sound like a knowledgeable friend," not marketing copy.
+
+**[Microsoft Writing Style Guide](https://learn.microsoft.com/en-us/style-guide/brand-voice-above-all-simple-human)** — 3 principles: warm/relaxed, crisp/clear, ready-to-help. "Crisp and clear" = write for scanning first, reading second. Conciseness rule: no wasted words, no filler qualifiers, be affirmative not hedgy.
+
+**[Diátaxis](https://diataxis.fr/)** — 4 separate doc modes (tutorial / how-to / reference / explanation), each answering a different question. Applies structurally: don't mix "why this works" explanation into a "how to ship a PR" how-to — keep reference (schema/API) separate from narrative (why the change matters).
+
+**[Keep a Changelog](https://keepachangelog.com/en/1.1.0/)** — fixed categories (Added/Changed/Deprecated/Removed/Fixed/Security); newest-first; "Unreleased" section at top; **write for the reader, not the tracker** — no bare "fixes #123," describe user-visible impact; regular cadence.
+
+**[Federal Plain Language Guidelines](https://digital.gov/guides/plain-language/principles)** — active voice always (name who does the action); sentence length target **15–20 words average**; one idea per sentence; cut wordy constructions.
+
+**[NN/G, F-shaped reading pattern](https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content-discovered/)** — users read ~20–28% of on-page text; they scan, not read. Countermeasure: **inverted pyramid** (conclusion first), front-loaded bolded/keyword phrases, short paragraphs, bullets over blocks.
+
+**AI-slop word lists** ([contentbeta](https://www.contentbeta.com/blog/list-of-words-overused-by-ai/), [awesome-slop](https://github.com/hwajongpark/awesome-slop)) — highest-severity terms: *delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, tapestry, landscape, underscore, meticulous, game-changer, cutting-edge, unprecedented, transformative, utilize (vs "use")*. Also banned structures: "It isn't just X, it's Y," rhetorical-question hooks, triplet-of-adjectives padding.
+
+**LLM anti-slop prompting** ([Anti-Slop Guide](https://cybertronai.github.io/SutroYaro/tooling/anti-slop-guide/), [Towards AI prompt](https://learnaitogethernewsletter.substack.com/p/the-prompt-we-use-to-prevent-ai-slop)) — negative word-bans alone catch ~80% of slop; the rest needs **positive structural constraints** (exact section format, sentence-length ceiling, required front-loaded answer) since a model told only "don't do X" tends to substitute a different flavor of padding. Before/after exemplar pairs outperform abstract rules. A cause worth knowing: RLHF rewards verbose, hedged, enthusiastic-sounding answers — banning words treats the symptom, constraining *structure and length* treats the cause.
+
+## Synthesized guideline set (→ `docs-voice.md`)
+
+1. Lead with the conclusion — answer before justification (inverted pyramid).
+2. Active voice, present tense, second person for instructions.
+3. One idea per sentence; average sentence length ≤20 words.
+4. Bullets/tables over paragraphs whenever the content is enumerable.
+5. No banned-word list: *delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, landscape, underscore, meticulous, game-changer, transformative, utilize→use, dive into*.
+6. No rhetorical-question hooks, no "it isn't just X, it's Y," no adjective triplets.
+7. State the mechanism, not the adjective — numbers/behavior over "robust"/"powerful" (matches existing `orin-visual-standard.md` §4 rule).
+8. Separate *what changed* (reference-like, factual) from *why* (one sentence, no more) — don't blend.
+9. Changelog/changeset entries: fixed category, user-facing impact language, no bare issue-number-only lines.
+10. PR bodies: summary bullets first, test plan as checklist, no prose recap of the diff.
+11. Cut hedge/filler qualifiers ("essentially," "basically," "in order to," "it's worth noting that").
+12. Self-edit pass: after drafting, re-read once specifically checking items 5–6 before output — prompt-only banned-word constraints miss ~20% without this.
+
+Sources: [Google style guide — tone](https://developers.google.com/style/tone) · [Microsoft brand voice](https://learn.microsoft.com/en-us/style-guide/brand-voice-above-all-simple-human) · [Diátaxis](https://diataxis.fr/) · [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · [Federal Plain Language Guidelines](https://digital.gov/guides/plain-language/principles) · [NN/G F-pattern](https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content-discovered/) · [NN/G how users read](https://www.nngroup.com/articles/how-users-read-on-the-web/) · [AI slop word list](https://www.contentbeta.com/blog/list-of-words-overused-by-ai/) · [awesome-slop wordlists](https://github.com/hwajongpark/awesome-slop) · [Anti-Slop Guide](https://cybertronai.github.io/SutroYaro/tooling/anti-slop-guide/) · [Towards AI anti-slop prompt](https://learnaitogethernewsletter.substack.com/p/the-prompt-we-use-to-prevent-ai-slop)</result>
+<usage><subagent_tokens>85716</subagent_tokens><tool_uses>8</tool_uses><duration_ms>48235</duration_ms></usage>
+</task-notification>
