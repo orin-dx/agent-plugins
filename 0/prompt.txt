@@ -1,0 +1,1 @@
+We should avoid the plugin-stage naming, that is worse than being more specific with multiple words
