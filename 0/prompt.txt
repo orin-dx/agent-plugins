@@ -1,0 +1,144 @@
+Let's include the codex folder please
+
+---
+
+And yes, let's stack the changes
+
+---
+
+Did we not ship the rename already?
+
+---
+
+We have a lot of wall of text in these. Are these wordy prose sections necessary or can they be accomplished better with bullets, sub-bullets, sections and sub-sections? Would that work as well or better for agents? Less work means less context used to load the file for an agent/skill/reference right?
+
+---
+
+Yes
+
+---
+
+<task-notification>
+<task-id>ad3397c5a25fadc6f</task-id>
+<tool-use-id>toolu_01NYxR9CB9EXKdKH8EAvcoLc</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/ad3397c5a25fadc6f.output</output-file>
+<status>completed</status>
+<summary>Agent "Bulletize judgment sections: sentinel, smith, vanguard, weaver" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Both validations pass with zero errors and warnings.
+
+## Summary
+
+**Restructured (4 files)** — each had 2+ chained "failure mode" prose enumerations converted to intro sentence + bulleted "Key failure modes:" list, content preserved verbatim:
+- `/Users/gabe/Projects/agent-plugins/plugins/smith/agents/exit-gate.md` — 4 failure modes
+- `/Users/gabe/Projects/agent-plugins/plugins/smith/agents/mutator.md` — 2 failure modes
+- `/Users/gabe/Projects/agent-plugins/plugins/smith/agents/recon.md` — 2 failure modes
+- `/Users/gabe/Projects/agent-plugins/plugins/smith/agents/reviewer.md` — 3 failure modes
+
+**Left untouched (11 files)** — read each `&lt;judgment&gt;` section; none contained a chained "a second/third failure mode" prose-enumeration pattern. Each was already a short, single-idea paragraph (a definition of "genuine"/"honest"/"complete" plus one contrasting failure condition, not a list-in-disguise):
+- `plugins/sentinel/agents/exit-gate.md`
+- `plugins/sentinel/agents/recon.md`
+- `plugins/sentinel/agents/verifier.md`
+- `plugins/vanguard/agents/reader.md`
+- `plugins/vanguard/agents/recon.md`
+- `plugins/vanguard/agents/risk-assessor.md`
+- `plugins/vanguard/agents/synthesizer.md`
+- `plugins/weaver/agents/auditor.md`
+- `plugins/weaver/agents/clarifier.md`
+- `plugins/weaver/agents/intake.md`
+- `plugins/weaver/agents/prioritizer.md`
+
+**Validation output:**
+- `./scripts/check-versions.sh` → `OK: 10 plugin(s), all versions agree across plugin.json/README/CHANGELOG/marketplace.json.`
+- `./shared/scripts/validate-wiring.sh` → `PASS — wiring is valid.` (0 errors, 0 warnings)
+
+No other sections (frontmatter, `&lt;constitution&gt;`, `&lt;load_first&gt;`, `&lt;backstory&gt;`, `&lt;goal&gt;`, `&lt;output&gt;`) were touched. Nothing was committed.</result>
+<usage><subagent_tokens>81288</subagent_tokens><tool_uses>22</tool_uses><duration_ms>64735</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a452e3552586df08c</task-id>
+<tool-use-id>toolu_01VDKtmmYUcugoigjXAJrbDn</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a452e3552586df08c.output</output-file>
+<status>completed</status>
+<summary>Agent "Bulletize judgment sections: ranger, scribe" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Both validations pass. No commits made, as requested.
+
+## Summary
+
+**Restructured** (had 2+ sequential "failure mode" prose clauses):
+- `plugins/ranger/agents/adversary.md` — 3 failure modes → bulleted list
+- `plugins/ranger/agents/exit-gate.md` — 2 failure modes → bulleted list
+- `plugins/ranger/agents/scanner.md` — 2 failure modes → bulleted list
+- `plugins/scribe/agents/auditor.md` — already-labeled "Four failure modes" paragraphs → bulleted list (merged the "test for both" sentence for vague-delegation/semantic-model into the semantic-model bullet since it applied to both, per instruction not to drop content)
+- `plugins/scribe/agents/drafter.md` — 2 failure modes → bulleted list
+- `plugins/scribe/agents/drift-checker.md` — 3 failure modes → bulleted list
+
+**Left untouched** (single failure mode only, or no enumeration pattern — didn't meet the 2+ threshold):
+- `plugins/ranger/agents/boundary-tracer.md` — one "key failure mode," no second
+- `plugins/ranger/agents/recon.md` — one "key failure mode," no second
+- `plugins/scribe/agents/architect.md` — one "key failure mode," no second
+- `plugins/scribe/agents/exit-gate.md` — one "key failure mode," no second
+- `plugins/scribe/agents/verifier.md` — one "key failure mode," no second
+
+In every restructured file, the intro/definition sentence stayed as prose, all descriptive content/examples/caveats were preserved verbatim inside their bullets, and `&lt;backstory&gt;`, `&lt;goal&gt;`, `&lt;output&gt;`, `&lt;constitution&gt;`, `&lt;load_first&gt;`, and frontmatter were left byte-for-byte untouched.
+
+Validation:
+- `./scripts/check-versions.sh` — OK, all versions agree across 10 plugins
+- `./shared/scripts/validate-wiring.sh` — PASS, 0 errors, 0 warnings
+
+No commits were made.</result>
+<usage><subagent_tokens>74557</subagent_tokens><tool_uses>14</tool_uses><duration_ms>78777</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a77abf9f05609da5a</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a77abf9f05609da5a.output</output-file>
+<status>completed</status>
+<summary>Agent "Bulletize judgment sections: courier, mason, muse, navigator" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Both validations pass cleanly.
+
+## Summary
+
+**Restructured (11 files)** — converted prose-disguised failure-mode enumerations into intro sentence + bulleted "Key failure modes:" list, preserving all descriptive content:
+- `plugins/courier/agents/changeset-analyzer.md`
+- `plugins/courier/agents/pr-narrator.md`
+- `plugins/courier/agents/release-summarizer.md`
+- `plugins/courier/agents/review-preprocessor.md`
+- `plugins/mason/agents/auditor.md`
+- `plugins/mason/agents/scaffolder.md`
+- `plugins/muse/agents/auditor.md`
+- `plugins/muse/agents/drafter.md`
+- `plugins/muse/agents/exit-gate.md`
+- `plugins/navigator/agents/challenger.md`
+- `plugins/navigator/agents/estimator.md`
+- `plugins/navigator/agents/planner.md`
+
+**Left untouched (2 files)** — no qualifying enumeration found, each judgment is a single-idea success/fail pair with only one failure condition, not a chain:
+- `plugins/courier/agents/commit-analyzer.md` — one contrastive fail condition ("describes the diff... instead of the intent"), no ordinal chaining.
+- `plugins/mason/agents/schema-designer.md` — one condition stated as two symmetric extremes ("if everything is required, or nothing is"), not distinct enumerated failure modes.
+
+Note: in `muse/drafter.md` and `muse/auditor.md` I moved one closing "test" sentence to sit with the intro prose rather than trailing the last bullet, since it applied to the whole set of criteria rather than being part of any single failure mode — content was preserved verbatim, only its position shifted for readability. In `changeset-analyzer.md`, one non-failure instructional sentence (the classify-per-decision-table guidance) was likewise kept as prose immediately after the intro rather than left stranded mid-list, with all failure-mode clauses consolidated into the bullet list. All other files were reformatted as literal prose→bullet conversions with no reordering.
+
+**Validation** (run from repo root):
+- `./scripts/check-versions.sh` → `OK: 10 plugin(s), all versions agree across plugin.json/README/CHANGELOG/marketplace.json.`
+- `./shared/scripts/validate-wiring.sh` → `PASS — wiring is valid.` (0 errors, 0 warnings)
+
+No commits were made.</result>
+<usage><subagent_tokens>100482</subagent_tokens><tool_uses>26</tool_uses><duration_ms>249467</duration_ms></usage>
+</task-notification>
+
+---
+
+Are we being too prescriptive in any place that we should lean more on guidance and allow LLMs to be fleixble as long as they understand goal and intent?
+
+---
+
+Let's fix all of the issues you've identified please

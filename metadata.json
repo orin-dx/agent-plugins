@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.10.4-nightly.202609020630.ee6d53f3d",
+  "checkpoint_id": "01M1HV156814DYS5VVPHA94EWD",
+  "strategy": "manual-commit",
+  "branch": "feat/docs-persistence-and-architecture-audit",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "plugins/mason/README.md",
+    "plugins/scribe/README.md",
+    "plugins/scribe/agents/architect.md",
+    "plugins/scribe/plugin.json",
+    "plugins/weaver/README.md",
+    "plugins/weaver/plugin.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 672,
+    "cache_creation_tokens": 1869361,
+    "cache_read_tokens": 150453820,
+    "output_tokens": 398477,
+    "api_call_count": 336
+  }
+}
