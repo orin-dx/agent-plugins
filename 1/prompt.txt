@@ -1,0 +1,86 @@
+Take a look at our agents and help me consider if any of the plugin agents should consider fable 5.1 for some of the larger work. I suspect some things can go between opus and fable depending on how big or complex it is.
+
+---
+
+I think more so than exist gates, perhaps planning and specing could use fable? Overall architecture and overall code analysis and reviews???
+
+---
+
+Think through architecture and our workflows that could most benefit from fable 5.1. Are we doing a good enough job of stepping back while we do work and considering the overall architecture of the entire codebase when specing and planning work? If we get too silo'd we make mistakes.
+
+---
+
+Yes, we want to make sure architecture and semantic modeling is a big part of the work right? Think of all the best practices and what folks are saying. how sdd works, etc. I'm surprised we haven't done that yet and it might account for why we're not always doing well and we miss things.
+
+---
+
+Can we make sure that our persisted schemas are not in the .claude folder? We should be more generic /docs/specs /docs/architecture /docs/projects right?
+
+---
+
+<task-notification>
+<task-id>ad9e08c58ea65b667</task-id>
+<tool-use-id>toolu_019C4UTKCKei9XeL98ttWrGt</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/75d0789c-fbc6-428d-91ec-20de9fcd81ff/tasks/ad9e08c58ea65b667.output</output-file>
+<status>completed</status>
+<summary>Agent "Find version-bump and conformance conventions" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Now compiling the report.
+
+## 1. Version-bump conventions
+
+`scripts/check-versions.sh` enforces that for every `plugins/*/plugin.json`, four values agree exactly: `plugin.json`'s `version`, the plugin's `README.md` `**Version:**` line, the top `## [x.y.z]` entry in the plugin's `CHANGELOG.md`, and `marketplace.json`'s per-plugin `version` field. Any mismatch fails CI (run via `.github/workflows/validate.yml`).
+
+Semver rule, from `shared/references/changesets.md`'s Semver Decision Guide (machine-enforced by `changeset-analyzer`):
+
+| Change | Bump |
+|---|---|
+| New field in existing schema (optional) | **minor** |
+| Removed or renamed field in existing schema | **major** + new file |
+| New schema file | **minor** |
+| New skill within existing plugin | **minor** |
+| Bug fix in subagent prompt (behavior change) | **patch** |
+| Renamed plugin ID | **major** |
+| Pure doc/self-description fix, no behavior change | **none — no bump** |
+
+Historical precedent for a path/convention change of this exact kind: the `.claude/specs/*.json` persistence convention was introduced 2026-08-12 ("Spec Persistence, Correction Loop, and Traceability") — CHANGELOG.md:201-216 — adding `spec_file_path` to `spec@1`/`plan@1` schemas (new optional field on existing schema → minor) and touching `shared/constitution.md` + orchestrator SKILL.md files. This repo's root `CHANGELOG.md` also uses non-semver dated headers in places (e.g. `## [2026-08-12]`) alongside proper `## [x.y.z]` — plugin-level CHANGELOGs are strictly semver-versioned per `check-versions.sh`; root CHANGELOG is not machine-checked the same way. `CONTRIBUTING.md`'s Capability Change Checklist requires updating: frontmatter `description`, SKILL.md routing text for new statuses, README Subagents/Output-Schema tables, CHANGELOG entry, `plugin.json` version, `marketplace.json` version, and `mason:scaffolder`/`mason:auditor` **only if a new structural convention is introduced** (new required section/check), not for ordinary capability changes.
+
+## 2. mason auditor — `.claude/specs` awareness
+
+`plugins/mason/agents/auditor.md` and the README's Conformance Checks table do **not** check for `.claude/specs` path literals or persistence-path conventions anywhere. The auditor's checks are: manifest fields (via script), skill file presence, agent file presence, description word count, 5-part body structure + constitution byte-identity, `&lt;load_first&gt;` presence/correctness, orchestration completeness, model/effort tiering, `shared` symlink, no runtime refs to `agent-best-practices.md`, and reference-file size (via script). None inspect path conventions, schema shapes, or literal strings like `.claude/specs`. It would need no update for a path rename per se — but per `CONTRIBUTING.md`, if the rename constitutes a new *structural* convention (unlikely; it's a value change, not a new required section) it wouldn't need mason changes; it's purely a content/prompt-text update across the files that mention the literal path.
+
+## 3. Files touching persistence paths (repo-wide grep for `spec_file_path`, `plan_file_path`, `workspace-conventions.md`, `.claude/`)
+
+`plan_file_path` does not exist anywhere. Beyond the six files you already knew, exact hits:
+
+- `CHANGELOG.md` (root) — 4 hits, historical narrative only
+- `plugins/vanguard/CHANGELOG.md`, `plugins/vanguard/agents/recon.md`
+- `plugins/muse/README.md`, `plugins/muse/agents/drafter.md` (x2), `plugins/muse/skills/component/SKILL.md`
+- `plugins/smith/CHANGELOG.md` (multiple), `plugins/smith/agents/recon.md`, `plugins/smith/agents/exit-gate.md`, `plugins/smith/agents/implementer.md`, `plugins/smith/skills/implement/SKILL.md`
+- `plugins/weaver/CHANGELOG.md`, `plugins/weaver/agents/auditor.md`
+- `plugins/navigator/CHANGELOG.md`, `plugins/navigator/README.md`, `plugins/navigator/skills/plan/SKILL.md`, `plugins/navigator/agents/challenger.md`, `plugins/navigator/agents/planner.md`
+- `plugins/scribe/agents/auditor.md`, `plugins/scribe/agents/drift-checker.md`, `plugins/scribe/README.md`, `plugins/scribe/skills/spec-drift/SKILL.md`, `plugins/scribe/CHANGELOG.md`, `plugins/scribe/skills/correct-spec/SKILL.md`, `plugins/scribe/agents/drafter.md` (x2)
+- `shared/agent-best-practices.md`
+- `shared/schemas/plan@1.json`, `shared/schemas/arch-spec@1.json` (line 90-92, `spec_file_path`), `shared/schemas/spec@1.json`
+- `shared/references/mcp-protocol.md` (unrelated — `~/.claude/mcp.json`, not spec persistence; noise hit)
+- `shared/constitution.md` (lines 110, 112, 114, 122, 136 — the canonical persistence rules)
+
+Note `shared/schemas/arch-spec@1.json` already carries a `spec_file_path` field (line 90-92) that also needs the path-convention update — you didn't list this schema in your known set but it's directly affected.
+
+## 4 &amp; 5. Requested raw file contents
+
+Delivered inline above in full: `shared/schemas/arch-spec@1.json`, `shared/schemas/finding-report@1.json`, `shared/schemas/verdict@1.json` (plus `verdict@2.json`, which exists and adds a non-blocking `flagged_for_review` array — relevant since you're designing something "verdict-like"), and `plugins/scribe/agents/architect.md` in full.
+
+One load-bearing anomaly in `architect.md`: its frontmatter description and `&lt;output&gt;` section both say it produces **`spec@1`** conforming to `shared/schemas/spec@1.json` — not `arch-spec@1` — despite `arch-spec@1.json` existing as a schema in the repo. `scribe/README.md`'s pipeline diagram confirms this: `scribe/architect → scribe/gate-spec → spec@1 (architectural)`. So `arch-spec@1` currently appears to be an unused/orphaned schema, and `architect.md` is scribe's existing *reactive* agent (ranger finding-report → structural spec@1), gated through the same `exit-gate`/`gate-spec` pipeline as ordinary specs. The file also has a duplicate closing `&lt;/output&gt;` tag at the very end (lines 56-57) — cosmetic but present in source.
+
+Full architect.md and schema JSON reproduced verbatim in the tool outputs above (not re-pasted here per your word budget).</result>
+<usage><subagent_tokens>56907</subagent_tokens><tool_uses>15</tool_uses><duration_ms>63269</duration_ms></usage>
+</task-notification>
+
+---
+
+Let's evaluate all our changes against out best practices. Context size, tone, succinct wording, EARS, goal/outcome, etc
+
+---
+
+We fixed everything?

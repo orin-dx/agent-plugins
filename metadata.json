@@ -3,14 +3,33 @@
   "checkpoint_id": "01M1HV156814DYS5VVPHA94EWD",
   "strategy": "manual-commit",
   "branch": "feat/docs-persistence-and-architecture-audit",
-  "checkpoints_count": 1,
+  "checkpoints_count": 8,
   "files_touched": [
+    "marketplace.json",
     "plugins/mason/README.md",
+    "plugins/navigator/CHANGELOG.md",
+    "plugins/navigator/README.md",
+    "plugins/navigator/plugin.json",
+    "plugins/navigator/skills/plan/SKILL.md",
+    "plugins/scribe/CHANGELOG.md",
     "plugins/scribe/README.md",
+    "plugins/scribe/agents/arch-auditor.md",
     "plugins/scribe/agents/architect.md",
     "plugins/scribe/plugin.json",
+    "plugins/scribe/skills/audit-architecture/SKILL.md",
+    "plugins/scribe/skills/gate-spec/SKILL.md",
+    "plugins/weaver/CHANGELOG.md",
     "plugins/weaver/README.md",
-    "plugins/weaver/plugin.json"
+    "plugins/weaver/agents/auditor.md",
+    "plugins/weaver/plugin.json",
+    "shared/agent-best-practices.md",
+    "shared/constitution.md",
+    "shared/references/workspace-conventions.md",
+    "shared/schemas/arch-audit@1.json",
+    "shared/schemas/arch-model@1.json",
+    "shared/schemas/arch-spec@1.json",
+    "shared/schemas/plan@1.json",
+    "shared/schemas/spec@1.json"
   ],
   "sessions": [
     {
@@ -19,13 +38,27 @@
       "compact_transcript": "/0/transcript.jsonl",
       "content_hash": "/0/content_hash.txt",
       "prompt": "/0/prompt.txt"
+    },
+    {
+      "metadata": "/1/metadata.json",
+      "transcript": "/1/full.jsonl",
+      "compact_transcript": "/1/transcript.jsonl",
+      "content_hash": "/1/content_hash.txt",
+      "prompt": "/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 672,
-    "cache_creation_tokens": 1869361,
-    "cache_read_tokens": 150453820,
-    "output_tokens": 398477,
-    "api_call_count": 336
+    "input_tokens": 902,
+    "cache_creation_tokens": 2296456,
+    "cache_read_tokens": 172722940,
+    "output_tokens": 496834,
+    "api_call_count": 451,
+    "subagent_tokens": {
+      "input_tokens": 16,
+      "cache_creation_tokens": 55346,
+      "cache_read_tokens": 243172,
+      "output_tokens": 22,
+      "api_call_count": 8
+    }
   }
 }
