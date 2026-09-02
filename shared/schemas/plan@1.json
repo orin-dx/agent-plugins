@@ -83,7 +83,11 @@
     },
     "spec_file_path": {
       "type": "string",
-      "description": "Workspace-relative path to the spec@1 file this plan implements (e.g. .claude/specs/SPEC-001.json). Propagated from spec@1.spec_file_path. Agents resolve it against workspace_root from the recon manifest."
+      "description": "Workspace-relative path to the spec@1 file this plan implements (e.g. docs/specs/SPEC-001.json). Propagated from spec@1.spec_file_path. Agents resolve it against workspace_root from the recon manifest."
+    },
+    "plan_file_path": {
+      "type": "string",
+      "description": "Workspace-relative path where this plan is written on disk (e.g. docs/projects/SPEC-001.json), keyed by linked_spec. Set by the navigator skill orchestrator after challenger passes. Agents resolve it against workspace_root from the recon manifest."
     },
     "spec_hash": {
       "type": "string",

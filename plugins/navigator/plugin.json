@@ -1,7 +1,7 @@
 {
   "id": "navigator",
   "name": "navigator",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with an implementation approach, exact code as a baseline, and the tests proving each criterion — no write-test-first mandate. Tasks are sized to compilation boundaries, not a clock-time estimate. No TBDs. A developer with zero domain context can execute the plan mechanically.",
   "author": {
     "name": "Gabriel Castro",

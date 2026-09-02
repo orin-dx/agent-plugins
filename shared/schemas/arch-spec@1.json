@@ -89,7 +89,7 @@
     },
     "spec_file_path": {
       "type": "string",
-      "description": "Workspace-relative path where this spec is written on disk (e.g. .claude/specs/ARCH-SPEC-001.json)."
+      "description": "Workspace-relative path where this spec is written on disk (e.g. docs/specs/ARCH-SPEC-001.json)."
     },
     "revision_note": {
       "type": "string",

@@ -46,6 +46,7 @@ WHEN assigning `model` and `effort`, the author SHALL apply dynamic routing base
 - `haiku / low` — deterministic enumeration and mechanical validation (recon, formatting, line citation lookups)
 - `sonnet / medium` — analysis and execution (scanning, drafting, planning, implementation, code reviews, standard exit gates)
 - `opus / high` — judgment (Tier 3 cross-crate architectural boundary gates, terminal binding verdicts)
+- `claude-fable-5-1 / high` — system-wide architectural synthesis: building or checking a persisted cross-codebase architecture model, or reactive structural remediation design. Reserved for single-invocation-per-artifact tasks with bounded volume, not gates or per-finding loops — the tier's cost premium is earned by breadth of reasoning, not by being on the critical path of every artifact.
 
 ---
 
@@ -107,13 +108,25 @@ IF exit-gate emits a blockers array in a fail verdict, the producing agent SHALL
 
 ## Spec Persistence
 
-WHEN exit-gate issues a pass verdict, the scribe skill orchestrator SHALL write the spec to `<workspace_root>/.claude/specs/<id>.json`, commit the file to version control, set `spec_file_path` to the workspace-relative path in the spec@1, and pass the updated spec to planner.
+WHEN exit-gate issues a pass verdict, the scribe skill orchestrator SHALL write the spec to `<workspace_root>/docs/specs/<id>.json`, commit the file to version control, set `spec_file_path` to the workspace-relative path in the spec@1, and pass the updated spec to planner.
 
 WHEN any agent consumes a spec@1 to make implementation or verification decisions, it SHALL read from `spec_file_path` when set — forwarding spec content through conversation context is not a substitute. Context is compressed across long sessions; the file is not.
 
 WHEN spec_file_path is absent, agents SHALL proceed with in-context spec content and record a spec_file_unset coverage gap — graceful degradation, not a hard block.
 
 IF the spec is written to disk but not committed to version control, it SHALL be treated as not yet persisted — an uncommitted file is invisible to a fresh checkout, a future session, and drift-checker.
+
+## Plan Persistence
+
+WHEN challenger issues an overall pass verdict on a plan@1, the navigator skill orchestrator SHALL write the plan to `<workspace_root>/docs/projects/<linked_spec>.json`, commit the file to version control, set `plan_file_path` to the workspace-relative path in the plan@1, and pass the updated plan to smith.
+
+WHEN any agent consumes a plan@1 to make implementation or verification decisions, it SHALL read from `plan_file_path` when set — the same lossy-context rationale as spec_file_path applies.
+
+WHEN plan_file_path is absent, agents SHALL proceed with in-context plan content and record a plan_file_unset coverage gap — graceful degradation, not a hard block.
+
+IF an amended plan@1 (planner's amend mode) is produced, the navigator skill orchestrator SHALL overwrite the existing file at the same plan_file_path and commit the change — the file path SHALL NOT change across an amendment, mirroring the Spec Correction Loop's rule for corrected specs.
+
+IF the plan is written to disk but not committed to version control, it SHALL be treated as not yet persisted, on the same terms as an uncommitted spec.
 
 ---
 
