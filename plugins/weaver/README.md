@@ -1,6 +1,6 @@
 # weaver — Need Definition
 
-**Stage:** Need · **Output:** `requirement@1` · **Version:** 3.0.0
+**Stage:** Need · **Output:** `requirement@1` · **Version:** 3.0.1
 
 Converts a raw need statement — a one-liner, a vague complaint, a stakeholder ask — into a structured `requirement@1` artifact that a spec writer can act on without asking a single follow-up question. Works with GitHub Issues by default; any issue tracker that emits `requirement@1` can substitute.
 
@@ -53,7 +53,7 @@ Five independently-triggered skills, not a linear pipeline — pick the one that
 | `intake` | Intake Structurer | sonnet / medium | Converts free text into a `requirement@1` draft. Infers all fields it can; leaves gaps noted in `reasoning`. |
 | `clarifier` | Clarifier | sonnet / medium | Identifies the most critical gap in the draft and asks one focused question, or returns the completed requirement if all dimensions are met. One question per invocation. |
 | `prioritizer` | Backlog Prioritizer | sonnet / medium | Ranks requirement@1 drafts by impact, urgency, and dependency order — a dependency overrides an otherwise higher impact/urgency score. |
-| `auditor` | Requirement Coverage Auditor | sonnet / medium | Cross-references requirement@1 objects against specs and implementation files for coverage and duplicates (`plan@1` isn't persisted to disk, so plan coverage isn't checkable). Runs at full-backlog scope (`audit-backlog`) or single-requirement scope (`connect-requirement`) — same agent, same output shape, different input size. |
+| `auditor` | Requirement Coverage Auditor | sonnet / medium | Cross-references requirement@1 objects against specs, persisted plans, and implementation files for coverage and duplicates. Runs at full-backlog scope (`audit-backlog`) or single-requirement scope (`connect-requirement`) — same agent, same output shape, different input size. |
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "id": "weaver",
   "name": "weaver",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to any issue tracker that produces the requirement@1 schema. Skills: capture-need, clarify-requirement, prioritize-backlog, connect-requirement, audit-backlog.",
   "author": {
     "name": "Gabriel Castro",

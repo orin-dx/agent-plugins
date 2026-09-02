@@ -48,6 +48,20 @@ navigator is one skill, `plan`. Behavior adapts to what's asked, dispatching to 
 
 ---
 
+<orchestration>
+After `challenger` returns an overall `pass` verdict, THE SKILL SHALL, before handing off to `smith`:
+1. Write the plan@1 JSON to `<workspace_root>/docs/projects/<linked_spec>.json`. Create the directory if it does not exist.
+2. Commit the file to version control. An uncommitted plan file is invisible to a fresh checkout and a future session, the same way an uncommitted spec is invisible to `scribe/spec-drift`.
+3. Set `plan_file_path` to the workspace-relative path (e.g. `docs/projects/SPEC-001.json`) in the plan@1 object.
+4. Pass the updated plan@1 — with `plan_file_path` set — to `smith`.
+
+An amended plan (planner's amend mode, following a spec correction) overwrites the file at the same `plan_file_path` and commits the change — the path does not change across an amendment, mirroring `scribe/correct-spec`'s rule for corrected specs. The amended plan still passes through `challenger` before this write, per the Spec Correction Loop.
+
+Without `plan_file_path` set, `weaver/audit-backlog` and other downstream agents fall back to treating plan coverage as unverifiable for that requirement, the same graceful-degradation posture as an unset `spec_file_path`.
+</orchestration>
+
+---
+
 <implementation_requirement>
 
 Every task in a plan@1 specifies, in this order:

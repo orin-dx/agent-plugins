@@ -1,8 +1,10 @@
 # navigator — Implementation Planning
 
-**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.2.0
+**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.3.0
 
 Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a brief implementation approach, exact implementation code as a concrete baseline, the exact tests proving each criterion, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without needing to decide what to build or which criteria it must satisfy — [smith](../smith/) may still adapt the baseline's shape, provided the same files, criteria, and tests are satisfied. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
+
+Once `challenger` passes it, the plan is written to `docs/projects/<linked_spec>.json` and committed — the same persistence discipline `scribe` applies to specs, so `weaver/audit-backlog` can check plan coverage, not just spec coverage.
 
 One skill, not several — see [Behavior](#behavior) below for how it adapts to the request.
 
@@ -65,7 +67,8 @@ flowchart LR
     Spec["spec@1"] --> Planner[planner]
     Planner --> Challenger[challenger]
     Challenger -.->|"findings: targeted fix"| Planner
-    Challenger --> Plan(["plan@1"])
+    Challenger --> Plan(["plan@1
+    written + committed"])
     Plan -.->|optional| Estimator[estimator]
 
     class Spec source
@@ -83,7 +86,7 @@ flowchart LR
 
 `plan@1` — see `shared/schemas/plan@1.json`
 
-The plan is an ordered array of tasks. Each task has: `id`, `title`, `files`, `steps`, `commit_message`, `depends_on`, `covers_criteria`. The plan itself carries `spec_file_path` (propagated from the spec), `spec_hash` (a content hash of the spec file at plan time, used by `recon` to detect if the spec changed after planning), and `linked_requirement` (propagated from the spec's `linked_requirement`, so the requirement-to-code chain stays traceable without re-reading the spec).
+The plan is an ordered array of tasks. Each task has: `id`, `title`, `files`, `steps`, `commit_message`, `depends_on`, `covers_criteria`. The plan itself carries `spec_file_path` (propagated from the spec), `spec_hash` (a content hash of the spec file at plan time, used by `recon` to detect if the spec changed after planning), `linked_requirement` (propagated from the spec's `linked_requirement`, so the requirement-to-code chain stays traceable without re-reading the spec), and `plan_file_path` (set by this skill after `challenger` passes, pointing at `docs/projects/<linked_spec>.json`).
 
 ---
 

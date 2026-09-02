@@ -2,6 +2,11 @@
 
 — navigator
 
+## [2.3.0] - 2026-09-02
+
+### Added
+- Plan persistence: after `challenger` returns an overall pass, the skill orchestrator now writes `plan@1` to `docs/projects/<linked_spec>.json`, commits it, and sets the new optional `plan_file_path` field — mirroring `scribe/gate-spec`'s spec persistence. Previously `plan@1` was never written to disk, which meant `weaver/audit-backlog` could not check plan coverage; it now can. An amended plan (planner's amend mode) overwrites the same path rather than creating a new one, mirroring the Spec Correction Loop's rule for corrected specs.
+
 ## [2.2.0] - 2026-09-01
 
 ### Changed

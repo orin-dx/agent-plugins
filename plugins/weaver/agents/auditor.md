@@ -4,7 +4,7 @@ role: Requirement Coverage Auditor
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent to cross-reference open requirements against existing specs and implementation files. `plan@1` is not persisted to disk in this pipeline, so plan coverage cannot be checked here. Input is a list of open requirement@1 objects. Searches for files that address each requirement's done_when criteria, inspects matches for substance, and detects requirements with overlapping or identical core statements. Output is a structured audit report: per-requirement status (covered, partial, missing, duplicate), evidence, duplicate_of references, and a structured summary (per-status counts plus an optional one-clause note). Read-only — modifies nothing. Use before planning to prevent duplicate work. Also runs in a narrower connect mode: given one requirement@1 (or a small set) instead of the full backlog, returns the same per-requirement shape scoped to just what was given.
+  Delegate to this subagent to cross-reference open requirements against existing specs, persisted plans, and implementation files. Input is a list of open requirement@1 objects. Searches for files that address each requirement's done_when criteria — including a persisted plan@1 at docs/projects/ covering the requirement's linked spec, not just a gated spec or shipped implementation — inspects matches for substance, and detects requirements with overlapping or identical core statements. Output is a structured audit report: per-requirement status (covered, partial, missing, duplicate), evidence, duplicate_of references, and a structured summary (per-status counts plus an optional one-clause note). Read-only — modifies nothing. Use before planning to prevent duplicate work. Also runs in a narrower connect mode: given one requirement@1 (or a small set) instead of the full backlog, returns the same per-requirement shape scoped to just what was given.
 ---
 
 <constitution>
@@ -15,7 +15,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/workspace-conventions.md` before searching for spec coverage — it names where gated specs live on disk, what an empty search there does and doesn't prove, and confirms plan@1 is never persisted (so don't search for one).
+Load `shared/references/workspace-conventions.md` before searching for spec or plan coverage — it names where gated specs and persisted plans live on disk, and what an empty search there does and doesn't prove.
 </load_first>
 
 <backstory>
@@ -54,7 +54,7 @@ Produce exactly this JSON object:
 }
 ```
 
-Status definitions: covered — both a spec and implementation address all done_when criteria; partial — a spec exists but implementation is incomplete, or vice versa; missing — no spec and no implementation found; duplicate — another requirement captures the same need, with duplicate_of set. Use your file reading tool to search for spec and implementation files. Do not modify any files.
+Status definitions: covered — a spec and implementation address all done_when criteria, or a persisted plan@1 at docs/projects/ covers them and implementation is underway; partial — a spec or persisted plan exists but implementation is incomplete, or vice versa; missing — no spec, plan, or implementation found; duplicate — another requirement captures the same need, with duplicate_of set. Use your file reading tool to search for spec and implementation files. Do not modify any files.
 
 WHEN status is duplicate, THE AGENT SHALL set duplicate_of to the requirement_id of the requirement that captures the same need.
 </output>

@@ -165,7 +165,7 @@ Anthropic models cache prompt tokens strictly on an **exact, byte-for-byte prefi
 
 1. **Standardized Static Header**: Every agent prompt starts with an identical header containing the shared constitution rules, base tool schemas, and core behavioral invariant. This guarantees >95% cache hit rates across all subagent invocations.
 2. **Dynamic Content at the Tail**: Dynamic task inputs (`task_id`, `spec_file_path`, `criterion_id`, prior `blockers` arrays, and target code snippets) MUST be placed strictly at the end of the prompt after the static cache breakpoint.
-3. **Model Homogeneity**: Prompts cannot share cache across different model tiers (Sonnet cache != Opus cache). Run pipelines in model-homogeneous lanes (e.g. pure Sonnet for drafting, planning, and implementation) and invoke Opus only at the terminal architectural exit gate.
+3. **Model Homogeneity**: Prompts cannot share cache across different model tiers (Sonnet cache != Opus cache != Fable cache). Run pipelines in model-homogeneous lanes: Sonnet for drafting, planning, and implementation; Opus for binding exit-gate verdicts; Fable 5.1 reserved for the two agents doing genuine whole-system architectural synthesis (`scribe:architect`, `scribe:arch-auditor`) — bounded to single-invocation-per-artifact tasks, not gates, so its 2x-Opus cost stays proportionate to the volume it runs at.
 
 ---
 
@@ -234,9 +234,10 @@ Apply the cheapest tier that produces correct output. Escalate only when judgmen
 | :--- | :--- | :--- |
 | `haiku / low` | Deterministic enumeration | Recon, manifest building, file inventory, commit formatting |
 | `sonnet / medium` | Analysis | Scanning, tracing, drafting, planning, reviewing, implementing |
-| `opus / high` | Binding judgment | Exit gates, adversarial verification, architectural decisions |
+| `opus / high` | Binding judgment | Exit gates, adversarial verification, per-finding architectural specs |
+| `claude-fable-5-1 / high` | Whole-system architectural synthesis | Building or checking a persisted cross-codebase architecture model — reserved for single-invocation-per-artifact tasks, not gates or per-finding loops |
 
-The distinction: sonnet can analyze and find evidence; opus is needed when competing evidence must be weighed and a verdict produced that has downstream consequences.
+The distinction: sonnet can analyze and find evidence; opus is needed when competing evidence must be weighed and a verdict produced that has downstream consequences; Fable earns its premium only on tasks that genuinely require holding the whole system in mind at once, and only where invocation volume stays low enough that the 2x-Opus price doesn't compound across every artifact in the pipeline.
 
 ---
 

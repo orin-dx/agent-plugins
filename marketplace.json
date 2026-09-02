@@ -34,7 +34,7 @@
     {
       "id": "weaver",
       "name": "weaver",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "path": "./plugins/weaver",
       "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker that produces the requirement@1 schema. Skills: capture-need, clarify-requirement, prioritize-backlog, connect-requirement, audit-backlog."
     },
@@ -48,9 +48,9 @@
     {
       "id": "scribe",
       "name": "scribe",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "path": "./plugins/scribe",
-      "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, gate-spec, correct-spec, architect."
+      "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Checks specs against a persisted whole-system architecture model. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, audit-architecture, gate-spec, correct-spec, architect."
     },
     {
       "id": "muse",
@@ -62,7 +62,7 @@
     {
       "id": "navigator",
       "name": "navigator",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "path": "./plugins/navigator",
       "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with an implementation approach, exact code as a baseline, and the tests proving each criterion \u2014 no write-test-first mandate. Tasks are sized to compilation boundaries, not a clock-time estimate. No TBDs. A developer with zero domain context can execute the plan mechanically."
     },

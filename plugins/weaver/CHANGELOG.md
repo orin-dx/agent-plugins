@@ -2,6 +2,11 @@
 
 — weaver
 
+## [3.0.1] - 2026-09-02
+
+### Changed
+- `auditor` can now check plan coverage: `navigator/plan` persists `plan@1` to `docs/projects/<linked_spec>.json` as of `navigator` 2.3.0, so the "plan@1 is never persisted" caveat no longer holds. `covered` status now accepts a persisted plan with implementation underway as evidence, not only a gated spec plus shipped code. Affects `auditor`'s description, `<load_first>`, and status definitions; `audit-backlog`/`connect-requirement`/`README.md` claims about coverage sources are accurate again.
+
 ## [3.0.0] - 2026-08-27
 
 ### Changed

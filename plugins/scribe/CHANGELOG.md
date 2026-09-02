@@ -2,6 +2,16 @@
 
 — scribe
 
+## [3.1.0] - 2026-09-02
+
+### Added
+- **`scribe/audit-architecture`** (new skill, `arch-auditor` agent, `claude-fable-5-1 / high`): checks a draft spec@1 against a persisted, workspace-wide `arch-model@1` — module boundaries, canonical abstractions, and invariants — for boundary violations, competing abstractions, and invariant conflicts. Runs between `scribe/audit-spec` and `scribe/gate-spec`. Closes a gap where every existing check was artifact-vs-artifact (spec vs spec) or artifact-vs-a-narrow-code-slice (a signature, a trait's implementers); nothing checked a spec against the system as a whole before this. Also runs in build mode to construct or refresh the model itself, bootstrapping automatically when absent.
+- New schemas `shared/schemas/arch-model@1.json` and `shared/schemas/arch-audit@1.json`.
+
+### Changed
+- Gated specs now write to `docs/specs/<id>.json` by default, replacing `.claude/specs/<id>.json` — `.claude/` reads as tool-internal state, not project documentation. Not breaking: `spec_file_path` values written by prior gate passes are untouched and still resolve; only the orchestrator's default write location for new gates changed. Affects `scribe/gate-spec`, `shared/constitution.md`'s Spec Persistence section, and `shared/references/workspace-conventions.md`.
+- **`architect`** moved from `opus / high` to `claude-fable-5-1 / high` — it's the reactive counterpart to the new `arch-auditor`, doing the same shape of whole-system structural reasoning; kept on the same tier for consistency.
+
 ## [3.0.0] - 2026-08-27
 
 ### Changed

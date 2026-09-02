@@ -1,8 +1,8 @@
 {
   "id": "scribe",
   "name": "scribe",
-  "version": "3.0.0",
-  "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Every acceptance criterion is a testable proposition. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, gate-spec, correct-spec, architect.",
+  "version": "3.1.0",
+  "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Every acceptance criterion is a testable proposition. Checks specs against a persisted whole-system architecture model, not just internal consistency. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, audit-architecture, gate-spec, correct-spec, architect.",
   "author": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"
@@ -10,6 +10,7 @@
   "skills": "./skills/",
   "agents": [
     "./agents/architect.md",
+    "./agents/arch-auditor.md",
     "./agents/auditor.md",
     "./agents/drift-checker.md",
     "./agents/drafter.md",
@@ -23,6 +24,8 @@
   ],
   "produces": [
     "spec@1",
-    "verdict@1"
+    "verdict@1",
+    "arch-audit@1",
+    "arch-model@1"
   ]
 }
