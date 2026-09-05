@@ -1,0 +1,1 @@
+I think we can skip the write red tests first and see how it goes. We should adjust smith and any other parts to remove this type of unecessary step now
