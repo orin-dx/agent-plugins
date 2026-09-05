@@ -1,0 +1,112 @@
+<task-notification>
+<task-id>a47c40b69aae73c07</task-id>
+<tool-use-id>toolu_01FXzMNEWdzEejTbr4TszcXN</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a47c40b69aae73c07.output</output-file>
+<status>completed</status>
+<summary>Agent "Research WCAG and machine-checkable a11y rules" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I now have enough well-sourced material to compile the findings report.
+
+## WCAG Research Findings Report
+
+### 1. WCAG 2.2 structure
+
+WCAG's requirements are organized under four principles, **POUR**:
+- **Perceivable** — information/UI must be presentable in ways users can perceive (text alternatives, captions, contrast, adaptable presentation)
+- **Operable** — UI and navigation must be operable (keyboard access, timing, seizure avoidance, navigability, input modalities)
+- **Understandable** — content and operation must be understandable (readable text, predictable behavior, input assistance)
+- **Robust** — content must work with a wide range of current and future user agents/assistive tech (valid parsing, name/role/value exposure)
+
+Three cumulative **conformance levels**: A (minimum) → AA (the level almost all legal mandates, e.g. ADA/EN 301 549, require) → AAA (highest, rarely required site-wide).
+
+**WCAG 2.2 has 86 total success criteria**: 31 at Level A, 24 at Level AA, 31 at Level AAA. Because conformance is cumulative, "AA conformance" = all 31 A criteria + all 24 AA criteria = 55 criteria total. ([W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/), [TestParty — 87 SC breakdown](https://testparty.ai/blog/wcag-22-success-criteria-list), [Eye-Able](https://eye-able.com/blog/wcag-a-aa-aaa))
+
+### 2. Automatable vs. judgment-required criteria
+
+Consistent estimate across sources: **roughly 30–40% of WCAG success criteria are reliably machine-checkable**; the rest need a human. Deque's own volume-weighted analysis claims ~57% of *issue instances* (not SCs) are caught by automation — a higher number because a few automatable rules (contrast, alt presence) fire very frequently in the wild — but by *success-criterion* count the automatable fraction is much smaller, and **no SC required for AA can be fully satisfied by automated testing alone** (Deque itself states this). ([Deque WCAG 2.1 support blog](https://www.deque.com/blog/support-for-wcag-2-1-in-axe-core/), [UK Intelligence Community Design System — automated testing limitations](https://design.sis.gov.uk/accessibility/testing/automated-testing-limitation/))
+
+**Most machine-checkable success criteria** (what an automated check concretely looks for):
+
+| SC | Name | What an automated check looks for |
+|---|---|---|
+| **1.1.1** | Non-text Content | `&lt;img&gt;`/`area`/`input[type=image]` missing `alt` attribute, or empty `alt` on a non-decorative-looking image (presence only — *not* whether the alt text is meaningful) |
+| **1.3.1** | Info and Relationships | Missing table headers (`&lt;th&gt;`/`scope`), missing `&lt;label for&gt;`/`aria-label` on form controls, heading level skips (h1→h3), list markup misuse |
+| **1.4.3** | Contrast (Minimum) | Computed foreground/background color luminance ratio &lt; 4.5:1 (or 3:1 for large text) — fully algorithmic |
+| **1.4.4 / 1.4.10** | Resize Text / Reflow | Fixed px units preventing 200% zoom without horizontal scroll, viewport meta blocking zoom |
+| **2.1.1 / 2.4.3** | Keyboard / Focus Order | Elements with `tabindex` &gt; 0, positive tabindex misuse, `onclick` on non-interactive elements with no keyboard handler |
+| **2.4.2** | Page Titled | Missing/empty `&lt;title&gt;` |
+| **2.4.4 / 2.4.9** | Link Purpose | Empty link text, generic text like "click here" with no accessible name, duplicate link text pointing to different destinations |
+| **3.1.1** | Language of Page | Missing/invalid `lang` attribute on `&lt;html&gt;` |
+| **4.1.1** | Parsing (deprecated in 2.2 but still checked) | Duplicate IDs, unclosed/malformed tags |
+| **4.1.2** | Name, Role, Value | Custom widgets/ARIA roles missing required name/role/state (e.g., `role="button"` with no accessible name), invalid ARIA attribute values, ARIA on unsupported elements |
+
+**Requires human judgment (cannot be reliably automated):**
+- Whether alt text is *meaningfully descriptive* vs. just present (1.1.1)
+- Whether reading order and focus order make logical *sense* (1.3.2, 2.4.3)
+- Whether a workflow, instructions, or error message is genuinely *understandable* (3.3.x, 3.1.5)
+- Whether content requiring user input has adequate context/help (3.3.5)
+- Meaningful sequence and purpose of gestures/motion (2.5.x)
+- Whether captions/audio descriptions are accurate (1.2.x)
+- Consistent navigation and identification *in a meaningful sense* (3.2.3/3.2.4) — structurally checkable but semantically judged
+
+### 3. Automated tool rule structures
+
+**axe-core (Deque)** — the most detailed public model. A rule is JSON with: `id`, `impact` (minor/serious/critical, sometimes "moderate"), `selector` (CSS/DOM-path matcher), `matches` (a named function for extra filtering logic beyond the selector), `tags` (WCAG SC mapping like `wcag2aa`, `wcag143`, plus `EN-301-549`, `ACT`, best-practice tags), `actIds` (links to W3C ACT test rules), `metadata.description` / `metadata.help` (human-readable explanation), and `all`/`any`/`none` arrays of atomic **checks** that combine to a pass/fail. Real example (`color-contrast.json`):
+
+```json
+{
+  "id": "color-contrast",
+  "impact": "serious",
+  "matches": "color-contrast-matches",
+  "excludeHidden": false,
+  "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c",
+           "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"],
+  "actIds": ["afw4f7", "09o5cg"],
+  "metadata": {
+    "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    "help": "Elements must meet minimum color contrast ratio thresholds"
+  },
+  "all": [],
+  "any": ["color-contrast"],
+  "none": []
+}
+```
+This id→impact→WCAG-SC-tag→description→matcher-logic shape is a strong direct model for a "hazard taxonomy" entry: taxonomy_id, severity, SC mapping(s), human-readable description, and a matching/detection rule. ([axe-core rule-development.md](https://github.com/dequelabs/axe-core/blob/master/doc/rule-development.md), [color-contrast.json](https://github.com/dequelabs/axe-core/blob/develop/lib/rules/color-contrast.json))
+
+**pa11y** is a runner, not its own engine — it drives headless Chrome via Puppeteer and delegates rule evaluation to a pluggable engine, either **axe-core** or **HTML_CodeSniffer** (WCAG2/Section 508 rulesets); it adds orchestration (CLI/CI config, `pa11y.json`, `--ignore`/`--threshold` flags) but no rules of its own. ([pa11y GitHub](https://github.com/pa11y/pa11y))
+
+**Lighthouse** (Google) wraps axe-core-derived audits into its accessibility category, scoring 0–100 and grouping by impact.
+
+**WAVE** (WebAIM) uses its own proprietary rule engine with icon-based annotations (errors, alerts, features, structural elements, ARIA) overlaid directly on the rendered page rather than a JSON rule export.
+
+### 4. WCAG 3.0 ("Silver")
+
+Still an **early-stage W3C Working Draft** — not stable enough to plan against yet:
+- Latest Working Draft published **September 2025** (updated March 2026); explicitly **not a Recommendation** and not to be used for compliance.
+- Replaces binary pass/fail SCs with an **outcomes-based scoring model**: each of **174 outcomes** (vs. 86 SCs in 2.2) is scored 0–4 rather than pass/fail.
+- Replaces A/AA/AAA with **Bronze/Silver/Gold** conformance; Bronze requires an average score ≥3.5 across all outcomes with the same floor in every functional category.
+- Timeline: Candidate Recommendation expected ~late 2027, final publication targeted ~late 2029.
+- No law anywhere currently references WCAG 3.0; WCAG 2.x remains the compliance target for the foreseeable future — **do not architect the pipeline around WCAG 3.0's schema yet**, but the outcomes/scoring shift is worth tracking since it changes "pass/fail" into a graded score, which may map better onto an LLM-based hazard-confidence model. ([WCAG 3.0 explainer — webability.io](https://www.webability.io/blog/wcag-3-0-explained), [web-accessibility-checker.com preparation guide](https://web-accessibility-checker.com/en/blog/wcag-3-0-preparation-guide), [accessibility.com — First Public Working Draft](https://www.accessibility.com/blog/silver-wcag-3-0-first-public-working-draft-released))
+
+### 5. LLM/AI-agent accessibility auditing — recent (2025/2026) findings
+
+This is genuinely fast-moving and directly relevant:
+
+- **Microsoft's A11y LLM Eval** (2025/2026, tests GPT-5.x, Claude Haiku/Opus/Sonnet, Gemini 3.x on 32 accessibility test cases across React/Vanilla JS): **baseline LLM-generated code passes only ~12%** of accessibility checks with no guidance; giving models a detailed WCAG 2.2 instruction set raises the pass rate to **~60%** (a 48.5-point jump). Even minimal instructions help (37%). Most common residual failures: color contrast (89% of detected issues), missing ARIA attributes/roles, broken focus management in interactive widgets, and missing helper-text associations. Complex layouts (e.g., shopping pages) scored 0% across all models — implying an agent pipeline needs explicit, structured a11y requirements injected at generation time, not reliance on default model behavior. ([microsoft.github.io/a11y-llm-eval-report](https://microsoft.github.io/a11y-llm-eval-report/))
+
+- **CodeA11y** (CHI 2025, arXiv 2502.10884) — a GitHub Copilot extension using three cooperating LLM agents: a **Responder** (generates accessible code proactively from a system prompt tuned to a11y standards), a **Correction agent** (parses axe DevTools linter output and proposes fixes), and a **Reminder agent** (flags manual-check-only items, e.g. meaningful alt text, that automation can't verify). This maps closely onto a coding-agent pipeline design: generate-with-guidance → automated-scan → LLM-mediated-fix-suggestion → flag-for-human-review on judgment items. Finding: LLM-assisted code can match or exceed human-written accessibility in some cases but still fails on compliance depth; novice developers using AI assistants still omit key practices. ([CodeA11y paper](https://arxiv.org/html/2502.10884), [CHI 2025 ACM record](https://dl.acm.org/doi/10.1145/3706598.3713335))
+
+- **A11yN** ("aligning LLMs for accessible web UI code generation") — trains/aligns a code-generating LLM via a reward function that penalizes WCAG violations, with penalty severity scaled to violation severity as scored by an accessibility testing engine (i.e., RL/DPO-style alignment against axe-core-style scoring, not just prompting).
+
+- **A11YRepair** (arXiv 2606.21926, "knowledge-enhanced divide-and-conquer repair") and the related "Blind Edits to Verified Repair" work (arXiv 2608.24913) converge on the same architecture recommendation: **never let an LLM patch blind** — apply candidate fix → re-run an automated auditor (axe-core plus computed-style probes) → accept only if detected violations strictly decrease → otherwise roll back and reprompt with the specific violation findings as feedback. This "generate → scan → gate → loop" pattern is the clearest concrete blueprint found for how a coding-agent pipeline should structure its accessibility remediation loop.
+
+- General 2026 framing: audits still find **&gt;90% of public web pages contain detectable violations**; the consensus across these papers is that AI hasn't replaced accessibility specialists but "made their expertise scalable" — i.e., automation should surface candidates and human/specialist judgment should remain the gate for anything above the machine-checkable ~30–40% of criteria.
+
+### Implication for pipeline design
+
+- **Requirements drafting**: for each generated component, inject the machine-checkable SC list (1.1.1 presence, 1.3.1 structure, 1.4.3 contrast, 2.4.2 title, 4.1.2 name/role/value, etc.) as concrete, falsifiable generation constraints — this is what took Microsoft's eval from 12%→60%.
+- **Scanning**: model the hazard taxonomy directly on axe-core's rule shape (id, impact, SC-tag, description, matcher) — it's already a proven, widely-adopted format and would let the pipeline optionally shell out to real axe-core/pa11y for the machine-checkable half rather than reinventing detection logic.
+- **Judgment items**: don't let the scanner claim confidence on alt-text quality, workflow understandability, or meaningful reading order — flag these explicitly as "needs human/specialist review," mirroring CodeA11y's Reminder agent and A11y LLM Eval's finding that passing automated checks doesn't guarantee WCAG conformance.
+- **Repair loop**: adopt the generate→scan→gate(strictly-decreasing-violations)→rollback-and-reprompt pattern from A11YRepair rather than one-shot fixes.</result>
+<usage><subagent_tokens>57808</subagent_tokens><tool_uses>12</tool_uses><duration_ms>103036</duration_ms></usage>
+</task-notification>
