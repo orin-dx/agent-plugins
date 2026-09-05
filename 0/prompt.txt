@@ -1,0 +1,1 @@
+Take a look at our agents and help me consider if any of the plugin agents should consider fable 5.1 for some of the larger work. I suspect some things can go between opus and fable depending on how big or complex it is.
