@@ -18,9 +18,9 @@
 
 ---
 
-## Wisp — the Lifecycle Ecosystem
+## Wisp Plugins — the Lifecycle Ecosystem
 
-Ten plugins, each a specialist persona covering one stage of the development lifecycle — together they're **Wisp**. Each produces a typed output schema consumed by the next stage. They're composable: install only the personas your workflow needs.
+Ten plugins, each a specialist persona covering one stage of the development lifecycle — together they're **Wisp Plugins**, the agent-side companions to the [Wisp](https://github.com/orin-axi/wisp) project-intelligence library. Each produces a typed output schema consumed by the next stage. They're composable: install only the personas your workflow needs.
 
 **The primary flow** — one direction, no side-taps:
 

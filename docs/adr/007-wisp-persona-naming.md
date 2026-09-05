@@ -1,6 +1,6 @@
 # ADR-007: Wisp persona naming — plugin ID rename
 
-**Status:** Accepted
+**Status:** Accepted; umbrella-brand clause superseded by ADR-010 (the family is now **Wisp Plugins**; "Wisp" alone is the library)
 **Date:** 2026-08-27
 **Supersedes:** none — this is a naming/identity change, not a structural one. All prior ADRs (001-006) remain in force under the new plugin ids.
 

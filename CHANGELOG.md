@@ -3,6 +3,10 @@
 All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [Unreleased] — Ecosystem brand becomes Wisp Plugins
+
+Docs-only. The ten-plugin family is now branded **Wisp Plugins**; **Wisp** alone refers to the `orin-axi/wisp` project-intelligence library the plugins consume. No plugin ids, skill names, versions, or schemas change. See `docs/adr/010-wisp-plugins-brand.md`.
+
 ## [4.2.0] - 2026-09-01 — Implementer shape latitude, compilation-boundary task sizing
 
 `smith` (2.2.0) and `navigator` (2.2.0): `planner`'s exact implementation code is now a concrete baseline `smith`'s implementer may adapt in shape (not scope) at execution time, with deviations recorded transparently — fixing an over-prescription pattern that echoed the same premature-shape-locking problem the previous release fixed for tests. Task sizing changed from a "under fifteen minutes" clock-time estimate to compilation-boundary cohesion, resolving a standing inconsistency with `shared/agent-best-practices.md`'s own batching rule. Also bulletized `implementer`'s `<judgment>` section, missed in the prior ecosystem-wide pass. See `docs/adr/009-implementer-shape-latitude.md`.
