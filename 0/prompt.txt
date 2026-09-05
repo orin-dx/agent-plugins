@@ -1,0 +1,16 @@
+<task-notification>
+<task-id>affd80035792a6fff</task-id>
+<tool-use-id>toolu_01MacnjXwgXjwVjR6Vyuz5oF</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/affd80035792a6fff.output</output-file>
+<status>completed</status>
+<summary>Agent "Polish basis README for scannability" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: polish `plugins/basis/README.md` for readability/scannability (accuracy already correct, no fix needed here).
+
+The file was already in good shape — tables, bullets, active voice, no banned words, correct ASCII tree for directory structure. Made one change:
+
+- Split the trailing paragraph under "Directory Layout" into two: the split-condition explanation (with the delta/canon/graph/basis examples) now stands alone, and the `basis/audit-plugin` behavior note (a distinct fact, previously tacked onto the same block) gets its own sentence.
+
+Considered adding a Mermaid diagram for the scaffold→audit relationship and decided against it — basis's four skills are independently invoked, not a real pipeline, so a diagram wouldn't earn its place. No other changes; the rest already met the bar.</result>
+<usage><subagent_tokens>668262</subagent_tokens><tool_uses>4</tool_uses><duration_ms>33400</duration_ms></usage>
+</task-notification>
