@@ -1,0 +1,21 @@
+<task-notification>
+<task-id>ab0ada784f767645c</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/ab0ada784f767645c.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for michi" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>michi is the response-formatting layer for the orin-axi agent-tooling suite — TOON (Token-Optimized Object Notation) rendering/parsing, truncation, retry/resilience math, and core AXI response types, as a Cargo workspace plus a Node.js NAPI package (`@orin-axi/michi`), AGPL-3.0-or-later, not yet published.
+
+PR template kept lightweight (type-of-change checkbox, why, `just check-all` test-plan item, linked issue) — this session's own research found rust-lang/rust, VS Code, and Next.js all ship with no PR template at all, so a heavy one wasn't warranted here either.
+
+Committed locally only, not pushed: `8cac684` on `main`.
+- `CODE_OF_CONDUCT.md` (new, verbatim Contributor Covenant 2.1)
+- `SECURITY.md` (new, scope grounded in real invariants: zero-panic library code, UTF-8 truncation boundary, `unsafe` restricted to `src/napi.rs`, resilience/retry math, mixed Cargo+npm supply chain)
+- `.github/PULL_REQUEST_TEMPLATE.md` (new)
+- `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md` (new, plain Markdown+frontmatter)
+- `CONTRIBUTING.md` (modified — one-line pointer to the two new files)
+
+Pre-existing untracked `.changeset/*.md` files in the repo were left alone — unrelated to this task, not mine to touch.</result>
+<usage><subagent_tokens>853620</subagent_tokens><tool_uses>17</tool_uses><duration_ms>249505</duration_ms></usage>
+</task-notification>
