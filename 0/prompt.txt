@@ -1,0 +1,3 @@
+Something for you to read later:
+
+https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models
