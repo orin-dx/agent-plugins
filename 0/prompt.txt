@@ -1,0 +1,61 @@
+<task-notification>
+<task-id>a0ac2adfd57972a90</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a0ac2adfd57972a90.output</output-file>
+<status>completed</status>
+<summary>Agent "Design and validate Muse plugin's agent/skill roster" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Task: design Muse's schema decision, agent roster, skill(s), and plugin.json for the agent-plugins repo, then adversarially self-critique the proposal. Read shared/constitution.md (already in context), spec@1.json, verdict@1.json, finding-report@1.json, all of canon's and proof's agents/plugin.json as templates.
+
+## Schema decision: no new schema
+
+`spec@1.acceptance_criteria` is already an array of free-text testable-proposition strings with `is_error_case`/`judgment_call` flags — nothing about that shape is backend-specific. A component criterion ("when `disabled=true`, the button renders `aria-disabled=\"true\"` and does not fire `onClick`") is exactly as expressible as an API criterion. Inventing `component-spec@1` now would force every downstream consumer (Navigator, Smith, Sentinel) to learn a second spec shape for zero expressive gain — pure cost. **Muse produces `spec@1` and `verdict@1`, same as Scribe (canon).** Revisit only if real Lumen usage hits a criterion shape free text genuinely can't express (e.g. a state-transition table) — not before.
+
+## What Muse does NOT do: scan implementation code
+
+Muse's own brief says "specs and audits UI components." Read literally that risks rebuilding Ranger's (proof's) recon→scanner→adversary→exit-gate hazard pipeline a second time for accessibility hazards — a direct capability duplication. That work correctly stays on Ranger (add an a11y hazard taxonomy reference + wire it into Ranger's default scan/adversary routing, per the earlier session's still-valid recommendation). **"Audits" in Muse's scope means audits the *spec*, not the *code*** — same split as Scribe auditing specs vs. Ranger auditing code. This needs to be explicit in Muse's plugin.json description or it'll get misread.
+
+## Agent roster (3 agents — deliberately smaller than canon's 6)
+
+| Agent | Model/Effort | Cognitive mode | Job |
+|---|---|---|---|
+| `drafter` | sonnet/medium | authorship | Drafts a component spec@1 from a requirement/design intent — props, variants, per-state observable behavior, accessibility criteria as testable propositions |
+| `auditor` | sonnet/medium | adversarial review of the artifact, non-binding | Applies Scribe-auditor's generic tests (testable, unambiguous, no padding) *plus* UI-specific completeness checks (missing interactive states, missing ARIA criteria, invalid prop combinations not marked as error cases) |
+| `exit-gate` | opus/high | binding terminal judgment | Default-fail gate before the spec proceeds to Navigator; same retry_count/escalate-at-3 pattern as every other exit-gate in the ecosystem |
+
+Canon's other three agents (`verifier`, `architect`, `drift-checker`) are deliberately **not duplicated**:
+- `architect` (finding-report@1 → structural spec@1) is domain-agnostic already — a UI architectural finding routes to Scribe's existing architect, not a new one.
+- `drift-checker` (spec@1 vs. workspace) is domain-agnostic already — it works on a component spec exactly as written today with zero changes.
+- `verifier` (criterion grounded in requirement@1?) is deferred, not rejected — real risk it catches (drafter inventing ungrounded criteria to please a stakeholder) is much lower for a single-user workload building Lumen directly. Add it later if drift/scope-creep is actually observed, not preemptively.
+
+## Skill
+
+Single skill, `muse:component` (not `muse:muse`) — matches this session's persona=who/skill=what convention, and the constitution's own carve-out ("if a single word does not communicate what the skill acts on, use a more specific word") for the same reason `post-review` beat `post`.
+
+## plugin.json sketch
+
+```json
+{
+  "id": "muse",
+  "name": "muse",
+  "version": "1.0.0",
+  "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs — props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning. Audits the spec, not the implementation — see proof/Ranger's accessibility hazard taxonomy for code-level scanning.",
+  "skills": "./skills/",
+  "agents": ["./agents/drafter.md", "./agents/auditor.md", "./agents/exit-gate.md"],
+  "consumes": ["requirement@1"],
+  "produces": ["spec@1", "verdict@1"]
+}
+```
+
+## Rejected during self-critique
+
+- **Merge auditor into drafter** — rejected: canon's own backstory names this exact failure mode (a drafter grading its own plausible-sounding work); the ecosystem's established pattern is author/adversary separation.
+- **Merge exit-gate into auditor** — rejected: auditor is advisory ("on the spec's own terms"), exit-gate is binding with retry/escalation semantics — merging would blur an advisory opinion with a gate decision, breaking the pattern every other plugin in the ecosystem follows.
+- **A recon→scanner→adversary hazard pipeline inside Muse** — rejected as direct duplication of Ranger's existing mechanism (see above).
+- **New `component-spec@1` schema** — rejected, no demonstrated expressive gap over `spec@1` (see above).
+- **Duplicate architect/drift-checker inside Muse** — rejected, both of Scribe's are already domain-agnostic; building UI-specific copies would just be two implementations of one job.
+- **Including `verifier` at launch** — deferred rather than rejected outright; flagged as the one candidate addition if real usage shows a gap.
+
+Would pass a conformance audit: 5-part agent structure, byte-identical `&lt;constitution&gt;` block to copy verbatim from any existing agent, schemas referenced (`shared/schemas/spec@1.json`, `shared/schemas/verdict@1.json`) already exist before these prompts reference them, frontmatter fields complete, model/effort tiers match the constitution's dynamic-routing rule (mechanical=none here, analysis=sonnet/medium ×2, terminal judgment=opus/high ×1).</result>
+<usage><subagent_tokens>250632</subagent_tokens><tool_uses>19</tool_uses><duration_ms>137228</duration_ms></usage>
+</task-notification>
