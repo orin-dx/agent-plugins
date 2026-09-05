@@ -1,0 +1,1 @@
+Not sure we want to worry too much about a malicious claude.md yet but we do want to improve SDD further right?
