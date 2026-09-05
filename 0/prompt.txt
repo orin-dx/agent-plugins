@@ -1,0 +1,3 @@
+You're wrapping our MD files, WE NEVER WRAP MARKDOWN! EVER!!!
+
+Let's make sure we're keeping a consistent tone, voice and prose pattern. We're succinct, friendly, eng focused. We avoid wordy prose and favor scannable text (sections, sub-sections, bullets and sub-bullets, diagrams and charts)
