@@ -1,0 +1,1 @@
+The hooks don't need to be shared if we can build better experience but if we can maintain one that would be ideal
