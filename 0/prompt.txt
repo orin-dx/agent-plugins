@@ -1,0 +1,1 @@
+Can our plugins leverage agent-teams where appropriate automatically without me keying it off?
