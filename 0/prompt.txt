@@ -1,0 +1,67 @@
+# AGENTS.md instructions for /Users/gabe/Projects/agent-plugins
+
+<INSTRUCTIONS>
+@/Users/gabe/.codex/RTK.md
+
+--- project-doc ---
+
+# Orin DX AI Agent & Skill Specification (`AGENTS.md`)
+
+This guide defines the top-level repository guidelines for AI coding agents (Claude Code, AGY, Cursor, Copilot, Codex) working on or utilizing `orin-dx/agent-plugins`.
+
+---
+
+## 1. Authoritative Sources
+
+All hard rules for plugin and agent authoring live in one place:
+
+- [**`shared/constitution.md`**](./shared/constitution.md): EARS-format authoritative constraints. The fence all plugin development must stay inside. Read this first and last.
+- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution, explained with examples. Authoring-time only — never loaded by agents at runtime.
+- [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, Red-to-Green verification standards.
+- [**`shared/references/modern-cli-tools.md`**](./shared/references/modern-cli-tools.md): Global preference directive for modern CLI tools (`bat`, `zoxide`, `ripgrep`, `fd`, `eza`, `delta`, `jq`, `fzf`, `gh`).
+
+---
+
+## 2. Directory Layout Standard
+
+```text
+plugins/<plugin-id>/
+├── plugin.json                   <-- Plugin Manifest (id, version, skills, agents)
+├── README.md                     <-- Purpose, trigger phrases, agent table, install
+├── CHANGELOG.md                  <-- Semver history
+├── skills/
+│   └── <plugin-id>/
+│       └── SKILL.md              <-- Skill definition (dispatch matrix, pipeline)
+└── agents/
+    ├── recon.md                  <-- haiku/low  — deterministic enumeration
+    ├── scanner.md                <-- sonnet/med — pattern matching
+    ├── adversary.md              <-- sonnet/med — adversarial verification
+    └── exit-gate.md              <-- opus/high  — binding judgment
+```
+
+A plugin defaults to one skill directory named after the plugin id, as above. IF the plugin's scope covers several genuinely independent, heterogeneous intents on the same artifact — not a linear pipeline invoked as one flow — `skills/<plugin-id>/` may split into `skills/<skill-name>/SKILL.md` per skill instead. `courier`, `scribe`, `weaver`, and `mason` are examples. The skill-routing key is the directory name, not the frontmatter `name:` field. A new skill name defaults to a single lifecycle-stage word; only go to a specific compound name (`audit-spec`, not `scribe-audit`) when the bare word is ambiguous or collides with another plugin's existing skill name. See `shared/constitution.md`'s Plugin Structure and Skill Names sections.
+
+Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, systemic, behavioral, judgment, repair) — not by pipeline position. See `shared/constitution.md` for the model/effort tier rules.
+
+---
+
+## 3. Quick Checklist for Adding New Plugins
+
+1. **Use `mason`** — run `scaffolder` to generate the full directory structure and stubs.
+2. **5-part agent structure** — every agent body: `<constitution>` (copied byte-for-byte from an existing agent), `<backstory>`, `<goal>`, `<judgment>`, `<output>`. No `<role>` body sections. No `success_criteria` checklists.
+3. **EARS in output only** — WHEN/IF/WHILE/WHERE notation belongs only in `<output>` contracts and never-do rules.
+4. **Progressive context loading** — one `<load_first>` block per agent, naming only the reference file for its cognitive phase.
+5. **Schema-first handoffs** — define `shared/schemas/<name>@<version>.json` before writing the agent that produces it.
+6. **Abstract tool language** — "use your file reading tool", never `view_file`, `read_file`, or `Bash tool`.
+7. **Manifest registration** — add an entry to root `marketplace.json` and validate: `jq . marketplace.json`.
+8. **Legal attribution** — set `"author": "Gabriel Castro (Orin DX)"` in `plugin.json`.
+
+</INSTRUCTIONS>
+
+<environment_context>
+  <cwd>/Users/gabe/Projects/agent-plugins</cwd>
+  <shell>zsh</shell>
+  <current_date>2026-09-02</current_date>
+  <timezone>America/Los_Angeles</timezone>
+  <filesystem><workspace_roots><root>/Users/gabe/Projects/agent-plugins</root></workspace_roots><permission_profile type="managed"><file_system type="restricted"><entry access="read"><special>:root</special></entry><entry access="write"><path>/Users/gabe/Projects/agent-plugins</path></entry><entry access="write"><special>:slash_tmp</special></entry><entry access="write"><special>:tmpdir</special></entry><entry access="read"><path>/Users/gabe/Projects/agent-plugins/.git</path></entry><entry access="read"><path>/Users/gabe/Projects/agent-plugins/.agents</path></entry><entry access="read"><path>/Users/gabe/Projects/agent-plugins/.codex</path></entry></file_system></permission_profile></filesystem>
+</environment_context>
