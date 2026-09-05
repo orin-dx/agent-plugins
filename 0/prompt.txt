@@ -1,0 +1,21 @@
+<task-notification>
+<task-id>af6aff7a75baef4d2</task-id>
+<tool-use-id>toolu_01SPzuaQ8R9dNHLfHtohD5wa</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/af6aff7a75baef4d2.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for prism" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Setup for `prism` (`/Users/gabe/Projects/prism`) — GitHub community health files, tailored not copied.
+
+**What prism is**: a Rust CLI evaluation/regression runner for AI coding agents and plugins — spawns Claude CLI/AGY/Anthropic API drivers against fixture repos in an ephemeral `/tmp` sandbox, replays frozen VCR cassettes for cheap CI gating, and depends on the sibling `lumen` repo via a local path dependency.
+
+**Files added** (commit `51399b8`, not pushed):
+- `CODE_OF_CONDUCT.md` — verbatim Contributor Covenant 2.1 text, admin@orin-dx.com
+- `SECURITY.md` — scope grounded in real architecture read from `docs/01-core-evaluation-and-vcr-cassettes.md`: sandbox escape, untrusted execution during grading, VCR cassette tampering, and the `lumen` path-dependency supply chain — not boilerplate
+- `.github/PULL_REQUEST_TEMPLATE.md` — kept lightweight (type of change, why, `cargo test`/`clippy`/`fmt` checklist), no invented release-note mechanism since prism has no existing changelog convention to hook into — matches the research finding that rust-lang/rust, VS Code, and Next.js all ship with no PR template at all
+- `.github/ISSUE_TEMPLATE/bug_report.md` + `feature_request.md` — plain Markdown, fields tailored to debugging a CLI eval tool (crate, command/config, environment)
+- One-line pointer added to `CONTRIBUTING.md`
+
+**Left untouched**: the working tree had substantial pre-existing uncommitted changes unrelated to this task (`Cargo.toml`, several driver/grader source files, `.claude/`/`.codex/`/`.moon/`/etc. tool-config directories) — none of that was staged or touched.</result>
+<usage><subagent_tokens>855079</subagent_tokens><tool_uses>17</tool_uses><duration_ms>272992</duration_ms></usage>
+</task-notification>
