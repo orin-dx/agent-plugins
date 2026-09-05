@@ -1,0 +1,5 @@
+I've created a folder in ~/Projects/wisp
+
+Can we write up docs about what we're thinking in terms of wisp, the library, cli, MCP. How it works with monokl. Leverages our other tools, etc, etc etc
+
+Be very detailed because we want to be able to drive work on this
