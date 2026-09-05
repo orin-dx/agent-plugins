@@ -1,0 +1,1 @@
+Think critically about how LLMs and agents work, the guidance and how to best take on this work
