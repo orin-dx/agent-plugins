@@ -1,0 +1,1 @@
+Looks like architecture lost a lot of context and diagrams and vertical that should be horizontal. Why is that?
