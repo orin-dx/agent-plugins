@@ -1,0 +1,135 @@
+This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.
+
+Summary:
+1. Primary Request and Intent:
+The user has been progressively improving the `orin-dx/agent-plugins` repository through a multi-session deep dive. The work has covered: (1) applying audit feedback to add new Rust hazard taxonomies 7/8/9 and expand architectural smells; (2) restructuring the entire reference file system to enable progressive disclosure (splitting monolithic rust.md and typescript.md into focused hazard/smells/tooling files); (3) rewriting all agent prompts with a new backstory/goal/judgment/output structure replacing role/success_criteria; (4) creating 3 new agents (boundary-tracers for both languages, TS architect, TS mutator) bringing both plugins to 6-agent parity; (5) adding before/after code examples to highest-impact taxonomies; (6) wiring JSON schemas as structured contracts between agents; (7) researching SDD principles from Tessl, Spec Kit, EARS notation, and ai-sdd.com; and (8) now the user wants a **holistic plan showing how the system should govern itself** — a meta-layer with a constitution, updated authoring guidelines, a plugin-author plugin, and an eval framework — with a plan artifact to show it all.
+
+The most recent explicit request: *"Let's think holistically and also adjust the plugin for writing and guiding plugin, agent and skill building. Our guidelines should keep us building this. Right? Show me the plan"*
+
+2. Key Technical Concepts:
+   - **Progressive Disclosure**: Reference files split into hazard/smells/tooling per language; agents load only their slice via explicit `<load_first>` blocks
+   - **Cognitive Mode Separation**: Agents split by mode (pattern matching, data flow tracing, adversarial reasoning, systemic analysis, behavioral testing, code repair) not taxonomy number
+   - **Backstory vs Role**: Backstory gives experiential perspective and values; role is just a label. 2-4 sentences, coherent across the team
+   - **Goal/Judgment structure**: Goal = intent (what/why); Judgment = how to know if you actually did it vs produced output that looks like you did
+   - **EARS notation**: Used ONLY for edges (output contracts, never-do rules, hard invariants) — NOT for process steps or implementation details. The fence, not the interior.
+   - **Schema-Driven Development (SDD)**: `candidate@1.json` → `finding-report@1.json` → `verdict@1.json` as structured handoff contracts between agents
+   - **TDD + SDD**: Red-green test cycle + schema-first contract definition
+   - **Tessl model**: "Skills are the new code" — skills need governance, versioning, security scanning, evals as release artifacts
+   - **Spec Kit workflow**: 9-phase agentic SDD: constitution → specify → clarify → plan → checklist → tasks → analyze → implement → converge. Key: analyze phase (pre-implementation consistency check), convergence loop (append-only gap identification)
+   - **AI-SDD**: Intent preservation across delivery phases; Cognition + Automation + Structured Intent
+   - **Eval-Driven Development (EDD)**: Evals as the spec made executable; gate deployments on eval scores
+   - **TDAD** (Test-Driven Agent Development): Write behavioral specs first, compile into executable tests, refine prompts until tests pass
+   - **Property-Based Testing**: Invariant-based testing (proptest in Rust, fast-check in TS) for things that can't be enumerated
+   - **Anthropic blog principles**: Rules→Judgment, Examples→Interface Design, Upfront→Progressive Disclosure, Repetition→Simplicity, Simple Specs→Rich References
+
+3. Files and Code Sections:
+
+   **Split Reference Files (NEW):**
+   - `shared/references/rust-hazards.md` (~89 lines) — Workspace discovery + Taxonomies 1-9 ordered by impact, with before/after Rust code examples for T7 and T8. Loaded by: scanner, adversary, boundary-tracer.
+   - `shared/references/rust-smells.md` (~89 lines) — Code-level smell sweeps + architectural pattern smells + shared trait centralization framework. Loaded by: architect.
+   - `shared/references/rust-tooling.md` (~69 lines) — Test commands + NAPI rules + non-negotiables. Loaded by: mutator, remediator.
+   - `shared/references/typescript-hazards.md` (~104 lines) — Workspace discovery + TS Taxonomies T1-T9 + optional chain, shallow spread, JSON clone, async TOCTOU, with before/after TS code examples for T7 and T8.
+   - `shared/references/typescript-smells.md` (~55 lines) — TS code-level and architectural smells. Loaded by: TS architect.
+   - `shared/references/typescript-tooling.md` (~50 lines) — TS test commands + non-negotiables. Loaded by: TS mutator, remediator.
+   - `shared/references/rust.md` → 9-line thin index
+   - `shared/references/typescript.md` → 9-line thin index
+
+   **New Schema:**
+   - `shared/schemas/candidate@1.json` — Scanner output contract: `{ id, file, line, taxonomy, excerpt, grep_pattern }`
+
+   **Rust Agents (all rewritten with backstory/goal/judgment/output):**
+   - `plugins/bug-hunter-rust/agents/bug-hunter-scanner-rust.md` — Backstory: "you don't trust your own reading of code when a mechanical check is available." Goal: run every grep pattern, return every match raw. Judgment: did you execute shell commands or read mentally?
+   - `plugins/bug-hunter-rust/agents/bug-hunter-adversary-rust.md` — Backstory: "burned by false positives, default hard to skepticism." Goal: determine if one specific candidate is real. Judgment: can you state a concrete failing scenario?
+   - `plugins/bug-hunter-rust/agents/bug-hunter-architect-rust.md` — Backstory: "watched teams fix the same bug five times because they patched symptoms." Goal: identify systemic patterns. Judgment: would the class reappear if bugs were fixed individually?
+   - `plugins/bug-hunter-rust/agents/bug-hunter-mutator-rust.md` — Backstory: "seen test suites that pass on broken code." Goal: find coverage gaps. Judgment: would your new test fail with the mutant injected?
+   - `plugins/bug-hunter-rust/agents/bug-hunter-remediator-rust.md` — Backstory: "don't call it fixed until a test proves it." Goal: fix with minimum change. Judgment: did test fail before and pass after? Full suite green?
+   - `plugins/bug-hunter-rust/agents/bug-hunter-boundary-tracer-rust.md` (NEW) — Backstory: "the worst bugs don't look like bugs — the value was simply never there." Goal: trace every field from construction to execution boundary. Judgment: can you account for every field in either direction?
+
+   **TS Agents (rewritten + 3 new):**
+   - `plugins/bug-hunter-ts/agents/bug-hunter-scanner-ts.md` — Same structure as Rust scanner, loads typescript-hazards.md
+   - `plugins/bug-hunter-ts/agents/bug-hunter-adversary-ts.md` — Same structure as Rust adversary, loads typescript-hazards.md
+   - `plugins/bug-hunter-ts/agents/bug-hunter-remediator-ts.md` — Outputs verdict@1.json, loads typescript-tooling.md
+   - `plugins/bug-hunter-ts/agents/bug-hunter-boundary-tracer-ts.md` (NEW) — TS-specific field survival tracing (structural subtyping angle)
+   - `plugins/bug-hunter-ts/agents/bug-hunter-architect-ts.md` (NEW) — Loads typescript-smells.md, designs interface/type changes
+   - `plugins/bug-hunter-ts/agents/bug-hunter-mutator-ts.md` (NEW) — Uses Stryker, loads typescript-tooling.md
+
+   **SKILL.md files (both updated):**
+   - `plugins/bug-hunter-rust/skills/bug-hunter-rust/SKILL.md` — 9 taxonomies, 7 smells, cognitive-mode dispatch matrix with Input→Output schema references, per-phase reference file routing
+   - `plugins/bug-hunter-ts/skills/bug-hunter-ts/SKILL.md` — Full rewrite matching Rust structure, 6-agent matrix
+
+   **Files still stale (not yet updated):**
+   - `shared/agent-best-practices.md` — Does not reflect any of the new principles
+   - `AGENTS.md` — Needs updating
+   - `CLAUDE.md` — Lightweight, needs to reference constitution
+
+4. Errors and fixes:
+   - No technical errors encountered. The main course-correction was conceptual: user pushed back on the instinct to just append more content to reference files, leading to the full restructuring approach instead.
+   - Mid-session the user asked "Do we consider SDD along with TDD?" during implementation — addressed inline by noting the schemas already implement SDD implicitly.
+
+5. Problem Solving:
+   - **Attention dilution problem**: Solved by splitting rust.md/typescript.md into 3 focused files each, making agents load only their relevant slice
+   - **Stale SKILL.md**: Solved by rewriting both SKILL.md files with accurate counts, cognitive-mode dispatch matrix, and schema references
+   - **Mixed cognitive modes**: Solved by creating dedicated boundary-tracer agents and narrowing scanner to grep-only
+   - **TS phase gap**: Solved by creating TS architect and mutator agents
+   - **Theater success_criteria**: Solved by replacing with judgment blocks that name the key failure mode
+   - **Role as label**: Solved by replacing with backstory giving experiential perspective
+   - **Taxonomy number ownership**: Solved by routing agents by cognitive mode with Input→Output schema contracts
+
+6. All user messages:
+   - "Some feedback from another agent regarding improvements we can make: [audit findings about CB1-CB4 patterns, new taxonomies, improvements to rust.md and bug-hunter-rust plugin]"
+   - "What else can you infer further about TS and rust that can help further improve our agents and skills? Do we want to split work into more specific agents?"
+   - "Think critically about how LLMs and agents work, the guidance and how to best take on this work"
+   - "Show me a comprehensive plan"
+   - "Make sure we're loading the right context at the right time, not just overloading files with more information right?"
+   - "Something for you to read later: https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models"
+   - "Read it now and consider in the context of the changes we're making"
+   - "Does this then become goals and judgement of how to decide if the goal was achieve?"
+   - "What else should we adjust?"
+   - "Should we create a backstory vs a role?"
+   - "Let's cook with all of this proposed changes"
+   - [Mid-turn] "Do we consider SDD along with TDD?"
+   - [Mid-turn] "From callisto agent: [long analysis of 3-tier Rust SDD: Tier 1 types as spec, Tier 2 executable specs with doctest/proptest/cargo-mutants, Tier 3 architectural specs with cargo-deny/kani]"
+   - "Can you do a lot more research on what tessl and speckit are going? What others recommend for SDD in an agentic world?"
+   - [Mid-turn during research] "https://tessl.io https://github.github.com/spec-kit/reference/agentic-sdd.html https://www.thebcms.com/blog/spec-driven-development/ https://ai-sdd.com/en/#core-model"
+   - "We have to balance EARS with being too prescriptive right? Being too prescriptive is limiting agents vs allowing it to be creative and explore which is its strength. We want to make sure we balance constraints with freedom right?"
+   - "Let's think holistically and also adjust the plugin for writing and guiding plugin, agent and skill building. Our guidelines should keep us building this. Right? Show me the plan"
+
+7. Pending Tasks:
+   - **Create holistic plan artifact** showing the meta-system: constitution, updated agent-best-practices.md, plugin-author plugin, eval framework
+   - **Create `shared/constitution.md`** — EARS-format authoritative rules for how all plugins must be built (hard edges only, not process steps)
+   - **Update `shared/agent-best-practices.md`** — encode all new principles: 4-part agent structure (backstory/goal/judgment/output), progressive disclosure, `<load_first>`, cognitive modes, EARS placement, SDD handoffs, schema wiring
+   - **Create `plugins/plugin-author/` plugin** — agents for drafting new plugins, reviewing existing plugins against constitution, creating behavioral evals
+   - **Create eval framework** — `shared/schemas/eval@1.json` + TDAD-style behavioral eval templates per cognitive mode
+   - **Update AGENTS.md and CLAUDE.md** to reference constitution and plugin-author skill
+   - Consider **convergence loop** for adversary (append gaps as new tasks, iterate)
+   - Consider **analyze phase agent** (pre-audit cross-artifact consistency check)
+   - Consider adding **EARS capability statements** to agent prompts (for output contracts only)
+   - Consider adding proptest/Stryker references to mutator agents (from callisto Tier 2 SDD analysis)
+
+8. Current Work:
+   The conversation was in the process of responding to: *"Let's think holistically and also adjust the plugin for writing and guiding plugin, agent and skill building. Our guidelines should keep us building this. Right? Show me the plan"*
+
+   The `artifact-design` skill had just been loaded (it confirmed design guidance), and the next step was to write the plan HTML to the scratchpad and publish it as an artifact. No artifact had been written yet for this holistic plan.
+
+   The plan to show in the artifact covers:
+   - The meta-system gap: no constitution, stale best-practices, no authoring plugin, no evals
+   - Tessl insight: "skills are the new code" — needs governance layer
+   - Spec Kit insight: constitution + convergence pattern
+   - EARS insight: constraints on edges only, freedom in interior
+   - Four components: constitution, updated best-practices, plugin-author plugin, eval framework
+   - How they form a self-reinforcing loop
+
+9. Optional Next Step:
+   Continue directly from where the session ended: write the holistic plan artifact. The user explicitly asked: *"Let's think holistically and also adjust the plugin for writing and guiding plugin, agent and skill building. Our guidelines should keep us building this. Right? Show me the plan"*
+
+   The artifact-design skill is loaded. The plan should show:
+   - The gap diagnosis (no meta-layer currently)
+   - Phase 1: Repository Constitution (`shared/constitution.md`) — EARS-format hard edges
+   - Phase 2: Update `shared/agent-best-practices.md` — developer guide with all new principles
+   - Phase 3: `plugins/plugin-author/` plugin — drafter, reviewer, evaluator agents
+   - Phase 4: Eval framework — `shared/schemas/eval@1.json` + TDAD templates
+   - The self-reinforcing loop these create
+   - How AGENTS.md and CLAUDE.md tie into it
+
+If you need specific details from before compaction (like exact code snippets, error messages, or content you generated), read the full transcript at: /Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a.jsonl
+Continue the conversation from where it left off without asking the user any further questions. Resume directly — do not acknowledge the summary, do not recap what was happening, do not preface with "I'll continue" or similar. Pick up the last task as if the break never happened.
