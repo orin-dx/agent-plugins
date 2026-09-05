@@ -1,0 +1,198 @@
+This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.
+
+Summary:
+1. Primary Request and Intent:
+   The user wanted to improve the `agent-plugins` repository (at `/Users/gabe/Projects/agent-plugins`) to stop agents from relying solely on the lossy context window for spec content, generalize away from Rust-specific content toward TypeScript/JS support, and properly implement SDD+TDD without context-window dependency. The work evolved through four rounds: (1) initial improvements, (2) adversarial review, (3) applying corrections from the tradeoff discussion, and (4) pre-publish fixes. The user confirmed three architectural decisions: the canon skill orchestrator (not the drafter) writes the spec to disk after gate pass; a separate `canon-drift-checker` agent (opus/high) handles drift checking rather than a dual-mode verifier; and spec_file_path enforcement uses graceful degradation (warn at entry via lambda-recon, not hard-fail at exit gate).
+
+2. Key Technical Concepts:
+   - **spec_file_path mechanism:** workspace-relative path (e.g., `.claude/specs/SPEC-001.json`) written by the canon skill orchestrator after `canon-exit-gate` passes. Agents resolve it against `workspace_root` from the lambda-recon manifest. Never absolute paths (non-portable).
+   - **covers_criteria:** `string[]` of acceptance criterion IDs per plan task. vector-planner sets them, vector-challenger enforces completeness via a new `orphaned-criteria` check dimension, lambda-implementer reads criteria from disk before writing tests.
+   - **Semantic model principle:** Acceptance criteria must be falsifiable propositions verifiable from observable system behavior alone — no implementation knowledge required. Correct: "When two records with the same key are inserted, the second insert returns an error and the first record is unchanged." Wrong: "The deduplication logic handles collisions correctly."
+   - **Cognitive mode separation:** Canon-drafter = analysis only (returns spec object, no disk write). Skill orchestrator = execution (writes file post-gate). Canon-drift-checker = opus/high judgment. Canon-verifier = grounding-only (sonnet/medium, pre-implementation).
+   - **Graceful degradation:** lambda-recon warns when spec_file_path absent (sets `spec_file_warning`); lambda-exit-gate proceeds with in-context spec and records `spec_file_unset` coverage gap rather than hard-failing.
+   - **Language generalization:** lambda-reviewer uses `<load_first>` to conditionally load `rust-hazards.md` or `typescript-hazards.md` based on the workspace manifest `language` field. Removes hardcoded Rust non-negotiables (unwrap, unsafe, HashMap/BTreeMap).
+   - **Spec persistence flow:** canon-drafter → returns spec object → canon-verifier → canon-auditor → canon-exit-gate → [skill writes `.claude/specs/<id>.json`, sets spec_file_path] → spec@1 with path → vector-planner propagates into plan@1 → lambda-recon verifies file exists → all downstream agents read from disk.
+   - **No MD file wrapping:** All prose in MD files must be single long lines per paragraph. No artificial 80-column hard line breaks. This applies to backstory, goal, judgment, output sections, EARS rules, and YAML frontmatter descriptions.
+   - **EARS notation placement:** Only in `<output>` sections for output contracts and never-do rules.
+   - **4-part agent structure:** `<backstory>`, `<goal>`, `<judgment>`, `<output>` — no `<role>` body sections.
+
+3. Files and Code Sections:
+
+   - **`shared/schemas/spec@1.json`**
+     - Added optional `spec_file_path` field (workspace-relative, set by skill orchestrator post-gate)
+     ```json
+     "spec_file_path": {
+       "type": "string",
+       "description": "Workspace-relative path where this spec is written on disk (e.g. .claude/specs/SPEC-001.json). Set by the canon skill orchestrator after gate passes. Agents resolve it against workspace_root from the lambda-recon manifest."
+     }
+     ```
+
+   - **`shared/schemas/plan@1.json`**
+     - Added `spec_file_path` at top level and `covers_criteria` per task
+     ```json
+     "spec_file_path": {
+       "type": "string",
+       "description": "Workspace-relative path to the spec@1 file this plan implements..."
+     },
+     "covers_criteria": {
+       "type": "array",
+       "items": { "type": "string" },
+       "description": "IDs of acceptance criteria from spec@1 that this task covers. vector-challenger checks that every criterion ID appears in at least one task."
+     }
+     ```
+
+   - **`shared/constitution.md`**
+     - Added `## Spec Persistence` section with three EARS rules (generic, not listing specific agent names):
+       - Skill orchestrator writes spec after gate pass
+       - Any agent consuming spec@1 SHALL read from spec_file_path when set
+       - When spec_file_path absent: graceful degradation with spec_file_unset coverage gap
+
+   - **`plugins/canon/agents/canon-drafter.md`**
+     - Description updated: no longer writes to disk, returns spec object only
+     - `<goal>` simplified: produce spec, no file write
+     - `<output>`: no spec_file_path in JSON; note says "Do not set spec_file_path — the canon skill orchestrator sets it after writing the file post-gate"
+     - `<judgment>` completely rewritten with language-agnostic semantic model example (deduplication, not prefixed/bare Callisto example), as single long lines
+
+   - **`plugins/canon/agents/canon-auditor.md`**
+     - `<judgment>` extended: added second named failure mode — the semantic model anti-pattern (criteria requiring implementation knowledge). Three paragraphs, each as single long lines.
+
+   - **`plugins/canon/agents/canon-exit-gate.md`**
+     - Reverted: removed spec_file_path existence check (that's recon work, not judgment work)
+
+   - **`plugins/canon/agents/canon-verifier.md`**
+     - Restored to grounding-only (pre-implementation)
+     - Description notes: "For post-implementation drift checking, use canon-drift-checker instead."
+
+   - **`plugins/canon/agents/canon-drift-checker.md`** — NEW FILE
+     - opus/high, judgment mode, post-implementation diagnostic (not a blocking gate)
+     - Reads spec from disk at spec_file_path (EARS rule enforces this)
+     - Classifies criteria as: covered / uncovered / drifted
+     - Key EARS rules: must read from spec_file_path (not context); green tests ≠ covered; uncovered ≠ folded into another criterion
+
+   - **`plugins/canon/plugin.json`**
+     - Version: 1.0.1 → 1.1.0
+     - Added `"./agents/canon-drift-checker.md"` to agents list
+
+   - **`plugins/canon/skills/canon/SKILL.md`**
+     - canon/verify sub-skill: added "Use this **before implementation**..." (single line)
+     - canon/drift sub-skill: added (single long lines, no wrapping)
+     - canon/gate sub-skill: added reference to `<orchestration>` section
+     - Added `<orchestration>` section with explicit numbered steps for post-gate file write
+     - Updated artifact_contracts, pipeline diagram, dispatch matrix
+     - Version: 1.0.x → 1.1.0 in frontmatter
+
+   - **`plugins/lambda/agents/lambda-recon.md`**
+     - Description updated: accepts optional spec_file_path input
+     - Output JSON extended with `spec_file_path: string | null` and `spec_file_warning: string | null`
+     - Three new EARS rules: halt on baseline fail; verify file exists when path provided; set warning when path absent
+     - All EARS rules as single long lines (no wrapping)
+
+   - **`plugins/lambda/agents/lambda-exit-gate.md`**
+     - Description: fixed to say "workspace manifest from lambda-recon (which carries spec_file_path)" — single long line
+     - `<backstory>`: added sentence about reading spec from context being lossy
+     - `<goal>`: reads spec from spec_file_path (single long line)
+     - `<output>` EARS rules: graceful degradation — reads from disk when set, falls back with spec_file_unset gap when null (single long lines)
+
+   - **`plugins/lambda/agents/lambda-implementer.md`**
+     - Description updated: reads criteria from spec_file_path before writing tests
+     - `<goal>`: reads criteria from disk before writing tests (single long line)
+     - `<output>`: added EARS rule: "WHEN spec_file_path is set in the workspace manifest, THE SYSTEM SHALL read the spec@1 from disk at that path and confirm the current task's covers_criteria IDs resolve to acceptance criteria in the spec before writing any test."
+
+   - **`plugins/lambda/agents/lambda-reviewer.md`**
+     - Description: language-aware, loads hazards reference based on manifest language field
+     - Added `<load_first>` block: conditionally loads rust-hazards.md or typescript-hazards.md
+     - `<backstory>`: added sentence about wrong-language non-negotiables being a failure mode
+     - `<goal>`: references hazards reference from load_first, not a hardcoded list
+
+   - **`plugins/lambda/plugin.json`**
+     - Version: 1.0.1 → 1.1.0
+
+   - **`plugins/lambda/skills/lambda/SKILL.md`**
+     - Context management: added spec_file_path to MUST pass list (source: plan@1, not spec@1); added full spec content to MUST NOT pass list
+     - Exit gate section: notes spec is read from spec_file_path on disk
+     - Fixed: "from the spec@1" → "from the plan@1 (propagated there by vector-planner from the spec@1)"
+
+   - **`plugins/vector/agents/vector-planner.md`**
+     - Description: includes covers_criteria and spec_file_path propagation
+     - `<judgment>`: added uncovered criterion as a plan failure condition
+     - `<output>`: added covers_criteria to task requirements; added EARS rule for reading from spec_file_path (single long line); added EARS rule for creating tasks for uncovered criteria
+
+   - **`plugins/vector/agents/vector-challenger.md`**
+     - Description: 7 dimensions (was 6), added orphaned-criteria
+     - `<goal>`: reads from spec_file_path before orphaned-criteria check (single long line)
+     - `<output>`: added `orphaned-criteria` to type enum; added EARS rule for flagging orphaned criteria
+
+   - **`plugins/vector/plugin.json`**
+     - Version: 1.0.1 → 1.1.0
+
+   - **`plugins/canon/CHANGELOG.md`**
+     - Added 1.1.0 entry (drift-checker, spec_file_path, orchestrator pattern, semantic model principle)
+     - Fixed 1.0.0 entry: added canon-architect to subagents list
+
+   - **`plugins/lambda/CHANGELOG.md`**
+     - Added 1.1.0 entry (spec_file_path propagation, covers_criteria, graceful degradation, language-aware reviewer)
+
+   - **`plugins/vector/CHANGELOG.md`**
+     - Added 1.1.0 entry (covers_criteria, orphaned-criteria, spec_file_path propagation)
+
+4. Errors and fixes:
+   - **Wrapping in MD files (first occurrence):** During round 3 edits, the assistant introduced hard line breaks at ~80 columns in prose paragraphs, EARS rules, and frontmatter descriptions. User said: "Don't wrap any of our MD files at all." The assistant rewrote the new `canon-drift-checker.md` file without wrapping.
+   - **Wrapping in MD files (second occurrence, user frustrated):** In round 4 edits, the assistant again introduced wrapping in CHANGELOGs and other sections. User said: "AGAIN, don't unnaturally wrap our MD files FFS." The assistant then read all affected files and fixed wrapping in: canon-drafter.md judgment, canon-auditor.md judgment, lambda-exit-gate.md description/goal/output EARS rules, lambda-recon.md output field descriptions and EARS rules, lambda-implementer.md goal, vector-planner.md output prose, canon/SKILL.md sub_skills (canon/verify and canon/drift entries). Each paragraph/EARS rule must be a single long line.
+   - **Canon-drafter writing before gate (C1/C2):** Initially had drafter write spec to disk. Adversarial review identified this creates stale files if gate fails, and mixes cognitive modes. Fixed by: drafter returns spec object only; skill orchestrator writes file in explicit `<orchestration>` section after gate pass.
+   - **Canon-verifier dual-mode (C3):** Initially extended canon-verifier to handle both grounding and drift. Adversarial review identified cognitive mode mismatch (sonnet/medium vs. opus/high needed) and ambiguous output contracts. Fixed by: restored canon-verifier to grounding-only; created separate `canon-drift-checker` (opus/high).
+   - **Lambda-exit-gate hard-fail (C4):** Initially made exit gate hard-fail when spec_file_path absent. Adversarial review identified migration cliff and sandboxed environment issues. Fixed by: lambda-recon enforces at entry (warns, doesn't fail); exit gate does graceful degradation with coverage gap.
+   - **Canon-exit-gate doing recon work (H7):** Initially added file-existence check to canon-exit-gate. Adversarial review identified this is haiku/low recon work in an opus/high judgment agent. Fixed by: removed check from exit gate entirely; lambda-recon handles file existence verification.
+   - **Absolute paths (M10):** Initially used absolute paths for spec_file_path. Fixed by: all paths are workspace-relative; agents resolve against workspace_root from lambda-recon manifest.
+   - **Callisto-specific judgment example (M11):** Initially used "prefixed/bare rule" example from Callisto project in canon-drafter judgment. Fixed by: replaced with language-agnostic deduplication example.
+   - **Constitution listing specific agent names (M12):** Initially listed vector-planner, lambda-implementer, etc. by name. Fixed by: generalized to "any agent that consumes a spec@1."
+
+5. Problem Solving:
+   - **Core problem:** Agents relying on lossy context window for spec content causes silent spec drift, missed criteria, and incorrect implementations when context is compressed over long sessions.
+   - **Solution architecture:** spec_file_path mechanism where spec is written to disk once (by skill orchestrator after gate pass), stored as workspace-relative path, propagated through plan@1 into lambda-recon manifest, and read from disk by every downstream agent. Graceful degradation when path absent.
+   - **Language generalization:** Replaced hardcoded Rust non-negotiables in lambda-reviewer with `<load_first>` pattern matching lambda-mutator's existing approach — conditionally loads language-specific hazard reference.
+   - **Criterion coverage gap:** Closed the accountability gap where plan tasks had no explicit link to spec criteria. covers_criteria per task + orphaned-criteria check in vector-challenger ensures every criterion must be claimed by at least one task before implementation begins.
+
+6. All user messages:
+   - Initial long message providing context about Callisto/Rust pipeline as a spec-verification system, explaining the canon→vector→lambda pipeline separation of concerns, semantic model principle, and requesting improvements to plugins/skills/agents to not rely on context window.
+   - "Sorry, I interrupted you" — after interrupting the initial file reads
+   - "Pickup where you left off"
+   - "Talk to tradeoffs with me where you have concerns" — after adversarial review was presented
+   - "1, your recommendation works, 2, let's go with the separate agent, graceful degradation seems best but enforcing the entry point, right?" — confirming three architectural decisions
+   - "Any other gaps, concerns or issues we should call out before we publish a new version?" — requesting final pre-publish audit
+   - "Let's fix absolutely everything please"
+   - "AGAIN, don't unaturally wrap our MD files FFS" (mid-turn message received while fixes were being applied)
+   - "CRITICAL: Respond with TEXT ONLY. Do NOT call any tools." — this summary request
+
+   **Critical preserved instruction:** "Don't wrap any of our MD files at all" / "AGAIN, don't unnaturally wrap our MD files FFS" — Every prose paragraph, EARS rule, and description in MD files must be a single long line with no artificial hard line breaks. Code blocks and list items are fine on their own lines. This applies to ALL sections: backstory, goal, judgment, output, YAML frontmatter descriptions, skill sub-skill descriptions, orchestration sections, etc.
+
+7. Pending Tasks:
+   - Complete the wrapping fixes that were in progress when this summary was triggered — specifically, the assistant was partway through fixing all MD files with wrapping introduced during the session. The last edit completed was fixing canon/SKILL.md sub_skills section (canon/verify and canon/drift entries). Files that may still need wrapping checks:
+     - `plugins/lambda/agents/lambda-recon.md` description frontmatter (was wrapped in `>-` YAML block)
+     - `plugins/lambda/agents/lambda-implementer.md` description frontmatter
+     - `plugins/lambda/agents/lambda-reviewer.md` description frontmatter
+     - `plugins/vector/agents/vector-planner.md` description frontmatter
+     - `plugins/vector/agents/vector-challenger.md` description frontmatter
+     - CHANGELOG files (may have wrapped bullet points)
+   - After wrapping is fully fixed: commit the changes
+
+8. Current Work:
+   The assistant was in the middle of fixing wrapping violations across all MD files that were edited during the session. The user's instruction was "AGAIN, don't unnaturally wrap our MD files FFS." The assistant had read all affected files and was applying fixes sequentially. The last completed edit was:
+
+   Fixed `plugins/canon/skills/canon/SKILL.md` sub_skills — changed wrapped canon/verify and canon/drift paragraphs to single long lines:
+   ```
+   ### canon/verify
+   Given a draft `spec@1` plus the originating `requirement@1` and optional `research-report@1`, check whether each acceptance criterion is grounded in the source artifacts. Classifies criteria as supported, unsupported, or overfitted. Collects evidence only — does not produce a pass/fail verdict. Use this **before implementation** to confirm the spec is traceable to requirements.
+
+   ### canon/drift
+   Given a spec@1 (via `spec_file_path`) and a workspace root, verify that the current code implements every acceptance criterion. Reads the spec from disk, reads the implementation from the workspace, and reports: `covered` (criterion is implemented and tested), `uncovered` (criterion has no matching implementation), and `drifted` (implementation exists but diverges from the criterion's contract). Use this **after implementation** to catch spec drift during maintenance — it is a diagnostic tool, not a blocking gate. lambda-exit-gate is the blocking gate; canon/drift is the ongoing health check.
+   ```
+
+   Files fixed before summary triggered: canon-drafter.md judgment, canon-auditor.md judgment, lambda-exit-gate.md description/goal/output EARS, lambda-recon.md output, lambda-implementer.md goal, vector-planner.md output prose, canon/SKILL.md sub_skills.
+
+9. Optional Next Step:
+   Continue fixing any remaining wrapping in MD files that may still have unnatural line breaks introduced during this session. Specifically, check the YAML frontmatter `description:` fields in files where the content was rewritten (lambda-recon.md, lambda-implementer.md, lambda-reviewer.md, vector-planner.md, vector-challenger.md) and CHANGELOG bullet points. Then confirm with the user that all wrapping is resolved before committing.
+
+   The user's instruction verbatim: "AGAIN, don't unaturally wrap our MD files FFS" — this applies to all MD files, all sections, all content written during this session.
+
+If you need specific details from before compaction (like exact code snippets, error messages, or content you generated), read the full transcript at: /Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/247ad93d-34f5-4700-80e8-873be6f73283.jsonl
+Continue the conversation from where it left off without asking the user any further questions. Resume directly — do not acknowledge the summary, do not recap what was happening, do not preface with "I'll continue" or similar. Pick up the last task as if the break never happened.
