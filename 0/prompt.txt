@@ -1,0 +1,35 @@
+<task-notification>
+<task-id>a452e3552586df08c</task-id>
+<tool-use-id>toolu_01VDKtmmYUcugoigjXAJrbDn</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a452e3552586df08c.output</output-file>
+<status>completed</status>
+<summary>Agent "Bulletize judgment sections: ranger, scribe" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Both validations pass. No commits made, as requested.
+
+## Summary
+
+**Restructured** (had 2+ sequential "failure mode" prose clauses):
+- `plugins/ranger/agents/adversary.md` — 3 failure modes → bulleted list
+- `plugins/ranger/agents/exit-gate.md` — 2 failure modes → bulleted list
+- `plugins/ranger/agents/scanner.md` — 2 failure modes → bulleted list
+- `plugins/scribe/agents/auditor.md` — already-labeled "Four failure modes" paragraphs → bulleted list (merged the "test for both" sentence for vague-delegation/semantic-model into the semantic-model bullet since it applied to both, per instruction not to drop content)
+- `plugins/scribe/agents/drafter.md` — 2 failure modes → bulleted list
+- `plugins/scribe/agents/drift-checker.md` — 3 failure modes → bulleted list
+
+**Left untouched** (single failure mode only, or no enumeration pattern — didn't meet the 2+ threshold):
+- `plugins/ranger/agents/boundary-tracer.md` — one "key failure mode," no second
+- `plugins/ranger/agents/recon.md` — one "key failure mode," no second
+- `plugins/scribe/agents/architect.md` — one "key failure mode," no second
+- `plugins/scribe/agents/exit-gate.md` — one "key failure mode," no second
+- `plugins/scribe/agents/verifier.md` — one "key failure mode," no second
+
+In every restructured file, the intro/definition sentence stayed as prose, all descriptive content/examples/caveats were preserved verbatim inside their bullets, and `&lt;backstory&gt;`, `&lt;goal&gt;`, `&lt;output&gt;`, `&lt;constitution&gt;`, `&lt;load_first&gt;`, and frontmatter were left byte-for-byte untouched.
+
+Validation:
+- `./scripts/check-versions.sh` — OK, all versions agree across 10 plugins
+- `./shared/scripts/validate-wiring.sh` — PASS, 0 errors, 0 warnings
+
+No commits were made.</result>
+<usage><subagent_tokens>74557</subagent_tokens><tool_uses>14</tool_uses><duration_ms>78777</duration_ms></usage>
+</task-notification>
