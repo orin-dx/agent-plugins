@@ -1,0 +1,1 @@
+We have a lot of wall of text in these. Are these wordy prose sections necessary or can they be accomplished better with bullets, sub-bullets, sections and sub-sections? Would that work as well or better for agents? Less work means less context used to load the file for an agent/skill/reference right?
