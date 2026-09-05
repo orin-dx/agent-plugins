@@ -1,0 +1,1 @@
+Are there shortcomings that prevent us from building as featureful plugins for codex compared to the current claude ones? Or vice-versa?
