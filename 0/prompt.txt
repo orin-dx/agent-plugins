@@ -1,0 +1,1 @@
+How do we propose caching monokl data? could the MCP leverage that cache?
