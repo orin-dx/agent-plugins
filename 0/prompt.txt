@@ -1,0 +1,52 @@
+<task-notification>
+<task-id>a2544d508f308d120</task-id>
+<tool-use-id>toolu_014NKkGDq1iUk7deHQiKTRK5</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a2544d508f308d120.output</output-file>
+<status>completed</status>
+<summary>Agent "Research Kent C. Dodds testing philosophy and NN/g crossover" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have enough to compile a solid findings report. Confirmed: no direct Kent Dodds 2026 content specifically merging "testing philosophy + AI agents writing code" beyond general AI-engineering commentary (EpicAI.pro is about AI application architecture/MCP, not testing practice per se), and no NN/g material connects to BDD/structured specs.
+
+# Findings Report
+
+## Part 1 — Kent C. Dodds Testing Philosophy
+
+**1. The Testing Trophy**
+
+Source: [Write tests. Not too many. Mostly integration.](https://kentcdodds.com/blog/write-tests) and [The Testing Trophy and Testing Classifications](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications)
+
+- Dodds explicitly frames this as a reaction to Martin Fowler's classic Testing Pyramid, arguing the pyramid's core assumption — that lower-level tests should dominate because higher-level tests are slow/expensive/brittle — no longer holds: "our tools are awesome now and this assumption is less true."
+- The Trophy shape, bottom to top: **static analysis** (linting/TypeScript) as the base, then a wide band of **integration tests** (the largest recommended investment), a smaller band of **unit tests**, and a thin cap of **end-to-end tests**.
+- This is a direct reaction against strict, unit-test-heavy TDD orthodoxy. He argues unit tests in isolation "doesn't do you any good if you don't also verify that they work together properly," and that chasing 100% unit coverage produces diminishing returns and pushes people toward testing implementation details rather than real behavior. He also argues against heavy mocking, since mocking "removes all confidence in the integration between what you're testing and what's being mocked."
+- Net effect: integration tests (not unit tests) are positioned as the best confidence-to-cost tradeoff — the tagline being "write tests, not too many, mostly integration."
+
+**2. Implementation Details vs. Behavior**
+
+Source: [Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
+
+- Core quote: "The more your tests resemble the way your software is used, the more confidence they can give you."
+- He defines implementation details as "things which users of your code will not typically use, see, or even know about" — and argues testing them causes two failure modes: false negatives (you break the code, the test still passes) and false positives (you refactor safely, the test breaks anyway).
+- His prescription: test observable, user-facing outputs (rendered DOM, exposed props/behavior) rather than internal state/methods (this is the direct rationale behind React Testing Library's design, which he championed).
+- **On BDD specifically**: he does **not** use the literal phrase "test behavior not implementation," and this article makes **no explicit connection to BDD, Cucumber, or Gherkin** — his framing is pragmatic/refactor-safety-driven rather than tied to formal BDD vocabulary or tooling. The philosophical alignment with BDD's "behavior not implementation" principle is real but implicit/convergent, not an explicit citation on his part.
+
+**3. Recent (2024–2026) commentary on AI agents/AI-assisted testing**
+
+- Honest finding: there is **no dedicated Dodds piece specifically reconciling his testing philosophy with AI-agent-generated code**. What exists is adjacent, general AI-engineering commentary:
+  - His current venture, [EpicAI.pro](https://www.epicai.pro/) ([launch post](https://kentcdodds.com/blog/the-next-chapter-epicai-pro)), is about architecting applications for AI interaction (MCP, exposing app capabilities to agents) — not about testing methodology.
+  - Talk: ["How I Build Web Applications in 2026"](https://gitnation.com/contents/how-i-build-web-applications-in-2026) — touches on agent-orchestrated workflows (manual testing, Cursor/browser control, BugBot for review) and a claim that developers are becoming "AI agent managers," but this is workflow/tooling commentary, not a testing-philosophy statement.
+  - Talk: ["The Last Software Engineer"](https://gitnation.com/contents/becoming-product-engineers) — argues the durable skill is deciding *what* to build, not writing code by hand; consistent with (but not an update to) his existing behavior-over-implementation stance.
+  - One surfaced fragment worth flagging with lower confidence: a claim that Dodds has said prompting AI to write tests "improves a lot when sending principles for the tests to follow" — this appeared only in a search-engine synthesis, not verified against a primary source, so treat it as unconfirmed.
+- Bottom line: no evidence he has revised or restated his core testing philosophy in response to LLM code generation; his AI-related public output so far is about *building AI-native applications*, not about *how test-writing changes when AI writes the code*.
+
+## Part 2 — NN/g Crossover Check
+
+Searched: "nngroup.com AI agents", "nngroup.com behavior driven", "nngroup.com structured specification / spec writing AI".
+
+- **No NN/g material connects to BDD, structured specification writing, or software-testing methodology.** This is a real, confirmed negative — not a search gap. NN/g's AI-agent content is entirely UX/design-strategy focused:
+  - [A Concrete Definition of an AI Agent](https://www.nngroup.com/articles/definition-ai-agent/)
+  - [AI Agents as Users](https://www.nngroup.com/articles/ai-agents-as-users/) — fetched and confirmed directly: covers how agents perceive interfaces (vision, accessibility-tree, API access) and design principles for agent-legible UI; explicitly contains no mention of specs, behavior contracts, acceptance criteria, or BDD/Gherkin-style workflows. Its only tangential overlap is that accessibility/semantic-HTML advice happens to also help test automation — coincidental, not a designed connection.
+  - [How Service Design Will Evolve with AI Agents](https://www.nngroup.com/articles/service-design-evolve-ai-agents/)
+  - [A Research Agenda for Generative AI in UX](https://www.nngroup.com/articles/genai-ux-research-agenda/) and [Accelerating Research with AI](https://www.nngroup.com/articles/research-with-ai/) — these are about using AI *to do UX research faster*, not about specifying agent behavior.
+- Recommendation: don't force this connection in any downstream write-up. NN/g's relevant material is squarely about designing interfaces/services for AI-agent consumption (a UX concern), not about software specification methodology or BDD (a dev-process concern). The two bodies of work don't currently intersect.</result>
+<usage><subagent_tokens>55277</subagent_tokens><tool_uses>12</tool_uses><duration_ms>72924</duration_ms></usage>
+</task-notification>
