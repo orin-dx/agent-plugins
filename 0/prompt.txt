@@ -1,0 +1,1 @@
+Let's make sure we're following best practices for bash scripts, We can leverage shared functions, etc to make things cleaner right?
