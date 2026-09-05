@@ -1,0 +1,1 @@
+Check on basis-meta adversarial review fork; once complete, batch and apply fixes for the confirmed lambda SKILL.md and proof exit-gate schema defects.
