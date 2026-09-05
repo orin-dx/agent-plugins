@@ -1,0 +1,38 @@
+<task-notification>
+<task-id>a7c7e2ea398d1320a</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a7c7e2ea398d1320a.output</output-file>
+<status>completed</status>
+<summary>Agent "Research prior art for PR/review/changelog agent splits" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**PR-agent/review-poster split, verified against real prior art**
+
+**PR-Agent (Qodo/CodiumAI)** — [github.com/qodo-ai/pr-agent](https://github.com/qodo-ai/pr-agent), [command reference](https://deepwiki.com/qodo-ai/pr-agent/7.2-command-reference)
+- Confirmed genuinely separate code paths: `PRReviewer` (`/review`, `pr_reviewer.py`) does quality/issue critique; `PRDescription` (`/describe`, `pr_description.py`) does documentation generation. Different classes, different `run()` methods.
+- This directly validates the existing split in this repo between `pr-narrator` (documentation of intent) and any critique step — they're different cognitive modes in real production tooling, not an artificial distinction.
+
+**Atlassian Changesets** — [changesets/changesets](https://github.com/changesets/changesets), [detailed-explanation.md](https://github.com/atlassian/changesets/blob/master/docs/detailed-explanation.md)
+- Confirmed: authoring-time flow prompts for a **per-changeset semver bump type** (major/minor/patch) at PR time, plus a summary — written to a markdown file with YAML frontmatter immediately.
+- Release phase later takes the **max bump across all changesets** per package, flattens into one version bump, writes the changelog. This is exactly the `semver_impact`-per-changeset design already proposed in this conversation — it's established prior art, not overengineering.
+
+**Conventional Comments** — [conventionalcomments.org](https://conventionalcomments.org/)
+- Label taxonomy: `praise`, `nitpick`, `suggestion`, `issue`, `question`, `thought`, `chore` — prefixed on every review comment so intent is unambiguous before tone is read.
+
+**Google Eng Practices** — [how to write code review comments](https://google.github.io/eng-practices/review/reviewer/comments.html)
+- Comment-weight labels: `Nit:`, `Optional:`/`Consider:`, `FYI:` — same mechanism as Conventional Comments, different vocabulary.
+- Explicit rule: include positive comments, not just problems. Point out problems and let the author decide rather than dictating the fix, when possible.
+
+**Danger.js** — inconclusive. Search didn't surface a clean "compute report vs. post it" architectural split — Danger's checks-API vs. comment-API distinction is about *transport*, not a judgment/action separation. Don't cite this as strong precedent either way.
+
+**Human-in-the-loop / draft-confirm-act** — [Google Cloud agent design patterns](https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system), [HITL patterns 2026](https://myengineeringpath.dev/genai-engineer/human-in-the-loop/)
+- Established pattern: read-only steps execute automatically; write/side-effecting operations are gated by a confirmation checkpoint that exposes intent before the action fires. This is generic, well-established, not tool-specific.
+
+**Recommendation, mapped to this repo's cognitive-mode-separation convention:**
+
+- `commit-analyzer`, `pr-narrator`, `changeset-analyzer`: **keep as-is**, each is already a distinct cognitive mode (drafting for a different audience), confirmed correct by PR-Agent's actual class split and Changesets' authoring-time model.
+- `review-preprocessor`: keep; optionally adopt the Conventional Comments / Google label vocabulary for how it categorizes incoming comments (must-fix/suggestion/question already approximates `issue`/`suggestion`/`question`).
+- **`review-composer` (proposed new agent): skip it.** Critiquing a PR is already the built-in `code-review` skill's job (bug/quality findings, `--comment` posting), and PR-spec-conformance is already `axiom`'s "verify-pr" job. A new delta agent doing the same critique work duplicates two existing systems — this is the one place prior art suggests you're about to overcomplicate.
+- **`review-poster`: worth adding, but maybe not as an LLM agent.** Posting is pure mechanical execution of an already-drafted artifact (a review, a comment) — no judgment required, so per this repo's cognitive-mode table it may not need a subagent at all, just a skill-level confirmation gate before the `gh pr review`/`gh pr comment` call. If you want it as a named step for symmetry/auditability, make it `haiku/low`, mechanical only — never drafting content.
+- **"code analyzer": not a new delta concept.** It's the existing top-level `code-review` skill; delta should consume its findings, not re-implement them.</result>
+<usage><subagent_tokens>122945</subagent_tokens><tool_uses>9</tool_uses><duration_ms>563877</duration_ms></usage>
+</task-notification>
