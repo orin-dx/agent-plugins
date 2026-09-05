@@ -1,0 +1,37 @@
+<task-notification>
+<task-id>a812639d94ccb4a15</task-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a812639d94ccb4a15.output</output-file>
+<status>completed</status>
+<summary>Agent "Research CLI and terminal accessibility" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result># CLI/Terminal Accessibility Research Report
+
+## Headline Finding: No WCAG Equivalent Exists
+
+There is no ratified, industry-standard accessibility specification for CLIs or terminal applications comparable to WCAG. There is no standardized "accessibility tree" analogous to the DOM/ARIA — a terminal is structurally an unstructured text stream (CHI '21 paper, confirmed). What exists is a patchwork: one peer-reviewed study, one widely-cited output-style guide that isn't accessibility-focused (clig.dev), independent practitioner checklists (Seirdy, AFixt), one vendor design-system handbook (PatternFly), and after-the-fact vendor engineering blogs (GitHub, 2025).
+
+## Six Topic Areas, With Checkable Rules
+
+**1. Output streams, machine-readability, exit codes** — stdout for primary output, stderr for diagnostics (clig.dev, confirmed); zero/non-zero exit codes (confirmed); `--json`/`--plain` machine-readable modes (confirmed) — these double as the workaround screen-reader users actually rely on (CHI paper). Key gap: TTY-detection alone can't distinguish "human with screen reader" from "human at plain terminal," so accessibility can't hook into TTY checks alone — it needs explicit flags.
+
+**2. Color** — disable color when not a TTY (clig.dev, confirmed); honor `NO_COLOR` (no-color.org, confirmed) and `FORCE_COLOR` (chalk/supports-color convention, confirmed but not a ratified standard like NO_COLOR); never encode meaning in color alone, pair with text labels (PatternFly, confirmed); constrain color to the 16-color ANSI palette since that's the only range terminals let users remap (GitHub engineering blog, confirmed); support `--color=always|never|auto` (Seirdy, confirmed); treat `TERM=dumb` as strip-all-formatting signal (AFixt, confirmed).
+
+**3. Animation/spinners** — the strongest, most repeated confirmed failure pattern. Animated spinners are "extremely problematic for screen readers" (Seirdy); GitHub CLI's braille-character spinner literally confused screen readers and was replaced with static text (GitHub blog, confirmed); Anthropic's own Claude Code has an open issue (#11002) where NVDA freezes during token-streaming/spinner updates, described as "largely unusable" for accessibility-focused Windows users; even GitHub Copilot CLI's shipped `--screen-reader` mode has a live regression re-announcing a status value on every keypress (cli/copilot-cli#1642) — evidence that shipping a flag isn't sufficient without interaction testing.
+
+**4. Structural semantics** — CLIs lack any accessibility-tree equivalent to HTML/DOM (CHI paper, root cause of most other findings); provide text alternatives for ASCII art, opt-in only via flags (AFixt); box-drawing characters get announced verbosely ("box drawing light horizontal") per Claude Code issue #247 (likely, secondary-source only); unstripped ANSI escape codes get read aloud as literal garbage (likely); man pages' standardized, searchable format is a positive pattern worth preserving (Seirdy).
+
+**5. TUI frameworks — the counter-intuitive core finding.** Bubble Tea (Go) has an open, unresolved "is accessibility on the roadmap" issue with no commitment; Ratatui (Rust) has no confirmed accessibility feature and rendered text can't even be copied from the terminal; Textual (Python), the most accessibility-forward framework surveyed, markets high-contrast/colorblind themes but explicitly describes screen-reader integration as still *planned*, not shipped. One critical (non-peer-reviewed) blog post argues modern canvas-redrawing TUI frameworks can be *worse* than old scrollback CLIs because they redraw the whole screen instead of using VT100 scrolling regions. Terminal emulator choice also matters independently: GTK-based terminals (gnome-terminal, xfce4-terminal) are fully accessible; XTerm, urxvt, st, and Konsole are not (blindcomputing.org, confirmed). **Bottom line: a plain, linear, scrollback-based CLI with a static-text screen-reader mode is currently more accessible than a modern full-screen TUI, not less sophisticated.**
+
+**6. Explicit accessibility modes, testing, documentation** — GitHub's `gh a11y` mode (v2.72.0+) and its 2025 accessibility overhaul (screen-reader mode, colorblind theme picker, keyboard-first nav) is the closest thing to a reference implementation that exists; GitHub's own conclusion is that no single "accessible" format works for everyone — customization via explicit flags is necessary; mandate testing with real screen readers or at minimum piping output through `espeak-ng` and listening (Seirdy); document accessibility flags prominently in `--help`, not a separate doc.
+
+## Honest Gap Assessment
+
+- The one peer-reviewed source (CHI '21, Sampath/Merrick/Macvean, ACM DL) had its full text blocked by a 403 on both fetch attempts — findings from it beyond the abstract are secondary paraphrases, not confirmed direct reads.
+- No sustained conference-talk circuit specific to CLI/terminal accessibility was found for 2023–2026; the field runs on one paper, scattered blog posts of uneven rigor, and vendor postmortems rather than proactive research.
+- clig.dev, despite being the most-cited CLI guidelines document, has no dedicated accessibility section — its relevance is incidental.
+
+## Recommendation (medium confidence)
+
+Default new CLI/TUI work to plain/static/structured output (topics 1–4, high-confidence, multiply-corroborated); treat any full-screen TUI framework as accessibility-risk-bearing by default and require a static/linear fallback before shipping (topic 5, weaker per-source but strong in aggregate across four independent frameworks); require real screen-reader or espeak-ng testing as a release gate, since every confirmed production failure found (GitHub Copilot CLI, Claude Code) was interactive/behavioral and passed normal code review undetected.</result>
+<usage><subagent_tokens>70744</subagent_tokens><tool_uses>4</tool_uses><duration_ms>493782</duration_ms></usage>
+</task-notification>
