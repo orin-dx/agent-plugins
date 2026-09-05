@@ -1,0 +1,1 @@
+The feature is enabled in my config so we can request it in the plugins and if it's not enabled for someone else it should still work just not with an agent team, right?
