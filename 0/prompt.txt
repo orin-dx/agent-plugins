@@ -1,0 +1,1 @@
+If we were to write some rust tooling to help the agents and skills and reduce the load on the context window how would we go about doing so? What would be useful? We're planning an AST-based code search tool
