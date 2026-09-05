@@ -1,0 +1,1 @@
+THink from the POV of someone looking at a new GH repo and trying to understand it
