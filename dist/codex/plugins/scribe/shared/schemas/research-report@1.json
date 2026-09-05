@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "research-report@1",
+  "title": "ResearchReport",
+  "description": "Documented evidence base from a research phase. Distinguishes confirmed findings from assumptions.",
+  "type": "object",
+  "required": ["question", "findings", "recommendation", "confidence", "open_questions"],
+  "additionalProperties": false,
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "The research question or requirement being investigated"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim", "evidence", "confidence"],
+        "additionalProperties": false,
+        "properties": {
+          "claim": { "type": "string" },
+          "evidence": {
+            "type": "string",
+            "description": "Where this was found — file path, URL, doc section, or test output"
+          },
+          "source": { "type": "string", "description": "Optional source label" },
+          "confidence": {
+            "enum": ["confirmed", "likely", "assumed"],
+            "description": "confirmed = read directly; likely = inferred from strong evidence; assumed = unverified"
+          }
+        }
+      }
+    },
+    "recommendation": {
+      "type": "string",
+      "description": "The recommended direction based on findings, with explicit rationale"
+    },
+    "confidence": {
+      "enum": ["high", "medium", "low"],
+      "description": "Overall confidence in the recommendation"
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Questions that remain unanswered and may affect the spec or plan"
+    },
+    "linked_requirement": {
+      "type": "string",
+      "description": "ID of the requirement@1 this research addresses"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

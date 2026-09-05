@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "verdict@2",
+  "title": "Verdict",
+  "description": "The sentinel exit gate result. Pass or fail, with specific blockers on failure. Extends verdict@1 with a non-blocking flagged_for_review channel for findings that could not be confirmed or refuted with certainty.",
+  "type": "object",
+  "required": ["verdict", "confidence", "verdict_summary"],
+  "additionalProperties": false,
+  "properties": {
+    "verdict": {
+      "enum": ["pass", "fail"],
+      "description": "Whether the artifact meets its criteria"
+    },
+    "confidence": {
+      "enum": ["high", "medium", "low"],
+      "description": "Confidence in the verdict"
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion", "finding"],
+        "additionalProperties": false,
+        "properties": {
+          "criterion": {
+            "type": "string",
+            "description": "The specific criterion that failed"
+          },
+          "finding": {
+            "type": "string",
+            "description": "What was found — specific, actionable, not generic"
+          },
+          "location": {
+            "type": "string",
+            "description": "File path and line number if applicable"
+          }
+        }
+      },
+      "description": "Required when verdict is fail. Each blocker must give the producing agent enough information to fix the issue."
+    },
+    "flagged_for_review": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["finding_id", "finding"],
+        "additionalProperties": false,
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "description": "The id of the source finding this entry carries forward"
+          },
+          "finding": {
+            "type": "string",
+            "description": "What was flagged — specific, not generic"
+          },
+          "location": {
+            "type": "string",
+            "description": "File path and line number if applicable"
+          }
+        }
+      },
+      "description": "Non-blocking. Findings that could not be confirmed or refuted with certainty, surfaced for human judgment. Never a basis for verdict: fail on its own."
+    },
+    "verdict_summary": {
+      "type": "string",
+      "maxLength": 300,
+      "description": "One paragraph readable by a human or orchestrator. States what passed, what failed, and what happens next."
+    },
+    "artifact_type": {
+      "type": "string",
+      "description": "The schema ID of the artifact that was verified (e.g. spec@1)"
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many times this artifact has been through the gate. Escalate at 3."
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

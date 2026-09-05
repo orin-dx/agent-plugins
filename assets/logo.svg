@@ -86,9 +86,9 @@
     <circle cx="122" cy="50" r="2.5" fill="#A5F3FC" />
   </g>
 
-  <!-- Wordmark: Orin DX / Agent Plugins -->
+  <!-- Wordmark: Wisp / Plugins -->
   <g transform="translate(220, 105)">
-    <text x="0" y="0" class="title-text">ORIN DX</text>
-    <text x="4" y="50" class="subtitle-text">AGENT PLUGINS</text>
+    <text x="0" y="0" class="title-text">WISP</text>
+    <text x="4" y="50" class="subtitle-text">PLUGINS</text>
   </g>
 </svg>

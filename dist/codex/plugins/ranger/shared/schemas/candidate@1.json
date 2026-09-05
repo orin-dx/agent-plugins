@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidate@1",
+  "title": "Candidate",
+  "description": "A raw pattern-match signal from the scanner. Not yet verified — passed to the adversary or boundary-tracer for evaluation.",
+  "type": "object",
+  "required": ["id", "file", "line", "taxonomy", "excerpt"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Sequential identifier, e.g. RUST-001 or TS-001"
+    },
+    "file": {
+      "type": "string",
+      "description": "Repo-relative path to the file containing the match"
+    },
+    "line": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Line number of the match"
+    },
+    "taxonomy": {
+      "type": "string",
+      "description": "Taxonomy name from the hazard reference file (e.g. 'Write-Only Fields', 'False-Success Mutation')"
+    },
+    "excerpt": {
+      "type": "string",
+      "description": "The matching line plus 2 lines of surrounding context"
+    },
+    "grep_pattern": {
+      "type": "string",
+      "description": "The grep pattern that produced this match — for traceability"
+    }
+  }
+}

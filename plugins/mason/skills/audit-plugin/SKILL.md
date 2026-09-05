@@ -18,7 +18,7 @@ Checks a plugin against the ecosystem's actual conformance rules — not vibes. 
 </dispatch>
 
 <references>
-`shared/constitution.md`
+`shared/constitution.md`, `shared/harness-authoring.md` when the plugin has a Codex-native source
 </references>
 
 <io>

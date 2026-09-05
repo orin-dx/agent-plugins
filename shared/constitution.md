@@ -244,6 +244,10 @@ WHEN the top-level language index file (`rust.md`, `typescript.md`) is reference
 
 WHEN a plugin is published, it SHALL include a `README.md` with: purpose, when-to-use trigger phrases, agent table with modes and tiers, pipeline diagram, output schema reference, and install instructions.
 
+WHEN editing Markdown, THE SYSTEM SHALL keep each prose paragraph on one physical source line — Markdown prose SHALL NEVER be manually wrapped.
+
+WHEN authoring Markdown, THE SYSTEM SHALL use a succinct, friendly, engineering-focused voice and favor scannable headings, lists, tables, diagrams, and charts over dense prose.
+
 WHEN CONTRIBUTING.md is updated, it SHALL reflect the current authoring checklist — not the authoring conventions from a prior era.
 
 WHEN a new agent-authoring convention is added to this constitution or to CONTRIBUTING.md's checklist — a new required section, a new required check — THE SYSTEM SHALL update `mason:scaffolder` and `mason:auditor` in the same change. A convention `mason` cannot generate or verify is documented, not enforced, and every plugin scaffolded before the update inherits the gap silently.

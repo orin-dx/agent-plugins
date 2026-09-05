@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "arch-audit@1",
+  "title": "Architecture Audit",
+  "description": "Result of checking a draft spec@1 against the workspace's persisted arch-model@1 for architectural fit — boundary violations, competing abstractions, and invariant conflicts. Produced by scribe:arch-auditor in check mode. Not a binding verdict; a fail routes back to scribe/draft-spec the same way an audit-spec fail does, under the same 2-round circuit breaker.",
+  "type": "object",
+  "required": ["issues", "overall"],
+  "additionalProperties": false,
+  "properties": {
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "description", "suggested_fix"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": ["boundary-violation", "competing-abstraction", "invariant-conflict", "missing-model-coverage"],
+            "description": "boundary-violation: spec implies a dependency running against a module's allowed direction. competing-abstraction: spec introduces a new type/interface for a concept the model already canonicalizes. invariant-conflict: spec conflicts with a modeled invariant. missing-model-coverage: spec touches an area the model doesn't describe — not itself a defect, but a gap worth noting."
+          },
+          "description": { "type": "string" },
+          "location": { "type": "string", "description": "File path or module name the issue concerns, if applicable" },
+          "suggested_fix": { "type": "string", "description": "The rewritten fix, not just a description of the problem" }
+        }
+      }
+    },
+    "overall": {
+      "enum": ["pass", "fail"],
+      "description": "pass only if no boundary-violation, competing-abstraction, or invariant-conflict issues exist. missing-model-coverage alone never fails the audit."
+    },
+    "model_updates_suggested": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Things noticed during the check that the model itself should learn (a new module, a new canonical abstraction) without triggering a full rebuild."
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

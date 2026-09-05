@@ -32,7 +32,9 @@ Muse specs the component, not the code that implements it — for code-level acc
 /plugin install muse
 ```
 
-**AGY** — installs the full repo; see the [root README](../../README.md#quick-start) for instructions.
+**AGY** — installs the full repo; see the [root README](../../README.md#install) for instructions.
+
+**Codex** — see the [root Codex setup](../../README.md#codex), then run `codex plugin add muse@wisp-plugins`.
 
 ---
 

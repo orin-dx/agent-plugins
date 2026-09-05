@@ -1,0 +1,24 @@
+{
+  "name": "courier",
+  "version": "3.0.0",
+  "description": "Prepare verified work for commits, pull requests, review response, changesets, and releases.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "homepage": "https://github.com/orin-dx/agent-plugins",
+  "repository": "https://github.com/orin-dx/agent-plugins",
+  "license": "MIT",
+  "keywords": ["git", "github", "release", "changeset", "review"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Courier",
+    "shortDescription": "Ship verified work safely",
+    "longDescription": "Ground commits, pull requests, review responses, changesets, and release artifacts in repository evidence.",
+    "developerName": "Gabriel Castro (Orin DX)",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/orin-dx/agent-plugins",
+    "defaultPrompt": ["Prepare a commit from my staged changes", "Draft a PR from this verified work", "Create changesets for these changes"]
+  }
+}

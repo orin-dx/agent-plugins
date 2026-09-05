@@ -2,6 +2,11 @@
 
 — mason
 
+## [3.0.1] - 2026-09-04
+
+### Changed
+- `audit-plugin` and `scaffold-plugin` skills now cite `shared/harness-authoring.md` — conditionally, when the audited/scaffolded plugin has (or will have) a Codex-native source under `harnesses/codex/plugins/<id>/`. Mason's own conformance/scaffolding logic needed to become aware of the new cross-harness authoring convention introduced alongside the Codex marketplace; see the root `CHANGELOG.md` entry for that larger addition.
+
 ## [3.0.0] - 2026-08-27
 
 ### Changed

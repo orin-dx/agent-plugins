@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harness-evaluation@1",
+  "title": "Harness Evaluation",
+  "description": "Evidence-led result for one representative workflow run in one agent harness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "fixture", "route", "execution", "artifacts", "outcome", "blocking_findings", "reasoning"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "fixture": {"type": "string", "minLength": 1},
+    "route": {"type": "string", "minLength": 1},
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["harness", "mode", "recorded_at", "host_version", "model", "roles"],
+      "properties": {
+        "harness": {"type": "string", "enum": ["claude", "codex"]},
+        "mode": {"type": "string", "enum": ["single-agent", "team"]},
+        "recorded_at": {"type": "string", "format": "date-time"},
+        "host_version": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1},
+        "roles": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stage", "schema", "path", "schema_valid", "evidence_paths", "consumer_usable", "notes"],
+        "properties": {
+          "stage": {"type": "string", "minLength": 1},
+          "schema": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1},
+          "schema_valid": {"type": "boolean"},
+          "evidence_paths": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "consumer_usable": {"type": "boolean"},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "outcome": {"type": "string", "enum": ["pass", "fail", "unverifiable"]},
+    "blocking_findings": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "reasoning": {"type": "string"}
+  }
+}

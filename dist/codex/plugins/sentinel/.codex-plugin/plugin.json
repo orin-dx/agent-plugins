@@ -1,0 +1,24 @@
+{
+  "name": "sentinel",
+  "version": "2.0.0",
+  "description": "Independently gate lifecycle artifacts against explicit criteria before they cross a workflow boundary.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "homepage": "https://github.com/orin-dx/agent-plugins",
+  "repository": "https://github.com/orin-dx/agent-plugins",
+  "license": "MIT",
+  "keywords": ["verification", "quality-gate", "specification", "review", "evidence"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Sentinel",
+    "shortDescription": "Gate work with evidence",
+    "longDescription": "Verify requirements, specs, plans, implementations, and pull requests against their stated criteria before the next lifecycle stage.",
+    "developerName": "Gabriel Castro (Orin DX)",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read"],
+    "websiteURL": "https://github.com/orin-dx/agent-plugins",
+    "defaultPrompt": ["Gate this spec before implementation", "Verify this PR against its criteria", "Is this artifact ready for the next stage?"]
+  }
+}

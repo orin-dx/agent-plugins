@@ -1,6 +1,6 @@
 # Architecture
 
-How plugins are structured, how agents communicate, how context is managed, and how the verification gate works.
+System design for plugin authoring, lifecycle contracts, generated Codex distribution, validation, and release safety.
 
 ---
 
@@ -10,7 +10,7 @@ Context is loaded on demand. Every agent's context window contains only what its
 
 ```mermaid
 %%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}}}%%
-flowchart TD
+flowchart LR
     classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:15px,font-weight:600;
     classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:15px,font-weight:600;
     classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:15px,font-weight:600;
@@ -140,7 +140,7 @@ Each subagent declares `model` and `effort` in its frontmatter. These are routin
 
 ```mermaid
 %%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}}}%%
-flowchart TD
+flowchart LR
     classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:15px,font-weight:600;
     classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:15px,font-weight:600;
     classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:15px,font-weight:600;
@@ -252,13 +252,118 @@ Full guide: `shared/agent-best-practices.md`. Key constraints:
 
 ---
 
-## 8. Cross-Platform Compatibility
+## 8. Cross-Harness Distribution
 
-Plugins run natively in Claude Code and AGY — no custom server framework required.
+The repository has one lifecycle contract and harness-specific execution packages. Claude Code and AGY consume the authored plugins directly; Codex consumes a generated, materialized marketplace. No custom server framework is required.
 
-| Concern | Approach |
-| :--- | :--- |
-| Model routing | `model`/`effort` frontmatter for Claude Code; AGY uses its own router |
-| Tool calls | Abstract language — portable across both platforms |
-| Paths | Relative only — `shared` symlink provides consistent paths from any plugin dir |
-| Schema validation | Wiring-time, host-side — agents never validate JSON Schema directly |
+```mermaid
+flowchart LR
+    ClaudeSource["Claude source\nmanifest · skills · agents"] --> Claude["Claude Code + AGY\nsource marketplace"]
+    SharedManifest["Shared plugin manifest\nID · version · contracts"] --> Build["Codex marketplace generator"]
+    CodexSource["Native Codex source\nmanifest · skills · resources"] --> Build
+    Catalog["Codex catalog\norder · runtime files"] --> Build
+    Schemas["Shared schemas\nversioned JSON contracts"] --> Claude
+    Schemas --> Build
+    Build --> Codex["Codex\ngenerated marketplace"]
+```
+
+| Concern | Claude Code and AGY | Codex |
+| :--- | :--- | :--- |
+| Plugin metadata | `plugins/<id>/plugin.json` | Native `.codex-plugin/plugin.json`, version- and author-checked against the shared manifest |
+| Workflow implementation | Authored skills and specialist agents | Separately authored skills in `harnesses/codex/plugins/<id>/skills/` |
+| Delegation | Named agents where the host supports them | Optional agent teams using packaged cognitive-mode role cards; complete single-agent fallback |
+| Durable handoffs | Versioned JSON schemas in `shared/schemas/` | Identical bytes materialized only where the native workflow needs them |
+| Runtime paths | Relative paths; source symlinks may provide shared context | Regular files only; generated output contains no symlinks |
+| Marketplace root | Repository root marketplace files | `dist/codex/.agents/plugins/marketplace.json` |
+
+`plugins/<id>/plugin.json` remains authoritative for shared ID, version, author, and produced/consumed artifacts. `harnesses/codex/plugins/<id>/` owns the Codex manifest, skills, category, capability, resource, and team-use choices. `harnesses/codex/catalog.json` owns marketplace order and runtime-file materialization. `tools/build-codex-marketplace.py` atomically packages `dist/codex`; generated files are reviewed and released with their sources, never edited by hand.
+
+The schema is the cross-harness contract. Named agents, model routing, prompt wording, tool availability, and delegation strategy are harness-specific implementation details.
+
+- A source change is shared only when it affects plugin identity or a versioned artifact contract.
+- A workflow change is compatible only when both harnesses preserve the intended schema, evidence, and acceptance criteria; transcript or prose identity is not required.
+- Codex may use an agent team for independent work, but a missing team capability never blocks the single-agent workflow.
+
+---
+
+## 9. Codex Marketplace Build System
+
+`dist/codex` is a reproducible build artifact, not a second authored plugin tree. The generator packages native Codex sources without rewriting them, while rejecting ID, version, author, and skill-set drift from the shared plugin contract.
+
+```mermaid
+flowchart LR
+    Manifest["plugins/id/plugin.json\nidentity · version · contracts"] --> Builder["build-codex-marketplace.py"]
+    ClaudeSkills["plugins/id/skills\nrequired skill inventory"] --> Builder
+    Native["harnesses/codex/plugins/id\nauthored manifest · skills · resources"] --> Builder
+    Catalog["harnesses/codex/catalog.json\nmarketplace order · runtime files"] --> Builder
+    Schemas["shared/schemas\nversioned JSON contracts"] --> Builder
+    Builder --> Temp["temporary regular-file bundle"]
+    Temp --> Check["--check\nexact tree and byte comparison"]
+    Temp --> Publish["atomic replace"]
+    Publish --> Bundle["dist/codex\ninstallable Codex marketplace"]
+```
+
+| Input | Authoritative for | Generator behavior |
+| :--- | :--- | :--- |
+| `plugins/<id>/plugin.json` | Shared plugin ID, version, author, `consumes`, and `produces` | Verifies the catalog ID plus native version and author match the shared source |
+| `plugins/<id>/skills/*/SKILL.md` | Required skill-name inventory | Requires exact native Codex skill-name parity; does not copy or transform Claude prompt bodies |
+| `harnesses/codex/plugins/<id>/` | Native Codex manifest, workflows, resources, and team policy | Copies authored regular-file content byte-for-byte into the bundle |
+| `harnesses/codex/catalog.json` | Marketplace identity, plugin order, and runtime dependencies | Rejects unknown or duplicate plugin IDs and materializes only declared runtime files |
+| `shared/schemas/` | Durable inter-harness artifact contracts | Materializes declared regular-file schema copies into the relevant Codex plugins |
+
+### Build guarantees
+
+- The generator resolves every input path beneath the repository root and rejects links that escape it.
+- Runtime source links are dereferenced into regular files; generated bundles contain no symlinks.
+- Authored native manifests and skill files are copied byte-for-byte; generated marketplace order follows the catalog.
+- A normal build writes into a sibling temporary directory, then replaces `dist/codex` only after successful generation.
+- If a build fails after moving the previous output aside, the generator restores the previous output.
+- `--check` builds the expected tree in a temporary directory and fails on missing files, stale files, symlinks, or byte differences without changing `dist/codex`.
+
+## 10. Generated Marketplace Contract
+
+The generated directory is a self-contained Codex marketplace root. Marketplace entry paths are relative to that root, which is why published installation uses `--sparse dist/codex` rather than the repository root.
+
+```text
+dist/codex/
+├── .agents/plugins/marketplace.json       # Ordered marketplace entries
+└── plugins/<id>/
+    ├── .codex-plugin/plugin.json          # Authored native Codex manifest
+    ├── skills/<skill>/SKILL.md             # Authored native Codex workflow
+    ├── agent-roles/*.md                    # Packaged cognitive-mode delegation cards
+    ├── shared/schemas/*.json               # Materialized contracts needed by this plugin
+    └── shared/references/*.md              # Materialized only when a native skill declares it
+```
+
+The generated bundle intentionally omits Claude agent files. A Codex skill owns its workflow, uses shared JSON contracts, and may request a team only when that runtime capability exists. It selects a packaged role card before delegation; the role card guides cognitive mode and ownership but is not a TOML runtime configuration. This prevents a host-specific Claude agent topology from becoming a false Codex runtime contract.
+
+## 11. Validation and Release Model
+
+Validation is layered so each check owns a distinct failure class.
+
+| Gate | Command or mechanism | Failure prevented |
+| :--- | :--- | :--- |
+| JSON shape | `jq` in CI | Invalid marketplace, manifest, schema, or Codex catalog JSON |
+| Source wiring | `shared/scripts/validate-wiring.sh` | Missing schema files or producer/consumer declarations with no source |
+| Source documentation | `scripts/check-skills-doc.sh` | Documented skills without a matching source directory |
+| Version consistency | `scripts/check-versions.sh` | Plugin version disagreement across manifest, README, changelog, and marketplace |
+| Native build behavior | `tests/test_build_codex_marketplace.py` | Native manifest/skill rewriting, source/native skill drift, version drift, stale output retention, unsafe runtime collisions, and symlink output |
+| Native source contract | `tests/test_codex_native_sources.py` | Missing native sources, invalid required manifest or skill metadata, source/native skill inventory drift, or rewritten release files |
+| Cross-harness compatibility | `tests/test_cross_harness_artifacts.py` | Changed portable contract bytes or missing lifecycle producer/consumer links |
+| Release drift | `tools/build-codex-marketplace.py --check` | A committed `dist/codex` that differs from source inputs |
+| Diagram syntax | `scripts/check-mermaid.sh` | Markdown diagrams that cannot render |
+
+CI runs the catalog JSON, native build, compatibility, drift, version, source-documentation, reference-size, and Mermaid checks. The release payload and its native-source, catalog, and schema change belong in the same review; a generated-only change is not a valid release.
+
+## 12. Failure Containment and Compatibility Boundaries
+
+| Condition | System response | Recovery |
+| :--- | :--- | :--- |
+| Malformed catalog, missing native skill, duplicate plugin ID, or native/shared identity mismatch | Generator exits before replacing the existing bundle | Correct the authored input, regenerate, and run `--check` |
+| Runtime file resolves outside the repository | Generator rejects the path | Use a repository-contained source file or copy the required artifact into a tracked source location |
+| Source or generated bundle changes without regeneration | Drift check fails | Regenerate `dist/codex` and review source plus output together |
+| Portable schema changes incompatibly | Existing consumers cannot safely assume the old shape | Add a new schema version; do not mutate the existing version |
+| Agent teams are unavailable | Codex skill does not delegate | Complete the same workflow in one agent and preserve the same artifact contract |
+| Two harnesses produce different prose or reasoning | Not automatically a compatibility failure | Run [`docs/codex-behavioral-evaluation.md`](./docs/codex-behavioral-evaluation.md) and compare valid artifacts, evidence, and acceptance criteria |
+
+The compatibility fixture covers the core `requirement@1 → research-report@1 → spec@1 → plan@1` lifecycle. It proves shared schema validity, materialized schema identity, and declared handoff links; it does not prove model-equivalent judgment, tool use, or transcript content.
