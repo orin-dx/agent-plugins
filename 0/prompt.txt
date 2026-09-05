@@ -1,0 +1,1 @@
+Think from the perspective of a user triggering the skills and agents
