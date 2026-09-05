@@ -1,0 +1,1 @@
+Can we update the readme to explain what we have, how it's setup and how we install codex vs claude plugins?
