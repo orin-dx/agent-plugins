@@ -1,0 +1,29 @@
+<task-notification>
+<task-id>a952b9ac148db45c7</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/876031dc-e253-4b55-afac-580ba4ee097a/tasks/a952b9ac148db45c7.output</output-file>
+<status>completed</status>
+<summary>Agent "Rewrite trace, vector, delta plugin agents with 4-part structure" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>All three SKILL.md files have dispatch matrices (2 hits = opening and closing tags). Done.
+
+Here's a summary of every change made:
+
+**12 agent files rewritten** across trace, vector, and delta — all now have the exact 4-part structure (`&lt;backstory&gt;`, `&lt;goal&gt;`, `&lt;judgment&gt;`, `&lt;output&gt;`). Forbidden elements (`&lt;role&gt;` body sections, `&lt;constraints&gt;`, `&lt;context&gt;`, `success_criteria`) were removed. EARS notation appears only in `&lt;output&gt;` sections.
+
+**Model/effort changes from the existing files:**
+- `trace-risk-assessor`: opus/high → sonnet/medium (per spec)
+- `delta-review-preprocessor`: sonnet/medium → haiku/low (per spec); function also changed from review-comment categorizer to pre-PR review package assembler
+
+**`load_first` added** to the four delta agents that read shared references: delta-changeset-analyzer, delta-commit-analyzer, delta-pr-narrator, delta-release-summarizer.
+
+**SKILL.md updates:**
+- `trace/SKILL.md`: added `Model / Effort` column to existing dispatch matrix; removed `&lt;success_criteria&gt;` checklist
+- `vector/SKILL.md`: added new `&lt;subagent_dispatch_matrix&gt;` section (none existed before)
+- `delta/SKILL.md`: added new `&lt;subagent_dispatch_matrix&gt;` section (none existed before)
+
+**README updates:**
+- `trace/README.md`: updated trace-risk-assessor row from opus/high to sonnet/medium with revised description
+- `delta/README.md`: updated delta-review-preprocessor row from sonnet/medium to haiku/low with new description; updated sub-skills and subagent selection table to reflect the changed function</result>
+<usage><subagent_tokens>57656</subagent_tokens><tool_uses>45</tool_uses><duration_ms>565119</duration_ms></usage>
+</task-notification>
