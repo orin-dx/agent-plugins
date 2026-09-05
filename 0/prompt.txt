@@ -1,0 +1,1 @@
+We should version appropriately using semver and we should make changelog changes across the board. Does that make sense?
