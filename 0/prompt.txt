@@ -1,0 +1,5 @@
+We want to have our language to be succinct, focused, to the point and generally engineering focused. Devoid of AI slop, ai word salad and filler words. We want to avoid unecessary and wordy blocks. Where appropriate favoring bullets, diagrams, etc.
+
+We want easily scannable, readable and understandable text vs wordy prose right?
+
+What kind of guidelines are out there? What does UX research say about user documentation? Best practices for changelogs, documentation, etc? How can we best guy our LLMs?
