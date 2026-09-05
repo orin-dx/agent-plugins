@@ -1,0 +1,1 @@
+I'm wondering what Böckeler's study and findinds actually mean. Is TDD adding more cost or is non-TDD better results but at the higher cost? Cost is a big concern too, right?
