@@ -1,0 +1,1 @@
+The wisp MCP can leverage the monokl library too and gix to bring in full context with sqlite and vectors for leverage?
