@@ -1,0 +1,1 @@
+Check on marketplace/changelog cross-check fork; once complete, fix confirmed defects (axiom SKILL.md stale authoring-time ref + any marketplace/changelog findings) and report a calibrated confidence answer to the user.
