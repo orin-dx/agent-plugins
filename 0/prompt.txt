@@ -1,0 +1,10 @@
+If we consider we want more native orchestration for kimi, GLM, Qwen is that possible in Claude? I thought some of them had more native orchestration support. What about GPT models in claude?
+
+Can all of the models work better together in another  orchestrator? What about Block's Buzz? Or what Stripe is doing with OpenRouter? OpenHands, Cline, Aider, Goose, Qwen code, continue.dev, Pi, Cursor, Augment Code,
+
+https://devtoollab.com/blog/open-source-alternatives-claude-code
+https://www.datacamp.com/blog/claude-code-alternatives
+https://stripe.dev/blog/minions-stripes-one-shot-end-to-end-coding-agents
+https://github.com/HKUDS/OpenHarness
+
+What about things like LMStudio, LiteLLM, OpenRouter, OpenLIT, OmniAgent etc? What about tools like RTK, where do they come in? Other alternatives? I feel like we need to do a lot more research with agent teams to augment our artifact report. Use the best model and effort for high quality with a focus on keeping costs down if possible.
