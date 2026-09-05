@@ -1,0 +1,1 @@
+FYI the trace mermaid diagram has a typo and is not rendering. How do we check on mermaid diagrams like this? We make these mistakes every now and again.
