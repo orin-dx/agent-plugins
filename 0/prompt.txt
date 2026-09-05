@@ -1,0 +1,16 @@
+<task-notification>
+<task-id>a5f2826b4d27f5c5d</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a5f2826b4d27f5c5d.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix proof's fictional sub-skills, polish README" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Directive: fix `proof`'s fictional sub-skills table and polish its README for scannability. Done — no commits made (per parent's central-sync instruction on marketplace files, I left version-control to the parent).
+
+**Version:** `2.2.0` → `2.2.1` (patch, per this repo's own semver table: doc/accuracy fix).
+
+**Summary:** `plugins/proof/skills/proof/SKILL.md` and `plugins/proof/README.md` both claimed four independently-invokable "sub-skills" (`proof/scan`, `proof/focus`, `proof/verify`, `proof/remediations`) — fiction, since proof has exactly one skill directory (`skills/proof/`), confirmed against `plugin.json`'s single agent set. Replaced both with an honest "How It Works" section describing the one fixed 5-phase pipeline (recon → scanner → boundary-tracer [conditional] → adversary → exit-gate) and how the request itself — not a separate command — determines which phase does the work. Also fixed a stale version mismatch (README said `2.0.0`, `plugin.json` said `2.2.0`), replaced the README's plain-text pipeline arrow with a styled Mermaid flowchart using `orin-visual-standard.md`'s palette, and added the `CHANGELOG.md` entry.
+
+Files touched: `plugins/proof/skills/proof/SKILL.md`, `plugins/proof/README.md`, `plugins/proof/plugin.json`, `plugins/proof/CHANGELOG.md`.</result>
+<usage><subagent_tokens>677585</subagent_tokens><tool_uses>13</tool_uses><duration_ms>82936</duration_ms></usage>
+</task-notification>
