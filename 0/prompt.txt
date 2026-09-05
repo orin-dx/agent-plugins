@@ -1,0 +1,1 @@
+I think more so than exist gates, perhaps planning and specing could use fable? Overall architecture and overall code analysis and reviews???
