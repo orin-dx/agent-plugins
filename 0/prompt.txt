@@ -1,0 +1,1 @@
+/compact but keep the context of knowledge to allow us to do the more adversarial analysis re-read of everything.
