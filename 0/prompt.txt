@@ -1,0 +1,20 @@
+<task-notification>
+<task-id>a12cffddc4b65c37b</task-id>
+<tool-use-id>toolu_017jSFD9oGuX3AM1wsJKZ7cs</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa/tasks/a12cffddc4b65c37b.output</output-file>
+<status>completed</status>
+<summary>Agent "Set up community health files for monokl" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Directive: set up GitHub community health files for `monokl` at `/Users/gabe/Projects/monokl`.
+
+**What monokl is:** An AST-aware semantic code search tool for TS/JS/Rust, built specifically for AI agents to consume (structured JSON output, not human-readable reports). Currently spec-stage — no code exists yet, only a full design in `docs/spec/`.
+
+**PR template decision:** Kept it lightweight rather than elaborate — this session's own research found `rust-lang/rust`, VS Code, and Next.js all ship with no PR template at all, so heavy isn't automatically better. Included a "spec change" type-of-change option (since right now that's the only kind of PR possible) alongside a code test-plan checklist scoped to the workspace's actual tooling (`cargo nextest`, `clippy`, `insta`) for when implementation starts.
+
+**Files added:** `CODE_OF_CONDUCT.md` (verbatim Contributor Covenant 2.1), `SECURITY.md` (scope grounded in monokl's real threat model — parser exploitation via crafted source, path traversal, agent-facing output manipulation, parser supply chain), `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/{bug_report.md, feature_request.md, config.yml}`, and a one-line pointer added to `CONTRIBUTING.md`.
+
+Repo had substantial unrelated in-progress work (other `.claude/plans/`, `.claude/specs/`, modified `ARCHITECTURE.md`) — staged and committed only the 7 files from this directive, left everything else untouched.
+
+**Commit:** `ba9d09f` on `main`, local only — not pushed.</result>
+<usage><subagent_tokens>856689</subagent_tokens><tool_uses>15</tool_uses><duration_ms>291832</duration_ms></usage>
+</task-notification>
