@@ -1,0 +1,1 @@
+How do we build tools to keep our setup consistent? We don't want to forget to make changes to both codex plugins and claude. Appropriately adjust, etc
