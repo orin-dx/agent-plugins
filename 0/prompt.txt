@@ -1,0 +1,1 @@
+Do a lot of research, find examples of plugins that have both claude and codex (and maybe others opencode, deepseek, etc)
