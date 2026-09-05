@@ -1,0 +1,1 @@
+Are we being too prescriptive in any place that we should lean more on guidance and allow LLMs to be fleixble as long as they understand goal and intent?
