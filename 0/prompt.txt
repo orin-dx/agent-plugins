@@ -1,0 +1,1 @@
+Let's evaluate all our changes against out best practices. Context size, tone, succinct wording, EARS, goal/outcome, etc
