@@ -1,0 +1,73 @@
+<task-notification>
+<task-id>af1ce9dc00a2592e6</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/af1ce9dc00a2592e6.output</output-file>
+<status>completed</status>
+<summary>Agent "Research BBC, NN/g, and leading a11y/UX experts" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I now have solid, sourced material across all four areas. Compiling the findings report.
+
+## Findings Report: Accessibility as a Design Discipline (for Spec-Time Reasoning)
+
+### 1. BBC — Accessibility Design Review (pre-code process)
+
+BBC's practice is documented publicly at [bbc.github.io/accessibility-news-and-you](https://bbc.github.io/accessibility-news-and-you/guides/accessibility-design-review.html) (repo: [bbc/accessibility-news-and-you](https://github.com/bbc/accessibility-news-and-you/blob/master/accessibility-news-and-designers.md)) plus their formal [BBC Mobile Accessibility Standards and Guidelines](https://www.usabilityinciviclife.org/bibliography/bbc-mobile-accessibility-standards-and-guidelines-v1-0/) and a current supplier framework for accessibility consultancy/review effective Jan 2025 ([find-tender.service.gov.uk notice](https://www.find-tender.service.gov.uk/Notice/001914-2025/PDF)).
+
+Key mechanism — a **structured design review that happens before sign-off, before any code**:
+- An "accessibility champion" (any discipline, not necessarily an a11y specialist) pairs with the designer for 1–2 hours per component.
+- Five-step review: visual inspection → check against key user-group considerations → compare against known best-practice references (e.g., Home Office Digital / Barclays accessibility posters) → verify user research included participants with access needs → **write out the intended screen-reader experience narrative** for the component.
+- That screen-reader narrative is the deliverable that crosses the design→dev boundary — it tells developers what semantics/behavior to build to, before a line of code exists.
+- Designer's own checklist requires, at design time: standard link/focus/hover states; 4.5:1 contrast (tool-checked); color-blindness simulation; explicit decision on whether icons need visually-hidden text; explicit call on heading structure/ARIA landmarks (discussed *with* developers pre-build); logical tab order; and an explicit answer to "does this degrade gracefully without JS."
+
+**Relevance to spec-writing agents**: BBC's model proves the "screen reader experience script" is a legitimate, testable spec artifact — a designer/spec-writer states expected role/name/state announcements before implementation, which is directly falsifiable later against actual AT output.
+
+### 2. Nielsen Norman Group — accessibility as inseparable from UX quality
+
+Sources: [NN/g Accessibility and Inclusivity: Study Guide](https://www.nngroup.com/articles/accessibility-inclusivity-study-guide/), [NN/g accessibility topic/reports hub](https://www.nngroup.com/reports/topic/accessibility/), [Beyond Accessibility: Treating Users with Disabilities as People](https://www.nngroup.com/articles/beyond-accessibility-treating-users-with-disabilities-as-people/), [Inclusive Design: Part 2](https://www.nngroup.com/articles/inclusive-design-part-2/).
+
+Core argument: NN/g explicitly frames **accessibility and inclusivity as branches of usability, not compliance categories** — "mindsets rather than collections of procedures, regulations, or checklists." Their stated rationale for why accessible design is just better design: features built for access needs (contrast, clear labeling, keyboard operability, predictable structure) measurably help everyone, not only disabled users — captured in their framing "accessible solutions benefit everyone." They cite population scale (an estimated 15–20% of people live with a disability, and a similar proportion is neurodiverse) as the business/design case for treating this as core UX, not edge-case handling.
+
+Process guidance for starting-early rather than retrofitting: (a) test with actual users with disabilities early, not just automated/heuristic checks — "the only way to know if designs are accessible and usable... is to test them with this population"; (b) NN/g's "Beyond Accessibility" piece pushes teams to treat disabled users as people with goals and context, not a checkbox demographic, which argues for accessibility being part of persona/scenario work at the requirements stage, not appended later; (c) inclusive design should start at the "organizational"/planning level (Part 2, drawing on Tognazzini) — embedded in foundational project structure rather than bolted onto a finished design.
+
+**Relevance**: Justifies a design principle for the pipeline: accessibility considerations belong in the same acceptance-criteria pass as any other UX quality bar — not a separate "a11y section" appended afterward — and that criteria should reference real assistive-tech user validation, not just automated-checker pass/fail, wherever feasible.
+
+### 3. Other frameworks and practitioner sources
+
+- **Microsoft Inclusive Design Toolkit** ([inclusive.microsoft.design](https://inclusive.microsoft.design/), [Inclusive 101 guidebook](https://inclusive.microsoft.design/articles/inclusive-101-guidebook)): three core principles — *recognize exclusion; learn from diversity; solve for one, extend to many*. The 2nd-edition toolkit (design-for-cognition) adds: understand user motivation/goals/tasks; assess cognitive load of the mismatch; co-create with a diverse community. Trained ~80,000 Microsoft employees and taught at 60+ universities — a widely-adopted framework for translating "who is excluded by this design decision" into an explicit design-time question, which maps well onto asking a spec-writing agent to state, per feature, who could be excluded and how the spec addresses it.
+
+- **Heydon Pickering, Inclusive Components** ([book.inclusive-components.design](https://book.inclusive-components.design/)): philosophy is "not about wrong and right, but bad to better" — a pragmatic, non-perfectionist stance. Approach: examine one component at a time, ask who could be tripped up by it, and prefer semantic HTML + native behavior over custom JS reimplementation. Explicitly names the tension between logical document structure, visual layout, and interaction, and says compromise is inevitable but "should be an equitable sort of compromise" — useful framing for an agent judging trade-offs rather than treating a11y as pass/fail absolutist.
+
+- **The A11Y Project checklist** ([a11yproject.com/checklist](https://www.a11yproject.com/checklist/)): built directly on WCAG as shared vocabulary, targets AA, and is explicit that "there is no such thing as 100% accessible" — the checklist is a floor for continuous improvement, not a certificate. Values noted: person-first/non-ableist language, and verifying with actual daily AT users, not just automated tooling.
+
+- **WebAIM** ([webaim.org/standards/wcag/checklist](https://webaim.org/standards/wcag/checklist), [WCAG testability](https://webaim.org/blog/wcag-2-testability/)): translates WCAG's formal success criteria into plain-language, verifiable checks organized by the four POUR principles (Perceivable, Operable, Understandable, Robust). Important structural point: **WCAG itself defines "testable" formally** — a criterion must be answerable "yes/no" by a machine, or produce ≥80% agreement among knowledgeable human evaluators (WCAG 2.x tightens this to requiring consistent results across independent testers). This is a ready-made bar for what "testable" means in an accessibility acceptance criterion.
+
+- **GOV.UK Service Manual / GDS Way** ([gov.uk/service-manual](https://www.gov.uk/service-manual/helping-people-to-use-your-service/making-your-service-accessible-an-introduction), [GDS Way accessibility](https://gds-way.digital.cabinet-office.gov.uk/manuals/accessibility.html)): explicit rule that "accessibility cannot be achieved by adding final touches — it must be considered at all stages," and assigns accessibility ownership by role (content/interaction designers avoid inaccessible patterns, researchers test for it, delivery managers ensure it's considered from the start) — a concrete distribution-of-responsibility model rather than leaving it to one specialist.
+
+### 4. Writing testable, falsifiable accessibility acceptance criteria — the key finding
+
+The most directly applicable pattern is **Deque's "a11yAC" (Accessibility Acceptance Criteria)**, part of their "a11yBID" (Accessibility Behavior-Informed Development) methodology — [Deque: Collaborative planning, the forgotten step of accessible development](https://www.deque.com/blog/collaborative-planning-the-forgotten-step-of-accessible-development/). This is the closest real-world analog to what this pipeline needs:
+
+- a11yAC are written in **Gherkin Given-When-Then** form, same as functional acceptance criteria, and live in the same user story — not a separate a11y appendix.
+- Concrete example given:
+  &gt; Given I am a blind screen reader user, and I have submitted the form, and a loading spinner is visible as I await a response from the server, When I navigate to the loading spinner image, Then I hear the image role, and I hear the alt text as "loading."
+- Explicit design rule: a11yAC should be **agnostic to specific assistive-tech key commands** and instead state the expected *semantics* (role, state, property/name) — i.e., criteria are written against the accessibility-tree contract, not against "press NVDA+X and hear Y," which keeps them stable across AT implementations while remaining falsifiable.
+- Process: a "**11y Amigos**" session (analyst/story-writer + developer + tester + designer — a variant of BDD's "three amigos") discovers and documents a11yAC **before development starts**, explicitly because "no single person is expected to know enough about all aspects of accessibility to write quality requirements" — knowledge is distributed across roles rather than assumed to live in one person's head.
+- Stated downstream payoff: developers read a11yAC to know what to build and self-test; testers read them to know what to verify; product owners use them as the bar for accepting the story; future maintainers use them to understand why an accessibility-driven implementation choice was made (preventing accidental regression).
+- Note: design-specific requirements (contrast, color, spacing) are captured in the visual design artifact itself, not in a11yAC — a11yAC exist specifically to cover what a static visual design cannot express: assistive-technology behavior, states, and announcements.
+
+Complementary: **Deque also runs accessibility heuristic evaluations at the design phase itself** ([Supporting Design: Accessibility Heuristics Evaluation](https://www.deque.com/blog/supporting-the-design-phase-with-accessibility-heuristics-evaluations/)), reinforcing that a11y review belongs at the design/spec review gate, not only at code review.
+
+**WCAG's formal testability bar** (from WebAIM) gives a crisp definition an agent can apply when judging whether a proposed criterion is "testable": it must be answerable objectively (automatable) or reach high inter-rater agreement among evaluators — this is a good litmus test to reject vague criteria like "must be accessible" or "should work with screen readers" in favor of Given-When-Then statements naming a specific role/state/name/behavior.
+
+---
+
+### Synthesis for the pipeline's spec-drafting agents
+
+1. **Treat accessibility acceptance criteria as first-class criteria in the same list as functional ones**, written Given-When-Then, naming assistive-technology-observable semantics (role, name, state, announced text, focus behavior) rather than visual description or vague compliance language — directly modeled on Deque's a11yAC pattern and WCAG's testability bar.
+2. **Require an explicit exclusion/persona pass at spec time** ("who could be excluded by this interaction and how does the spec address it") — Microsoft's "recognize exclusion / solve for one, extend to many" gives a concrete prompt shape for this.
+3. **Require a stated assistive-tech experience narrative for any new interactive component**, before implementation — BBC's practice of writing the intended screen-reader experience as a design deliverable is a template for a criterion category: "expected AT narrative."
+4. **Reject "must be accessible"-style criteria outright** as a spec smell — the whole body of sources (WCAG testability rule, Deque's a11yAC, NN/g's rejection of "checklist" thinking) converges on requiring criteria phrased as falsifiable propositions with a stated verification method (automatable check, or a named evaluator procedure with expected agreement).
+5. **Frame accessibility judgment as pragmatic and comparative ("bad to better"), not pass/fail perfectionist** — Heydon Pickering's and A11Y Project's shared stance — useful for an adversarial gate agent (like axiom or canon's auditor) that should flag missing/ambiguous a11y criteria as blockers but not demand an unattainable "100% accessible" bar.
+6. **Assign accessibility review to a broadened cast, not a single specialist** — GOV.UK's per-role responsibility model and Deque's "a11y Amigos" both argue against having accessibility live only in one gate agent's judgment; worth reflecting in how the pipeline distributes accessibility-checking responsibility across draft-spec, audit-spec, and gate-spec rather than concentrating it in one late step.</result>
+<usage><subagent_tokens>63125</subagent_tokens><tool_uses>18</tool_uses><duration_ms>108702</duration_ms></usage>
+</task-notification>
