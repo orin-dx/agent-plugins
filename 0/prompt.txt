@@ -1,0 +1,1 @@
+How do we address our issues comprehensively? Systematically and semantically across our workflows and plugins? Also how do we heavily improve basis so it's useful in maintaining this repo? Keep in mind the things we've been askign you to do that basis should have covered> Search the prior sessions for the repo for further learnings too, right?
