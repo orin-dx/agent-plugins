@@ -1,0 +1,1 @@
+So the only way to keep good claude access is keeping using claude code. Should we use open code to access all the other models or just use the other models in some other way in claude code? What's the best way to coordinate across claude code and other models to maximize work and reduce cost?
