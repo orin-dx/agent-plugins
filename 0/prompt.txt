@@ -1,0 +1,1 @@
+Can we do similar hook work in the claude ones? We can defer the MCP work until we have the MCPs
