@@ -1,0 +1,1 @@
+So that would be some sort of vector or json store/db fronted by an MCP server?
