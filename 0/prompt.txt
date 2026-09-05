@@ -1,0 +1,1 @@
+Shouldn't we do better than generate the codex plugins? I thought we said we wanted to be able to tailor it to get the best out of codex, not just make it work by auto-generating
