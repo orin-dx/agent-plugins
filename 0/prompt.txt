@@ -1,0 +1,1 @@
+This is hooks just to this repo but as a set of hooks that ships with the plugins for both claude and codex, do we need anything right now?
