@@ -1,0 +1,1 @@
+The little moving thin in the header is neat but it's overlapping with the text. Is there a better way to do something similar in the header and not have this looking weird. Think of a11y, UX and desing best practices for our report/artifact across the board, not just the header
