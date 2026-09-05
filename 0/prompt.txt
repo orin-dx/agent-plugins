@@ -1,0 +1,5 @@
+If we want to add a11y audit and understanding to our plugins where do we do that? What part of the workflow? Can you research WCAG along with industry accepted leaders like BBC, NNGroup and widely accepted UX and a11y experts for input on how to best guide LLMs and agents through building accessible software?
+
+Do wide ranging research, understand how to account for a11y in original designs as well as how to audit individual parts of a codebase or the entirety of it. Not just from the UI perspective but also from a CLI if at all possible. Consider accessible interfaces good UX.
+
+Research, think through our current plugins, skills and agents and present a report and proposal.
