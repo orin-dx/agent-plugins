@@ -1,0 +1,1 @@
+This repo is setup as a claude plugin marketplace. How could we setup something similar for codex?
