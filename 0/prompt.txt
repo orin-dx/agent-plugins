@@ -1,0 +1,26 @@
+<task-notification>
+<task-id>ab0ce4940f5c67968</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/57009568-ab00-48b8-8bfe-fdb7614d6930/tasks/ab0ce4940f5c67968.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit delta plugin for wiring gaps" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Delta plugin audit — read-only, no files changed.**
+
+**Main finding — `receive-feedback` promises a capability `review-preprocessor` doesn't have, in 3 places:**
+
+- `plugins/delta/skills/receive-feedback/SKILL.md:4` (description) and `:11` (overview) both say it "categorizes incoming review comments as must-fix, suggestion, or question."
+- `plugins/delta/README.md:31,44` repeats the same claim in both the Skills and Subagents tables.
+- But `plugins/delta/agents/review-preprocessor.md` never implements it: its own frontmatter description doesn't list "incoming review comments" as an input at all (only diff, spec, test results, open questions); its output schema (lines 33-45) has no must-fix/suggestion/question field, only `open_questions: []`; and its `&lt;judgment&gt;` explicitly states "NEVER make judgments about the change quality — assemble only what is given" (line 51) — directly contradicting a "must-fix vs. suggestion" categorization, which is a judgment call.
+
+This isn't a documented gap like lambda's "Capability Gaps" table — it's an active misrepresentation of what the agent does, repeated in 3 files, that would surprise a caller expecting triage output. Fix direction: either add real triage logic + an output field to `review-preprocessor` (using the `github.md` Conventional Comments/Google vocabulary it doesn't currently load for this purpose), or narrow the SKILL.md/README claims to match reality (assembly only) — same two-way choice lambda already made explicitly for its own gaps.
+
+**Everything else checked clean:**
+
+- Output→input chaining across `commit-analyzer → (none)`, `changeset-analyzer → pr-narrator`/`release-summarizer`, `release-summarizer` end state: every field one agent requires is actually produced upstream. `release-summarizer` correctly does not re-derive `consumer_impact`/`semver_impact` (matches its own judgment section and `changesets.md`'s "machine-enforced" framing).
+- `changeset@1` is consistently framed as superseded-but-legacy everywhere it's mentioned (README, schema description) — no live code treats it as current.
+- `&lt;load_first&gt;` references are appropriate per agent — `review-preprocessor` and `commit-analyzer`/`pr-narrator` load only what they need; `post-review` has no agent (correctly, per its own SKILL.md reasoning) and no `&lt;load_first&gt;` needed.
+- Model/effort tiers (haiku/low for mechanical assembly, sonnet/medium for classification/narrative work) are consistent with the rest of the repo's tiering convention — no obvious right-sizing issue.
+- No redundant re-computation found — each stage consumes prior output directly rather than re-deriving it.</result>
+<usage><subagent_tokens>302038</subagent_tokens><tool_uses>14</tool_uses><duration_ms>42458</duration_ms></usage>
+</task-notification>
