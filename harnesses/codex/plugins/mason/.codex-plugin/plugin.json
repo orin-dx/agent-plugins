@@ -1,0 +1,24 @@
+{
+  "name": "mason",
+  "version": "3.0.1",
+  "description": "Build, audit, and evolve conformant agent-plugin structures and shared artifact schemas.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "homepage": "https://github.com/orin-dx/agent-plugins",
+  "repository": "https://github.com/orin-dx/agent-plugins",
+  "license": "MIT",
+  "keywords": ["plugins", "skills", "agents", "json-schema", "scaffolding"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Mason",
+    "shortDescription": "Build conformant agent plugins",
+    "longDescription": "Scaffold and audit plugin structures, author versioned handoff contracts, and add agents without losing ecosystem invariants.",
+    "developerName": "Gabriel Castro (Orin DX)",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/orin-dx/agent-plugins",
+    "defaultPrompt": ["Scaffold a plugin for this workflow", "Audit this plugin for conformance", "Design a schema for this handoff"]
+  }
+}

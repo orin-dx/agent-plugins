@@ -28,7 +28,9 @@ Smith never assembles a changeset itself. It hands `criteria_evidence` — exact
 /plugin install smith
 ```
 
-**AGY** — installs the full repo; see the [root README](../../README.md#quick-start) for instructions.
+**AGY** — installs the full repo; see the [root README](../../README.md#install) for instructions.
+
+**Codex** — see the [root Codex setup](../../README.md#codex), then run `codex plugin add smith@wisp-plugins`.
 
 ---
 

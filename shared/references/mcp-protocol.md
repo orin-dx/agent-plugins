@@ -61,7 +61,7 @@ For cross-service discovery, plugins publish an AgentCard at `/.well-known/agent
 ```json
 {
   "name": "sentinel",
-  "description": "Cross-cutting verification gate for the Orin DX plugin ecosystem",
+  "description": "Cross-cutting verification gate for the Wisp Plugins ecosystem",
   "url": "https://plugins.orin.dev/sentinel",
   "version": "1.0.0",
   "capabilities": {

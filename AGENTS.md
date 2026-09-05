@@ -1,6 +1,6 @@
-# Orin DX AI Agent & Skill Specification (`AGENTS.md`)
+# Wisp Plugins AI Agent & Skill Specification (`AGENTS.md`)
 
-This guide defines the top-level repository guidelines for AI coding agents (Claude Code, AGY, Cursor, Copilot, Codex) working on or utilizing `orin-dx/agent-plugins`.
+This guide defines the top-level repository guidelines for AI coding agents (Claude Code, AGY, Cursor, Copilot, Codex) working on or utilizing the Wisp Plugins repository (`orin-dx/agent-plugins`).
 
 ---
 
@@ -11,6 +11,7 @@ All hard rules for plugin and agent authoring live in one place:
 - [**`shared/constitution.md`**](./shared/constitution.md): EARS-format authoritative constraints. The fence all plugin development must stay inside. Read this first and last.
 - [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution, explained with examples. Authoring-time only — never loaded by agents at runtime.
 - [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, Red-to-Green verification standards.
+- [**`shared/harness-authoring.md`**](./shared/harness-authoring.md): Cross-harness change classification, native workflow boundaries, and required counterpart review.
 - [**`shared/references/modern-cli-tools.md`**](./shared/references/modern-cli-tools.md): Global preference directive for modern CLI tools (`bat`, `zoxide`, `ripgrep`, `fd`, `eza`, `delta`, `jq`, `fzf`, `gh`).
 
 ---

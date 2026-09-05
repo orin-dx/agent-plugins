@@ -1,0 +1,19 @@
+{
+  "name": "smith",
+  "version": "2.2.0",
+  "description": "Execute approved implementation plans with evidence, tests, review, and independent exit verification.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Smith",
+    "shortDescription": "Implement plans and prove their criteria hold.",
+    "longDescription": "Codex-native implementation workflow that preserves plan and spec contracts, verifies tests, uses bounded parallel work, and reports an independent verdict.",
+    "developerName": "Gabriel Castro",
+    "category": "implement",
+    "capabilities": ["skills", "agent-teams-optional"],
+    "defaultPrompt": ["Implement an approved plan in bounded batches, preserve criterion evidence, and verify the result against the persisted specification."]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "codex-adaptation@1",
+  "title": "CodexAdaptationCatalog",
+  "type": "object",
+  "required": ["catalog_version", "harness", "runtime_files", "plugins"],
+  "additionalProperties": false,
+  "properties": {
+    "catalog_version": { "const": 1 },
+    "harness": { "const": "codex" },
+    "runtime_files": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {"type": "string"},
+          {
+            "type": "object",
+            "required": ["source", "destination"],
+            "additionalProperties": false,
+            "properties": {
+              "source": {"type": "string"},
+              "destination": {"type": "string"}
+            }
+          }
+        ]
+      }
+    },
+    "marketplace": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "display_name": { "type": "string" }
+      }
+    },
+    "plugins": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "runtime_files": {"$ref": "#/properties/runtime_files"}
+        }
+      }
+    },
+    "reasoning": { "type": "string" }
+  }
+}

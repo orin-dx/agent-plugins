@@ -14,6 +14,7 @@ ADR-007 named the ten-plugin family **Wisp**. Separately, `orin-axi/wisp` is the
 - The plugin ecosystem is **Wisp Plugins**. This is a brand change only: no `plugin.json` `id`, `name`, or version changes; no skill renames; no schema changes.
 - In this repository, "Wisp" alone refers to the library. The ecosystem is written "Wisp Plugins" in prose and headings.
 - The repository directory and remote name (`agent-plugins`) are unchanged by this ADR.
+- Marketplace identities are `wisp-plugins`; repository source URLs remain `orin-dx/agent-plugins`. Existing marketplace registrations under `orin-dx-agent-plugins` require removal and re-registration before installing with the new selector.
 
 ## Consequences
 

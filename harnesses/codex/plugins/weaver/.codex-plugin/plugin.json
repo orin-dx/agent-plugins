@@ -1,0 +1,19 @@
+{
+  "name": "weaver",
+  "version": "3.0.1",
+  "description": "Define, clarify, connect, prioritize, and audit durable product requirements.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Weaver",
+    "shortDescription": "Turn product evidence into durable requirements.",
+    "longDescription": "Codex-native requirement workflows that preserve traceability from raw need to a testable requirement contract.",
+    "developerName": "Gabriel Castro",
+    "category": "define",
+    "capabilities": ["skills", "agent-teams-optional"],
+    "defaultPrompt": ["Turn product evidence into a durable requirement artifact, or audit requirement coverage without changing workspace state."]
+  }
+}

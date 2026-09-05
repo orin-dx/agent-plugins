@@ -1,0 +1,24 @@
+{
+  "name": "ranger",
+  "version": "3.0.0",
+  "description": "Find evidence-backed, reachable defects across Rust, TypeScript, and JavaScript codebases.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "homepage": "https://github.com/orin-dx/agent-plugins",
+  "repository": "https://github.com/orin-dx/agent-plugins",
+  "license": "MIT",
+  "keywords": ["bug-hunting", "audit", "security", "rust", "typescript"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ranger",
+    "shortDescription": "Find real reachable defects",
+    "longDescription": "Audit live code through evidence collection, control-flow tracing, adversarial refutation, and explicit findings contracts.",
+    "developerName": "Gabriel Castro (Orin DX)",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read"],
+    "websiteURL": "https://github.com/orin-dx/agent-plugins",
+    "defaultPrompt": ["Audit this repository for bugs", "Verify this suspected defect", "Scan this Rust service for reachable hazards"]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "catalog_version": 1,
+  "harness": "codex",
+  "runtime_files": [
+    {
+      "source": "harnesses/codex/agent-roles",
+      "destination": "agent-roles"
+    }
+  ],
+  "marketplace": {
+    "name": "wisp-plugins",
+    "display_name": "Wisp Plugins"
+  },
+  "plugins": [
+    {
+      "id": "courier",
+      "runtime_files": [
+        "shared/schemas/changeset@2.json",
+        "shared/schemas/release-artifact@2.json",
+        "shared/schemas/requirement@1.json",
+        "shared/schemas/spec@1.json",
+        "shared/references/changesets.md",
+        "shared/references/conventional-commits.md"
+      ]
+    },
+    {
+      "id": "mason",
+      "runtime_files": ["shared/schemas", "shared/harness-authoring.md"]
+    },
+    {
+      "id": "muse",
+      "runtime_files": ["shared/schemas/requirement@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@1.json"]
+    },
+    {
+      "id": "navigator",
+      "runtime_files": ["shared/schemas/plan@1.json", "shared/schemas/spec@1.json"]
+    },
+    {
+      "id": "ranger",
+      "runtime_files": [
+        "shared/schemas/candidate@1.json",
+        "shared/schemas/field-survival-map@1.json",
+        "shared/schemas/finding-report@1.json",
+        "shared/schemas/verdict@2.json",
+        "shared/references/rust-hazards.md",
+        "shared/references/rust-hazards-t7-t10.md",
+        "shared/references/typescript-hazards.md",
+        "shared/references/typescript-hazards-t7-t10.md"
+      ]
+    },
+    {
+      "id": "scribe",
+      "runtime_files": ["shared/schemas/arch-audit@1.json", "shared/schemas/arch-model@1.json", "shared/schemas/finding-report@1.json", "shared/schemas/plan@1.json", "shared/schemas/requirement@1.json", "shared/schemas/research-report@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@1.json"]
+    },
+    {
+      "id": "sentinel",
+      "runtime_files": ["shared/schemas/verdict@1.json"]
+    },
+    {
+      "id": "smith",
+      "runtime_files": ["shared/schemas/plan@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@1.json"]
+    },
+    {
+      "id": "vanguard",
+      "runtime_files": ["shared/schemas/requirement@1.json", "shared/schemas/research-report@1.json"]
+    },
+    {
+      "id": "weaver",
+      "runtime_files": ["shared/schemas/plan@1.json", "shared/schemas/requirement@1.json", "shared/schemas/spec@1.json"]
+    }
+  ]
+}

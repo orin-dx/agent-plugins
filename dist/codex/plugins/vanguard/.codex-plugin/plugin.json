@@ -1,0 +1,19 @@
+{
+  "name": "vanguard",
+  "version": "2.0.0",
+  "description": "Research questions and requirements into evidence-backed recommendations before solution commitment.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Vanguard",
+    "shortDescription": "Build an evidence base before design commitment.",
+    "longDescription": "Codex-native research workflow that separates direct evidence, inference, and assumptions before a specification is written.",
+    "developerName": "Gabriel Castro",
+    "category": "research",
+    "capabilities": ["skills", "agent-teams-optional"],
+    "defaultPrompt": ["Investigate a technical or product question, cite the evidence, distinguish uncertainty, and produce a durable research report."]
+  }
+}

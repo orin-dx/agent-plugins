@@ -138,6 +138,8 @@ Add an entry to the `"plugins"` array:
 
 ## Capability Change Checklist
 
+For a change spanning Claude/AGY and Codex, read [`shared/harness-authoring.md`](./shared/harness-authoring.md) first. It defines which concerns are shared, which are native, and the counterpart-review record required before release.
+
 When you add or change what an existing agent can do — a new dimension, a new output status, a new default posture — the code change alone leaves the ecosystem inconsistent. Work through this list in the same change:
 
 - [ ] Frontmatter `description` reflects the new capability
@@ -168,7 +170,7 @@ This isn't automated. `mason:audit-plugin` checks structural conformance; it doe
 ## Development Setup
 
 ```bash
-git clone https://github.com/orin-axi/agent-plugins.git
+git clone https://github.com/orin-dx/agent-plugins.git
 cd agent-plugins
 
 # Validate all plugin manifests
@@ -195,5 +197,7 @@ jq . plugins/*/plugin.json > /dev/null
 # Check schema files parse correctly
 jq . shared/schemas/*.json > /dev/null
 ```
+
+Before a `git commit`, the repository-local Claude and Codex hook checks immutable schema versions and Codex generated-output freshness. See [`docs/repository-hooks.md`](./docs/repository-hooks.md).
 
 All of the above run automatically in CI (`.github/workflows/validate.yml`) on every PR and every push to `main`.

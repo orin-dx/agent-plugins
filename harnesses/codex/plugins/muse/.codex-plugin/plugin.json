@@ -1,0 +1,24 @@
+{
+  "name": "muse",
+  "version": "1.0.0",
+  "description": "Turn UI intent into testable component specifications with behavior and accessibility criteria.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "homepage": "https://github.com/orin-dx/agent-plugins",
+  "repository": "https://github.com/orin-dx/agent-plugins",
+  "license": "MIT",
+  "keywords": ["ui", "components", "accessibility", "specification", "design"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Muse",
+    "shortDescription": "Specify components precisely",
+    "longDescription": "Convert UI intent and repository evidence into implementation-ready component specifications with externally testable accessibility criteria.",
+    "developerName": "Gabriel Castro (Orin DX)",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/orin-dx/agent-plugins",
+    "defaultPrompt": ["Write a component spec from this design", "Audit this component spec", "Make this UI intent implementation-ready"]
+  }
+}

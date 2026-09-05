@@ -1,0 +1,19 @@
+{
+  "name": "scribe",
+  "version": "3.1.0",
+  "description": "Draft, verify, audit, gate, correct, and maintain testable specifications.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Scribe",
+    "shortDescription": "Turn evidence into implementation-ready specifications.",
+    "longDescription": "Codex-native specification workflows with explicit requirements traceability, architecture fit, durable artifacts, and independent gates.",
+    "developerName": "Gabriel Castro",
+    "category": "specify",
+    "capabilities": ["skills", "agent-teams-optional"],
+    "defaultPrompt": ["Draft or evaluate an evidence-backed spec, preserving the durable contract from requirement through planning."]
+  }
+}

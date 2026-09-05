@@ -29,7 +29,9 @@ One skill, not several — see [Behavior](#behavior) below for how it adapts to 
 /plugin install navigator
 ```
 
-**AGY** — installs the full repo; see the [root README](../../README.md#quick-start) for instructions.
+**AGY** — installs the full repo; see the [root README](../../README.md#install) for instructions.
+
+**Codex** — see the [root Codex setup](../../README.md#codex), then run `codex plugin add navigator@wisp-plugins`.
 
 ---
 

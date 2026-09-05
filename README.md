@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" alt="Orin Agent Plugins" width="400px" />
+  <img src="./assets/logo.svg" alt="Wisp Plugins" width="400px" />
 </div>
 
 <p align="center">
@@ -93,6 +93,121 @@ Grouped by what each persona actually does — five bands across the lifecycle, 
 
 ---
 
+## Install
+
+### One Ecosystem, Two Harnesses
+
+This repository publishes the same lifecycle ecosystem to Claude Code and Codex without pretending their runtimes are interchangeable. The durable boundary is the versioned JSON artifact in `shared/schemas/`; a requirement, research report, spec, or plan can move between harnesses when it validates against the same schema.
+
+| Concern | Claude Code | Codex | Source of truth |
+| :--- | :--- | :--- | :--- |
+| Shared ID, version, author, and artifact declarations | Uses `plugins/<id>/plugin.json` | Native manifest is checked against those shared fields | `plugins/<id>/plugin.json` |
+| Workflow prompts | Skills plus specialist agent prompts | Native Codex skills | Claude: `plugins/<id>/`; Codex: `harnesses/codex/plugins/<id>/` |
+| Durable handoffs | Versioned JSON artifacts | The same versioned JSON artifacts, materialized as regular files | `shared/schemas/` |
+| Installable marketplace | Root Claude marketplace files | Generated bundle | `dist/codex/` |
+
+`plugins/` is the authored source for the existing Claude/AGY marketplace. `harnesses/codex/plugins/<id>/` contains separately authored Codex manifests, skills, and optional resources. `harnesses/codex/catalog.json` controls marketplace order and materialized runtime files only. `tools/build-codex-marketplace.py` validates and packages those inputs into `dist/codex`. Do not edit generated files by hand.
+
+Claude agents are not renamed and shipped as Codex agents. Each Codex skill has its own harness-appropriate instructions and can complete alone. When agent teams are enabled, a skill selects a packaged Codex role card for independent, bounded work; the artifact contract and single-agent result remain the same. Codex role cards are portable plugin resources, not TOML configuration.
+
+### Claude Code
+
+Add the repository marketplace from inside Claude Code, then install the plugins you want:
+
+```
+/plugin marketplace add orin-dx/agent-plugins
+/plugin install weaver
+/plugin install vanguard
+/plugin install scribe
+/plugin install navigator
+/plugin install smith
+```
+
+Add `muse` for component specifications, `sentinel` and `ranger` for verification, `courier` for shipping work, and `mason` for plugin authoring:
+
+```
+/plugin install muse
+/plugin install sentinel
+/plugin install ranger
+/plugin install courier
+/plugin install mason
+```
+
+If you registered the previous marketplace identity, replace it before installing from Wisp Plugins:
+
+```
+/plugin marketplace remove orin-dx-agent-plugins
+/plugin marketplace add orin-dx/agent-plugins
+```
+
+### Codex
+
+The published Codex marketplace is the generated `dist/codex` directory, not the repository root. Register that directory once, then add only the plugins you need:
+
+```bash
+codex plugin marketplace add orin-dx/agent-plugins --sparse dist/codex
+codex plugin add weaver@wisp-plugins
+codex plugin add vanguard@wisp-plugins
+codex plugin add scribe@wisp-plugins
+codex plugin add navigator@wisp-plugins
+codex plugin add smith@wisp-plugins
+```
+
+Other available selectors are `muse`, `sentinel`, `ranger`, `courier`, and `mason`. Inspect marketplace availability with:
+
+```bash
+codex plugin list
+```
+
+To refresh the registered Git marketplace after a release:
+
+```bash
+codex plugin marketplace upgrade wisp-plugins
+```
+
+For contributors using a local checkout, rebuild and verify the bundle before registering it:
+
+```bash
+python3 tools/build-codex-marketplace.py
+python3 tools/build-codex-marketplace.py --check
+codex plugin marketplace add ./dist/codex
+```
+
+If you previously registered the marketplace as `orin-dx-agent-plugins`, migrate to the Wisp Plugins identity:
+
+```bash
+codex plugin marketplace remove orin-dx-agent-plugins
+codex plugin marketplace add orin-dx/agent-plugins --sparse dist/codex
+codex plugin add <plugin>@wisp-plugins
+```
+
+### Antigravity (AGY)
+
+Install individual plugins via the native CLI (uses a Git URL):
+
+```bash
+agy plugin install https://github.com/orin-dx/agent-plugins.git
+```
+
+Or use [`agy-plugins-cli`](https://github.com/ZaunEkko/agy-plugins-cli) for an interactive TUI with update tracking:
+
+```bash
+npm install -g agy-plugins-cli
+agy-plugin marketplace add orin-dx/agent-plugins
+agy-plugin add weaver@wisp-plugins
+agy-plugin add vanguard@wisp-plugins
+agy-plugin add scribe@wisp-plugins
+agy-plugin add muse@wisp-plugins
+agy-plugin add navigator@wisp-plugins
+agy-plugin add smith@wisp-plugins
+agy-plugin add sentinel@wisp-plugins
+agy-plugin add courier@wisp-plugins
+agy-plugin add ranger@wisp-plugins
+agy-plugin add mason@wisp-plugins
+```
+
+---
+
 ## Design Principles
 
 Four decisions shape how every plugin and agent in this repository is built. They are enforced by `shared/constitution.md` and explained in `shared/agent-best-practices.md`.
@@ -168,70 +283,23 @@ Runtime-pullable guides in `shared/references/`. Agents pull these themselves du
 
 ---
 
-## Quick Start
-
-### Claude Code
-
-Add this repo as a marketplace, then install the plugins you need:
-
-```
-/plugin marketplace add orin-dx/agent-plugins
-/plugin install weaver
-/plugin install vanguard
-/plugin install scribe
-/plugin install muse
-/plugin install navigator
-/plugin install smith
-/plugin install sentinel
-/plugin install courier
-```
-
-Install `ranger` and `mason` as needed:
-
-```
-/plugin install ranger
-/plugin install mason
-```
-
-### Antigravity (AGY)
-
-Install individual plugins via the native CLI (uses a Git URL):
-
-```bash
-agy plugin install https://github.com/orin-dx/agent-plugins.git
-```
-
-Or use [`agy-plugins-cli`](https://github.com/ZaunEkko/agy-plugins-cli) for an interactive TUI with update tracking:
-
-```bash
-npm install -g agy-plugins-cli
-agy-plugin marketplace add orin-dx/agent-plugins
-agy-plugin add weaver@orin-dx
-agy-plugin add vanguard@orin-dx
-agy-plugin add scribe@orin-dx
-agy-plugin add muse@orin-dx
-agy-plugin add navigator@orin-dx
-agy-plugin add smith@orin-dx
-agy-plugin add sentinel@orin-dx
-agy-plugin add courier@orin-dx
-agy-plugin add ranger@orin-dx
-agy-plugin add mason@orin-dx
-```
-
----
-
 ## Repository Structure
 
 ```
 agent-plugins/
 ├── marketplace.json              ← Plugin registry
+├── .claude-plugin/               ← Claude marketplace metadata
 ├── ARCHITECTURE.md               ← System architecture
 ├── CONTRIBUTING.md               ← Plugin authoring guide
+├── harnesses/
+│   └── codex/
+│       ├── catalog.json          ← Marketplace order and runtime dependencies
+│       └── plugins/<id>/         ← Authored native Codex plugins and skills
 ├── shared/
 │   ├── schemas/                  ← Versioned inter-agent JSON schemas
 │   ├── references/               ← Runtime-pullable domain guides (split by concern)
 │   └── agent-best-practices.md  ← Authoring-time principles
-└── plugins/
+├── plugins/
     ├── weaver/                    ← Requirement capture
     ├── vanguard/                  ← Research synthesis
     ├── scribe/                    ← Specification drafting and gating
@@ -242,6 +310,9 @@ agent-plugins/
     ├── courier/                   ← Ship tooling
     ├── ranger/                    ← Fast cross-language bug scan
     └── mason/                     ← Plugin scaffolding
+├── tools/
+│   └── build-codex-marketplace.py ← Deterministic Codex bundle generator
+└── dist/codex/                    ← Generated Codex marketplace; never hand-edit
 ```
 
 ---

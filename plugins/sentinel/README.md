@@ -27,7 +27,9 @@ Sentinel is standalone. Its `plugin.json` declares `consumes: []`, and nothing i
 /plugin install sentinel
 ```
 
-**AGY** — installs the full repo; see the [root README](../../README.md#quick-start) for instructions.
+**AGY** — installs the full repo; see the [root README](../../README.md#install) for instructions.
+
+**Codex** — see the [root Codex setup](../../README.md#codex), then run `codex plugin add sentinel@wisp-plugins`.
 
 ---
 

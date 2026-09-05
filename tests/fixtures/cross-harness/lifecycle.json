@@ -1,0 +1,90 @@
+{
+  "fixture_version": 1,
+  "description": "A minimal portable requirement-to-plan handoff used to verify Claude source and generated Codex skills share the same JSON contracts.",
+  "stages": [
+    {
+      "artifact": "requirement@1",
+      "producer": {"plugin": "weaver", "skill": "capture-need"},
+      "consumer": {"plugin": "vanguard", "skill": "research"},
+      "document": {
+        "id": "REQ-CROSS-HARNESS-001",
+        "statement": "Keep durable lifecycle handoffs portable across supported agent harnesses.",
+        "stakeholder": "plugin maintainer",
+        "why": "A workflow must survive a handoff between Claude and Codex without relying on prompt-local state.",
+        "done_when": [
+          "A valid requirement can be consumed by the research stage in either harness."
+        ],
+        "out_of_scope": [
+          "Proving equivalent model judgment or prose."
+        ],
+        "priority": "high"
+      }
+    },
+    {
+      "artifact": "research-report@1",
+      "producer": {"plugin": "vanguard", "skill": "research"},
+      "consumer": {"plugin": "scribe", "skill": "draft-spec"},
+      "document": {
+        "question": "Which contract must cross a Claude-to-Codex research-to-spec handoff?",
+        "findings": [
+          {
+            "claim": "The versioned JSON schema is the portable handoff boundary.",
+            "evidence": "shared/schemas/research-report@1.json",
+            "source": "repository schema",
+            "confidence": "confirmed"
+          }
+        ],
+        "recommendation": "Pass a research-report@1 document rather than a harness-specific agent transcript.",
+        "confidence": "high",
+        "open_questions": [],
+        "linked_requirement": "REQ-CROSS-HARNESS-001"
+      }
+    },
+    {
+      "artifact": "spec@1",
+      "producer": {"plugin": "scribe", "skill": "draft-spec"},
+      "consumer": {"plugin": "navigator", "skill": "plan"},
+      "document": {
+        "id": "SPEC-CROSS-HARNESS-001",
+        "purpose": "Define the portable contract check for the core lifecycle handoff.",
+        "scope": "The requirement, research, specification, and plan contracts used by both harnesses.",
+        "non_goals": [
+          "Comparing harness-specific prompts or named agents."
+        ],
+        "acceptance_criteria": [
+          {
+            "id": "AC-001",
+            "criterion": "The artifact validates against its versioned JSON schema."
+          }
+        ],
+        "linked_requirement": "REQ-CROSS-HARNESS-001",
+        "linked_research": "RESEARCH-CROSS-HARNESS-001",
+        "spec_file_path": "docs/specs/SPEC-CROSS-HARNESS-001.json"
+      }
+    },
+    {
+      "artifact": "plan@1",
+      "producer": {"plugin": "navigator", "skill": "plan"},
+      "consumer": {"plugin": "smith", "skill": "implement"},
+      "document": {
+        "goal": "Verify a portable lifecycle handoff before release.",
+        "architecture": "Read the persisted specification and validate the compatibility fixture in CI.",
+        "tech_stack": ["JSON Schema", "Python standard library"],
+        "tasks": [
+          {
+            "id": "T1",
+            "title": "Validate the portable fixture",
+            "files": {"test": ["tests/test_cross_harness_artifacts.py"]},
+            "steps": ["Run the focused compatibility test."],
+            "commit_message": "test(codex): cover portable artifact handoff",
+            "covers_criteria": ["AC-001"]
+          }
+        ],
+        "linked_spec": "SPEC-CROSS-HARNESS-001",
+        "spec_file_path": "docs/specs/SPEC-CROSS-HARNESS-001.json",
+        "plan_file_path": "docs/projects/SPEC-CROSS-HARNESS-001.json",
+        "linked_requirement": "REQ-CROSS-HARNESS-001"
+      }
+    }
+  ]
+}

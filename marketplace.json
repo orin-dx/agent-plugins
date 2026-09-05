@@ -1,13 +1,13 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
-  "name": "orin-dx-agent-plugins",
+  "name": "wisp-plugins",
   "version": "4.2.0",
-  "description": "Official Orin DX AI Agent Plugins & Skills Marketplace for AGY and Claude Code",
+  "description": "Wisp Plugins marketplace for AGY and Claude Code, published by Orin DX",
   "plugins": [
     {
       "id": "mason",
       "name": "mason",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "path": "./plugins/mason",
       "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent.",
       "supersedes": "agent-plugin-builder"

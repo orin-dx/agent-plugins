@@ -1,7 +1,23 @@
 # Changelog
 
-All notable changes to the orin-dx/agent-plugins ecosystem are documented here.
+All notable changes to the Wisp Plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
+
+## [Unreleased] — Codex marketplace and cross-harness authoring
+
+Adds a second installable harness, Codex, alongside Claude Code/AGY, without pretending the two runtimes are interchangeable. Classification: distribution + shared contract additions.
+
+- **New**: `harnesses/codex/` — independently-authored Codex-native skills and eight portable role cards (`recon`, `tracer`, `research`, `author`, `implementer`, `adversary`, `reviewer`, `judge`) for every plugin, matched to each plugin's shared identity (id/version/author) but not a mechanical translation of Claude prompts, model tiers, or delegation topology.
+- **New**: `tools/build-codex-marketplace.py` generates the installable `dist/codex` bundle from `plugins/*/plugin.json`, `harnesses/codex/`, and `shared/schemas/`. Never hand-edit `dist/codex`. `--check` verifies the bundle is in sync (deterministic, byte-identical native sources, no symlinks, no version/author drift) — this is now a CI gate and a pre-release gate.
+- **New**: `scripts/authoring-integrity-hook.py`, wired into both `.claude/settings.json` and `.codex/hooks.json` as a `PreToolUse`/`Bash` guard — blocks a `git commit` that mutates an existing versioned schema in place (instead of adding a new version) or leaves `dist/codex` stale relative to its sources.
+- **New schemas**: `shared/schemas/codex-adaptation@1.json` (the generated marketplace's own manifest shape), `shared/schemas/harness-evaluation@1.json` (behavioral-parity evaluation records, see below).
+- **New docs**: `shared/harness-authoring.md` (the design boundary and change procedure for anything touching both harnesses), `docs/codex-marketplace-release-policy.md` (what's portable, the release procedure, the CI gates), `docs/codex-behavioral-evaluation.md` (how to evaluate whether a Codex-native workflow produces durable, evidence-led artifacts comparable to the Claude source — not identical prose or transcripts), `docs/repository-hooks.md` (documents the commit-time integrity guard above).
+- **New tests**: `tests/test_build_codex_marketplace.py`, `tests/test_cross_harness_artifacts.py`, `tests/test_codex_native_sources.py`, `tests/test_authoring_integrity_hook.py`, `tests/test_codex_behavioral_evaluation.py` — now run in CI (`.github/workflows/validate.yml`) alongside the existing manifest/version/skill-doc checks.
+- **Changed**: every plugin `README.md` gained a Codex install line (`codex plugin add <id>@wisp-plugins`, after registering the marketplace with `codex plugin marketplace add orin-dx/agent-plugins --sparse dist/codex`) — doc-only, no plugin behavior change, no version bump for the 9 plugins whose only change is this line.
+- **Changed**: `mason` (3.0.0→3.0.1) — `audit-plugin` and `scaffold-plugin` now cite `shared/harness-authoring.md` when a plugin has or will have a Codex-native source; this is a real (if small) capability change to mason's own conformance/scaffolding logic, not just a Codex-side distribution addition, so it gets its own bump — see `plugins/mason/CHANGELOG.md`.
+- **Not changed**: no other plugin's `plugin.json` version bumped. Each plugin's shared identity (id, version, author in `plugin.json`) is the contract Codex's native manifest must match, not something that changes because a Codex-native implementation was added alongside it — `test_codex_native_sources.py` enforces this (`test_rejects_native_version_drift`).
+
+Verification: `python3 -m unittest discover tests -v`, `python3 tools/build-codex-marketplace.py --check`. See `docs/codex-marketplace-release-policy.md` for the full release procedure.
 
 ## [Unreleased] — Ecosystem brand becomes Wisp Plugins
 
