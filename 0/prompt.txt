@@ -1,0 +1,1 @@
+I wonder if part of that is the red, green flow vs actually writing tests as validation, catch regressions, etc. Would you think so too?
