@@ -1,0 +1,1 @@
+Yes, we want to make sure architecture and semantic modeling is a big part of the work right? Think of all the best practices and what folks are saying. how sdd works, etc. I'm surprised we haven't done that yet and it might account for why we're not always doing well and we miss things.
