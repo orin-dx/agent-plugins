@@ -1,0 +1,1 @@
+Think through architecture and our workflows that could most benefit from fable 5.1. Are we doing a good enough job of stepping back while we do work and considering the overall architecture of the entire codebase when specing and planning work? If we get too silo'd we make mistakes.
