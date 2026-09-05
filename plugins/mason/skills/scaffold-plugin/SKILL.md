@@ -18,7 +18,7 @@ Makes the correct plugin structure the easy one to produce. Delegates to `scaffo
 </dispatch>
 
 <references>
-`shared/constitution.md`, `shared/agent-best-practices.md`
+`shared/constitution.md`, `shared/agent-best-practices.md`, `shared/harness-authoring.md` when the plugin will ship to more than one harness
 </references>
 
 <io>

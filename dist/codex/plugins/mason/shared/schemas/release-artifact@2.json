@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "release-artifact@2",
+  "title": "ReleaseArtifact",
+  "description": "What was in a release: version, changesets, and breaking changes. Supersedes release-artifact@1 — the changesets array now consumes changeset@2's consumer_impact/semver_impact directly instead of redeclaring a separate type field.",
+  "type": "object",
+  "required": ["version", "date", "changesets"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Semver version string (e.g. 1.2.0)"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Release date in ISO 8601 format (YYYY-MM-DD)"
+    },
+    "changesets": {
+      "type": "array",
+      "minItems": 1,
+      "description": "changeset@2 entries included in this release. A changeset IS the changelog entry — semver_impact and consumer_impact are set once at authoring time (shared/schemas/changeset@2.json) and consumed here, not re-derived. release-summarizer's version is max(semver_impact) across this array, with consumer_impact: internal-only entries filtered out before this array is built.",
+      "items": {
+        "type": "object",
+        "required": ["summary", "consumer_impact", "semver_impact"],
+        "additionalProperties": false,
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "One sentence describing what changed, written from the consumer's perspective"
+          },
+          "consumer_impact": {
+            "type": "string",
+            "enum": ["behavior-change", "new-capability", "internal-only"]
+          },
+          "semver_impact": {
+            "type": "string",
+            "enum": ["major", "minor", "patch", "none"]
+          },
+          "linked_requirement": {
+            "type": "string",
+            "description": "ID of the requirement@1 this changeset addresses"
+          },
+          "pr_url": {
+            "type": "string",
+            "description": "URL of the merged PR"
+          },
+          "commits": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Git SHAs included in this changeset"
+          }
+        }
+      }
+    },
+    "breaking_changes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Human-readable descriptions of all breaking changes in this release"
+    },
+    "migration_guide": {
+      "type": "string",
+      "description": "Optional: instructions for upgrading from the previous version"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

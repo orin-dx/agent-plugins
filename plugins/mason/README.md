@@ -1,6 +1,6 @@
 # mason — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 3.0.0
+**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 3.0.1
 
 The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 
@@ -25,7 +25,9 @@ The tool for building tools. Scaffolds new plugins, audits existing ones for eco
 /plugin install mason
 ```
 
-**AGY** — installs the full repo; see the [root README](../../README.md#quick-start) for instructions.
+**AGY** — installs the full repo; see the [root README](../../README.md#install) for instructions.
+
+**Codex** — see the [root Codex setup](../../README.md#codex), then run `codex plugin add mason@wisp-plugins`.
 
 ---
 

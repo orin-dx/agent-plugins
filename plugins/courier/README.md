@@ -29,7 +29,9 @@ Courier does not critique code quality or spec conformance — that's the built-
 /plugin install courier
 ```
 
-**AGY** — installs the full repo; see the [root README](../../README.md#quick-start) for instructions.
+**AGY** — installs the full repo; see the [root README](../../README.md#install) for instructions.
+
+**Codex** — see the [root Codex setup](../../README.md#codex), then run `codex plugin add courier@wisp-plugins`.
 
 ---
 

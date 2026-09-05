@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "requirement@1",
+  "title": "Requirement",
+  "description": "A structured statement of what needs to be built, why, who it serves, and what done means.",
+  "type": "object",
+  "required": ["id", "statement", "stakeholder", "why", "done_when"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (e.g. REQ-001)"
+    },
+    "statement": {
+      "type": "string",
+      "description": "What needs to be built, in one sentence"
+    },
+    "stakeholder": {
+      "type": "string",
+      "description": "Who this serves — a role or persona, not a name"
+    },
+    "why": {
+      "type": "string",
+      "description": "The underlying need or pain point being addressed"
+    },
+    "done_when": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Testable conditions that define completion. Each item must be verifiable from the outside."
+    },
+    "out_of_scope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicitly excluded from this requirement to prevent scope creep"
+    },
+    "priority": {
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Relative priority for sequencing"
+    },
+    "linked_issues": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Issue URLs or IDs this requirement traces to (GitHub, Linear, Jira)"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — chain-of-thought during capture. Not consumed downstream."
+    }
+  }
+}

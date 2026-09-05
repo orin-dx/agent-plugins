@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "orin-dx-agent-plugins",
-  "description": "Ten cooperating plugins covering the full development lifecycle \u2014 from requirement capture through spec, plan, implementation, verification, and shipping.",
+  "name": "wisp-plugins",
+  "description": "Wisp Plugins: ten cooperating plugins covering the full development lifecycle \u2014 from requirement capture through spec, plan, implementation, verification, and shipping.",
   "owner": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"

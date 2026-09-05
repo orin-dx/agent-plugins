@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "arch-model@1",
+  "title": "Architecture Model",
+  "description": "A persisted, workspace-wide map of module boundaries, canonical abstractions, and architectural invariants. One per workspace, updated in place rather than versioned by id. Built and maintained by scribe:arch-auditor in build/refresh mode; checked against by scribe:arch-auditor in check mode before a spec enters planning.",
+  "type": "object",
+  "required": ["modules", "canonical_abstractions", "invariants"],
+  "additionalProperties": false,
+  "properties": {
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "responsibility"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string", "description": "Workspace-relative path to the module, package, or crate root" },
+          "responsibility": { "type": "string", "description": "One paragraph: what this module owns and why it exists as a separate boundary" },
+          "depends_on": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Names of other modules this one is allowed to depend on. A dependency running the other direction is a boundary violation."
+          }
+        }
+      },
+      "description": "The boundary map — every module the model tracks, its responsibility, and its allowed dependency direction."
+    },
+    "canonical_abstractions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["concept", "type_or_interface", "location"],
+        "additionalProperties": false,
+        "properties": {
+          "concept": { "type": "string", "description": "The domain concept this abstraction represents (e.g. 'user identity', 'retry policy')" },
+          "type_or_interface": { "type": "string", "description": "The canonical type, trait, or interface name" },
+          "location": { "type": "string", "description": "File path where the canonical definition lives" },
+          "rationale": { "type": "string", "description": "Why this is the one representation new code should reuse rather than reinvent" }
+        }
+      },
+      "description": "The registry of 'this is the one true representation of X' — a new spec introducing a competing type for an already-modeled concept is a finding, not a fresh design choice."
+    },
+    "invariants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "rule", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "rule": { "type": "string", "description": "The rigid architectural property that must hold" },
+          "rationale": { "type": "string" },
+          "enforced_by": { "type": "string", "description": "The test, type check, or lint that fails if this invariant is violated, if one exists" }
+        }
+      },
+      "description": "System-wide invariants — cumulative across every structural fix scribe:architect has ever produced, plus any the build pass surfaced directly."
+    },
+    "last_built_from": {
+      "type": "string",
+      "description": "Commit hash or other repository state marker the model was last built or refreshed against. Absence means staleness cannot be assessed — treat as a coverage gap, not proof the model is current."
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

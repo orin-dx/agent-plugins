@@ -1,0 +1,14 @@
+{
+  "id": "CODEX-MARKETPLACE-001",
+  "purpose": "Define a generated, materialized Codex marketplace for every lifecycle plugin that preserves shared identity and portable contracts while allowing each harness to own its workflow design.",
+  "scope": "Shared plugin identity, separately authored native Codex plugins, catalog runtime metadata, deterministic packaging, validation, CI, and installation and release documentation.",
+  "non_goals": ["Replacing Claude agent prompts", "Publishing a Wisp MCP server", "Making agent-team availability mandatory"],
+  "acceptance_criteria": [
+    {"id": "AC-001", "criterion": "A Codex-native source tree exists for every marketplace plugin and has exact skill-name parity with its Claude source without requiring prompt-body reuse."},
+    {"id": "AC-002", "criterion": "The generator produces a regular-file-only dist/codex bundle containing a valid .agents/plugins/marketplace.json and byte-identical copies of every authored native Codex manifest, skill, and resource."},
+    {"id": "AC-003", "criterion": "Every Codex skill has a complete native single-agent workflow and treats agent-team delegation as an optional optimization for bounded independent work."},
+    {"id": "AC-004", "criterion": "Validation rejects catalog parity drift, shared/native ID-version-author drift, stale generated output, symlinks, traversal paths, missing declared files, and unsafe runtime collisions without replacing a prior valid bundle."},
+    {"id": "AC-005", "criterion": "Repository CI runs native source, generator, cross-harness contract, generated-drift, and repository-owned Codex manifest validation."}
+  ],
+  "spec_file_path": "docs/specs/CODEX-MARKETPLACE-001.json"
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "finding-report@1",
+  "title": "FindingReport",
+  "description": "Confirmed bugs in live code. Every finding includes the exact trigger condition and root cause.",
+  "type": "object",
+  "required": ["workspace", "language", "findings"],
+  "additionalProperties": false,
+  "properties": {
+    "workspace": {
+      "type": "string",
+      "description": "Absolute path to the workspace root"
+    },
+    "language": {
+      "type": "string",
+      "description": "Primary language of the scanned code (e.g. rust, typescript)"
+    },
+    "modules_scanned": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Modules or files included in the scan (live code only)"
+    },
+    "dead_files_excluded": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Files excluded because they are unreachable from the crate root or entry point"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "file", "line", "severity", "trigger_condition", "root_cause", "verdict"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "severity": { "enum": ["critical", "high", "medium", "low"] },
+          "trigger_condition": {
+            "type": "string",
+            "description": "Exact input, state, or call sequence that reproduces the bug"
+          },
+          "root_cause": { "type": "string" },
+          "remediation_sketch": {
+            "type": "string",
+            "description": "One-sentence description of the fix — not prescriptive code"
+          },
+          "verdict": {
+            "enum": ["confirmed", "plausible"],
+            "description": "confirmed = adversary could not refute; plausible = needs human review"
+          }
+        }
+      }
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

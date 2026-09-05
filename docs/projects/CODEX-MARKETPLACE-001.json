@@ -1,0 +1,13 @@
+{
+  "goal": "Ship a reproducible Codex marketplace from native Codex workflows and shared lifecycle contracts.",
+  "architecture": "Keep shared plugin identity and artifact declarations in existing manifests, author Codex-specific behavior in harnesses/codex/plugins/<id>/, use the catalog only for marketplace order and runtime dependencies, and package a materialized dist/codex bundle through a deterministic Python tool. Validate source parity, output safety, and cross-harness contracts in CI.",
+  "tech_stack": ["Python standard library", "JSON", "Bash", "jq", "Codex plugin manifest contract"],
+  "tasks": [
+    {"id": "T1", "title": "Define native Codex sources and catalog", "files": {"create": ["harnesses/codex/plugins/<id>/.codex-plugin/plugin.json", "harnesses/codex/plugins/<id>/skills/<skill>/SKILL.md", "harnesses/codex/catalog.json"]}, "steps": ["Author each Codex manifest and skill for its runtime rather than translating Claude prompts.", "Keep skill names aligned with the shared lifecycle inventory.", "Declare only marketplace order and runtime files in the catalog."], "commit_message": "feat(codex): author native marketplace sources", "covers_criteria": ["AC-001", "AC-003"]},
+    {"id": "T2", "title": "Package the materialized marketplace", "files": {"create": ["tools/build-codex-marketplace.py", "dist/codex/.agents/plugins/marketplace.json"]}, "steps": ["Verify shared ID, version, author, and skill inventory before copying.", "Copy native source trees without rewriting and materialize declared regular-file runtime dependencies."], "commit_message": "feat(codex): package native marketplace", "depends_on": ["T1"], "covers_criteria": ["AC-002", "AC-004"]},
+    {"id": "T3", "title": "Validate and document release behavior", "files": {"create": ["tests/test_build_codex_marketplace.py", "tests/test_codex_native_sources.py", "docs/codex-marketplace-release-policy.md"], "modify": [".github/workflows/validate.yml", "README.md", "ARCHITECTURE.md"]}, "steps": ["Test determinism, byte identity, source drift, and unsafe input rejection.", "Run source, contract, generated-drift, and manifest validation in CI.", "Document install and release behavior without implying runtime equivalence."], "commit_message": "test(codex): validate native marketplace", "depends_on": ["T2"], "covers_criteria": ["AC-004", "AC-005"]}
+  ],
+  "linked_spec": "CODEX-MARKETPLACE-001",
+  "spec_file_path": "docs/specs/CODEX-MARKETPLACE-001.json",
+  "plan_file_path": "docs/projects/CODEX-MARKETPLACE-001.json"
+}

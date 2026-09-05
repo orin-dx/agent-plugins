@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "plan@1",
+  "title": "Plan",
+  "description": "A sequenced implementation plan. Every task is bite-sized, with an implementation approach, exact code, the tests proving each criterion, and a commit message.",
+  "type": "object",
+  "required": ["goal", "architecture", "tech_stack", "tasks"],
+  "additionalProperties": false,
+  "properties": {
+    "goal": {
+      "type": "string",
+      "description": "One sentence: what this plan produces"
+    },
+    "architecture": {
+      "type": "string",
+      "description": "2-3 sentences on the implementation approach"
+    },
+    "tech_stack": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Key libraries, frameworks, or runtimes involved"
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "files", "steps", "commit_message"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "files": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "create": { "type": "array", "items": { "type": "string" } },
+              "modify": { "type": "array", "items": { "type": "string" } },
+              "test": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "Ordered steps. Each step is one action. Code steps include exact code. Test steps include exact command and expected output."
+          },
+          "commit_message": {
+            "type": "string",
+            "description": "Conventional commit message for this task"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "IDs of tasks that must complete before this one"
+          },
+          "covers_criteria": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "IDs of acceptance criteria from spec@1 that this task covers. challenger checks that every criterion ID appears in at least one task."
+          }
+        }
+      }
+    },
+    "batches": {
+      "type": "array",
+      "description": "Optional grouping of tasks into cohesive subsystem/crate compilation units to allow batch execution and minimize subagent spawns.",
+      "items": {
+        "type": "object",
+        "required": ["batch_id", "title", "target_crate", "task_ids"],
+        "additionalProperties": false,
+        "properties": {
+          "batch_id": { "type": "string" },
+          "title": { "type": "string" },
+          "target_crate": { "type": "string" },
+          "task_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "linked_spec": {
+      "type": "string",
+      "description": "ID of the spec@1 this plan implements"
+    },
+    "spec_file_path": {
+      "type": "string",
+      "description": "Workspace-relative path to the spec@1 file this plan implements (e.g. docs/specs/SPEC-001.json). Propagated from spec@1.spec_file_path. Agents resolve it against workspace_root from the recon manifest."
+    },
+    "plan_file_path": {
+      "type": "string",
+      "description": "Workspace-relative path where this plan is written on disk (e.g. docs/projects/SPEC-001.json), keyed by linked_spec. Set by the navigator skill orchestrator after challenger passes. Agents resolve it against workspace_root from the recon manifest."
+    },
+    "spec_hash": {
+      "type": "string",
+      "description": "Content hash (e.g. sha256:<hex>) of the spec@1 file at spec_file_path as it existed when this plan was created. Set by planner. recon recomputes the current file's hash and compares it to this value to detect whether the spec changed after planning — a mismatch means the plan may not cover criteria added or changed since it was made."
+    },
+    "linked_requirement": {
+      "type": "string",
+      "description": "ID of the requirement@1 the source spec@1 implements. Propagated from spec@1.linked_requirement by planner so the full requirement-to-code chain is traceable without re-reading the spec."
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Agent scratchpad — not consumed downstream"
+    }
+  }
+}

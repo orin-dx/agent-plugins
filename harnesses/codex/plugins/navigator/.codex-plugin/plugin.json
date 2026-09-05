@@ -1,0 +1,19 @@
+{
+  "name": "navigator",
+  "version": "2.3.0",
+  "description": "Decompose approved specifications into evidence-backed, executable implementation plans.",
+  "author": {
+    "name": "Gabriel Castro",
+    "email": "gabe@techworx.dev"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Navigator",
+    "shortDescription": "Create implementation plans that survive execution.",
+    "longDescription": "Codex-native planning that reads persisted specifications, maps criteria to compilation-boundary batches, and preserves drift detection metadata.",
+    "developerName": "Gabriel Castro",
+    "category": "plan",
+    "capabilities": ["skills", "agent-teams-optional"],
+    "defaultPrompt": ["Turn an approved persisted specification into a bounded implementation plan with evidence for every acceptance criterion."]
+  }
+}
