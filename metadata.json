@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.10.4-nightly.202609020630.ee6d53f3d",
+  "checkpoint_id": "01M1QK1MDGSSKD2W1CGBCS3XJF",
+  "strategy": "manual-commit",
+  "branch": "docs/wisp-plugins-brand",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/adr/007-wisp-persona-naming.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 672,
+    "cache_creation_tokens": 1869361,
+    "cache_read_tokens": 150453820,
+    "output_tokens": 398477,
+    "api_call_count": 336
+  }
+}
