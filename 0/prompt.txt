@@ -1,0 +1,1 @@
+Can we make sure that our persisted schemas are not in the .claude folder? We should be more generic /docs/specs /docs/architecture /docs/projects right?
