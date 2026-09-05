@@ -1,0 +1,1 @@
+does wisp cli/service/mcp read from source of truth and our plugins still deal directly with json?
