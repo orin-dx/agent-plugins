@@ -1,0 +1,1 @@
+Like, we're already building tooling to parse code using ASTs right? Should we build a memory-like MCP?
