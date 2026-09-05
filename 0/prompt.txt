@@ -1,0 +1,1 @@
+Let's first make the codex ones and then think through how we guide harness-authoring and maintenance
