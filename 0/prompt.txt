@@ -1,0 +1,1 @@
+Should it just be constitution level or should we consider BDD more holistically too? How does it work with SDD and TDD? DOes it conflict? How do we account for in the spec of SDD and the testing of TDD?
