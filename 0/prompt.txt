@@ -1,0 +1,1 @@
+Let's layout the plugin readmes in the order of importance to users
