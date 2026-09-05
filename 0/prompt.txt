@@ -1,0 +1,5 @@
+<task-notification>
+<task-type>artifact-watch-lifecycle</task-type>
+<summary>Stopped watching Artifact: "Wisp Marks" (connection lost)</summary>
+<event>Watch on https://claude.ai/code/artifact/37342e5c-8038-4700-a719-9188d03f4a62 ended — the live connection kept failing and reconnecting has stopped. This session will no longer hear when it is republished; watch it again if you still need that.</event>
+</task-notification>
