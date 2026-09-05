@@ -1,0 +1,97 @@
+<task-notification>
+<task-id>a077000f6e784d232</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-gabe-Projects-agent-plugins/5ecd9de8-2c05-4dfb-95d2-d928d11fdf96/tasks/a077000f6e784d232.output</output-file>
+<status>completed</status>
+<summary>Agent "Research Martin Fowler on BDD/TDD/SDD" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have enough material now to compile a thorough, well-cited report. Let me deliver the findings.
+
+# Findings Report: Fowler/ThoughtWorks on BDD, TDD, and Spec-Driven Development
+
+## 1. Fowler's own writing on BDD's relationship to TDD
+
+Fowler does **not** have a dedicated bliki entry titled "Behavior-Driven Development" — I confirmed this by direct search; his closest and most-cited entry is **[Given-When-Then](https://martinfowler.com/bliki/GivenWhenThen.html)**. In it, Fowler:
+- Credits **Daniel Terhorst-North and Chris Matts** as developers of the Given-When-Then style within BDD, noting North himself credits Ivan Moore for "a significant amount of inspiration."
+- Frames Given-When-Then as "a reformulation of the Four-Phase Test pattern" (Meszaros: Setup/Exercise/Verify/Teardown) and notes the equivalent "Arrange, Act, Assert" (Bill Wake) — i.e., Fowler treats BDD's structuring convention as a **parallel naming style**, not a superior method: "Test frameworks tend to follow either naming style of xunit or BDD."
+- Notably, this entry does **not** explicitly argue BDD fixes TDD's problems — that argument lives more with Dan North than with Fowler directly.
+
+Fowler's **[Unit Test](https://martinfowler.com/bliki/UnitTest.html)** bliki entry is relevant background: he calls unit-testing terminology "ill-defined" and suggests "xunit testing" might be a clearer term than "unit testing," tracing the lineage Extreme Programming → xunit-style testing → TDD → (BDD as a naming/vocabulary correction downstream).
+
+His **[Specification By Example](https://martinfowler.com/bliki/SpecificationByExample.html)** entry (he says he coined the term in 2002) is his fullest treatment of the underlying idea BDD formalizes:
+- Pushes back on treating tests as a mere "side effect" of TDD, using the analogy: "if someone offered me a million dollars to hike up a mountain... the side-effect to my wallet is hardly trivial."
+- States the "double-check principle": good TDD practice means you "always say things twice: once in the code and once in the tests" — redundancy via different expression methods catches errors.
+- States explicit limitations: "Specification By Example isn't enough... you need to do more to ensure everything is properly communicated," and "tests are always going to be incomplete." He also flags the classic gaming risk: a supplier could "just return hard-coded responses to the specific test inputs" rather than a general solution.
+- Requires collaborative context to work: needs "both sides... collaborating and not fighting," plus supplementary practices (conversation, DDD, contractual thinking).
+
+**Caveat:** I could not find a Fowler-authored piece that explicitly narrates "BDD emerged to fix TDD misuse" in his own voice with that framing — that specific narrative is Dan North's own account (see #3), which Fowler references/links to but doesn't restate as his own argument. Treat any claim that Fowler personally wrote "BDD fixes TDD's confusion" as **unsupported by what I found** — the framing belongs to North; Fowler's contribution is more the Given-When-Then/Specification-by-Example vocabulary layer.
+
+## 2. Specification by Example / Living Documentation
+
+- Fowler is credited with coining "Specification by Example" in 2002 (per multiple secondary sources, e.g. Gojko Adzic's own retrospective at [gojko.net/2020/03/17/sbe-10-years.html](https://gojko.net/2020/03/17/sbe-10-years.html)).
+- I could **not confirm** that Fowler wrote a foreword to Adzic's 2011 book *Specification by Example: How Successful Teams Deliver the Right Software*. Search results consistently link Fowler to the *term's* origin but never surface foreword/endorsement text. **I'm not able to verify this claim from the sources found — treat it as unconfirmed, possibly conflating "coined the term" with "endorsed the book."**
+- The value/risk framing Fowler gives (his own bliki, not the book) is captured above: value = tests double as specification and catch a class of errors formal specs miss cheaply; risk = incompleteness, the "hard-coded response" gaming risk, and the requirement of genuine collaboration or the technique degrades.
+
+## 3. Dan North's original BDD framing (2006)
+
+From **["Introducing BDD"](https://dannorth.net/blog/introducing-bdd/)** (Better Software magazine, March 2006):
+- The problem BDD solved: "Programmers wanted to know where to start, what to test and what not to test, how much to test in one go, what to call their tests, and how to understand why a test fails." North felt TDD, as commonly taught, "presented itself as a series of pitfalls" rather than a clear path.
+- The fix was largely **linguistic**: replacing "test" with "behaviour" dissolved a category of confusion, because it reoriented developers from "what to test" (an open-ended, anxiety-inducing question) to "what should the system do" (a scoped, natural-language question).
+- Concrete naming convention: "Test method names should be sentences," using a "should" template ("the class should do X") to keep each test single-responsibility.
+- North extended this past unit-test naming into requirements/analysis — proposing a shared "ubiquitous language" so business stakeholders, analysts, testers, and developers describe behavior in the same vocabulary (this is the direct ancestor of Given-When-Then and Gherkin).
+- Background: North started replacing JUnit with **JBehave** at the end of 2003, specifically to strip "testing" vocabulary and rebuild around "verifying behaviour."
+
+So the "BDD is TDD done right" framing is substantiated, but as **North's own claim about his own motivation**, not literally that exact phrase turning up verbatim in what I fetched — it's a fair paraphrase of "TDD but with the confusions removed," which is what North states directly.
+
+## 4. Recent (2024–2026) Fowler/ThoughtWorks writing on AI-assisted development
+
+This is the richest vein, and directly relevant to your use case:
+
+**Martin Fowler's "Exploring Gen AI" series** (martinfowler.com/articles/exploring-gen-ai/) is an ongoing set of memos from Fowler and Thoughtworks colleagues, spanning 2023–2025+.
+
+- **["TDD inside the agent loop – theater or actual value?"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)** by **Birgitta Böckeler** is the single most on-point source found. Key claims:
+  - Empirically (Opus-judged quality comparisons), "there was no clearly discernible difference based on TDD workflow versus no TDD workflow" — non-TDD runs sometimes scored *higher* on design and test quality.
+  - Diagnosis of why: "The way AI agents were trained is that they have seen completed functions and descriptions of those functions. The number of actual step-by-step TDD examples they have seen is a tiny part of the training data" — i.e., the step-by-step red/green/refactor *process* isn't well-represented in training data the way finished code is.
+  - TDD's classic benefits don't clearly transfer to agents: test-tautology avoidance was unresolved (agents wrote self-referential tests anyway), the "small steps for feedback" benefit is questionable when an agent debugs fine without incrementalism, and the confidence-building/psychological benefit of TDD (for a human) doesn't apply to a non-human implementer.
+  - Costs: TDD approaches used 3–8x more tokens; prescriptive TDD prompting requires continuous re-tuning across model versions.
+  - Mutation-testing comparison showed **no regression-quality advantage** for TDD vs non-TDD runs.
+  - Her conclusion: she has "abandoned prescriptive TDD instructions" in favor of mutation testing, static/modularity analysis, an "Approved Scenarios" pattern, and automated refactor triggers. Verbatim: "Whatever ends up giving us trust and confidence in our software in the future — I think the role of TDD as we've known it is significantly smaller than pre-GenAI."
+
+- **["Understanding Spec-Driven Development: Kiro, spec-kit, and Tessl"](https://www.martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)**, also by Böckeler, gives a taxonomy that's become the field's working vocabulary:
+  - **Spec-first**: spec written up front, used to generate code once, then discarded/not maintained.
+  - **Spec-anchored**: spec persists alongside code as the durable source of intent; when requirements change, the spec updates first; agents reading the codebase later are pointed at the spec, not just the code.
+  - **Spec-as-source**: "the spec is the main source file over time, and only the spec is edited by the human, the human never touches the code" — code is generated and marked `// GENERATED FROM SPEC — DO NOT EDIT`.
+  - She notes Kiro's acceptance-criteria format explicitly reuses **Given-When-Then** — a direct, current lineage line from Dan North's 2006 BDD vocabulary into 2025 AI-agent spec tooling.
+  - Stated risks: agents frequently **ignore** detailed specs/notes ("the agent ignored the notes... it just took them as a new specification and generated them all over again, creating duplicates"); a "false control illusion" from elaborate spec workflows that agents don't reliably follow; explicit parallel drawn to historical **Model-Driven Development** failures (inflexibility, overhead); and observed **non-determinism** even at low abstraction — regenerating from the same spec produces different code.
+
+- **ThoughtWorks Technology Radar** (Volume 34, ~April 2026) has a dedicated **["Spec-driven development" entry](https://www.thoughtworks.com/en-us/radar/techniques/spec-driven-development)**:
+  - Frames SDD as "workflows beginning with a structured functional specification, then proceeding through multiple steps to break it down into smaller pieces, solutions and tasks," generally following spec → plan → implement.
+  - Names OpenSpec, GitHub Spec Kit, and Amazon Kiro as tools standardizing the practice.
+  - Frames spec-driven development and Agent Skills as "feedforward controls" and mutation testing as a "feedback control" that triggers self-correction before human review — i.e., ThoughtWorks is explicitly positioning spec-driven practice and mutation testing (not classic TDD) as the emerging AI-era control mechanisms.
+  - The overall Radar release (per Morningstar/ThoughtWorks press coverage) is themed around "a return to engineering fundamentals to combat cognitive debt" as AI accelerates complexity — worth reading if you want the broader framing, but I did not fetch that full press piece for direct quotes.
+  - Also names the "Ralph Loop" pattern (single agent, infinite loop, fresh context per iteration, implementing one spec-piece at a time) as a related emerging pattern.
+
+**Honest gap:** I found no Fowler/ThoughtWorks piece that directly addresses "how does BDD specifically (as opposed to spec-driven development generally) change when an LLM is the implementer." The 2025–2026 material is rich on **TDD vs. agents** and on **spec-driven development taxonomy**, and it explicitly reuses BDD's Given-When-Then vocabulary as the substrate for AI-agent specs — but there is no Fowler/Böckeler article I found that argues, e.g., "here's what happens to the *collaborative discovery* half of BDD when a human isn't the one doing TDD." That synthesis point (BDD's value was always the conversation, not the Gherkin; spec-driven-development-for-agents keeps the artifact but has no equivalent conversational discovery step with an LLM) appears to be a connection **you would be making**, not one I found stated explicitly in the corpus. If that's the thesis of whatever this research feeds into, flag it as your synthesis, not a sourced claim.
+
+## 5. Failure modes / criticism of BDD in practice
+
+From general web sources (not Fowler/ThoughtWorks specifically — these are practitioner writeups, e.g. Andrew Knight's "Airing of Grievances: BDD" and others):
+- **Staleness**: feature files drift as business rules change, becoming "stale, vague, or tightly coupled to UI workflows," producing false confidence.
+- **Translation-layer overhead**: Gherkin/plain-English steps still have to be wired to step-definition code; for teams already writing expressive test code, this is "pure overhead — it adds a translation layer where none is needed and pulls behavior specification away from the design activity it should be part of."
+- **Collaboration-failure is the core failure mode**: "without regular collaboration between product, dev, and QA during scenario writing, BDD becomes a formatting exercise rather than a quality practice" — most stakeholders never actually read or contribute to the Given-When-Then scenarios, and the people writing them are just developers/testers who could have written equally clear tests in code without Gherkin's ceremony.
+- This directly corroborates the thing you flagged wanting to check: the well-known criticism that teams write Given-When-Then syntax as a checkbox without doing the actual collaborative discovery conversation that gives BDD its value — that's the consistent theme across every practitioner source found, though none of it is Fowler/ThoughtWorks-authored specifically.
+
+## Source list
+
+- https://martinfowler.com/bliki/GivenWhenThen.html
+- https://martinfowler.com/bliki/SpecificationByExample.html
+- https://martinfowler.com/bliki/UnitTest.html
+- https://martinfowler.com/bliki/TestDrivenDevelopment.html (checked, no BDD content)
+- https://dannorth.net/blog/introducing-bdd/
+- https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html (Birgitta Böckeler)
+- https://www.martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html (Birgitta Böckeler)
+- https://www.thoughtworks.com/en-us/radar/techniques/spec-driven-development
+- https://gojko.net/2020/03/17/sbe-10-years.html (Adzic's own retrospective, for the "Fowler coined the term" claim)
+- General BDD-criticism sources (non-Fowler): Automation Panda's "Airing of Grievances: BDD," Cucumber's "BDD is not test automation," TDD Buddy's "TDD already does BDD, without the Gherkin"</result>
+<usage><subagent_tokens>62103</subagent_tokens><tool_uses>18</tool_uses><duration_ms>129949</duration_ms></usage>
+</task-notification>
