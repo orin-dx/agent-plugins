@@ -1,0 +1,1 @@
+Should we have a bit more descriptive names for the skills since that's how we call them with slash "commands"?
