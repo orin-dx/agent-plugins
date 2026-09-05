@@ -1,0 +1,1 @@
+UX and design principles don't seem to be respected in this report, artifact. Some fonts are tiny. the diagrams are not clean and easily readable. We should have round-rects instead of sharp corners for a more modern look right?
