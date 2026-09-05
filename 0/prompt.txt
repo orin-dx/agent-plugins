@@ -1,0 +1,21 @@
+Review from claude:
+
+I've done a thorough review — learned the real Codex CLI plugin system via research, then verified this work against it rather than just reading their docs at face value. Verdict: this is strong, well-verified engineering. Summary:
+
+What "Codex plugins" actually are (confirmed via search against real OpenAI docs, not just this repo's own claims): Codex CLI has its own plugin marketplace — a .codex-plugin/plugin.json manifest per plugin, codex plugin marketplace add <source> [--sparse <path>] to register a marketplace, codex plugin add <name>@<marketplace> to install (the @marketplace suffix disambiguates same-named plugins across marketplaces — I initially found a conflicting example suggesting @ meant a version pin, but a more targeted search confirmed plugin@marketplace is correct), and codex plugin marketplace upgrade/remove <name>. Codex also has its own hook system (~/.codex/hooks.json, PreToolUse/matcher/command shape) — genuinely similar to Claude Code's, not something this repo invented.
+
+What this work built: a full cross-harness architecture — harnesses/codex/ holds independently-authored Codex-native skills and eight portable "role cards" (recon/tracer/research/author/implementer/adversary/reviewer/judge, tiered low→high like this repo's own haiku/sonnet/opus scheme), a generator (tools/build-codex-marketplace.py) that packages those plus the shared schemas into dist/codex (the real installable marketplace), a commit-time integrity hook blocking schema mutation or a stale generated bundle, and a documented policy for what's portable (schema bytes) versus what deliberately isn't (Claude prompts, model tiers, team topology).
+
+What I actually verified, not just read:
+- Ran all 27 tests (test_build_codex_marketplace, test_cross_harness_artifacts, test_codex_native_sources, test_authoring_integrity_hook, test_codex_behavioral_evaluation) — all pass
+- python3 tools/build-codex-marketplace.py --check — bundle is in sync, deterministic
+- Validated docs/specs/CODEX-MARKETPLACE-001.json and docs/projects/CODEX-MARKETPLACE-001.json against my spec@1/plan@1 schemas — both clean. Notably, they used this exact feature to plan their own work: real proof my new persistence convention holds up.
+- New schemas (codex-adaptation@1, harness-evaluation@1) both correctly carry additionalProperties: false and reasoning, per this repo's own Schema-Driven Handoffs rule
+- CI wiring (.github/workflows/validate.yml) matches the release policy doc exactly
+- Their Codex-native port of scribe/audit-architecture (the skill I built last session) correctly cites all three schemas and faithfully carries over my judgment nuance ("missing model coverage is a gap, not a defect")
+
+One discretionary thing, not a bug: their Codex audit-architecture skill requires explicit user authorization before persisting the arch-model; my Claude-side version auto-writes+commig gate-spec's existing pattern. Could be anintentional, reasonable harness-specific safety divergence (Codex's trust/permission model differs), or worth deciding on purpose and backporting either direction. Their own shared/hitly allows intentional divergence — I just don't seeit called out anywhere as deliberate.
+
+Everything else — command syntax, hook shape, schema conformance, test coverage, CI gates — checked out clean. Nothing here is committed yet; it's all in your working tree. Want mation discrepancy further, or is there something elseyou want reviewed?
+
+Please read, understand and then do your own adversarial review of our codex system as well as our claude system
