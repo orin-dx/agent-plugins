@@ -1,0 +1,1 @@
+If we think outside of the box, is there tooling we could build outside of the context window that would help us in any way?
