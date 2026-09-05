@@ -1,0 +1,1 @@
+Do codex plugins allow skils and agents? references? work with symlinks? Would we be able to use the same repo or we should do separete repos? do we setup a more monorepo layout? How are others doing this?
