@@ -1,0 +1,55 @@
+For the plugins, we might have to do some more tweaking for changesets. In callisto you created one giant changeset that had muliple versions on a locked group.
+
+That seems wrong as the changesets should be feature/change-based and not just lumped together right? After a lot of proding this is what you suggested:
+
+I've now traced the real diff since the last release (f40d87b8, 376 commits) rather than working from the bundled file's prose alone. Here's the accurate per-topic package attribution, verified against actual git diff per track/commit-range (not guessed):
+
+New changeset: fixed-group-convergence.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 1: fixed-group siblings converge to one target; pre_mutation_checks/divergence wiring; ConflictingGroupMembership detection; this
+session's [[fixed-group]] config + no-compounding test
+────────────────────────────────────────
+New changeset: platform-manifest-planning.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 2: real platform_writes/optional_dep_updates planning logic
+────────────────────────────────────────
+New changeset: cascade-severity-fixes.md
+Packages (severity): callisto-graph (patch)
+Scope: Track 9: peer-escalation respects true severity; cross-ecosystem rewrite-key fix
+────────────────────────────────────────
+New changeset: identity-ecosystem-resolution.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 3a/3b1: workspace-membership filtering, ecosystem-prefixed identity, cross-ecosystem promotion, fallback removal
+────────────────────────────────────────
+New changeset: release-pipeline-contract.md
+Packages (severity): callisto-model, callisto-graph, callisto-cli, callisto-moon (minor)
+Scope: Track 4 + Track 6-mechanical + SPEC-005: tag-sha fix, status --check fix, JSON report renames, ReleaseEntry.is_prerelease + Action rewrite
+────────────────────────────────────────
+New changeset: changelog-pr-body-rendering.md
+Packages (severity): callisto-graph (minor)
+Scope: Track 5: one renderer everywhere, ChangeSource constr
+────────────────────────────────────────
+New changeset: callisto-matrix-command.md
+Packages (severity): callisto-cli, callisto-graph, callisto-model (minor)
+Scope: Track G: callisto matrix napi/maturin discovery
+────────────────────────────────────────
+New changeset: manifest-write-batching.md
+Packages (severity): callisto-graph, callisto-manifests, callisto-model (minor)
+Scope: Spec A + Spec B: Manifest::persist required, write-ba
+────────────────────────────────────────
+New changeset: security-hardening.md
+Packages (severity): callisto-graph, callisto-vcs, callisto-cli (patch), callisto-model (minor — new LeadingHyphen variant)
+Scope: publish name validation, registry allowlist, path traion, tag hyphen rejection, bounded subprocess capture
+────────────────────────────────────────
+New changeset: vcs-conventional-decoupling-and-fixes.md
+Packages (severity): callisto-conventional (minor — CommitWalker decoupling), callisto-vcs, callisto-graph, callisto-model, callisto-format (patch)
+Scope: CommitWalker trait decoupling, GitAccess sharing, cactory fix, BREAKING-CHANGE footer parser, PEP440 normalization,
+caret-range fix, diagnostic-code dedup
+
+One thing I'm not silently guessing on: a few micro-bullets EP503 normalization, npm package-manager auto-detection, Cargo compound dependency-range rewriting) I haven't pinned to an exact file yet — I'll verify each before filing rather than place them by assumption.
+
+callisto-fixtures genuinely has zero diffs in this window — it gets no changeset entry (it'll still bump via fixed-group convergence, which is correct, separate from changeset content).
+
+Want me to proceed with this split, or adjust the grouping f
+
+We should make sure that the skill and agent can appropriately apportion changesets. Do you need more details? Do you need to think more critically and do some research?
