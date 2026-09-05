@@ -1,0 +1,163 @@
+This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.
+
+Summary:
+1. Primary Request and Intent:
+   This is a marathon session in the `orin-dx/agent-plugins` repo (a Claude Code / AGY plugin marketplace) covering many sequential, user-directed phases:
+   - Investigate/establish documentation voice standards and changeset/PR/release tooling patterns.
+   - Split the overloaded `delta` "ship" skill into targeted skills, matching real dispatch to real agents.
+   - Extend that same split treatment to `canon`, `graph`, and `basis` (but explicitly NOT `axiom`, `proof`, `vector`, `lambda`, `trace`, which are correctly single-skill).
+   - Establish a rigorous, reasoned process for git commits, version bumps, and release tagging — including correcting real mistakes (a version bump for pure-doc changes; a first-ever tag skipping v1/v2 history) and building durable safeguards (a memory, a restructured `changesets.md`) so those mistakes don't recur.
+   - Audit release-readiness end-to-end (plugin validation, marketplace manifest sync, Mermaid diagram rendering — building `scripts/check-mermaid.sh` — GitHub community health files).
+   - Apply the project's own documented Mermaid color palette (`orin-visual-standard.md`) to actual diagrams across the repo, since it had never been applied anywhere despite being documented.
+   - Find and fix a serious, pre-existing, repo-wide accuracy bug: five single-skill plugins (`proof`, `vector`, `lambda`, `axiom`, `trace`) documented fictional "sub-skills" with slash-paths that looked like real split skills but weren't; `axiom` and `trace` had two internally-contradicting fictional lists. Fix all of it "at once" via parallel forks.
+   - Fill in missing GitHub community health files (`CODE_OF_CONDUCT.md`, `SECURITY.md`, PR/issue templates, labels) for `agent-plugins`, verified against real/official sources rather than reconstructed from memory (a real gap was found and fixed in the first `CODE_OF_CONDUCT.md` draft).
+   - Roll the same tailored (not copy-pasted) community health setup out to six sibling repos across two GitHub orgs (`orin-axi`: `lumen`, `prism`, `michi`, `monokl`; `orin-dx`: `callisto`, `oxc-react-docgen`), explicitly per-repo rather than via a centralized org-level `.github` repo (a considered, reasoned decision after investigation, not the user's first instinct or mine).
+   - Most recently: harden `delta`'s `changeset-analyzer` agent against a real incident (relayed by the user, from a separate `callisto` session) where a large diff got bundled into one giant changeset with guessed attribution, later manually split into ~10 topic-scoped changesets after user pushback. The user explicitly wants this fixed by making the agent split multi-topic diffs into multiple `changeset@2` entries, BUT — per the two most recent messages — this must be a genuinely nuanced, judgment-based rule, not a rigid one-changeset-per-topic mechanical rule: related changes (e.g., "a testing coverage push across all packages," "a set of new features implemented together") should still be ONE changeset, and the user explicitly said **"We don't want too many changesets either"** — i.e., guard against over-splitting as much as under-splitting/bundling.
+
+2. Key Technical Concepts:
+   - Claude Code / AGY plugin architecture: `plugin.json`, `skills/<name>/SKILL.md`, `agents/*.md`, `shared/schemas/*.json`, `shared/references/*.md`.
+   - **Critical fact**: skill routing key is the **skill directory name** (`<plugin>:<directory>`), not the frontmatter `name:` field — confirmed early and used throughout to justify splitting plugins into multiple directories.
+   - 4-part agent structure: `<backstory>`, `<goal>`, `<judgment>`, `<output>` — no `<role>`, no `success_criteria` checklists (per `shared/constitution.md` and `shared/agent-best-practices.md`).
+   - EARS notation (WHEN/IF/WHILE/WHERE/THE SYSTEM SHALL) — belongs only in `<output>` sections, never in `<goal>`/`<judgment>`/`<backstory>` ("EARS is the fence; backstory and goal fill the interior with judgment").
+   - Cognitive mode separation — agents split by required mental mode, not pipeline position.
+   - Schema immutability — a breaking schema change must create a new `<name>@N+1.json` file, never mutate the existing one in place (violated once, self-caught and fixed this session).
+   - `changeset@2` schema (`consumer_impact`: behavior-change|new-capability|internal-only; `semver_impact`: major|minor|patch|none) — supersedes `changeset@1`.
+   - `release-artifact@2` schema — supersedes `release-artifact@1`, drops a redundant `type` field, consumes `changeset@2`'s fields directly, version computed as `max(semver_impact)`.
+   - Skill Names constitution rule (amended this session): default to single lifecycle-stage word; use a specific multi-word name (not `<plugin>-<stage>` prefix) when ambiguous or colliding with another plugin's skill name — because `plugin:skill` invocation already disambiguates, a prefix is redundant.
+   - Plugin Structure constitution rule (amended this session): a plugin defaults to one skill directory named after the plugin id; MAY split into `skills/<skill-name>/SKILL.md` per skill when scope covers genuinely independent, heterogeneous intents (not a linear pipeline).
+   - `shared/references/docs-voice.md` — voice standard (lead with conclusion, active voice, bullets over prose, banned-word list, no hard word-count ceilings — later softened per user feedback — Conventional Comments/Google review-label vocabulary).
+   - **User's explicit, verbatim, standing rule**: "Let's not wrap our MD files EVER" — extended to "Same with our changeset files, never artificially wrap lines" and "Same for commits too" — applies to ALL markdown files AND generated text content (commit messages, changeset summaries, PR bodies, release notes) repo-wide. Saved as memory `feedback_no_markdown_hard_wrap.md`.
+   - `shared/references/changesets.md` — canonical changeset authoring rules: Consumer Impact Classification, Voice, "One Changeset Per Topic" (added this session, then refined again in the most recent, possibly-incomplete edit), "When to Write a Changeset" / "Skip changesets for" (pure documentation changes, reference file updates, internal refactors with no behavioral change), Semver Decision Guide table (now has an explicit "none — do not bump" row after the version-bump mistake).
+   - **User's explicit standing lesson**: check whether a change qualifies to "skip changesets/versioning entirely" BEFORE reaching for the semver bump amount table — codified in `changesets.md` and saved as memory `feedback_check_skip_list_before_version_bump.md`.
+   - GitHub mechanics learned/verified this session: `claude plugin validate`, `claude plugin tag [--push]` (creates `<plugin>--v<version>` tags, validates against `.claude-plugin/marketplace.json` specifically), `gh api repos/{owner}/{repo}/community/profile` (health percentage + missing files), `gh api codes_of_conduct/contributor_covenant` (GitHub's verbatim official CoC text), org-wide `.github` repo default-file mechanism (must be a real public repo, no Settings-only alternative; issue templates are all-or-nothing per repo, no merging), `gh repo edit --description` (repo "About" field, factors into community health score separately from files).
+   - Two real, separate marketplace manifests exist in this repo: root `marketplace.json` (AGY's schema: `id`/`path`/`version` per plugin) and `.claude-plugin/marketplace.json` (Claude Code's real schema: `source: {source: git-subdir, url, path, ref}`, no per-plugin version field) — both are genuine sources of truth per the user ("Both are source of truths"), kept in sync manually.
+   - `orin-visual-standard.md`'s six-color semantic Mermaid palette (`classDef source/store/engine/router/output/alert` with specific hex values, `stroke-width:2px`, `rx:8px,ry:8px`) — confirmed identical to what sibling repos `lumen`/`prism` already use in their own diagrams (not divergent), but never actually applied in `agent-plugins`' own diagrams until this session.
+   - Mermaid syntax bug pattern discovered and fixed: unquoted `@` in a node/edge label (e.g., `Spec[spec@1]`, `|research-report@1|`) is misparsed by Mermaid's newer grammar as a shape/link-ID annotation — must be quoted. Verified by actually rendering via `@mermaid-js/mermaid-cli` (`npx --yes @mermaid-js/mermaid-cli -i x.mmd -o x.svg`), not by reading source. Built `scripts/check-mermaid.sh` (repo-wide extraction + render-check) and wired it into `CLAUDE.md`/`CONTRIBUTING.md`'s validation checklists.
+   - Two GitHub orgs: `orin-dx` (this repo, `callisto`, `oxc-react-docgen`) and `orin-axi` (`lumen`, `prism`, `michi`, `monokl`) — both under the "Orin" umbrella per `orin-visual-standard.md`'s own framing.
+   - Contact emails established: `gabe@orin-dx.com` (authorship, not touched in `plugin.json`/`marketplace.json` author fields), `admin@orin-dx.com` (CODE_OF_CONDUCT enforcement), `security@orin-dx.com` (SECURITY.md reporting) — used consistently across `agent-plugins` and all 6 sibling repos.
+   - `callisto`'s real, callisto-specific `[[fixed-group]]`/locked-group version-linking mechanics (confirmed via actual source doc comments in `crates/callisto-graph/src/{aggregate,cascade,walk}.rs`) — deliberately NOT imported into `delta`'s changeset model, since `agent-plugins`' plugins version independently with no hard-linked group requirement.
+   - Changeset apportionment judgment (most recent work): priority order for "what belongs in one changeset" — (1) shared `linked_spec`/`linked_plan`/`linked_requirement` (strongest, a recorded upstream decision), (2) explicitly stated shared scope from the caller, (3) shared cause read from the diff itself (fallback only). Explicitly NOT a proxy for file/package/commit count. Both over-bundling and over-splitting are named as real, symmetric failure modes — the "split when uncertain" tie-breaker is meant to be a rare fallback after checking 1 and 2, not a default.
+
+3. Files and Code Sections:
+
+   **`shared/references/docs-voice.md`** (created, later refined)
+   - Canonical voice standard; rule 3 (sentence length) was changed from a hard "≤20 words" ceiling to a diagnostic signal ("if a sentence keeps running, it's usually doing two jobs... split it") after user asked me to "loosen" it, since it was an unevidenced mechanical rule contradicting the constitution's own Output Economy warning against artificial truncation.
+
+   **`shared/references/orin-visual-standard.md`** (trimmed)
+   - Kept only diagram/visual scope; voice content moved to `docs-voice.md`. One Mermaid-fenced block (`### Sequence Diagram Theme Initialization`) was actually an intentional partial fragment (a `%%{init}%%` directive with no diagram body) — re-fenced from ` ```mermaid ` to ` ```text ` so `scripts/check-mermaid.sh` doesn't false-positive on it.
+
+   **`shared/schemas/changeset@1.json` / `release-artifact@1.json`**
+   - Reverted to original content after a self-caught immutability violation.
+
+   **`shared/schemas/changeset@2.json`** (new) / **`release-artifact@2.json`** (new)
+   - Added required `consumer_impact`, `semver_impact` (changeset@2); release-artifact@2 drops redundant `type` field, consumes those fields directly from each changeset.
+
+   **`shared/references/changesets.md`**
+   - Added "Consumer Impact Classification" table, "Voice" section, "One Changeset Per Topic" section (added, then just rewritten again in the most recent, unverified edit — current state includes a 3-step priority order: linked_spec/plan/requirement → explicitly stated shared scope → shared cause from diff; explicit "not a proxy for file/package/commit count" statement; reframed "prefer splitting when ambiguous" as a rare fallback, ending "Reaching for 'split when unsure' without checking 1 and 2 first is exactly what produces changeset sprawl."), "Semver Decision Guide" (added a "Pure documentation or self-description fix, no behavior change → none — do not bump" row directly in the table).
+
+   **`shared/constitution.md`**
+   - Amended "Plugin Structure" section (multi-skill directories allowed), amended "Skill Names" section (default single word; specific multi-word name over `<plugin>-<stage>` prefix for collisions/ambiguity).
+
+   **`plugins/delta/agents/changeset-analyzer.md`** (heavily edited, most recent target file)
+   - Current `<judgment>` section (as of the last edit, unverified) reads (paraphrased from the actual edit): opens by stating both over-bundling and over-splitting are real, symmetric failure modes; gives the 3-step priority order (shared linked_spec/plan/requirement is strongest and should stop the analysis there; explicitly stated shared scope from the caller next; shared-cause diff reading only as fallback); states none of this proxies file/package/commit count; reframes the "prefer splitting when ambiguous" tie-breaker as rare, not default, warning that reaching for it without checking 1/2 first "is what produces changeset sprawl." Package/file attribution must be verified against each topic's own diff slice.
+   - `<output>` section (from the prior "split by topic" edit, already committed): returns an array of one-or-more `changeset@2` objects instead of a single object; added EARS rules for splitting and per-topic verification.
+   - This file's edits from the most recent turn have NOT yet been verified/read back, and no version bump or commit has been made for them yet.
+
+   **`plugins/delta/skills/changeset/SKILL.md`**
+   - Updated `<io>` to reflect array-capable output (from the "split by topic" work); version bumped 2.0.0 → 2.1.0. NOT yet updated to reflect the very latest judgment refinement (priority order / anti-fragmentation) — still describes only the earlier framing.
+
+   **`plugins/delta/plugin.json`**
+   - Version 2.0.0 → 2.1.0 (for the split-by-topic feature). No further bump yet for the latest refinement.
+
+   **`plugins/delta/CHANGELOG.md`** / root **`CHANGELOG.md`**
+   - `[2.1.0]` entry added to delta's CHANGELOG; `[3.2.0]` entry added to root CHANGELOG, both for the split-by-topic work. Not yet updated for the latest priority-order refinement.
+
+   **`marketplace.json`** (root) / **`.claude-plugin/marketplace.json`**
+   - Kept in sync throughout; delta's version bumped alongside top-level marketplace version (currently 3.2.0 after the last committed round).
+
+   **`scripts/check-mermaid.sh`** (new)
+   - Bash script extracting every ` ```mermaid ` block from every `.md` file and rendering each via `npx @mermaid-js/mermaid-cli`, reporting failures. Wired into `CLAUDE.md` and `CONTRIBUTING.md`'s validation checklists.
+
+   **`.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/{bug_report,feature_request}.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`** (all new, in `agent-plugins`)
+   - `CODE_OF_CONDUCT.md` rebuilt from GitHub's verbatim `gh api codes_of_conduct/contributor_covenant` text plus one verified 2.1-specific addition ("caste, color"), contact `admin@orin-dx.com`. `SECURITY.md` contact `security@orin-dx.com`, scope tailored to this repo's real threat model (prompt injection via scanned workspace content, unsafe tool invocation, schema validation bypass, supply chain).
+
+   **Six sibling repos** (`~/Projects/{lumen,prism,michi,monokl,callisto,oxc-react-codegen}`)
+   - Each got `CODE_OF_CONDUCT.md` (byte-identical Contributor Covenant text, verified via md5), a genuinely tailored `SECURITY.md`, a lightweight PR template, Markdown issue templates, and a one-line `CONTRIBUTING.md` pointer — all committed locally by parallel forks (not pushed by them), then verified and pushed by me. `callisto`'s commit was cherry-picked from a feature branch onto `main`. All 6 repos also got their GitHub "About" description set via `gh repo edit --description` to fix a community-health-score gap unrelated to file content.
+
+4. Errors and fixes:
+   - **Schema immutability violation**: Initially edited `changeset@1.json`/`release-artifact@1.json` in place with new required fields — self-caught by re-reading `shared/constitution.md`'s "existing schema is immutable" rule. Fixed by reverting `@1` files (via `git show HEAD:<path>`) and creating proper `@2` versioned files.
+   - **`post-review` naming violation**: violated "single lifecycle-stage word" rule. Renamed to `post`, then per user pushback ("that is worse than being more specific with multiple words") reverted back to `post-review` and amended the constitution rule itself instead.
+   - **Commit staging bug**: First "cut a release" commit accidentally included 4 unrelated pre-staged file deletions from earlier `git rm` calls made much earlier in the session. Fixed via `git reset --soft HEAD~1` (undo commit, keep staged) then `git reset HEAD -- <4 paths>` (unstage just those), then re-committed cleanly. User was shown this transparently.
+   - **Version-skipping without history**: Tagged `v3.0.0` as literally the first tag ever in the repo's history, with no `v1`/`v2` tags/releases ever having existed. User called this out ("You have a habit of skipping over versions"). Fixed by reconstructing real version history from `marketplace.json`'s git log and backfilling tags `v1.0.0` through `v2.2.0` at their true historical commits.
+   - **Version bump for pure documentation**: Bumped to `v3.1.0` (5 plugin patches + marketplace minor) for what was actually pure documentation/self-description fixes (fictional sub-skills removed, no behavior changed) — violated `changesets.md`'s own "skip changesets for pure documentation changes" rule, which existed but wasn't checked before reaching for the bump table. User: "Did we really need a release for just doc updates?" — owned the mistake, user said leave the already-pushed v3.1.0 as-is but fix the process. Restructured `changesets.md` to put the skip-check directly in the semver table itself, saved a memory.
+   - **`CODE_OF_CONDUCT.md` written from memory**: User asked "Did we base these on some of the industry best ones? specially the code of conduct?" — I admitted it was reconstructed from memory, verified against `gh api codes_of_conduct/contributor_covenant`, found real dropped content (a paragraph on moderator rights, a Scope example, wrong version label), rebuilt from the verbatim official text.
+   - **Mermaid diagrams silently broken**: User reported "the trace mermaid diagram has a typo and is not rendering" then "Same with the vector readme." Root-caused via actually installing and running `@mermaid-js/mermaid-cli`: unquoted `@` in labels. Fixed both, then swept the whole repo (`scripts/check-mermaid.sh`) and found one more pre-existing false-positive (an intentional non-diagram fragment mis-fenced as mermaid) which I re-fenced as `text` rather than "fixing" content that was never broken.
+   - **`callisto` fork committed on wrong branch**: The `setup-callisto-community` fork committed on the branch that happened to be checked out (`release-pipeline-and-matrix-hardening`) rather than `main`, since my directive didn't specify checking out `main` first. Fixed via `git checkout main; git cherry-pick <sha>` then restored the original branch checkout.
+   - **`axiom` fork's own self-introduced bug**: A fork fixing `axiom`'s fictional sub-skills wrote "single skill (`axiom/gate`)" in its draft, incorrectly implying `axiom/gate` was the real routing identifier — the fork caught and corrected this itself before finishing (routing key is `axiom:axiom`, `gate` is only the cosmetic frontmatter name), and I additionally verified no other fixed plugin repeated this mistake via a repo-wide grep.
+
+5. Problem Solving:
+   - Repeatedly used "verify against the real, authoritative source" as the governing discipline this session, after multiple instances of memory-reconstruction producing real errors (Code of Conduct text, Mermaid template assumptions, PR template "industry best practice" claims). Established `gh api`, `WebFetch`/`WebSearch`, and actually running tools (`claude plugin validate`, `@mermaid-js/mermaid-cli`, `jq`) as the standard verification method rather than reading source and eyeballing it.
+   - Repeatedly used research forks (subagent_type: "fork") for research-heavy or parallelizable execution work, keeping the main conversation's context focused on synthesis and decisions rather than raw tool output.
+   - Resolved the "org-wide vs per-repo" community health file architecture question through genuine investigation and reconsideration (not a snap decision) — ultimately per-repo, after confirming GitHub's org-default mechanism requires an actual new repo and that generic templates risk being mediocre everywhere per real-world precedent (rust-lang/rust, VS Code, Next.js all ship with no PR template).
+   - The current, most recent problem being solved: how to instruct `changeset-analyzer` to correctly balance under-splitting (bundling unrelated topics) against over-splitting (fragmenting one coherent, deliberately-scoped effort into many tiny changesets) — using `linked_spec`/`linked_plan`/`linked_requirement` as the primary, most reliable signal of deliberate scope (since it's a recorded decision, not an inference), falling back to diff-based "shared cause" judgment only when no such linkage exists.
+
+6. All user messages (non-tool-result, verbatim or near-verbatim where short; summarized only when very long transcripts were pasted):
+   - "We don't seem to have a skill for creating changesets, pull requests and any references for language, tone, etc when it comes to documentation right?"
+   - "It seems to all be wrapped up in the ship skill which encompasses too much all at once right? Shouldn't we have one for receiving feedback? one for giving feedback, one for writing the changeset and one for creating a PR?"
+   - "We want our language to be succinct, focused, to the point and generally engineering focused. Devoid of AI slop, ai word salad and filler words. We want to avoid unecessary and wordy blocks. Where appropriate favoring bullets, diagrams, etc. We want easily scannable, readable and understandable text vs wordy prose right? What kind of guidelines are out there? What does UX research say about user documentation? Best practices for changelogs, documentation, etc? How can we best guy our LLMs?"
+   - "Are we avoiding being overly prescriptive in how we changed things?" (later, a different point in conversation)
+   - "I do think we want to split the giant skill into smaller and more targeted skills right? Have we done the same in other plugins? Overloading it might result in less effective actions right?"
+   - "Both are source of truths"
+   - "Say we're doing a push for testing coverage improvement across all packages, that can go in one changeset. Say we're implementing a set of new features together, that can be a changeset. Agentic work makes this a bit more difficult because the agents do a lot more work quicker, right"
+   - "Yes, If you think that will help its judgement of what goes in a changeset and what gets split into another. We don't want too many changesets either." (most recent message)
+   - "Let's tackle the other plugins"
+   - "Do all of it at once please"
+   - "consider we might want to have a changeset analyzer who's goal is to determine what changed from the perspective of a consumer, not just what changed internally. Remembering that a changeset is a changelog entry (or can be combined into one entry for a version). We want to consider how to determine the semver and scale the details in the changeset based on how complex and how big the version bump is. How dow we want to write this skill?"
+   - "Let's plan things out and not rush into changes." (appeared twice, at two separate planning junctures)
+   - "The single lifecycle-single word is maybe too aggressive post-review is a good name for example and avoids conflicts right?"
+   - "We should avoid the plugin-stage naming, that is worse than being more specific with multiple words"
+   - "Let's fix that please" (in reference to a "did we base these on industry best" follow-up)
+   - "yes and consider if there are better ways to represent our diagram info"
+   - "The plugin readmes could probably also use some love where we make them more readable, scanable and prettier"
+   - "FYI the trace mermaid diagram has a typo and is not rendering. How do we check on mermaid diagrams like this? We make these mistakes every now and again."
+   - "Same with the vector readme"
+   - "I'm creating emails for gabe@orin-dx.com admin@orin-dx.com and security@orin-dx.com. We should use the admin and security emails in the docs"
+   - "Looks like we don't have the security policy set"
+   - "Is the PR templace adequate or great?"
+   - "I think you need to research and consider what we should use. We want this kind of setup for all our repos right?"
+   - "Or should we setup the appropriate things in each repo???"
+   - "Can that be setup at the org vs creating a new repo???"
+   - "Yes, go ahead"
+   - "Why v3? did we ever release v2? You have a habit of skipping over versions"
+   - "We should backfill and keep versioning consistent please"
+   - "Do we feel confident about all our changes? Anything you think we should look into before we release?"
+   - "Ready to push to main and \"release\" it?"
+   - "Shall we tag a release and push?"
+   - "Do we feel confident about all our changes? Anything you think we should look into before we release?" (this repeated phrasing appeared once, listed above)
+   - "We should finish setting up the recommended bits from GH community: https://github.com/orin-dx/agent-plugins/community"
+   - "Did we base these on some of the industry best ones? specially the code of conduct?"
+   - "Is it always one changeset per topic or can related things go into a changeset, it's a bit nebulous on purpose and why AI is good for this right?"
+   - "Do we feel confident about all our changes? Anything you think we should look into before we release?" (single occurrence, listed for completeness earlier)
+   - "For the plugins, we might have to do some more tweaking for changesets. In callisto you created one giant changeset that had muliple versions on a locked group. That seems wrong as the changesets should be feature/change-based and not just lumped together right? After a lot of proding this is what you suggested: [pasted a detailed transcript from a separate callisto session describing the split into ~10 topic-scoped changesets like `fixed-group-convergence.md`, `platform-manifest-planning.md`, `cascade-severity-fixes.md`, `identity-ecosystem-resolution.md`, `release-pipeline-contract.md`, `changelog-pr-body-rendering.md`, `callisto-matrix-command.md`, `manifest-write-batching.md`, `security-hardening.md`, `vcs-conventional-decoupling-and-fixes.md`, with per-package severity attribution verified against real git diffs] ... We should make sure that the skill and agent can appropriately apportion changesets. Do you need more details? Do you need to think more critically and do some research?"
+
+7. Pending Tasks:
+   - Finish and verify the most recent `changeset-analyzer.md`/`changesets.md` judgment refinement (priority order: linked_spec/plan/requirement → stated shared scope → shared cause; explicit anti-over-splitting guidance) — this was just edited but not yet re-read/verified.
+   - Update `plugins/delta/skills/changeset/SKILL.md`'s description/overview to reflect the refined priority-order judgment (it currently only reflects the earlier "split by topic" framing from the prior round).
+   - Decide whether this refinement warrants its own version bump (per the "check skip-list before bumping" lesson) or should be considered part of the still-fresh v2.1.0 change, and act accordingly (CHANGELOG entries, `plugin.json`/`marketplace.json` version, tag) — or explicitly conclude no bump is needed.
+   - Commit, push, and (if warranted) tag this latest change, following the established git-history process (clear, well-scoped commits with `Claude-Session:` footer).
+   - No other pending tasks were explicitly left open by the user at time of this summary — all prior phases (delta/canon/graph/basis splits, community health files for agent-plugins and 6 sibling repos, Mermaid palette application, version backfill) were completed and confirmed.
+
+8. Current Work:
+   Immediately before this summary was requested, I was refining `plugins/delta/agents/changeset-analyzer.md`'s `<judgment>` section and `shared/references/changesets.md`'s "One Changeset Per Topic" section in direct response to the user's most recent message: "Yes, If you think that will help its judgement of what goes in a changeset and what gets split into another. We don't want too many changesets either."
+
+   I made two edits:
+   1. In `plugins/delta/agents/changeset-analyzer.md`, replaced the `<judgment>` section's opening (which previously only warned against bundling and told the agent to "treat as separate" when uncertain) with new text establishing that over-bundling AND over-splitting are both real, symmetric failure modes, followed by a 3-step priority order for deciding what belongs in one changeset: (1) shared `linked_spec`/`linked_plan`/`linked_requirement` — the strongest signal, a decision already made explicitly before code existed; (2) an explicitly stated shared scope from whoever handed over the diff; (3) shared cause read from the diff itself, only as a fallback when neither above applies. Explicitly stated this is not a proxy for file/package/commit count, and reframed "prefer splitting when genuinely ambiguous" as a rare fallback rather than a default, to avoid producing changeset sprawl.
+   2. Made the mirroring edit to `shared/references/changesets.md`'s "One Changeset Per Topic" section, with the same 3-step priority order and the same explicit warning against treating "split when unsure" as a default.
+
+   The tool result for the second edit (`shared/references/changesets.md`) was returned successfully, and this was the LAST action taken before the summary request arrived. No verification, version-bump decision, commit, or push has happened yet for this specific round of edits.
+
+9. Optional Next Step:
+   The immediate next step, directly continuing the just-completed edits, is to finish propagating this refined judgment consistently and close out the change properly — mirroring the exact process used for the "split by topic" change earlier in this same conversation (update `delta/skills/changeset/SKILL.md`, decide on a version bump per the "check the skip-list first" discipline, update CHANGELOGs if warranted, commit with a clear message, push, and tag if warranted). This directly continues the user's explicit instruction: "Yes, If you think that will help its judgement of what goes in a changeset and what gets split into another. We don't want too many changesets either." — no other task should be started without checking in first, since this refinement is the active, unfinished thread.
+
+If you need specific details from before compaction (like exact code snippets, error messages, or content you generated), read the full transcript at: /Users/gabe/.claude/projects/-Users-gabe-Projects-agent-plugins/bbc88500-1c22-4b17-a7aa-f01c453ffafa.jsonl
+Continue the conversation from where it left off without asking the user any further questions. Resume directly — do not acknowledge the summary, do not recap what was happening, do not preface with "I'll continue" or similar. Pick up the last task as if the break never happened.
