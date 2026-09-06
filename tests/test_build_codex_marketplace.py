@@ -131,6 +131,9 @@ class BuildCodexMarketplaceTests(unittest.TestCase):
         marketplace = json.loads((output / ".agents/plugins/marketplace.json").read_text())
         self.assertEqual([item["name"] for item in marketplace["plugins"]], ["bravo", "alpha"])
         self.assertEqual(marketplace["plugins"][0]["source"]["path"], "./plugins/bravo")
+        discovery = json.loads((self.root / ".agents/plugins/marketplace.json").read_text())
+        self.assertEqual([item["name"] for item in discovery["plugins"]], ["bravo", "alpha"])
+        self.assertEqual(discovery["plugins"][0]["source"]["path"], "./dist/codex/plugins/bravo")
         native_alpha = self.root / "harnesses/codex/plugins/alpha"
         for relative, contents in self.files(native_alpha).items():
             self.assertEqual((output / "plugins/alpha" / relative).read_bytes(), contents)
@@ -155,6 +158,9 @@ class BuildCodexMarketplaceTests(unittest.TestCase):
         marketplace = json.loads((self.root / "dist/codex/.agents/plugins/marketplace.json").read_text())
         self.assertEqual(marketplace["name"], "wisp-plugins")
         self.assertEqual(marketplace["interface"]["displayName"], "Wisp Plugins")
+        discovery = json.loads((self.root / ".agents/plugins/marketplace.json").read_text())
+        self.assertEqual(discovery["name"], "wisp-plugins")
+        self.assertEqual(discovery["interface"]["displayName"], "Wisp Plugins")
 
     def test_rebuild_is_deterministic_and_removes_stale_output(self) -> None:
         self.write_json("harnesses/codex/catalog.json", self.catalog())
@@ -280,6 +286,40 @@ class BuildCodexMarketplaceTests(unittest.TestCase):
             capture_output=True,
         )
         self.assertEqual(checked.returncode, 0, checked.stderr)
+
+    def test_check_fails_for_a_stale_root_discovery_manifest(self) -> None:
+        self.write_json("harnesses/codex/catalog.json", self.catalog())
+        self.assertEqual(self.build().returncode, 0)
+        self.write(".agents/plugins/marketplace.json", "{}\n")
+
+        check = subprocess.run(
+            [sys.executable, str(BUILDER), "--repo-root", str(self.root), "--check"],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertEqual(check.returncode, 2)
+        self.assertIn("out of date", check.stderr)
+        result = self.build()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        discovery = json.loads((self.root / ".agents/plugins/marketplace.json").read_text())
+        self.assertEqual(discovery["plugins"][0]["source"]["path"], "./dist/codex/plugins/bravo")
+
+    def test_root_discovery_write_failure_restores_the_previous_bundle(self) -> None:
+        self.write_json("harnesses/codex/catalog.json", self.catalog())
+        self.assertEqual(self.build().returncode, 0)
+        output = self.root / "dist/codex"
+        before = self.files(output)
+        discovery = self.root / ".agents/plugins/marketplace.json"
+        discovery.unlink()
+        discovery.mkdir()
+
+        result = self.build()
+
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(self.files(output), before)
+        self.assertFalse(any((self.root / "dist").glob(".codex.previous-*")))
 
 
 if __name__ == "__main__":
