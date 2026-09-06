@@ -7,7 +7,7 @@ These hooks apply only while working in `orin-dx/agent-plugins`. They are projec
 Claude and Codex run `scripts/authoring-integrity-hook.py` before a shell command that invokes `git commit`. The hook is silent unless it blocks a commit for one of two hard invariants:
 
 - A tracked `shared/schemas/<name>@<version>.json` file is modified, deleted, renamed, or copied instead of adding a new version.
-- `dist/codex` does not exactly match the authored Codex sources and catalog.
+- The generated Codex marketplace artifacts (`.agents/plugins/marketplace.json` and `dist/codex`) do not exactly match the authored Codex sources and catalog.
 
 The hook does not run tests, rewrite files, add context, inspect ordinary edits, or act outside this repository. It permits new schema files and reports the one corrective action when it blocks.
 

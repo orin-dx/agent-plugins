@@ -104,9 +104,9 @@ This repository publishes the same lifecycle ecosystem to Claude Code and Codex 
 | Shared ID, version, author, and artifact declarations | Uses `plugins/<id>/plugin.json` | Native manifest is checked against those shared fields | `plugins/<id>/plugin.json` |
 | Workflow prompts | Skills plus specialist agent prompts | Native Codex skills | Claude: `plugins/<id>/`; Codex: `harnesses/codex/plugins/<id>/` |
 | Durable handoffs | Versioned JSON artifacts | The same versioned JSON artifacts, materialized as regular files | `shared/schemas/` |
-| Installable marketplace | Root Claude marketplace files | Generated bundle | `dist/codex/` |
+| Installable marketplace | Root Claude marketplace files | Root discovery manifest plus generated bundle | `.agents/plugins/marketplace.json` and `dist/codex/` |
 
-`plugins/` is the authored source for the existing Claude/AGY marketplace. `harnesses/codex/plugins/<id>/` contains separately authored Codex manifests, skills, and optional resources. `harnesses/codex/catalog.json` controls marketplace order and materialized runtime files only. `tools/build-codex-marketplace.py` validates and packages those inputs into `dist/codex`. Do not edit generated files by hand.
+`plugins/` is the authored source for the existing Claude/AGY marketplace. `harnesses/codex/plugins/<id>/` contains separately authored Codex manifests, skills, and optional resources. `harnesses/codex/catalog.json` controls marketplace order and materialized runtime files only. `tools/build-codex-marketplace.py` validates and packages those inputs into `dist/codex`, then emits `.agents/plugins/marketplace.json` at the repository root so Codex can discover the bundle from Git. Do not edit generated files by hand.
 
 Claude agents are not renamed and shipped as Codex agents. Each Codex skill has its own harness-appropriate instructions and can complete alone. When agent teams are enabled, a skill selects a packaged Codex role card for independent, bounded work; the artifact contract and single-agent result remain the same. Codex role cards are portable plugin resources, not TOML configuration.
 
@@ -142,10 +142,10 @@ If you registered the previous marketplace identity, replace it before installin
 
 ### Codex
 
-The published Codex marketplace is the generated `dist/codex` directory, not the repository root. Register that directory once, then add only the plugins you need:
+Codex discovers the generated root manifest at `.agents/plugins/marketplace.json`; it points at the generated `dist/codex` bundle. Register the repository once, then add only the plugins you need:
 
 ```bash
-codex plugin marketplace add orin-dx/agent-plugins --sparse dist/codex
+codex plugin marketplace add orin-dx/agent-plugins
 codex plugin add weaver@wisp-plugins
 codex plugin add vanguard@wisp-plugins
 codex plugin add scribe@wisp-plugins
@@ -170,14 +170,14 @@ For contributors using a local checkout, rebuild and verify the bundle before re
 ```bash
 python3 tools/build-codex-marketplace.py
 python3 tools/build-codex-marketplace.py --check
-codex plugin marketplace add ./dist/codex
+codex plugin marketplace add .
 ```
 
 If you previously registered the marketplace as `orin-dx-agent-plugins`, migrate to the Wisp Plugins identity:
 
 ```bash
 codex plugin marketplace remove orin-dx-agent-plugins
-codex plugin marketplace add orin-dx/agent-plugins --sparse dist/codex
+codex plugin marketplace add orin-dx/agent-plugins
 codex plugin add <plugin>@wisp-plugins
 ```
 
@@ -310,9 +310,10 @@ agent-plugins/
     ├── courier/                   ← Ship tooling
     ├── ranger/                    ← Fast cross-language bug scan
     └── mason/                     ← Plugin scaffolding
+├── .agents/plugins/               ← Generated Codex discovery manifest; never hand-edit
 ├── tools/
 │   └── build-codex-marketplace.py ← Deterministic Codex bundle generator
-└── dist/codex/                    ← Generated Codex marketplace; never hand-edit
+└── dist/codex/                    ← Generated Codex bundle; never hand-edit
 ```
 
 ---

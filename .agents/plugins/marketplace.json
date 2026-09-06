@@ -1,0 +1,128 @@
+{
+  "name": "wisp-plugins",
+  "interface": {
+    "displayName": "Wisp Plugins"
+  },
+  "plugins": [
+    {
+      "name": "courier",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/courier"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "mason",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/mason"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "muse",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/muse"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "navigator",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/navigator"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "plan"
+    },
+    {
+      "name": "ranger",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/ranger"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "scribe",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/scribe"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "specify"
+    },
+    {
+      "name": "sentinel",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/sentinel"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "smith",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/smith"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "implement"
+    },
+    {
+      "name": "vanguard",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/vanguard"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "research"
+    },
+    {
+      "name": "weaver",
+      "source": {
+        "source": "local",
+        "path": "./dist/codex/plugins/weaver"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "define"
+    }
+  ]
+}

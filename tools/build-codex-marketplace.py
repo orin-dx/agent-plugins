@@ -3,8 +3,11 @@
 
 Codex behavior is authored in ``harnesses/codex/plugins/<id>/``.  The builder
 copies those native plugin trees into ``dist/codex`` without rewriting manifests
-or skills. ``harnesses/codex/catalog.json`` controls marketplace identity, order,
-and portable runtime files only. Its supported shape is::
+or skills. It also emits the repository-root discovery manifest at
+``.agents/plugins/marketplace.json``; that manifest points at the generated
+bundle for Git marketplace installation. ``harnesses/codex/catalog.json``
+controls marketplace identity, order, and portable runtime files only. Its
+supported shape is::
 
     {
       "catalog_version": 1,
@@ -103,6 +106,21 @@ def output_path(repo_root: Path, raw_path: str) -> Path:
 def write_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def write_json_atomically(path: Path, value: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", delete=False
+        ) as temporary:
+            temporary.write(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+            temporary_path = Path(temporary.name)
+        temporary_path.replace(path)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
 
 
 def copy_regular_files(source: Path, destination: Path, repo_root: Path, label: str) -> None:
@@ -284,6 +302,12 @@ def files_match(expected: Path, actual: Path) -> bool:
     return all((expected / path).read_bytes() == (actual / path).read_bytes() for path in expected_paths)
 
 
+def file_matches(expected: dict[str, Any], actual: Path) -> bool:
+    if actual.is_symlink() or not actual.is_file():
+        return False
+    return actual.read_bytes() == (json.dumps(expected, ensure_ascii=False, indent=2) + "\n").encode()
+
+
 def build(repo_root: Path, catalog_path: Path, output: Path, check: bool = False) -> None:
     catalog = read_json(catalog_path, "Codex catalog")
     marketplace = catalog_marketplace(catalog)
@@ -296,6 +320,8 @@ def build(repo_root: Path, catalog_path: Path, output: Path, check: bool = False
     if len(ids) != len(set(ids)):
         fail("catalog plugins must not repeat an id")
     global_runtime_files = require_list(catalog.get("runtime_files", []), "catalog runtime_files")
+    discovery_manifest = output_path(repo_root, ".agents/plugins/marketplace.json")
+    output_relative = output.relative_to(repo_root).as_posix()
 
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}.build-", dir=output.parent))
@@ -319,10 +345,23 @@ def build(repo_root: Path, catalog_path: Path, output: Path, check: bool = False
             ],
         }
         write_json(temporary / ".agents" / "plugins" / "marketplace.json", marketplace_payload)
+        discovery_payload = {
+            **marketplace_payload,
+            "plugins": [
+                {
+                    **entry,
+                    "source": {
+                        "source": "local",
+                        "path": f"./{output_relative}/plugins/{entry['name']}",
+                    },
+                }
+                for entry in marketplace_payload["plugins"]
+            ],
+        }
 
         if check:
-            if not files_match(temporary, output):
-                fail(f"generated marketplace is out of date: {output}")
+            if not files_match(temporary, output) or not file_matches(discovery_payload, discovery_manifest):
+                fail(f"generated Codex marketplace is out of date: {output} or {discovery_manifest}")
             return
 
         if output.exists() and not output.is_dir():
@@ -333,6 +372,13 @@ def build(repo_root: Path, catalog_path: Path, output: Path, check: bool = False
         if output.exists():
             output.rename(backup)
         temporary.rename(output)
+        try:
+            write_json_atomically(discovery_manifest, discovery_payload)
+        except Exception:
+            if backup.exists() and output.exists():
+                shutil.rmtree(output)
+                backup.rename(output)
+            raise
         if backup.exists():
             shutil.rmtree(backup)
     except Exception:

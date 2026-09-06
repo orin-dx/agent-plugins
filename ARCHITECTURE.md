@@ -274,9 +274,9 @@ flowchart LR
 | Delegation | Named agents where the host supports them | Optional agent teams using packaged cognitive-mode role cards; complete single-agent fallback |
 | Durable handoffs | Versioned JSON schemas in `shared/schemas/` | Identical bytes materialized only where the native workflow needs them |
 | Runtime paths | Relative paths; source symlinks may provide shared context | Regular files only; generated output contains no symlinks |
-| Marketplace root | Repository root marketplace files | `dist/codex/.agents/plugins/marketplace.json` |
+| Marketplace root | Repository root marketplace files | `.agents/plugins/marketplace.json`, pointing at `dist/codex/` |
 
-`plugins/<id>/plugin.json` remains authoritative for shared ID, version, author, and produced/consumed artifacts. `harnesses/codex/plugins/<id>/` owns the Codex manifest, skills, category, capability, resource, and team-use choices. `harnesses/codex/catalog.json` owns marketplace order and runtime-file materialization. `tools/build-codex-marketplace.py` atomically packages `dist/codex`; generated files are reviewed and released with their sources, never edited by hand.
+`plugins/<id>/plugin.json` remains authoritative for shared ID, version, author, and produced/consumed artifacts. `harnesses/codex/plugins/<id>/` owns the Codex manifest, skills, category, capability, resource, and team-use choices. `harnesses/codex/catalog.json` owns marketplace order and runtime-file materialization. `tools/build-codex-marketplace.py` atomically packages `dist/codex` and writes the root discovery manifest; generated files are reviewed and released with their sources, never edited by hand.
 
 The schema is the cross-harness contract. Named agents, model routing, prompt wording, tool availability, and delegation strategy are harness-specific implementation details.
 
@@ -300,7 +300,8 @@ flowchart LR
     Builder --> Temp["temporary regular-file bundle"]
     Temp --> Check["--check\nexact tree and byte comparison"]
     Temp --> Publish["atomic replace"]
-    Publish --> Bundle["dist/codex\ninstallable Codex marketplace"]
+    Publish --> Discovery[".agents/plugins/marketplace.json\nGit discovery manifest"]
+    Discovery --> Bundle["dist/codex\ninstallable Codex bundle"]
 ```
 
 | Input | Authoritative for | Generator behavior |
@@ -318,15 +319,16 @@ flowchart LR
 - Authored native manifests and skill files are copied byte-for-byte; generated marketplace order follows the catalog.
 - A normal build writes into a sibling temporary directory, then replaces `dist/codex` only after successful generation.
 - If a build fails after moving the previous output aside, the generator restores the previous output.
-- `--check` builds the expected tree in a temporary directory and fails on missing files, stale files, symlinks, or byte differences without changing `dist/codex`.
+- `--check` builds the expected tree in a temporary directory and fails on missing files, stale files, symlinks, or byte differences without changing generated artifacts.
 
 ## 10. Generated Marketplace Contract
 
-The generated directory is a self-contained Codex marketplace root. Marketplace entry paths are relative to that root, which is why published installation uses `--sparse dist/codex` rather than the repository root.
+Codex discovers marketplaces only from the repository-root `.agents/plugins/marketplace.json`. The generator writes that discovery manifest with entry paths into `dist/codex`; the bundle also carries a self-contained manifest for local bundle testing.
 
 ```text
+.agents/plugins/marketplace.json           # Git discovery entries -> ./dist/codex/plugins/<id>
 dist/codex/
-├── .agents/plugins/marketplace.json       # Ordered marketplace entries
+├── .agents/plugins/marketplace.json       # Standalone bundle entries -> ./plugins/<id>
 └── plugins/<id>/
     ├── .codex-plugin/plugin.json          # Authored native Codex manifest
     ├── skills/<skill>/SKILL.md             # Authored native Codex workflow
@@ -350,7 +352,7 @@ Validation is layered so each check owns a distinct failure class.
 | Native build behavior | `tests/test_build_codex_marketplace.py` | Native manifest/skill rewriting, source/native skill drift, version drift, stale output retention, unsafe runtime collisions, and symlink output |
 | Native source contract | `tests/test_codex_native_sources.py` | Missing native sources, invalid required manifest or skill metadata, source/native skill inventory drift, or rewritten release files |
 | Cross-harness compatibility | `tests/test_cross_harness_artifacts.py` | Changed portable contract bytes or missing lifecycle producer/consumer links |
-| Release drift | `tools/build-codex-marketplace.py --check` | A committed `dist/codex` that differs from source inputs |
+| Release drift | `tools/build-codex-marketplace.py --check` | Generated root discovery or `dist/codex` artifacts that differ from source inputs |
 | Diagram syntax | `scripts/check-mermaid.sh` | Markdown diagrams that cannot render |
 
 CI runs the catalog JSON, native build, compatibility, drift, version, source-documentation, reference-size, and Mermaid checks. The release payload and its native-source, catalog, and schema change belong in the same review; a generated-only change is not a valid release.
@@ -361,7 +363,7 @@ CI runs the catalog JSON, native build, compatibility, drift, version, source-do
 | :--- | :--- | :--- |
 | Malformed catalog, missing native skill, duplicate plugin ID, or native/shared identity mismatch | Generator exits before replacing the existing bundle | Correct the authored input, regenerate, and run `--check` |
 | Runtime file resolves outside the repository | Generator rejects the path | Use a repository-contained source file or copy the required artifact into a tracked source location |
-| Source or generated bundle changes without regeneration | Drift check fails | Regenerate `dist/codex` and review source plus output together |
+| Source or generated marketplace artifacts change without regeneration | Drift check fails | Regenerate `.agents/plugins/marketplace.json` and `dist/codex`, then review source plus output together |
 | Portable schema changes incompatibly | Existing consumers cannot safely assume the old shape | Add a new schema version; do not mutate the existing version |
 | Agent teams are unavailable | Codex skill does not delegate | Complete the same workflow in one agent and preserve the same artifact contract |
 | Two harnesses produce different prose or reasoning | Not automatically a compatibility failure | Run [`docs/codex-behavioral-evaluation.md`](./docs/codex-behavioral-evaluation.md) and compare valid artifacts, evidence, and acceptance criteria |

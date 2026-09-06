@@ -13,6 +13,7 @@ CATALOG_PATH = REPOSITORY_ROOT / "harnesses/codex/catalog.json"
 NATIVE_ROOT = REPOSITORY_ROOT / "harnesses/codex/plugins"
 ROLE_ROOT = REPOSITORY_ROOT / "harnesses/codex/agent-roles"
 OUTPUT_ROOT = REPOSITORY_ROOT / "dist/codex/plugins"
+DISCOVERY_MANIFEST = REPOSITORY_ROOT / ".agents/plugins/marketplace.json"
 SOURCE_ROOT = REPOSITORY_ROOT / "plugins"
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$")
 SCHEMA_REFERENCE = re.compile(r"shared/schemas/([A-Za-z0-9@._-]+\.json)")
@@ -37,6 +38,16 @@ class CodexNativeSourceTests(unittest.TestCase):
     def test_catalog_and_native_source_trees_have_exact_plugin_parity(self) -> None:
         native_ids = {path.name for path in NATIVE_ROOT.iterdir() if path.is_dir()}
         self.assertEqual(native_ids, set(self.plugin_ids))
+
+    def test_root_discovery_manifest_points_at_the_generated_bundle(self) -> None:
+        discovery = read_json(DISCOVERY_MANIFEST)
+        self.assertEqual(discovery.get("name"), "wisp-plugins")
+        self.assertEqual(discovery.get("interface"), {"displayName": "Wisp Plugins"})
+        entries = discovery.get("plugins")
+        self.assertIsInstance(entries, list)
+        self.assertEqual([entry["name"] for entry in entries], self.plugin_ids)
+        for entry in entries:
+            self.assertEqual(entry["source"], {"source": "local", "path": f"./dist/codex/plugins/{entry['name']}"})
 
     def test_native_skill_sets_match_claude_source_skill_sets(self) -> None:
         for plugin_id in self.plugin_ids:

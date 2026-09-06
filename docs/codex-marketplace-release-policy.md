@@ -1,6 +1,6 @@
 # Codex Marketplace Release Policy
 
-`dist/codex` is the installable, generated Codex marketplace. The authored sources are `plugins/*/plugin.json`, `harnesses/codex/plugins/*/`, `shared/schemas/`, and `harnesses/codex/catalog.json`. Never edit `dist/codex` by hand.
+`.agents/plugins/marketplace.json` is the generated Codex discovery manifest at the repository root. It points at the generated `dist/codex` bundle. The authored sources are `plugins/*/plugin.json`, `harnesses/codex/plugins/*/`, `shared/schemas/`, and `harnesses/codex/catalog.json`. Never edit generated files by hand.
 
 ## What is portable
 
@@ -36,14 +36,14 @@ Its test validates fixture documents against the source schemas, confirms the sa
    ```
 
 4. Review native Codex source and generated changes in the same pull request. A generated change without a native-source, catalog, or schema explanation is a release blocker.
-5. Tag and publish only a commit for which the check command succeeds. The tag includes the generated marketplace so users install a deterministic payload.
+5. Tag and publish only a commit for which the check command succeeds. The tag includes both generated marketplace artifacts so users install a deterministic payload.
 6. Register the published bundle with Codex using its marketplace root:
 
    ```bash
-   codex plugin marketplace add orin-dx/agent-plugins --sparse dist/codex
+   codex plugin marketplace add orin-dx/agent-plugins
    ```
 
-   Codex registers this source as `wisp-plugins`; install a plugin with `codex plugin add <plugin>@wisp-plugins`. A source previously registered at the repository root or as `orin-dx-agent-plugins` must be removed and re-added with this sparse path after the first release.
+   Codex discovers the root manifest and registers this source as `wisp-plugins`; install a plugin with `codex plugin add <plugin>@wisp-plugins`. A source previously registered as `orin-dx-agent-plugins` must be removed and re-added after this release.
 
 CI runs the generator and compatibility tests. A stale generated bundle, a symlink in the bundle, a missing contract, or a mismatch between source and materialized schema must fail before release.
 
