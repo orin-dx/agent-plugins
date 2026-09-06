@@ -1,0 +1,4 @@
+fyi:
+
+codex plugin marketplace add orin-dx/agent-plugins --sparse dist/codex
+Error: invalid marketplace file `/Users/gabe/.codex/.tmp/marketplaces/.staging/marketplace-add-tONh68`: marketplace root does not contain a supported manifest
