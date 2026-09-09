@@ -1,6 +1,6 @@
 # scribe — Specification
 
-**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.2.0
+**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.3.0
 
 Turns requirements into unambiguous, testable specs a developer can implement without a single clarifying question — and keeps them that way after implementation starts.
 
@@ -23,7 +23,7 @@ Eight independently-triggered skills, not a linear pipeline — pick the one tha
 - You want to audit a spec for vague criteria, missing error cases, or unverifiable claims
 - You want to check whether a spec fits the codebase's actual module boundaries, canonical abstractions, and invariants — not just whether it's internally consistent
 - You need a binding pass/fail gate on a spec before it enters planning
-- Ranger returned `finding-report@1` or Smith returned `implementation-review@1` with a structural defect family
+- Ranger returned `finding-report@2`, or Smith returned `implementation-review@2` or an architecture-escalating `implementation-result@1`
 - You want to check whether the live codebase still matches a spec gated weeks or months ago
 - implementer reported that a criterion contradicts observed system behavior and the spec itself needs correcting
 
@@ -56,7 +56,7 @@ Eight independently-triggered skills, not a linear pipeline — pick the one tha
 | `scribe/audit-architecture` | Checks a spec against the workspace's persisted architecture model — boundary violations, competing abstractions, invariant conflicts; builds/refreshes the model on demand | `arch-auditor` |
 | `scribe/gate-spec` | Binding pass/fail verdict before the spec enters planning; writes the passed spec to disk | `exit-gate` |
 | `scribe/correct-spec` | Revises a previously gated spec after implementer reports a criterion contradicts observed system behavior | `drafter` (correction mode) |
-| `scribe/architect` | Produces a structural `spec@1` from `finding-report@1` or `implementation-review@1` | `architect` |
+| `scribe/architect` | Produces a structural `spec@1` from Ranger or Smith architecture evidence | `architect` |
 
 `audit-spec` and `gate-spec` are not bare `audit`/`gate` — those words are already taken by `ranger` and `sentinel`'s own plugin-level skills. See `shared/constitution.md`'s Skill Names rule.
 
@@ -125,7 +125,7 @@ spec_file_path + criterion_id + contradiction report
 
 **Architectural remediation pipeline:**
 ```
-finding-report@1 or implementation-review@1
+finding-report@2, implementation-review@2, or architecture-escalating implementation-result@1
   → scribe/architect (architect)
   → scribe/verify-spec → scribe/audit-spec → scribe/audit-architecture → scribe/gate-spec
   → spec@1 (architectural)
@@ -152,7 +152,7 @@ finding-report@1 or implementation-review@1
 | `revision_note` | no | Set only on a correction — what changed and why, citing the affected criterion_id |
 | `reasoning` | yes | Scratchpad — never forwarded downstream |
 
-**`verdict@1`** — produced by `scribe/gate-spec` only; see `shared/schemas/verdict@1.json`
+**`verdict@3`** — produced by `scribe/gate-spec` only; see `shared/schemas/verdict@3.json`
 
 **`arch-audit@1`** — produced by `scribe/audit-architecture` (check mode); see `shared/schemas/arch-audit@1.json`
 
@@ -177,4 +177,4 @@ On fail, specific blockers are returned to `scribe/draft-spec` or `scribe/archit
 
 Feed `spec@1` to **[navigator](../navigator/)** (implementation planning) or run it through **[sentinel](../sentinel/)** for standalone verification against an existing implementation.
 
-Feed structural `finding-report@1` or `implementation-review@1` artifacts to `scribe/architect` before returning to Navigator.
+Feed structural `finding-report@2` or `implementation-review@2` artifacts to `scribe/architect` before returning to Navigator.

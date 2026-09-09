@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Find evidence-backed reachable defects in Rust, TypeScript, or JavaScript. Use for bug hunts, security audits, suspected defects, or post-remediation verification; do not use for general code explanation.
+description: Find evidence-backed reachable defects in Rust, TypeScript, JavaScript, Python, or Go. Use for bug hunts, security audits, suspected defects, or post-remediation verification; do not use for general code explanation.
 ---
 
 # Audit live code, not signals
@@ -16,15 +16,15 @@ Ranger reports only defects that survive control-flow and reachability review. P
 
 ## Evidence pipeline
 
-1. Build a live-file and entry-point manifest. Detect the language from repository evidence; exclude dead files from all later work.
-2. Load only the matching hazard reference: `shared/references/rust-hazards.md`, `shared/references/rust-hazards-t7-t10.md`, `shared/references/typescript-hazards.md`, or `shared/references/typescript-hazards-t7-t10.md`.
+1. Build `shared/schemas/workspace-manifest@1.json` from repository evidence. Record live files, entry points, languages, available checks, workspace state, and exact Ranger version/source revision when known.
+2. Load only the matching Rust, TypeScript/JavaScript, Python, or Go hazard reference. Use the narrow T7/T10 pack only for those taxonomies.
 3. Emit candidates conforming to `shared/schemas/candidate@1.json` from live code only.
 4. For T7 or T10 candidates, trace field survival and record `shared/schemas/field-survival-map@1.json` before adjudicating the candidate.
-5. Trace control flow, inputs, state, and I/O to refute each candidate. A confirmed finding needs a concrete failing scenario. Use plausible only when external state prevents a reachability conclusion.
-6. Aggregate confirmed and plausible results using `shared/schemas/finding-report@1.json`.
-7. Group confirmed findings that share a root cause, domain responsibility, or failure state. Search for both copied syntax and semantic equivalents.
+5. Trace control flow, inputs, state, and I/O to refute each candidate. Record `shared/schemas/candidate-assessment@1.json`; confirmation needs a concrete failing scenario, while plausible requires unobserved external state.
+6. Aggregate results and defect families using `shared/schemas/finding-report@2.json`.
+7. Group confirmed findings that share a root cause, domain responsibility, or failure state. Derive likely semantic candidate sites from types, calls, state transitions, and boundary adapters before searching them.
 8. When repeated findings suggest a missing concept, state, operation, boundary, abstraction, invariant, or enforcement mechanism, route the report to `scribe:architect` before remediation.
-9. After remediation, issue `shared/schemas/verdict@2.json`. Verify each finding, syntactic and semantic siblings, compile, and tests.
+9. After remediation, issue `shared/schemas/verdict@3.json`. Independently verify each finding, sibling candidates, and the affected boundary against current state. Wait for every started check to finish.
 
 ## Safety and evidence
 
@@ -32,6 +32,7 @@ Ranger reports only defects that survive control-flow and reachability review. P
 - Never label dead or unreachable code a bug.
 - Do not report a security claim without a concrete reachable path and impact.
 - Before saying a remediation is resolved, inspect the edited code and run the repository-native verification relevant to the change.
+- Choose mutation, property, fuzz, race, integration, or boundary checks when they fit the risk and the project supports them. A generated-input check must state its generator and oracle. Record uncovered risk as a coverage gap.
 
 ## Team use
 

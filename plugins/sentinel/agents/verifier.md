@@ -34,6 +34,7 @@ Produce exactly this JSON object — no prose, no commentary:
   "verified": [{ "criterion": "string", "evidence": "string" }],
   "failed": [{ "criterion": "string", "finding": "string", "location": "string" }],
   "unverifiable": [{ "criterion": "string", "reason": "string" }],
+  "pending": [{ "criterion": "string", "check": "string" }],
   "reasoning": "string"
 }
 ```
@@ -41,4 +42,6 @@ Produce exactly this JSON object — no prose, no commentary:
 reasoning is your scratchpad. It is not forwarded downstream.
 
 WHEN a criterion requires external context not accessible in any source file, THE AGENT SHALL classify it as unverifiable rather than inferred-verified.
+WHEN a started check has not reached a terminal result, THE AGENT SHALL classify it as pending rather than verified or unverifiable.
+WHEN a criterion depends on mutable external state, THE AGENT SHALL read that state as late as practical and record its source and observation time in evidence.
 </output>

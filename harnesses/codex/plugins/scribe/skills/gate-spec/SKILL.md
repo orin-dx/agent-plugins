@@ -7,7 +7,7 @@ description: Issue the binding pass or fail decision for a specification before 
 
 ## Outcome
 
-Produce a `verdict@1` that a spec must earn through testable criteria, explicit error behavior, bounded scope, and resolved upstream audit findings.
+Produce a `verdict@3` that a spec must earn through testable criteria, explicit error behavior, bounded scope, and resolved upstream audit findings.
 
 ## Workflow
 
@@ -20,7 +20,8 @@ Produce a `verdict@1` that a spec must earn through testable criteria, explicit 
 ## Contract
 
 - Input schema: `shared/schemas/spec@1.json`
-- Output schema: `shared/schemas/verdict@1.json`
+- Output schema: `shared/schemas/verdict@3.json`
+- A pass names its verified scope and has no blockers, blocking gaps, or pending checks.
 - Passing persistence: `docs/specs/<id>.json` containing the same valid `spec@1` with `spec_file_path`
 - Next step: `navigator:plan` consumes the persisted artifact.
 

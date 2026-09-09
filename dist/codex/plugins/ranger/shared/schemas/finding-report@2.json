@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "finding-report@2",
+  "title": "Finding Report",
+  "description": "Confirmed or plausible defects in live polyglot code, grouped by shared cause when related instances exist.",
+  "type": "object",
+  "required": ["workspace", "languages", "modules_scanned", "findings", "defect_families", "reasoning"],
+  "additionalProperties": false,
+  "properties": {
+    "workspace": {"type": "string", "minLength": 1},
+    "languages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "modules_scanned": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "dead_files_excluded": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "language", "description", "file", "line", "severity", "trigger_condition", "root_cause", "verdict"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "language": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "file": {"type": "string", "minLength": 1},
+          "line": {"type": "integer", "minimum": 1},
+          "severity": {"enum": ["critical", "high", "medium", "low"]},
+          "trigger_condition": {"type": "string", "minLength": 1},
+          "root_cause": {"type": "string", "minLength": 1},
+          "remediation_sketch": {"type": "string", "minLength": 1},
+          "verdict": {"enum": ["confirmed", "plausible"]},
+          "family_id": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "defect_families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "finding_ids", "shared_root_cause", "semantic_model", "architecture", "disposition"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "finding_ids": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "shared_root_cause": {"type": "string", "minLength": 1},
+          "semantic_model": {
+            "type": "object",
+            "required": ["assessment", "evidence"],
+            "additionalProperties": false,
+            "properties": {
+              "assessment": {"enum": ["adequate", "missing_concept", "missing_state", "missing_operation"]},
+              "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+            }
+          },
+          "architecture": {
+            "type": "object",
+            "required": ["assessment", "evidence"],
+            "additionalProperties": false,
+            "properties": {
+              "assessment": {"enum": ["adequate", "missing_boundary", "missing_invariant", "missing_abstraction", "missing_enforcement"]},
+              "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+            }
+          },
+          "disposition": {"enum": ["local_remediation", "unify_implementation", "architecture_escalation", "human_review"]}
+        }
+      }
+    },
+    "reasoning": {"type": "string", "description": "Private producer scratchpad; not forwarded downstream."}
+  }
+}

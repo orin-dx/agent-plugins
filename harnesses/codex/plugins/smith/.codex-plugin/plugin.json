@@ -1,7 +1,7 @@
 {
   "name": "smith",
-  "version": "2.3.0",
-  "description": "Execute approved implementation plans with evidence, tests, review, and independent exit verification.",
+  "version": "2.4.0",
+  "description": "Execute approved plans with risk-matched tests, defect-family review, and independent boundary verification.",
   "author": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"

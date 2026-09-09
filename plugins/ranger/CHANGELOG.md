@@ -2,6 +2,15 @@
 
 — ranger
 
+## [3.2.0] - 2026-09-09
+
+### Added
+- Python and Go hazard and boundary packs alongside Rust and TypeScript/JavaScript.
+- `candidate-assessment@1` makes per-candidate confirmation, plausibility, and dismissal schema-valid. `finding-report@2` records languages and structural families; `verdict@3` records verified scope, gaps, and pending checks.
+
+### Changed
+- Recon emits a provenance-aware workspace manifest. Exit-gate independently derives semantic sibling candidates and verifies the relevant execution boundary against current state.
+
 ## [3.1.0] - 2026-09-09
 
 ### Added

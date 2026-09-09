@@ -69,6 +69,9 @@ def validate_subset(instance: Any, schema: dict[str, Any], path: str = "$") -> l
         minimum = schema.get("minItems")
         if isinstance(minimum, int) and len(instance) < minimum:
             errors.append(f"{path}: expected at least {minimum} items")
+        maximum = schema.get("maxItems")
+        if isinstance(maximum, int) and len(instance) > maximum:
+            errors.append(f"{path}: expected at most {maximum} items")
         item_schema = schema.get("items")
         if isinstance(item_schema, dict):
             for index, value in enumerate(instance):
@@ -130,8 +133,8 @@ class CrossHarnessArtifactTests(unittest.TestCase):
             self.assertIn(artifact, codex_consumer.read_text(encoding="utf-8"))
 
     def test_implementation_review_requires_structural_assessments(self) -> None:
-        stage = next(stage for stage in self.stages if stage["artifact"] == "implementation-review@1")
-        schema = read_json(REPOSITORY_ROOT / "shared/schemas/implementation-review@1.json")
+        stage = next(stage for stage in self.stages if stage["artifact"] == "implementation-review@2")
+        schema = read_json(REPOSITORY_ROOT / "shared/schemas/implementation-review@2.json")
 
         missing_assessment = copy.deepcopy(stage["document"])
         del missing_assessment["defect_families"][0]["architecture"]
@@ -157,9 +160,13 @@ class CrossHarnessArtifactTests(unittest.TestCase):
         del missing_lineage["workspace"]
         self.assertTrue(any("missing required property 'workspace'" in error for error in validate_subset(missing_lineage, schema)))
 
-        unsupported_language = copy.deepcopy(stage["document"])
-        unsupported_language["language"] = "python"
-        self.assertTrue(any("expected one of" in error for error in validate_subset(unsupported_language, schema)))
+        python_language = copy.deepcopy(stage["document"])
+        python_language["languages"] = ["python"]
+        self.assertEqual(validate_subset(python_language, schema), [])
+
+        missing_candidate_sites = copy.deepcopy(stage["document"])
+        del missing_candidate_sites["sibling_search"]["semantic"]["candidate_sites"]
+        self.assertTrue(any("missing required property 'candidate_sites'" in error for error in validate_subset(missing_candidate_sites, schema)))
 
         missing_escalation = copy.deepcopy(stage["document"])
         missing_escalation["defect_families"][0]["disposition"] = "fix_instances"
@@ -170,6 +177,16 @@ class CrossHarnessArtifactTests(unittest.TestCase):
         invalid_approval["defect_families"][0]["disposition"] = "fix_instances"
         self.assertTrue(any("forbidden shape" in error for error in validate_subset(invalid_approval, schema)))
 
+        approved_with_verification_gap = copy.deepcopy(stage["document"])
+        approved_with_verification_gap["status"] = "approved"
+        family = approved_with_verification_gap["defect_families"][0]
+        family["disposition"] = "explicit_deferral"
+        family["deferral_reason"] = "Approved deferral for this fixture."
+        for instance in family["instances"]:
+            instance["status"] = "deferred"
+        approved_with_verification_gap["coverage_gaps"][0]["blocking"] = False
+        self.assertTrue(any("forbidden shape" in error for error in validate_subset(approved_with_verification_gap, schema)))
+
         invalid_repair = copy.deepcopy(stage["document"])
         invalid_repair["status"] = "changes_requested"
         invalid_repair["issues"] = [{
@@ -179,7 +196,34 @@ class CrossHarnessArtifactTests(unittest.TestCase):
             "severity": "must_fix",
             "family_id": "FAMILY-001",
         }]
-        self.assertTrue(any("forbidden shape" in error for error in validate_subset(invalid_repair, schema)))
+        self.assertTrue(any("expected 'needs_architecture'" in error for error in validate_subset(invalid_repair, schema)))
+
+    def test_mutation_report_rejects_unavailable_or_surviving_passes(self) -> None:
+        schema = read_json(REPOSITORY_ROOT / "shared/schemas/mutation-report@2.json")
+        report = {
+            "languages": ["python"],
+            "method": "unavailable",
+            "tool_used": "none",
+            "commands": [],
+            "cases_tested": 0,
+            "survived_mutants": [],
+            "precision_tests": [],
+            "coverage_gaps": ["No safe discrimination method was available."],
+            "errors": [],
+            "verdict": "pass",
+            "reasoning": "",
+        }
+        self.assertTrue(any("expected 'coverage_gap'" in error for error in validate_subset(report, schema)))
+
+        report["method"] = "mutation"
+        report["survived_mutants"] = [{
+            "id": "mut-1",
+            "file": "src/parser.py",
+            "line": 10,
+            "mutation_description": "Invert the required-field check.",
+            "why_it_survived": "The tests cover only valid input.",
+        }]
+        self.assertTrue(any("expected at most 0 items" in error for error in validate_subset(report, schema)))
 
 
 if __name__ == "__main__":

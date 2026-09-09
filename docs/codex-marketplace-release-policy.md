@@ -4,7 +4,7 @@
 
 ## What is portable
 
-Versioned JSON artifacts in `shared/schemas/` are the compatibility boundary between Claude and Codex. A requirement, research report, specification, or plan can move between harnesses by its schema ID and JSON content. Named Claude agents, prompt wording, tool availability, and team delegation are not portable contracts. Codex skills must complete their workflow without an agent team; teams may improve independent investigation but cannot change the artifact shape.
+Versioned JSON artifacts in `shared/schemas/` are the compatibility boundary between Claude and Codex. Lifecycle and structural-escalation artifacts move between harnesses by schema ID and JSON content. Named Claude agents, prompt wording, tool availability, and team delegation are not portable contracts. Codex skills must complete their workflow without an agent team; teams may improve independent investigation but cannot change the artifact shape.
 
 The focused compatibility fixture at `tests/fixtures/cross-harness/lifecycle.json` covers the core handoff:
 
@@ -13,6 +13,7 @@ weaver/capture-need  requirement@1  vanguard/research
 vanguard/research    research-report@1  scribe/draft-spec
 scribe/draft-spec    spec@1  navigator/plan
 navigator/plan       plan@1  smith/implement
+smith/implement       implementation-review@2  scribe/architect
 ```
 
 Its test validates fixture documents against the source schemas, confirms the same schema bytes are materialized into the relevant Codex plugins, and checks that both harnesses declare each producer/consumer relationship. It is a contract compatibility evaluation, not proof that two models reach identical judgment or prose.
@@ -49,4 +50,4 @@ CI runs the generator and compatibility tests. A stale generated bundle, a symli
 
 ## Behavioral evaluations
 
-The fixture is intentionally narrow. Before declaring a workflow change behaviorally equivalent across harnesses, run a representative task through each harness and compare durable JSON artifacts against the same schema and acceptance criteria. Follow [Codex Behavioral Evaluation](./codex-behavioral-evaluation.md) for the core case, record format, and pass criteria. Do not require identical transcripts, plans, or language; require valid artifacts, traceable evidence, and the intended lifecycle links.
+The fixture is intentionally narrow. Before declaring a workflow change behaviorally equivalent across harnesses, run a representative task through each harness and compare durable JSON artifacts against the same schema and acceptance criteria. Follow [Cross-Harness Behavioral Evaluation](./codex-behavioral-evaluation.md) for the core case, record format, and pass criteria. Do not require identical transcripts, plans, or language; require valid artifacts, traceable evidence, and the intended lifecycle links.

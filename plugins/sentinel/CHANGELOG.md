@@ -2,6 +2,12 @@
 
 — sentinel
 
+## [2.1.0] - 2026-09-09
+
+### Changed
+- Exit-gate returns `verdict@3`, separating blockers, coverage gaps, and unfinished checks.
+- Mutable external evidence is refreshed near the verdict; started checks must reach a terminal result before pass.
+
 ## [2.0.0] - 2026-08-27
 
 ### Changed

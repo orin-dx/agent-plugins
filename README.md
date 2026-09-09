@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.3.0-success.svg" alt="Marketplace v4.3.0" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.4.0-success.svg" alt="Marketplace v4.4.0" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
@@ -62,19 +62,19 @@ flowchart LR
     ra([Ranger\naudit])
 
     sc2 -.->|"spec@1"| se
-    sm2 -.->|"code + verdict@1"| se
-    sm2 -.->|"implementation-review@1"| sc2
-    se -.->|"verdict@1"| co2
+    sm2 -.->|"code + verdict@3"| se
+    sm2 -.->|"implementation-review@2"| sc2
+    se -.->|"verdict@3"| co2
 
     sm2 -->|"live code"| ra
-    ra -.->|"finding-report@1"| sc2
+    ra -.->|"finding-report@2"| sc2
 
     class se,ra verify
 ```
 
 ![Define](https://img.shields.io/badge/-Define-6366f1) ![Design](https://img.shields.io/badge/-Design-8b5cf6) ![Build](https://img.shields.io/badge/-Build-3b82f6) ![Verify](https://img.shields.io/badge/-Verify-f59e0b) ![Ship](https://img.shields.io/badge/-Ship-10b981) ![Meta](https://img.shields.io/badge/-Meta-64748b)
 
-*Pill-shaped nodes are cross-cutting checkpoints, not sequence stops. Solid arrows are direct handoffs; dashed arrows are verification and meta side-channels. Ranger's input is the live codebase Smith just wrote, not a schema handoff — the one solid arrow in the second diagram.*
+*Pill-shaped nodes are cross-cutting checkpoints, not sequence stops. Solid arrows are direct handoffs; dashed arrows are verification side-channels. Ranger's input is the live codebase Smith just wrote, not a schema handoff — the one solid arrow in the second diagram.*
 
 Smith repairs scoped defect families before its exit gate. Structural families route through `scribe:architect`, the normal spec gates, Navigator plan amendment, and Smith implementation; after verification, Scribe refreshes the persisted architecture model.
 
@@ -87,11 +87,11 @@ Grouped by what each persona actually does — five bands across the lifecycle, 
 | **Design** | [`scribe`](./plugins/scribe/) | Drafts and gates the unambiguous, binding spec | `spec@1` |
 | **Design** | [`muse`](./plugins/muse/) | Drafts and gates component specs — props, variants, per-state behavior, accessibility | `spec@1` |
 | **Build** | [`navigator`](./plugins/navigator/) | Decomposes the spec into an executable plan | `plan@1` |
-| **Build** | [`smith`](./plugins/smith/) | Implements, mutation-tests, reviews defect families, and verifies criteria | `implementation-review@1`, `verdict@1` |
-| **Verify** | [`sentinel`](./plugins/sentinel/) | Cross-cutting gate — confirms any artifact meets its criteria before the next stage begins | `verdict@1` |
-| **Verify** | [`ranger`](./plugins/ranger/) | Hunts down real bugs through adversarial, evidence-based verification | `finding-report@1` |
+| **Build** | [`smith`](./plugins/smith/) | Implements, selects risk-matched tests, reviews defect families, and verifies criteria | `implementation-review@2`, `verdict@3` |
+| **Verify** | [`sentinel`](./plugins/sentinel/) | Cross-cutting gate — confirms any artifact meets its criteria before the next stage begins | `verdict@3` |
+| **Verify** | [`ranger`](./plugins/ranger/) | Hunts reachable defects and semantic siblings in Rust, TypeScript, JavaScript, Python, and Go | `finding-report@2` |
 | **Ship** | [`courier`](./plugins/courier/) | Commits, opens PRs, responds to review, writes changelogs and release notes | `release-artifact@2` |
-| **Meta** | [`mason`](./plugins/mason/) | Lays the foundation — scaffolds new plugins, audits the rest for conformance | — |
+| **Meta** | [`mason`](./plugins/mason/) | Scaffolds and audits plugins, designs schemas, and evaluates workflow behavior | `harness-evaluation@2` |
 
 ---
 
@@ -183,6 +183,10 @@ codex plugin marketplace add orin-dx/agent-plugins
 codex plugin add <plugin>@wisp-plugins
 ```
 
+### Session History Across Agent Hosts
+
+Entire-managed adapters expose the same repository-history search skill to Codex, Claude, Cursor, Gemini, and OpenCode. Cursor and OpenCode also carry host-native lifecycle hooks. These tracked files contain commands and adapter code—not session transcripts, credentials, or machine-specific paths—and should be regenerated through Entire rather than edited by hand.
+
 ### Antigravity (AGY)
 
 Install individual plugins via the native CLI (uses a Git URL):
@@ -212,19 +216,19 @@ agy-plugin add mason@wisp-plugins
 
 ## Design Principles
 
-Four decisions shape how every plugin and agent in this repository is built. They are enforced by `shared/constitution.md` and explained in `shared/agent-best-practices.md`.
+Six decisions shape how every plugin and agent in this repository is built. They are enforced by `shared/constitution.md` and explained in `shared/agent-best-practices.md`.
 
 **Schema-Driven Development** — every handoff between agents is a typed JSON document.
 - JSON Schema draft-2020-12 with `additionalProperties: false` — a schema-invalid output halts the pipeline before any downstream agent acts on bad data
 - Schema versions are immutable — a breaking change creates `<name>@2.json`, never mutates the existing file
-- Every schema includes a `reasoning` scratchpad field for chain-of-thought; never forwarded downstream
+- Every schema includes a private `reasoning` scratchpad field that is never forwarded downstream
 
 **EARS output contracts** — hard constraints live exclusively in `<output>` sections, using `WHEN / IF / WHILE / WHERE / THE SYSTEM SHALL`.
 - Encodes what the agent must produce, must not produce, or must do under a specific condition
 - The prompt interior — how the agent searches, reasons, and decides — is intentionally unconstrained
 - EARS is the fence; backstory and goal fill the interior with judgment
 
-**5-part agent structure** — every agent body has exactly five sections; no role labels, no success-criteria checklists.
+**5-part agent structure** — every Claude/AGY source agent body has exactly five sections; no role labels, no success-criteria checklists. Codex skills and role cards use native structures while preserving lifecycle intent.
 - `<constitution>` — ecosystem-wide invariants, byte-identical across every agent (copied verbatim, never authored per-agent)
 - `<backstory>` — experiential perspective that shapes judgment in open situations (not a role label)
 - `<goal>` — intent, not steps
@@ -234,6 +238,18 @@ Four decisions shape how every plugin and agent in this repository is built. The
 **Cognitive mode separation** — agents are dispatched by the cognitive mode they require, not their pipeline position.
 - A scanner (exhaustive pattern matching, no filtering) and an adversary (default-to-skepticism, requires a concrete failing scenario) cannot share a mental mode — combining them produces an agent worse at both
 - Model and effort tiers follow the same logic: `haiku / low` for enumeration, `sonnet / medium` for analysis, `opus / high` for binding judgment
+
+**Instruction economy** — prompts preserve decisions, evidence, and consequences while removing filler, repeated rationale, and incidental process.
+
+- One independently actionable rule per paragraph or list item
+- Numbered procedures only when order affects correctness
+- Reference files hold detail needed by one phase; runtime prompts load it on demand
+
+**Verification evidence** — a check is useful only when its observation can falsify the claim.
+
+- Select project-native mutation, property, fuzz, race, integration, or boundary checks from the changed risk
+- Derive semantic sibling candidates from domain responsibility, state transitions, and architecture—not copied syntax alone
+- Record generators, oracles, coverage gaps, pending checks, fresh external state, and boundary observations where relevant
 
 See [`ARCHITECTURE.md §7`](./ARCHITECTURE.md#7-agent-authoring-principles) for the full authoring guide, and [`docs/pipeline-walkthrough.md`](./docs/pipeline-walkthrough.md) for a concrete end-to-end example showing schemas at each stage.
 
@@ -248,15 +264,24 @@ Structured inter-plugin handoffs are typed. Schemas live in `shared/schemas/` an
 | `requirement@1` | weaver | vanguard, scribe |
 | `research-report@1` | vanguard | scribe |
 | `spec@1` | scribe, muse | navigator, sentinel |
+| `verdict@1` | muse | component-spec gate consumers |
 | `plan@1` | navigator | smith |
-| `implementation-review@1` | smith | smith exit-gate, scribe architect |
+| `workspace-manifest@1` | smith, ranger | their implementation and audit pipelines |
+| `implementation-result@1` | smith implementer | smith reviewer, scribe architect on escalation |
+| `implementation-review@2` | smith | smith exit-gate, scribe architect |
 | `changeset@2` | courier | courier release, sentinel |
-| `verdict@1` | scribe, smith, sentinel | any gate consumer |
-| `verdict@2` | ranger | callers, humans (extends verdict@1 with flagged_for_review) |
-| `finding-report@1` | ranger | scribe architect, humans |
+| `verdict@3` | scribe, smith, ranger, sentinel | gate consumers and humans |
+| `candidate-assessment@1` | ranger adversary | ranger report aggregation |
+| `finding-report@2` | ranger | scribe architect, humans |
 | `field-survival-map@1` | boundary-tracer | adversary |
-| `mutation-report@1` | mutator | exit-gate, implementer |
+| `mutation-report@2` | smith mutator | reviewer, implementer |
+| `evaluation-run@1` | mason evaluation runner | mason evaluation adjudicator |
+| `harness-evaluation@2` | mason | release reviewers and longitudinal analysis |
+| `arch-audit@1` | scribe | architecture-gate callers and humans |
+| `arch-model@1` | scribe | scribe architecture checks and remediation |
 | `release-artifact@2` | courier | humans |
+
+`verdict@1` remains Muse's component-spec gate contract. Other current gates use `verdict@3`; immutable schema versions are not rewritten in place.
 
 ---
 
@@ -276,6 +301,18 @@ Runtime-pullable guides in `shared/references/`. Agents pull these themselves du
 | `typescript-smells.md` | TS architectural smells and interface/type designs | architect, Smith reviewer |
 | `typescript-tooling.md` | TS test commands (Stryker, Vitest), non-negotiables | mutator, remediator |
 | `typescript.md` | Thin index → routes to the files above | — |
+| `python-hazards.md` | Python hazards outside T7/T10 | Ranger scanner and adversary, Smith reviewer |
+| `python-hazards-t7-t10.md` | Python intent-loss and error-downgrade hazards | Ranger boundary tracer, scanner, and adversary; Smith reviewer |
+| `python-smells.md` | Python architectural smells and structural remedies | Scribe architect, Smith reviewer |
+| `python-tooling.md` | Python-native test, mutation, property, and fuzz options | Smith implementer and mutator |
+| `python.md` | Thin index → routes to the Python files above | — |
+| `go-hazards.md` | Go hazards outside T7/T10 | Ranger scanner and adversary, Smith reviewer |
+| `go-hazards-t7-t10.md` | Go intent-loss and error-downgrade hazards | Ranger boundary tracer, scanner, and adversary; Smith reviewer |
+| `go-smells.md` | Go architectural smells and structural remedies | Scribe architect, Smith reviewer |
+| `go-tooling.md` | Go-native test, fuzz, race, and mutation options | Smith implementer and mutator |
+| `go.md` | Thin index → routes to the Go files above | — |
+| `verification-evidence.md` | Risk-to-evidence selection across boundaries, generated inputs, state, and completion | Smith implementation and review |
+| `behavioral-evaluation.md` | Hidden-oracle, provenance-complete workflow evaluation | Mason evaluation |
 | `conventional-commits.md` | Type/scope conventions and scope table | courier |
 | `github.md` | PR template, `gh` CLI commands, labels | courier |
 | `changesets.md` | Changeset vs commit distinction, semver decision guide | courier |
@@ -314,12 +351,18 @@ agent-plugins/
     ├── scribe/                    ← Specification drafting and gating
     ├── muse/                      ← Component spec drafting and gating
     ├── navigator/                 ← Implementation planning
-    ├── smith/                     ← Implementation, mutation-tested
+    ├── smith/                     ← Implementation and risk-matched verification
     ├── sentinel/                  ← Verification gate
     ├── courier/                   ← Ship tooling
-    ├── ranger/                    ← Fast cross-language bug scan
-    └── mason/                     ← Plugin scaffolding
-├── .agents/plugins/               ← Generated Codex discovery manifest; never hand-edit
+    ├── ranger/                    ← Cross-language reachable-defect audit
+    └── mason/                     ← Plugin authoring and behavioral evaluation
+├── .agents/
+│   ├── plugins/                   ← Generated Codex discovery manifest; never hand-edit
+│   └── skills/entire-search/      ← Entire-managed Codex history search
+├── .claude/skills/entire-search/  ← Entire-managed Claude history search
+├── .cursor/                       ← Entire-managed Cursor skill and hooks
+├── .gemini/skills/entire-search/  ← Entire-managed Gemini history search
+├── .opencode/                     ← Entire-managed OpenCode skill and plugin
 ├── tools/
 │   └── build-codex-marketplace.py ← Deterministic Codex bundle generator
 └── dist/codex/                    ← Generated Codex bundle; never hand-edit

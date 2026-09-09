@@ -1,62 +1,30 @@
 # Claude Code Guidelines (`CLAUDE.md`)
 
-Quick reference guide for Claude Code CLI and Claude AI agents interacting with `orin-dx/agent-plugins`.
+Claude Code follows [`AGENTS.md`](./AGENTS.md), the shared repository guide for every harness. Read [`shared/constitution.md`](./shared/constitution.md) first and last. Use [`shared/agent-best-practices.md`](./shared/agent-best-practices.md) only while authoring prompts; runtime agents must not load it.
 
----
-
-## 1. Quick Reference & Commands
-
-- **Install Plugin in Claude Code**:
-  ```bash
-  claude plugin add orin-dx/agent-plugins/ranger
-  claude plugin add orin-dx/agent-plugins/mason
-  ```
-- **Install Plugin in AGY**:
-  ```bash
-  agy plugin add orin-dx/agent-plugins/ranger
-  agy plugin add orin-dx/agent-plugins/mason
-  ```
-- **Local Manifest Validation**:
-  ```bash
-  jq . marketplace.json > /dev/null
-  jq . plugins/*/plugin.json > /dev/null
-  ```
-- **Mermaid Diagram Validation** (run after touching any mermaid-fenced block — a syntax error still reads as valid markdown, only an actual render catches it):
-  ```bash
-  ./scripts/check-mermaid.sh
-  ```
-- **Version Consistency** (run after any version bump — checks `plugin.json`, README, CHANGELOG, and `marketplace.json` agree):
-  ```bash
-  ./scripts/check-versions.sh
-  ```
-- **Skill Doc Accuracy** (run after adding/removing/renaming a skill directory — checks every skill a README's table documents actually exists):
-  ```bash
-  ./scripts/check-skills-doc.sh
-  ```
-- **Reference File Size** (run after editing any file in `shared/references/` — a reference loaded via `<load_first>` is a fixed tax on every agent invocation that loads it, so it stays capped at 120 lines and split by concern):
-  ```bash
-  ./scripts/check-reference-size.sh
-  ```
-
----
-
-## 2. Authoring Guidelines & Single Source of Truth
-
-All authoring rules and principles are centralized in:
-
-- [**`shared/constitution.md`**](./shared/constitution.md): EARS-format authoritative rules — the fence all plugin development must stay inside. Read this first.
-- [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution with examples — 5-part agent structure, EARS placement, cognitive modes, schema-driven handoffs, model/effort tiers.
-- [**`AGENTS.md`**](./AGENTS.md): Repository standards, directory layout, and new-plugin checklist.
-
----
-
-## 3. Directory Conventions
-
-Ensure new plugins conform to the open format:
+## Claude Marketplace
 
 ```text
-plugins/<plugin-id>/
-├── plugin.json                 <-- Plugin Manifest
-├── skills/<plugin-id>/SKILL.md <-- Skill Definition
-└── agents/*.md                 <-- Agent Prompt Files
+/plugin marketplace add orin-dx/agent-plugins
+/plugin install <plugin-id>
 ```
+
+See the root [`README.md`](./README.md#claude-code) for migration and complete install guidance.
+
+## Cross-Harness Changes
+
+Read [`shared/harness-authoring.md`](./shared/harness-authoring.md) before changing plugin identity, lifecycle intent, shared schemas, or either harness workflow. Claude/AGY and Codex must preserve route names, artifact contracts, evidence, and acceptance intent; prompt wording, model routing, and delegation topology remain native.
+
+## Validation
+
+```bash
+jq . marketplace.json plugins/*/plugin.json harnesses/codex/catalog.json
+python3 -m unittest discover -s tests
+./scripts/check-versions.sh
+./scripts/check-skills-doc.sh
+./scripts/check-reference-size.sh
+python3 tools/build-codex-marketplace.py --check
+./scripts/check-mermaid.sh
+```
+
+Run the relevant subset while editing and the full set before release. Generated Codex files in `.agents/plugins/` and `dist/codex/` must match their authored sources; never edit them directly.

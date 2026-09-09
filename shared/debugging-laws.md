@@ -1,7 +1,7 @@
 # Universal Bug-Hunter Framework
 
 <core_goal>
-Verify candidate findings through end-to-end execution traces before confirming. Verify code fixes by demonstrating that a regression test fails on pre-fix code and passes post-fix in the current session.
+Verify candidate findings through the boundary implicated by the defect. Verify fixes with safe evidence that distinguishes the faulty behavior from the correction, such as a controlled mutation, deliberate fault, isolated prior revision, or equivalent check.
 </core_goal>
 
 ---
@@ -18,10 +18,10 @@ Investigate, trace, and evaluate disproofs prior to making code modifications. T
 Choose the optimal auditing partition (by hazard taxonomy, by package boundary, or by architectural layer) that fits the repository scale. Adapt the audit depth to the project structure.
 
 ### 4. Dynamic Tool Detection & Adaptation
-Inspect the target codebase environment to discover existing build tools, test runners (`cargo nextest`, `vitest`, `jest`, `pytest`, `bun test`), and linters before executing verification commands. Adapt to project-native conventions.
+Inspect project configuration and CI to discover applicable build, test, analysis, mutation, property, and fuzz capabilities. Prefer project-native commands and record relevant environment gaps.
 
-### 5. Red-to-Green Test Verification
-Write or execute a test reproducing the target defect to confirm failure status first. Apply the minimal fix, then execute the test suite to confirm green pass status with zero regressions.
+### 5. Discriminating Verification
+Prove that the verification detects the relevant wrong behavior and accepts the correction. Do not require a fixed test-writing order or mutate shared workspace state merely to manufacture a red run.
 
 </debugging_heuristics>
 
@@ -39,7 +39,7 @@ Format confirmed findings in a scannable structure:
 - **Classification**: [Discarded Parameter | Fixpoint Staleness | Spec Drift | Silent Fallback | Boundary Condition | I/O Safety]
 - **Root Cause**: Concise explanation of the flaw in current implementation logic.
 - **Failing Scenario**: Concrete payload, CLI command, or input state that triggers the defect.
-- **Verification Strategy**: Test that fails on current code and passes once fixed.
+- **Verification Strategy**: Evidence that distinguishes the faulty behavior from the correction without risking shared workspace state.
 ```
 
 </evaluation_output_standard>

@@ -1,0 +1,89 @@
+{
+  "id": "implementation-verification@1",
+  "purpose": "Measure defect-family search and risk-matched verification without rewarding tool invocation alone.",
+  "cases": [
+    {
+      "id": "typescript-semantic-sibling",
+      "language": "typescript",
+      "route": "ranger:audit -> smith:implement",
+      "public_input": {
+        "task": "Find and repair the reported loss of an optional registry value at the publish boundary.",
+        "workspace_fixture": "typescript-semantic-sibling"
+      },
+      "oracle": {
+        "seeded_defects": 2,
+        "required_observations": [
+          "The reported object-spread loss reaches the subprocess boundary.",
+          "A differently written destructuring path drops the same domain field.",
+          "The family points to a missing canonical publish-boundary representation."
+        ],
+        "false_pass_if": [
+          "The reported instance is fixed but the destructuring sibling remains.",
+          "A zero-match semantic search has no independently derived candidate sites."
+        ]
+      }
+    },
+    {
+      "id": "rust-process-boundary",
+      "language": "rust",
+      "route": "smith:implement",
+      "public_input": {
+        "task": "Repair argument handling and prove the released process receives the intended value.",
+        "workspace_fixture": "rust-process-boundary"
+      },
+      "oracle": {
+        "seeded_defects": 1,
+        "required_observations": [
+          "A real compiled process or equivalent release artifact crosses the serialization and subprocess boundary.",
+          "An in-memory unit assertion alone does not prove the claim."
+        ],
+        "false_pass_if": [
+          "Only a helper return value is tested.",
+          "A started build or process check is still pending at the verdict."
+        ]
+      }
+    },
+    {
+      "id": "python-generated-input",
+      "language": "python",
+      "route": "ranger:audit -> smith:implement",
+      "public_input": {
+        "task": "Find and repair malformed nested configuration handling across supported input shapes.",
+        "workspace_fixture": "python-generated-input"
+      },
+      "oracle": {
+        "seeded_defects": 1,
+        "required_observations": [
+          "Structured generation reaches nested lists, mappings, nulls, and scalar boundary values.",
+          "The oracle asserts the documented normalization or rejection invariant.",
+          "A failing case is preserved as a minimal regression example."
+        ],
+        "false_pass_if": [
+          "A property test generates only flat valid dictionaries.",
+          "The asserted property is tautological or unrelated to the defect."
+        ]
+      }
+    },
+    {
+      "id": "go-fresh-state",
+      "language": "go",
+      "route": "sentinel:gate",
+      "public_input": {
+        "task": "Verify that a completed cache invalidation fix is ready to ship.",
+        "workspace_fixture": "go-fresh-state"
+      },
+      "oracle": {
+        "seeded_defects": 1,
+        "required_observations": [
+          "The gate reads current cache or service state after the mutation.",
+          "Concurrent or asynchronous checks reach a terminal result.",
+          "Environment differences relevant to invalidation are stated."
+        ],
+        "false_pass_if": [
+          "The verdict relies on state captured before the fix.",
+          "A goroutine, race check, or external invalidation remains pending."
+        ]
+      }
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 name: gate-spec
 description: >-
   Trigger when a spec@1 needs a definitive pass/fail judgment before it enters planning: "gate this spec", "is this spec ready?", "check this spec before we plan it". Default disposition is fail — the spec must earn a pass. Passes only if every acceptance criterion is testable with no vague language, no TBDs remain, error cases are explicitly covered, and scope is narrow enough for one planning cycle. This gate checks the spec on its own terms — whole-system architectural fit is scribe/audit-architecture's job upstream, not re-litigated here. On fail, returns blockers specific enough for scribe/draft-spec to act on without further clarification.
-version: 2.0.0
+version: 2.1.0
 ---
 
 # Scribe — Gate Spec
@@ -30,10 +30,10 @@ Without `spec_file_path` set, downstream agents fall back to reading the spec fr
 </orchestration>
 
 <references>
-`shared/schemas/spec@1.json`, `shared/schemas/verdict@1.json`
+`shared/schemas/spec@1.json`, `shared/schemas/verdict@3.json`
 </references>
 
 <io>
 **Consumes**: `spec@1` (post-verify, post-audit-spec, post-audit-architecture)
-**Produces**: `verdict@1`. On pass, a persisted `spec@1` with `spec_file_path` set, routed to `navigator`. On fail, blockers routed back to `scribe/draft-spec`.
+**Produces**: `verdict@3`. On pass, a persisted `spec@1` with `spec_file_path` set, routed to `navigator`. On fail, blockers routed back to `scribe/draft-spec`.
 </io>

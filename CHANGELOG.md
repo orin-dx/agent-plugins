@@ -3,6 +3,17 @@
 All notable changes to the Wisp Plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [4.4.0] - 2026-09-09 — Evidence-depth and behavioral evaluation
+
+- Added risk-matched verification rules for real execution boundaries, structured-input generators and oracles, fresh external state, and terminal asynchronous results. Mutation, property, fuzz, race, integration, and boundary tools remain project-native options rather than mandatory rituals.
+- Added Python and Go hazard, boundary, architecture-smell, and tooling references beside the existing Rust and TypeScript/JavaScript packs.
+- Added `workspace-manifest@1`, `implementation-result@1`, `mutation-report@2`, `implementation-review@2`, `candidate-assessment@1`, `finding-report@2`, and `verdict@3`. The contracts expose capabilities, semantic-sibling candidates, boundary and input-space evidence, structural families, gaps, pending checks, and provenance.
+- Smith 2.4.0 and Ranger 3.2.0 adopt the new contracts. Scribe 3.3.0 consumes their structural escalations. Sentinel 2.1.0 returns scoped verdicts.
+- Added `mason:evaluate` in Mason 3.2.0. It preserves isolated run evidence as `evaluation-run@1`, then records `harness-evaluation@2` after revealing the hidden oracle; prose and tool invocation receive no score.
+- Added a four-language behavioral fixture covering non-syntactic siblings, compiled process boundaries, non-vacuous generated inputs, and fresh asynchronous or external state.
+- Added Entire-managed repository-history search adapters for Codex, Claude, Cursor, Gemini, and OpenCode, including native Cursor and OpenCode lifecycle integration.
+- Updated root architecture, Claude and cross-harness authoring guidance, shared-reference maps, plugin output docs, and contract descriptions to match the released workflows.
+
 ## [4.3.0] - 2026-09-09 — Instruction economy and defect-family review
 
 - Added direct, atomic authoring rules with outcome-based guidance for judgment and ordered steps only where sequence affects correctness. Mason now scaffolds and audits the convention.

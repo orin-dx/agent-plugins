@@ -73,13 +73,15 @@ rust-smells.md or rust-tooling.md.
 </load_first>
 ```
 
-**Why this matters:** attention degrades when a context window contains material the agent won't use. A scanner loading all three reference files will pattern-match less precisely than one that loaded only the hazard file. Load exactly one reference file per agent — the one for its cognitive phase.
+**Why this matters:** attention degrades when context contains unused material. Load only the concern and language needed for the current decision. A routing reference may select several focused files when the phase genuinely spans them.
 
 **Reference file split by concern:**
-- `rust-hazards.md` / `typescript-hazards.md` — scanner (all taxonomies), adversary (non-T7/T10 candidates)
-- `rust-hazards-t7-t10.md` / `typescript-hazards-t7-t10.md` — boundary-tracer's entire scope; also scanner (full scans) and adversary (T7/T10 candidates). Split out from the hazards file specifically so boundary-tracer never pays for the other eight taxonomies it never uses.
-- `rust-smells.md` / `typescript-smells.md` — architect
-- `rust-tooling.md` / `typescript-tooling.md` — mutator, remediator
+- `<language>-hazards.md` — scanner and non-boundary adversary work.
+- `<language>-hazards-t7-t10.md` — boundary tracing and T7/T10 adjudication.
+- `<language>-smells.md` — architecture analysis.
+- `<language>-tooling.md` — project-native verification tools.
+
+Current packs cover Rust, TypeScript/JavaScript, Python, and Go. Load one concern and language at a time.
 
 ---
 
@@ -192,6 +194,15 @@ Optimize for decision-relevant context, not a target length. Use the fewest word
 - **Targeted execution**
   - Run targeted tests during inner development cycles.
   - Read large files in focused ranges.
+
+**Evidence depth:** match verification to the changed risk and observable boundary.
+
+- Derive semantic sibling candidates from domain responsibilities, types, calls, state transitions, and adapters before searching syntax.
+- Treat mutation, property, fuzz, race, integration, and boundary tools as options discovered from the repository, not mandatory rituals.
+- For generated inputs, record both the input strategy and the invariant or reference model that can fail.
+- Distinguish missing evidence from failure. Record the gap and whether it blocks the claimed conclusion.
+- Re-read mutable external state near the verdict and wait for started work to finish.
+- For longitudinal evaluations, preserve exact fixture, route, host, model, plugin version, source revision, and workspace state. Dates alone do not identify the behavior under test.
 
 **Compression test:** delete a sentence unless it changes what the agent does, checks, records, or decides; supplies evidence; or resolves a realistic ambiguity. Preserve full context for a subtle invariant or failure mode when removing it would change judgment.
 

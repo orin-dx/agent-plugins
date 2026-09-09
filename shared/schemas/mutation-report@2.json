@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mutation-report@2",
+  "title": "Mutation Report",
+  "description": "Language-neutral evidence that tests distinguish changed behavior, using mutation tooling or a controlled deliberate fault.",
+  "type": "object",
+  "allOf": [
+    {
+      "if": {"properties": {"method": {"const": "unavailable"}}, "required": ["method"]},
+      "then": {"properties": {"verdict": {"const": "coverage_gap"}, "coverage_gaps": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"verdict": {"const": "pass"}}, "required": ["verdict"]},
+      "then": {"properties": {"survived_mutants": {"maxItems": 0}, "errors": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"verdict": {"const": "fail"}}, "required": ["verdict"]},
+      "then": {
+        "anyOf": [
+          {"properties": {"survived_mutants": {"minItems": 1}}},
+          {"properties": {"errors": {"minItems": 1}}}
+        ]
+      }
+    },
+    {
+      "if": {"properties": {"verdict": {"const": "coverage_gap"}}, "required": ["verdict"]},
+      "then": {"properties": {"coverage_gaps": {"minItems": 1}}}
+    }
+  ],
+  "required": ["languages", "method", "tool_used", "commands", "cases_tested", "survived_mutants", "precision_tests", "coverage_gaps", "errors", "verdict", "reasoning"],
+  "additionalProperties": false,
+  "properties": {
+    "languages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "method": {"enum": ["mutation", "deliberate_fault", "unavailable"]},
+    "tool_used": {"type": "string", "minLength": 1, "description": "Observed tool or controlled method; not a closed ecosystem list."},
+    "commands": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "cases_tested": {"type": "integer", "minimum": 0},
+    "survived_mutants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "file", "line", "mutation_description", "why_it_survived"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "file": {"type": "string", "minLength": 1},
+          "line": {"type": "integer", "minimum": 1},
+          "mutation_description": {"type": "string", "minLength": 1},
+          "why_it_survived": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "precision_tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["for_case_id", "test_name", "test_description", "assertion"],
+        "additionalProperties": false,
+        "properties": {
+          "for_case_id": {"type": "string", "minLength": 1},
+          "test_name": {"type": "string", "minLength": 1},
+          "test_description": {"type": "string", "minLength": 1},
+          "assertion": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "coverage_gaps": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "errors": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "verdict": {"enum": ["pass", "fail", "coverage_gap"]},
+    "reasoning": {"type": "string", "description": "Private producer scratchpad; not forwarded downstream."}
+  }
+}

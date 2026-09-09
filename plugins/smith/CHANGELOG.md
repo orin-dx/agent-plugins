@@ -2,6 +2,16 @@
 
 — smith
 
+## [2.4.0] - 2026-09-09
+
+### Added
+- Risk-matched mutation, property, fuzz, race, integration, environment, and boundary verification across Rust, TypeScript/JavaScript, Python, and Go.
+- Versioned workspace, implementation, mutation, review, and verdict handoffs with explicit capabilities, semantic candidate sites, generators and oracles, coverage gaps, pending checks, and provenance.
+
+### Changed
+- Reviewer and exit-gate independently derive semantic sibling candidates instead of accepting a reported zero-match search.
+- Exit approval requires current workspace and external-state evidence plus terminal results for every started check.
+
 ## [2.3.0] - 2026-09-09
 
 ### Added

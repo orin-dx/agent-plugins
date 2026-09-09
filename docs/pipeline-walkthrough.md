@@ -36,7 +36,7 @@ The user invokes the `weaver` skill. `intake` (sonnet/medium) converts free text
 }
 ```
 
-`reasoning` is the agent's chain-of-thought. It is never forwarded to the next stage.
+`reasoning` is a private scratchpad. It is never forwarded to the next stage.
 
 ---
 
@@ -165,12 +165,15 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
 - The unit test passes because it checks the Duration value, not which builder slot it went into
 - The surviving mutant is the specific code path that was never killed — `mutator` returns a precision test targeting exactly that slot assignment
 
-**Output: `mutation-report@1`**
+**Output: `mutation-report@2`**
 
 ```json
 {
+  "languages": ["rust"],
+  "method": "mutation",
   "tool_used": "cargo-mutants",
-  "mutants_tested": 14,
+  "commands": ["cargo mutants --in-diff"],
+  "cases_tested": 14,
   "survived_mutants": [
     {
       "id": "mut-01",
@@ -182,18 +185,20 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
   ],
   "precision_tests": [
     {
-      "for_mutant_id": "mut-01",
+      "for_case_id": "mut-01",
       "test_name": "WHEN connect_timeout_ms is set THEN connection_timeout slot receives the value AND read_timeout slot is None",
       "test_description": "Assert that the reqwest ClientBuilder receives the timeout in the connection_timeout field, not the read_timeout field, when only connect_timeout_ms is configured.",
       "assertion": "assert_eq!(builder.get_connection_timeout(), Some(Duration::from_millis(500))); assert_eq!(builder.get_timeout(), None);"
     }
   ],
+  "coverage_gaps": [],
+  "errors": [],
   "verdict": "fail",
   "reasoning": "The surviving mutant reveals that the test cannot distinguish which builder slot receives the timeout. The precision test forces that distinction."
 }
 ```
 
-`mutator` re-invokes `implementer` with the precision test to write and make pass. The implementer fixes the slot assignment and both tests go green. `exit-gate` (opus/high) confirms the mutation gate passed on the second cycle and issues the changeset.
+`mutator` re-invokes `implementer` with the precision test. The implementer fixes the slot assignment and both tests pass. `exit-gate` confirms the mutation evidence and later issues `verdict@3`.
 
 ---
 
@@ -234,24 +239,30 @@ For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct
 }
 ```
 
-`adversary` (opus/high) confirms the finding is real — user-specified registry is silently overridden by the hardcoded default. `exit-gate` (opus/high) issues the finding report.
+`adversary` (opus/high) confirms the finding is real — user-specified registry is silently overridden by the hardcoded default. Ranger groups it with related instances before remediation.
 
-**Output: `finding-report@1`** (abridged)
+**Output: `finding-report@2`** (abridged)
 
 ```json
 {
-  "id": "fr-access-001",
-  "verdict": "confirmed",
+  "workspace": "example-workspace",
+  "languages": ["rust"],
+  "modules_scanned": ["src/publish"],
   "findings": [
     {
-      "taxonomy": "T7",
+      "id": "fr-access-001",
+      "language": "rust",
       "file": "src/publish/publisher.rs",
       "line": 134,
-      "title": "private_registry field captured but never reaches publish subprocess",
+      "description": "private_registry is captured but never reaches the publish subprocess",
       "severity": "high",
-      "failing_scenario": "User sets private_registry: 'https://registry.internal'. publish() receives the AccessConfig but its signature only reads access_level. The subprocess is always invoked against the public registry."
+      "trigger_condition": "User sets private_registry, but publish() reads only access_level and invokes the public registry.",
+      "root_cause": "The process boundary accepts a narrower shape than AccessConfig.",
+      "verdict": "confirmed"
     }
-  ]
+  ],
+  "defect_families": [],
+  "reasoning": "The field-survival map reaches a concrete subprocess boundary."
 }
 ```
 
@@ -264,7 +275,7 @@ For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct
 - A patch would add `private_registry` to the existing `publish()` parameter list — it would fix this one field but leave the narrow type intact, ready to silently drop the next field that gets added
 - The structural fix widens the parameter type to accept the full `AccessConfig` directly, eliminating the class of bug rather than the instance
 
-`architect` (opus/high) receives `finding-report@1` and applies this fix.
+`architect` receives `finding-report@2` and specifies this correction.
 
 **Output: `spec@1` (structural)**
 

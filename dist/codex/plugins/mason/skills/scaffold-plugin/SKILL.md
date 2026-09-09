@@ -19,6 +19,7 @@ Establish:
 - Which harness-specific adaptation trees are needed, rather than assuming Claude instructions are portable.
 - The shortest direct wording that preserves each action, condition, evidence requirement, and consequence.
 - Which operations require fixed order; express other work through outcomes and decision criteria.
+- Which verification claims need boundary, semantic-candidate, generator/oracle, fresh-state, completion, or evaluation-provenance evidence. Do not add unrelated methods.
 
 ## Build order
 

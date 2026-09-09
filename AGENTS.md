@@ -47,5 +47,8 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 4. **Progressive context loading** — one `<load_first>` block per agent, naming only the reference file for its cognitive phase.
 5. **Schema-first handoffs** — define `shared/schemas/<name>@<version>.json` before writing the agent that produces it.
 6. **Abstract tool language** — "use your file reading tool", never `view_file`, `read_file`, or `Bash tool`.
-7. **Manifest registration** — add an entry to root `marketplace.json` and validate: `jq . marketplace.json`.
-8. **Legal attribution** — set `"author": "Gabriel Castro (Orin DX)"` in `plugin.json`.
+7. **Instruction economy** — keep one actionable rule per item, remove repeated rationale, and number only order-dependent work.
+8. **Verification evidence** — match checks to risk; require generators and oracles, independently derived semantic candidates, fresh state, terminal results, and explicit gaps when relevant.
+9. **Cross-harness review** — preserve identity, skill routes, artifact contracts, evidence, and acceptance intent in Claude/AGY and Codex sources; native wording and delegation may differ.
+10. **Manifest registration** — add an entry to root `marketplace.json` and validate: `jq . marketplace.json`.
+11. **Legal attribution** — set `"author": "Gabriel Castro (Orin DX)"` in `plugin.json`.

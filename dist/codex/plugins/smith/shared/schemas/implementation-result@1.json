@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "implementation-result@1",
+  "title": "Implementation Result",
+  "description": "One implementation batch result with criterion and verification evidence for mutation and review.",
+  "type": "object",
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "spec_contradiction"}}, "required": ["status"]},
+      "then": {"required": ["contradiction"]}
+    },
+    {
+      "if": {"properties": {"status": {"const": "needs_architecture"}}, "required": ["status"]},
+      "then": {"required": ["architecture_escalation"]}
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["done", "done_with_concerns"]}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "test_result": {"const": "pass"},
+          "verification_checks": {"minItems": 1},
+          "criteria_evidence": {"minItems": 1}
+        }
+      }
+    }
+  ],
+  "required": ["task_id", "status", "steps_completed", "test_result", "verification_checks", "commit_sha", "criteria_evidence", "reasoning"],
+  "additionalProperties": false,
+  "properties": {
+    "task_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["done", "done_with_concerns", "needs_context", "blocked", "spec_contradiction", "needs_architecture"]},
+    "steps_completed": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "test_result": {"enum": ["pass", "fail", "not_run"]},
+    "verification_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim", "method", "result", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "claim": {"type": "string", "minLength": 1},
+          "method": {"type": "string", "minLength": 1},
+          "command": {"type": "string", "minLength": 1},
+          "result": {"enum": ["pass", "fail", "gap", "not_applicable"]},
+          "evidence": {"type": "string", "minLength": 1},
+          "boundary": {"type": "string", "minLength": 1},
+          "environment": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "precision_tests_absorbed": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "commit_sha": {"type": ["string", "null"]},
+    "concerns": {"type": ["string", "null"]},
+    "contradiction": {
+      "type": "object",
+      "required": ["criterion_id", "spec_claim", "observed_behavior"],
+      "additionalProperties": false,
+      "properties": {
+        "criterion_id": {"type": "string", "minLength": 1},
+        "spec_claim": {"type": "string", "minLength": 1},
+        "observed_behavior": {"type": "string", "minLength": 1}
+      }
+    },
+    "architecture_escalation": {
+      "type": "object",
+      "required": ["criterion_id", "unsafe_shape", "why_task_scope_is_insufficient"],
+      "additionalProperties": false,
+      "properties": {
+        "criterion_id": {"type": "string", "minLength": 1},
+        "unsafe_shape": {"type": "string", "minLength": 1},
+        "why_task_scope_is_insufficient": {"type": "string", "minLength": 1}
+      }
+    },
+    "criteria_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion_id", "test_file", "test_line", "implementation_file", "implementation_line"],
+        "additionalProperties": false,
+        "properties": {
+          "criterion_id": {"type": "string", "minLength": 1},
+          "test_file": {"type": "string", "minLength": 1},
+          "test_line": {"type": "integer", "minimum": 1},
+          "implementation_file": {"type": "string", "minLength": 1},
+          "implementation_line": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "reasoning": {"type": "string", "description": "Private producer scratchpad; not forwarded downstream."}
+  }
+}

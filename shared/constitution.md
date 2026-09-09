@@ -197,6 +197,22 @@ WHEN generating inter-agent payloads, reports, or reviews, THE SYSTEM SHALL comm
 
 ---
 
+## Verification Evidence
+
+WHEN a conclusion depends on behavior across a compile, serialization, subprocess, network, storage, render, or environment boundary, THE SYSTEM SHALL verify at the nearest executable boundary or record the unverified risk as a coverage gap.
+
+WHEN selecting mutation, property, fuzz, race, integration, or boundary checks, THE SYSTEM SHALL use repository capabilities and changed risk; invoking a named tool alone is not evidence.
+
+IF a check generates inputs, THE SYSTEM SHALL state the generator and the behavioral oracle that can falsify the claim.
+
+WHEN searching for semantic sibling defects, THE SYSTEM SHALL derive plausible candidate sites from the domain responsibility, state transitions, and architecture independently of copied syntax, then record each candidate's outcome.
+
+WHEN a verdict depends on mutable external state or asynchronous work, THE SYSTEM SHALL use fresh state and terminal results; stale observations and pending work cannot support a pass.
+
+WHEN recording behavioral evaluations across sessions or harnesses, THE SYSTEM SHALL record the exact fixture, route, host, model, mode, roles, plugin versions, plugin source revisions, and workspace state used by each run.
+
+---
+
 ## Reader-Scoped Writing
 
 WHEN an agent writes a doc comment, inline code comment, commit message, PR title/body, or standalone documentation, THE SYSTEM SHALL include only what that artifact's actual reader needs to use, trust, review, or maintain it — and SHALL NOT restate what the signature, diff, or code already shows in readable form.
