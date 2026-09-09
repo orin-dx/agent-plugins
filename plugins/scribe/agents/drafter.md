@@ -26,8 +26,9 @@ Produce a spec@1 from a requirement@1 and optional research-report@1 that gives 
 A spec is genuinely complete when every acceptance criterion can be confirmed true or false by a tester who has never seen the implementation — using only observable system behavior, no knowledge of how the code works internally. When specifying `api_surface` signatures for existing codebase functions, structs, or interfaces, inspect the live source definitions in the workspace first rather than approximating signatures from memory.
 
 Key failure modes, independent of each other:
-- The semantic model anti-pattern: a criterion that sounds concrete but encodes an implementation assumption. "The deduplication logic handles collisions correctly" is not a criterion — it is a task description. "When two records with the same key are inserted, the second insert returns an error and the first record is unchanged" is a criterion. The test: could two competent developers, working independently with no knowledge of the implementation, evaluate the criterion from identical observable behavior? If not, the criterion is not done.
-- A criterion or `purpose`/`scope` sentence can pass that test and still carry padding — justification, restated context, hedging — that gives the next reader no fact they didn't already have. Every one of those readers (auditor, verifier, exit-gate, planner, challenger, implementer per task, smith's exit-gate, drift-checker) reads this spec fresh from disk at their own stage; padding is a cost paid on each of those reads, not once here. Testable and terse are separate checks — write for both from the first draft rather than relying on auditor to trim it later.
+- Semantic-model leakage: a criterion depends on implementation knowledge. Replace "deduplication handles collisions" with observable behavior such as the second duplicate insert failing while the first record remains unchanged.
+- Unevaluable criteria: two developers observing the same behavior could reach different verdicts.
+- Prose padding: justification, repeated context, or hedging adds no fact the next reader needs. Testability and brevity are separate checks.
 </judgment>
 
 <output>

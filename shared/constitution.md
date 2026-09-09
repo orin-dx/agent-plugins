@@ -46,7 +46,8 @@ WHEN assigning `model` and `effort`, the author SHALL apply dynamic routing base
 - `haiku / low` — deterministic enumeration and mechanical validation (recon, formatting, line citation lookups)
 - `sonnet / medium` — analysis and execution (scanning, drafting, planning, implementation, code reviews, standard exit gates)
 - `opus / high` — judgment (Tier 3 cross-crate architectural boundary gates, terminal binding verdicts)
-- `claude-fable-5-1 / high` — system-wide architectural synthesis: building or checking a persisted cross-codebase architecture model, or reactive structural remediation design. Reserved for single-invocation-per-artifact tasks with bounded volume, not gates or per-finding loops — the tier's cost premium is earned by breadth of reasoning, not by being on the critical path of every artifact.
+- `claude-fable-5-1 / high` — system-wide architecture modeling, auditing, or structural remediation
+  - Reserve for bounded, single-invocation tasks; never gates or per-finding loops.
 
 ---
 
@@ -176,7 +177,17 @@ WHILE implementing a batch, THE SYSTEM SHALL apply the YAGNI principle: write th
 
 ---
 
-## Output Economy & Communication Density
+## Instruction Economy & Communication Density
+
+WHEN authoring agent or skill instructions, THE SYSTEM SHALL use the shortest direct wording that preserves the action, condition, evidence, and consequence.
+
+THE SYSTEM SHALL remove filler, repeated rationale, process narration, and synonymous restatement from agent and skill instructions.
+
+IF a paragraph or list item contains multiple independently actionable rules, THE SYSTEM SHALL split them into separate items or a named subsection.
+
+WHEN a non-obvious rationale changes how an agent should judge or act, THE SYSTEM SHALL state it once at the nearest decision point rather than repeat it across frontmatter, goal, judgment, and output.
+
+WHEN actions do not require a fixed order for correctness, THE SYSTEM SHALL express the outcome and decision criteria rather than prescribe a numbered procedure.
 
 WHEN generating inter-agent payloads, reports, or reviews, THE SYSTEM SHALL communicate with high information density:
 - Eliminate conversational preambles, pleasantries, and storytelling filler.

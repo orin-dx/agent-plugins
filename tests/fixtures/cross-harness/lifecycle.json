@@ -85,6 +85,81 @@
         "plan_file_path": "docs/projects/SPEC-CROSS-HARNESS-001.json",
         "linked_requirement": "REQ-CROSS-HARNESS-001"
       }
+    },
+    {
+      "artifact": "implementation-review@1",
+      "producer": {
+        "plugin": "smith",
+        "skill": "implement"
+      },
+      "consumer": {
+        "plugin": "scribe",
+      "skill": "architect"
+    },
+    "document": {
+      "id": "REVIEW-CROSS-HARNESS-001",
+      "workspace": "fixtures/portable-workspace",
+      "batch_id": "BATCH-T1",
+      "language": "typescript",
+      "linked_spec": "SPEC-CROSS-HARNESS-001",
+      "linked_plan": "docs/projects/SPEC-CROSS-HARNESS-001.json",
+      "linked_requirement": "REQ-CROSS-HARNESS-001",
+      "spec_file_path": "docs/specs/SPEC-CROSS-HARNESS-001.json",
+      "status": "needs_architecture",
+      "sibling_search": {
+        "scope": ["src/publish.ts", "src/tag.ts"],
+        "syntactic": {
+          "method": "Search partial execution-option declarations and command builders.",
+          "evidence": ["No copied declaration matched outside publish."],
+          "matches": 0
+        },
+        "semantic": {
+          "method": "Trace every command boundary that accepts execution options.",
+          "evidence": ["tag independently narrows the same domain value."],
+          "matches": 1
+        }
+      },
+      "issues": [],
+        "defect_families": [
+          {
+            "id": "DF-001",
+            "summary": "Execution options are narrowed before two command boundaries.",
+            "shared_root_cause": "The domain model has no canonical execution-options type.",
+            "instances": [
+              {
+                "file": "src/publish.ts",
+                "line": 42,
+                "relationship": "original",
+                "status": "unresolved",
+                "evidence": "publish receives a type that omits registry"
+              },
+              {
+                "file": "src/tag.ts",
+                "line": 37,
+                "relationship": "semantic_sibling",
+                "status": "unresolved",
+                "evidence": "tag independently narrows the same options"
+              }
+            ],
+            "semantic_model": {
+              "assessment": "missing_concept",
+              "description": "Execution options have no single domain representation.",
+              "evidence": [
+                "publish and tag declare separate partial shapes"
+              ]
+            },
+            "architecture": {
+              "assessment": "missing_boundary",
+              "description": "Command execution lacks one options boundary.",
+              "evidence": [
+                "both commands accept independently narrowed parameters"
+              ]
+            },
+            "disposition": "architecture_escalation"
+          }
+        ],
+        "reasoning": "Two related instances show a shared structural cause."
+      }
     }
   ]
 }

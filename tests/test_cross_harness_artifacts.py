@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import unittest
 from pathlib import Path
@@ -29,12 +30,26 @@ def validate_subset(instance: Any, schema: dict[str, Any], path: str = "$") -> l
         "array": lambda value: isinstance(value, list),
         "string": lambda value: isinstance(value, str),
         "boolean": lambda value: isinstance(value, bool),
+        "integer": lambda value: isinstance(value, int) and not isinstance(value, bool),
     }
     if expected_type in type_matches and not type_matches[expected_type](instance):
         return [f"{path}: expected {expected_type}"]
 
     if "enum" in schema and instance not in schema["enum"]:
         errors.append(f"{path}: expected one of {schema['enum']!r}")
+    if "const" in schema and instance != schema["const"]:
+        errors.append(f"{path}: expected {schema['const']!r}")
+    forbidden = schema.get("not")
+    if isinstance(forbidden, dict) and not validate_subset(instance, forbidden, path):
+        errors.append(f"{path}: matched a forbidden shape")
+    if isinstance(instance, str):
+        minimum_length = schema.get("minLength")
+        if isinstance(minimum_length, int) and len(instance) < minimum_length:
+            errors.append(f"{path}: expected at least {minimum_length} characters")
+    if isinstance(instance, int) and not isinstance(instance, bool):
+        minimum = schema.get("minimum")
+        if isinstance(minimum, int) and instance < minimum:
+            errors.append(f"{path}: expected at least {minimum}")
 
     if isinstance(instance, dict):
         properties = schema.get("properties", {})
@@ -58,6 +73,20 @@ def validate_subset(instance: Any, schema: dict[str, Any], path: str = "$") -> l
         if isinstance(item_schema, dict):
             for index, value in enumerate(instance):
                 errors.extend(validate_subset(value, item_schema, f"{path}[{index}]"))
+        contains = schema.get("contains")
+        if isinstance(contains, dict) and not any(
+            not validate_subset(value, contains, f"{path}[{index}]") for index, value in enumerate(instance)
+        ):
+            errors.append(f"{path}: no item matched the required shape")
+
+    for constraint in schema.get("allOf", []):
+        errors.extend(validate_subset(instance, constraint, path))
+
+    condition = schema.get("if")
+    if isinstance(condition, dict):
+        branch = schema.get("then") if not validate_subset(instance, condition, path) else schema.get("else")
+        if isinstance(branch, dict):
+            errors.extend(validate_subset(instance, branch, path))
     return errors
 
 
@@ -99,6 +128,58 @@ class CrossHarnessArtifactTests(unittest.TestCase):
             codex_consumer = REPOSITORY_ROOT / "dist/codex/plugins" / consumer["plugin"] / "skills" / consumer["skill"] / "SKILL.md"
             self.assertIn(artifact, codex_producer.read_text(encoding="utf-8"))
             self.assertIn(artifact, codex_consumer.read_text(encoding="utf-8"))
+
+    def test_implementation_review_requires_structural_assessments(self) -> None:
+        stage = next(stage for stage in self.stages if stage["artifact"] == "implementation-review@1")
+        schema = read_json(REPOSITORY_ROOT / "shared/schemas/implementation-review@1.json")
+
+        missing_assessment = copy.deepcopy(stage["document"])
+        del missing_assessment["defect_families"][0]["architecture"]
+        self.assertTrue(any("missing required property 'architecture'" in error for error in validate_subset(missing_assessment, schema)))
+
+        unknown_field = copy.deepcopy(stage["document"])
+        unknown_field["defect_families"][0]["confidence"] = "high"
+        self.assertTrue(any("unexpected property 'confidence'" in error for error in validate_subset(unknown_field, schema)))
+
+        missing_deferral_reason = copy.deepcopy(stage["document"])
+        missing_deferral_reason["defect_families"][0]["disposition"] = "explicit_deferral"
+        self.assertTrue(any("missing required property 'deferral_reason'" in error for error in validate_subset(missing_deferral_reason, schema)))
+
+        mismatched_deferral = copy.deepcopy(stage["document"])
+        mismatched_deferral["defect_families"][0]["instances"][1]["status"] = "deferred"
+        self.assertTrue(any("forbidden shape" in error for error in validate_subset(mismatched_deferral, schema)))
+
+        missing_search = copy.deepcopy(stage["document"])
+        del missing_search["sibling_search"]
+        self.assertTrue(any("missing required property 'sibling_search'" in error for error in validate_subset(missing_search, schema)))
+
+        missing_lineage = copy.deepcopy(stage["document"])
+        del missing_lineage["workspace"]
+        self.assertTrue(any("missing required property 'workspace'" in error for error in validate_subset(missing_lineage, schema)))
+
+        unsupported_language = copy.deepcopy(stage["document"])
+        unsupported_language["language"] = "python"
+        self.assertTrue(any("expected one of" in error for error in validate_subset(unsupported_language, schema)))
+
+        missing_escalation = copy.deepcopy(stage["document"])
+        missing_escalation["defect_families"][0]["disposition"] = "fix_instances"
+        self.assertTrue(any("no item matched" in error for error in validate_subset(missing_escalation, schema)))
+
+        invalid_approval = copy.deepcopy(stage["document"])
+        invalid_approval["status"] = "approved"
+        invalid_approval["defect_families"][0]["disposition"] = "fix_instances"
+        self.assertTrue(any("forbidden shape" in error for error in validate_subset(invalid_approval, schema)))
+
+        invalid_repair = copy.deepcopy(stage["document"])
+        invalid_repair["status"] = "changes_requested"
+        invalid_repair["issues"] = [{
+            "file": "src/consumer.ts",
+            "line": 14,
+            "description": "Repair the unresolved sibling.",
+            "severity": "must_fix",
+            "family_id": "FAMILY-001",
+        }]
+        self.assertTrue(any("forbidden shape" in error for error in validate_subset(invalid_repair, schema)))
 
 
 if __name__ == "__main__":

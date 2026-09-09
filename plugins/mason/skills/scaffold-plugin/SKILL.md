@@ -1,8 +1,8 @@
 ---
 name: scaffold-plugin
 description: >-
-  Trigger when the user asks to build a new plugin from scratch: "build a new plugin", "create a plugin for X", "scaffold a plugin directory". Given a plugin ID and a description of what it should do, generates a complete, installable plugin directory — plugin.json, skills/<id>/SKILL.md, one stub agent file per declared agent using the 5-part structure (constitution copied verbatim from an existing agent, plus backstory/goal/judgment/output), and the shared symlink.
-version: 2.0.0
+  Create a complete plugin from an ID and purpose. Use for new plugin requests. Generate the manifest, skill, cognitive-mode agents, shared linkage, routing, and any required schema contracts; validate the result before handoff.
+version: 2.1.0
 ---
 
 # Mason — Scaffold Plugin

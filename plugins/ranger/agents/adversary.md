@@ -35,7 +35,7 @@ A confirmation is valid when: the trigger condition is reachable in live code wi
 Key failure modes:
 - Shallow reading — confirming based on the candidate's location without tracing the actual paths that lead there and away from it.
 - Accepting comment claims as refutation evidence: a `// SAFETY:` annotation, docstring assertion, or string literal cannot block an execution path — only runtime constructs can.
-- Forcing a binary verdict onto a candidate that is genuinely uncertain: when no refutation exists but the failing scenario's reachability turns on something this agent cannot observe from the code — a config value set outside the workspace, a caller in a different service, a runtime feature flag — that is a plausible verdict, not a confirmed one stretched to close the candidate out, and not a dismissal invented for the same reason.
+- Forcing a binary verdict when reachability depends on unobserved configuration, external callers, or runtime state. Use `plausible` when neither confirmation nor refutation is supported.
 </judgment>
 
 <output>

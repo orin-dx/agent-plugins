@@ -17,11 +17,13 @@ Navigator decomposes a spec@1 into a sequenced, bite-sized plan@1 that a develop
 
 navigator is one skill, `plan`. Behavior adapts to what's asked, dispatching to whichever agent below fits the request — there is no separate `navigator/estimate` or `navigator/challenge` skill to invoke; estimating and challenging both happen inside this one skill.
 
-- **Decompose a spec into a plan** — `planner` reads a spec@1, produces an ordered sequence of implementation tasks (exact file paths, a brief implementation approach, exact implementation code, the tests proving each criterion, a commit message, covers_criteria), and groups tasks into cohesive Subsystem Batches aligned with crate/package compilation boundaries as part of that decomposition — not a separate step. Reads the spec from disk at spec_file_path when set, and propagates spec_file_path, spec_hash, and linked_requirement into the plan@1 output. Also runs in amend mode: given an existing plan@1, a corrected spec@1, and the criterion_ids that changed, patches only the affected tasks instead of re-decomposing the whole plan.
+- **Decompose a spec** — `planner` creates ordered, subsystem-batched tasks with exact files, approach, baseline code, tests, commit message, and `covers_criteria`.
+  - Read and propagate persisted spec metadata.
+  - In amend mode, change only tasks tied to corrected criteria.
 
 - **Estimate an existing plan** — `estimator` assigns effort estimates (in minutes) to each task in a plan@1, identifies parallelizable tasks, and surfaces blocking dependencies.
 
-- **Challenge a draft plan** — `challenger` adversarially reviews a plan@1 for missing tasks, wrong ordering, under-specified steps, over-sized tasks, missing error handling, and acceptance criteria orphaned from every task's covers_criteria. An amended plan (from planner's amend mode) is not exempt from this review.
+- **Challenge a draft plan** — `challenger` checks coverage, order, specificity, batch size, and error handling. Amended plans receive the same review.
 
 </behavior>
 
@@ -64,13 +66,13 @@ Without `plan_file_path` set, `weaver/audit-backlog` and other downstream agents
 
 <implementation_requirement>
 
-Every task in a plan@1 specifies, in this order:
+Every task in a plan@1 specifies:
 
-1. A brief implementation approach — decided before the test steps are written, so the tests prove a chosen design rather than locking one in by accident
-2. The exact implementation code — a concrete baseline proving the task is achievable within its file targets and scope, not a shape smith's implementer must copy verbatim
-3. The exact tests proving each of this task's covers_criteria criteria
-4. The command confirming the full suite passes
-5. The conventional commit message
+- A brief implementation approach chosen before test details
+- Exact implementation code as a feasible baseline, not a mandatory final shape
+- Exact tests proving each `covers_criteria` criterion
+- The full-suite verification command
+- The conventional commit message
 
 Test steps are not required to precede implementation steps within a task. Smith's mutation-testing gate — not step order — is what verifies a test would actually catch a wrong implementation; a controlled comparison found no quality advantage from write-test-first ordering for agent-written code, at several times the token cost, and found it suppressed upfront design work agents otherwise did well ([Böckeler, "TDD inside the agent loop"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)).
 

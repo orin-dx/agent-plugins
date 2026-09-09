@@ -4,7 +4,7 @@
 
 One skill, one three-agent pipeline, artifact-agnostic. Point sentinel at a requirement, spec, plan, implementation, PR, changeset, or finding-report and it returns a binding `verdict@1` — pass or fail, with specific, actionable blockers on fail. Default disposition is **fail**: unverifiable criteria count as failures unless explicitly waived.
 
-Sentinel is standalone. Its `plugin.json` declares `consumes: []`, and nothing invokes it automatically. `scribe`'s and `smith`'s own exit-gate agents already implement the same recon → verify → judge discipline sentinel formalizes, tailored to `spec@1` and `changeset@2` respectively — neither calls into sentinel's agents. Install sentinel when you want that same protocol available on demand against *any* artifact, including as an independent second opinion on top of scribe's or smith's own gate.
+Sentinel is standalone. Its `plugin.json` declares `consumes: []`, and nothing invokes it automatically. Scribe and Smith have dedicated exit gates for their own artifacts; neither calls Sentinel's agents. Install Sentinel for an on-demand independent gate against any artifact.
 
 ---
 
@@ -100,4 +100,4 @@ On `fail`, the orchestrator returns the `blockers` array directly to the produci
 
 ## Used By
 
-Nothing invokes sentinel automatically. **[scribe](../scribe/)** and **[smith](../smith/)** each run their own dedicated exit-gate agent following the same protocol sentinel formalizes, not sentinel itself. Install sentinel to run that protocol standalone against any artifact — `spec@1` from scribe, `changeset@2` from smith — as an independent check alongside their own gates. **[courier](../courier/)** consumes `changeset@2` directly from smith; wiring sentinel's verdict into a shipping decision is a caller choice, not a declared dependency.
+Nothing invokes Sentinel automatically. **[scribe](../scribe/)** and **[smith](../smith/)** run dedicated exit gates for `spec@1` and implementations. Use Sentinel as an independent check; wiring its verdict into shipping remains the caller's choice.

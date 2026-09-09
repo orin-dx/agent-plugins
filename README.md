@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.2.0-success.svg" alt="Marketplace v4.2.0" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.3.0-success.svg" alt="Marketplace v4.3.0" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
@@ -20,7 +20,7 @@
 
 ## Wisp Plugins — the Lifecycle Ecosystem
 
-Ten plugins, each a specialist persona covering one stage of the development lifecycle — together they're **Wisp Plugins**, the agent-side companions to the [Wisp](https://github.com/orin-axi/wisp) project-intelligence library. Each produces a typed output schema consumed by the next stage. They're composable: install only the personas your workflow needs.
+Ten plugins, each a specialist persona covering one stage of the development lifecycle — together they're **Wisp Plugins**, the agent-side companions to the [Wisp](https://github.com/orin-axi/wisp) project-intelligence library. Lifecycle handoffs use typed artifacts where applicable. The plugins are composable: install only the personas your workflow needs.
 
 **The primary flow** — one direction, no side-taps:
 
@@ -37,7 +37,7 @@ flowchart LR
     mu[Muse\ncomponent spec] -->|"spec@1"| na[Navigator\nplan]
     sc -->|"spec@1"| na
     na -->|"plan@1"| sm[Smith\ncode]
-    sm -->|"changeset@2"| co[Courier\nship]
+    sm -->|"verified code"| co[Courier\nship]
     co -. iterate .-> we
 
     class we,va define
@@ -62,11 +62,11 @@ flowchart LR
     ra([Ranger\naudit])
 
     sc2 -.->|"spec@1"| se
-    sm2 -.->|"changeset@2"| se
+    sm2 -.->|"code + verdict@1"| se
+    sm2 -.->|"implementation-review@1"| sc2
     se -.->|"verdict@1"| co2
 
     sm2 -->|"live code"| ra
-    ra -.->|"finding-report@1"| co2
     ra -.->|"finding-report@1"| sc2
 
     class se,ra verify
@@ -76,6 +76,8 @@ flowchart LR
 
 *Pill-shaped nodes are cross-cutting checkpoints, not sequence stops. Solid arrows are direct handoffs; dashed arrows are verification and meta side-channels. Ranger's input is the live codebase Smith just wrote, not a schema handoff — the one solid arrow in the second diagram.*
 
+Smith repairs scoped defect families before its exit gate. Structural families route through `scribe:architect`, the normal spec gates, Navigator plan amendment, and Smith implementation; after verification, Scribe refreshes the persisted architecture model.
+
 Grouped by what each persona actually does — five bands across the lifecycle, plus one that stands outside it and maintains the rest:
 
 | Category | Persona | Job | Output |
@@ -84,8 +86,8 @@ Grouped by what each persona actually does — five bands across the lifecycle, 
 | **Define** | [`vanguard`](./plugins/vanguard/) | Goes first — researches prior art, risk, and patterns before anyone commits to a direction | `research-report@1` |
 | **Design** | [`scribe`](./plugins/scribe/) | Drafts and gates the unambiguous, binding spec | `spec@1` |
 | **Design** | [`muse`](./plugins/muse/) | Drafts and gates component specs — props, variants, per-state behavior, accessibility | `spec@1` |
-| **Build** | [`navigator`](./plugins/navigator/) | Decomposes the spec into an exact, step-by-step plan | `plan@1` |
-| **Build** | [`smith`](./plugins/smith/) | Implements — design, code, comprehensive tests, mutation-tested, commit | `changeset@2` |
+| **Build** | [`navigator`](./plugins/navigator/) | Decomposes the spec into an executable plan | `plan@1` |
+| **Build** | [`smith`](./plugins/smith/) | Implements, mutation-tests, reviews defect families, and verifies criteria | `implementation-review@1`, `verdict@1` |
 | **Verify** | [`sentinel`](./plugins/sentinel/) | Cross-cutting gate — confirms any artifact meets its criteria before the next stage begins | `verdict@1` |
 | **Verify** | [`ranger`](./plugins/ranger/) | Hunts down real bugs through adversarial, evidence-based verification | `finding-report@1` |
 | **Ship** | [`courier`](./plugins/courier/) | Commits, opens PRs, responds to review, writes changelogs and release notes | `release-artifact@2` |
@@ -239,7 +241,7 @@ See [`ARCHITECTURE.md §7`](./ARCHITECTURE.md#7-agent-authoring-principles) for 
 
 ## Shared Schema Contract
 
-All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use JSON Schema draft-2020-12 with `additionalProperties: false`. Schema versions are immutable — a breaking change requires a new file (e.g. `requirement@2.json`). Every schema includes a `reasoning` scratchpad field that is never forwarded downstream.
+Structured inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use JSON Schema draft-2020-12 with `additionalProperties: false`. Schema versions are immutable — a breaking change requires a new file (e.g. `requirement@2.json`). Every schema includes a `reasoning` scratchpad field that is never forwarded downstream.
 
 | Schema | Produced by | Consumed by |
 | :--- | :--- | :--- |
@@ -247,10 +249,11 @@ All inter-plugin handoffs are typed. Schemas live in `shared/schemas/` and use J
 | `research-report@1` | vanguard | scribe |
 | `spec@1` | scribe, muse | navigator, sentinel |
 | `plan@1` | navigator | smith |
-| `changeset@2` | smith | courier, sentinel |
-| `verdict@1` | sentinel | any gate consumer |
-| `verdict@2` | ranger | courier, humans (extends verdict@1 with flagged_for_review) |
-| `finding-report@1` | ranger | courier, humans, architect |
+| `implementation-review@1` | smith | smith exit-gate, scribe architect |
+| `changeset@2` | courier | courier release, sentinel |
+| `verdict@1` | scribe, smith, sentinel | any gate consumer |
+| `verdict@2` | ranger | callers, humans (extends verdict@1 with flagged_for_review) |
+| `finding-report@1` | ranger | scribe architect, humans |
 | `field-survival-map@1` | boundary-tracer | adversary |
 | `mutation-report@1` | mutator | exit-gate, implementer |
 | `release-artifact@2` | courier | humans |
@@ -263,14 +266,14 @@ Runtime-pullable guides in `shared/references/`. Agents pull these themselves du
 
 | File | Purpose | Loaded by |
 | :--- | :--- | :--- |
-| `rust-hazards.md` | Rust hazard taxonomies T1–T6/T8/T9, grep patterns, before/after examples | scanner (always), adversary (non-T7/T10) |
-| `rust-hazards-t7-t10.md` | Rust taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10) |
-| `rust-smells.md` | Rust architectural smells and resolving trait designs | architect |
+| `rust-hazards.md` | Rust hazard taxonomies T1–T6/T8/T9, grep patterns, before/after examples | scanner, adversary, Smith reviewer |
+| `rust-hazards-t7-t10.md` | Rust taxonomies T7 and T10 | boundary-tracer, scanner, adversary, Smith reviewer |
+| `rust-smells.md` | Rust architectural smells and resolving trait designs | architect, Smith reviewer |
 | `rust-tooling.md` | Rust test commands, NAPI rules, non-negotiables | mutator, remediator |
 | `rust.md` | Thin index → routes to the files above | — |
-| `typescript-hazards.md` | TS hazard taxonomies T1–T6/T8/T9, grep patterns, before/after examples | scanner (always), adversary (non-T7/T10) |
-| `typescript-hazards-t7-t10.md` | TS taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10) |
-| `typescript-smells.md` | TS architectural smells and interface/type designs | architect |
+| `typescript-hazards.md` | TS hazard taxonomies T1–T6/T8/T9, grep patterns, before/after examples | scanner, adversary, Smith reviewer |
+| `typescript-hazards-t7-t10.md` | TS taxonomies T7 and T10 | boundary-tracer, scanner, adversary, Smith reviewer |
+| `typescript-smells.md` | TS architectural smells and interface/type designs | architect, Smith reviewer |
 | `typescript-tooling.md` | TS test commands (Stryker, Vitest), non-negotiables | mutator, remediator |
 | `typescript.md` | Thin index → routes to the files above | — |
 | `conventional-commits.md` | Type/scope conventions and scope table | courier |
@@ -280,6 +283,12 @@ Runtime-pullable guides in `shared/references/`. Agents pull these themselves du
 | `modern-cli-tools.md` | ripgrep, fd, bat, jq, delta, fzf usage patterns | — |
 | `interface-implementers.md` | Deterministic pre-scan for enumerating trait/interface implementers per language | challenger |
 | `boundary-value-shapes.md` | Sum-type-over-bool default posture for boundary-crossing values, per-language examples | implementer |
+| `implementation-review.md` | Routes implementation review to language hazards, architecture smells, and comment rules | Smith reviewer |
+| `architecture-remediation.md` | Routes structural remediation to the persisted model and language smells | Scribe architect |
+| `code-comments.md` | Reader-scoped doc and inline comment rules | implementer, Smith reviewer |
+| `workspace-conventions.md` | Persisted spec, plan, and architecture-model locations | recon and coverage auditors |
+| `docs-voice.md` | Reader-focused prose and review-label conventions | Courier authoring references |
+| `orin-visual-standard.md` | Shared Mermaid palette and diagram conventions | documentation authors |
 
 ---
 

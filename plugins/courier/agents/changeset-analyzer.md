@@ -31,7 +31,9 @@ Bundling unrelated topics into one changeset and fragmenting one coherent effort
 
 Decide what belongs together by checking, in order:
 
-1. **Shared `linked_spec`/`linked_plan`/`linked_requirement`.** A scope decision already made before any code existed, so it outweighs anything inferred from the diff. Changes tracing to the same spec/plan/requirement are one changeset even across unrelated packages; changes tracing to different ones are separate changesets even in the same diff. 2. **An explicitly stated shared scope from whoever handed over the diff** ("a testing push across all packages," "shipping these together this cycle") — trust it. 3. **Shared cause, read from the diff**, only absent 1 and 2: does one part exist *because of* another (one changeset), or would each have happened independently (separate changesets)? An "and" joining two things with no shared cause is two changesets.
+1. **Shared artifact.** The same `linked_spec`, `linked_plan`, or `linked_requirement` defines one scope across packages. Different links define separate scopes.
+2. **Explicit shared scope.** Honor a stated cross-package purpose such as a testing push or coordinated release.
+3. **Shared cause.** When neither signal exists, ask whether one change exists because of another. Independent causes need separate changesets.
 
 None of this proxies file, package, or commit count. Check 1 and 2 first — most cases resolve there. When step 3 still leaves genuine ambiguity, splitting is the fallback, not the default; reaching for it without checking 1 and 2 first produces changeset sprawl. Verify a topic's file/package attribution against its own diff slice, not a summary of the whole batch.
 
@@ -41,7 +43,8 @@ Key failure modes:
 - breaking_changes lists method signatures instead of user-visible behavior changes.
 - summary uses engineering language ("refactored X") for a change classified internal-only.
 - a major change's breaking_changes entry names what changed but not what the caller must now do about it.
-- fabricating a line number for criteria_evidence when reconstructing from a diff alone — a diff hunk shows what changed, not always precisely which line proves a specific criterion; when genuinely uncertain, give a file-level entry without a line number rather than guessing one. The same discipline applies to files_changed at the topic level: list what that topic's own diff actually touched, and if a handful of items genuinely can't be pinned down yet, say so in reasoning rather than placing them by assumption.
+- Fabricating evidence line numbers from a diff; omit uncertain lines.
+- Assigning uncertain files to a topic; record the uncertainty in `reasoning`.
 </judgment>
 
 <output>

@@ -1,13 +1,14 @@
 # ranger — Adversarial Bug Hunting
 
-**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 3.0.0
+**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 3.1.0
 
 Adversarial bug hunting on live code, for Rust, TypeScript, and JavaScript — language is auto-detected from `Cargo.toml` or `package.json`.
 
 - Builds a reachability manifest first, so dead code is never scanned.
 - Sweeps live files against language-specific hazard taxonomies, optionally tracing data flow for intent-capture and error-downgrade candidates.
 - Refutes every candidate before confirming it — a finding survives only when no refutation can be constructed and a concrete failing scenario can be stated.
-- Gates the output through an exit verifier before producing `finding-report@1`.
+- Groups related findings by shared root cause and routes structural families to `scribe:architect`.
+- Produces `finding-report@1`, then uses the exit verifier after remediation.
 
 ---
 
@@ -57,7 +58,7 @@ Unlike `courier` or `scribe`, ranger has exactly one skill directory (`skills/au
 | `scanner` | Hazard Scanner | sonnet / medium | Loads language-specific hazard taxonomies, runs grep patterns against live files, emits every match as a candidate@1 entry. No filtering — exhaustiveness is the goal. |
 | `boundary-tracer` | Data Flow Tracer | sonnet / medium | Conditional. Invoked for T7 and T10 candidates only. Traces each field of the flagged struct or type from construction site to execution boundary and produces a field survival map for the adversary. |
 | `adversary` | Adversarial Verifier | opus / high | Invoked once per candidate. Tries hard to refute before confirming. Runs a one-time constitution sweep for Invisible Invariants. Confirms only when a concrete failing scenario can be stated. |
-| `exit-gate` | Exit Verifier | opus / high | Re-reads all affected code from scratch after remediation. Checks resolved findings, scans for sibling gaps, verifies compile and tests. Escalates to human when retry_count exceeds 3. |
+| `exit-gate` | Exit Verifier | opus / high | Re-reads current code, checks syntactic and semantic siblings, verifies structural assessment, compilation, and tests. |
 
 ---
 
@@ -78,19 +79,27 @@ flowchart LR
     (conditional)"]
     scanner --> adv[adversary]
     bt --> adv
-    adv --> gate[exit-gate]
-    gate --> out(["finding-report@1"])
+    adv --> out(["finding-report@1"])
+    out -. structural family .-> arch[scribe:architect]
+    out --> fix[remediation]
+    fix --> gate[exit-gate]
+    gate --> verdict(["verdict@2"])
 
     class ws source
     class recon store
     class scanner engine
     class bt engine
     class adv router
+    class arch router
+    class fix engine
     class gate router
     class out output
+    class verdict output
 ```
 
 `boundary-tracer` is conditional — invoked only when the scanner produces T7 (write-only fields / intent-capture discard) or T10 (error downgrade) candidates.
+
+Related confirmed findings form a possible defect family. When they share a root cause or reveal a missing domain concept or architectural constraint, pass the complete `finding-report@1` to `scribe:architect` before remediation.
 
 ---
 
@@ -139,11 +148,11 @@ Recon inspects the workspace root automatically:
 | `shared/references/typescript-hazards.md` | TypeScript taxonomies T1-T6, T8, T9, grep patterns, unhandled promise patterns | scanner (always), adversary (non-T7/T10 candidates) |
 | `shared/references/typescript-hazards-t7-t10.md` | TypeScript taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
 | `shared/schemas/candidate@1.json` | Scanner output shape | — |
-| `shared/schemas/finding-report@1.json` | Adversary and exit-gate output shape | — |
+| `shared/schemas/finding-report@1.json` | Aggregated adversary output | — |
 | `shared/schemas/verdict@2.json` | Exit-gate verdict shape (extends verdict@1 with flagged_for_review) | — |
 
 ---
 
 ## Integration
 
-`finding-report@1` feeds into **[courier](../courier/)** — the release summarizer rolls confirmed findings into release notes. Run ranger before cutting any release.
+`finding-report@1` feeds structural defect families into **[scribe](../scribe/)**. After remediation, Ranger's exit gate returns `verdict@2` for the caller's shipping decision.

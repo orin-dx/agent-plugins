@@ -1,8 +1,8 @@
 # smith — Implementation
 
-**Stage:** Code · **Output:** committed code, `verdict@1` · **Version:** 2.2.0
+**Stage:** Code · **Output:** code, `implementation-review@1`, `verdict@1` · **Version:** 2.3.0
 
-One skill, one pipeline. Give it a `plan@1` and it executes every task in order — design, implement, test comprehensively, commit — then gates the result with mutation testing and an adversarial exit check before handing off. Test quality is enforced by the mutation-testing gate, not by mandating tests be written before the code they cover — see [Implementation Cycle](#implementation-cycle-per-task). No plan yet? Give it a `spec@1` directly.
+Smith executes each plan batch through implementation, mutation, defect-family review, and an independent exit gate. Review finds syntactic and semantic siblings, records their shared cause, and checks for missing domain concepts or architectural constraints. No plan yet? Give it a `spec@1` directly.
 
 Smith never assembles a changeset itself. It hands `criteria_evidence` — exact test and implementation locations for every criterion it proved — to **[courier](../courier/)**, which produces `changeset@2` from it.
 
@@ -39,10 +39,10 @@ Smith never assembles a changeset itself. It hands `criteria_evidence` — exact
 | Subagent | Role | Tier | What it does |
 | :--- | :--- | :--- | :--- |
 | `recon` | Workspace Recon | haiku / low | Detects language, test runner, build tool. Inventories plan files. Confirms the baseline passes before any code is written. Flags `spec_drift_warning` if the plan's `spec_hash` no longer matches the spec file on disk. |
-| `implementer` | Implementation Executor | sonnet / medium | Executes one task: design, implement, test comprehensively, commit. Absorbs precision tests from `mutator` when supplied. Reports `spec_contradiction` instead of forcing an implementation that satisfies neither the criterion nor reality. Defaults any absent/wrong/stale boundary value to a sum type over a raw value-plus-boolean pair, reporting `needs_architecture` when a single task's scope can't get there. |
+| `implementer` | Implementation Executor | sonnet / medium | Designs, implements, and tests one task. Commits only with explicit authorization. Reports contradictions and architecture needs instead of forcing a pass. |
 | `mutator` | Mutation Gate | sonnet / medium | Runs mutation testing on the task's changed files. Designs a precision test for every surviving mutant. |
-| `reviewer` | Pre-Gate Review | sonnet / medium | Neutral check before the exit gate: scope adherence, non-negotiable violations, sibling gaps, test quality. |
-| `exit-gate` | Adversarial Verifier | opus / high | Independent, from-scratch verification that every criterion is implemented, tested, and passing, with no regressions. Produces `verdict@1`. |
+| `reviewer` | Pre-Gate Review | sonnet / medium | Produces `implementation-review@1`: issues, related defect instances, shared root cause, semantic-model evidence, architecture evidence, and disposition. |
+| `exit-gate` | Adversarial Verifier | opus / high | Independently verifies criteria, tests, mutation evidence, and every defect-family disposition. Produces `verdict@1`. |
 
 ---
 
@@ -72,26 +72,31 @@ flowchart LR
     end
 
     Recon --> Impl
-    Rev --> Gate["exit-gate
+    Rev -.->|needs architecture| Arch["scribe/architect"]
+    Rev -->|approved| Gate["exit-gate
     opus / high"]
     Gate --> Done(["verdict@1"])
 
     class Plan source
     class Recon store
     class Impl,Mut engine
-    class Rev,Gate router
+    class Rev,Arch,Gate router
     class Done output
 
     style loop fill:#fafafa,stroke:#cbd5e1,stroke-width:1.5px,stroke-dasharray: 4 4,rx:10px,ry:10px
 ```
 
-Each task runs in a fresh `implementer` context — no state bleeds between tasks. `mutator` can feed precision tests back into `implementer` before `reviewer` and the next task proceed. `exit-gate` runs once, after every task completes, and confirms mutation testing ran.
+Each batch runs in a fresh `implementer` context. Mutation survivors return as precision tests. Reviewer findings return for scoped repair or route to `scribe:architect`; only approved reviews reach exit-gate.
 
 ---
 
 ## Output Schema
 
 `verdict@1` — see `shared/schemas/verdict@1.json`. Produced by `exit-gate`: pass or fail, with specific blockers on failure.
+
+`implementation-review@1` — see `shared/schemas/implementation-review@1.json`. Carries workspace and batch lineage, sibling-search evidence, issues, defect families, and structural assessments.
+
+The reviewer loads `shared/references/implementation-review.md`, which selects the language hazards, architecture smells, and comment standard relevant to the diff.
 
 Each `implementer` task also returns `criteria_evidence` — one `{criterion_id, test_file, test_line, implementation_file, implementation_line}` entry per criterion the task proves. The caller accumulates these across the run and hands them to `changeset-analyzer` when shipping, which uses them to populate `changeset@2.criteria_evidence` — see `shared/schemas/changeset@2.json`.
 
@@ -102,11 +107,12 @@ Each `implementer` task also returns `criteria_evidence` — one `{criterion_id,
 No shortcuts, but no mandated write-order either — tests are validated by the mutation gate below, not by which came first:
 
 1. Read the task's covers_criteria acceptance criteria from the spec before writing any code.
-2. Design the approach — for anything beyond a trivial change, decide the shape of the solution before locking it in through a test. Forcing a failing test into existence before any design work tends to freeze the implementation onto whatever shape that first test happened to imply. The plan's own code is a concrete baseline, not a mandate — use a better-shaped approach if implementing reveals one, as long as it satisfies the same file targets, `covers_criteria`, and tests, and note the deviation in `concerns`. See [ADR-009](../../docs/adr/009-implementer-shape-latitude.md).
+2. Choose the implementation shape. Treat plan code as a baseline, not a transcript; record any better-shaped deviation in `concerns`.
 3. Write the implementation.
-4. Write comprehensive tests proving every covers_criteria criterion. Tests may be written alongside or after the implementation — what matters is that they'd fail if the implementation were wrong, not the order they were written in.
-5. Run the full suite — confirm every test passes, with no regressions.
-6. Commit with the plan's conventional commit message.
+4. Write tests that fail when each covered criterion is violated.
+5. Run targeted tests, then the relevant full suite.
+6. Record exact implementation and test evidence for each criterion.
+7. Commit only with user authorization.
 
 This departs from strict TDD deliberately — see [ADR-008](../../docs/adr/008-drop-test-first-ordering.md). A controlled comparison found agent-written code produced no measurable quality advantage from write-test-first ordering, at 3–9x the token cost, and that forcing a failing test into existence before any design work suppressed the upfront design agents otherwise did well ([Böckeler, "TDD inside the agent loop"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)). The mutation gate below is what actually verifies test quality — mutation score, not write order, is the evidence.
 
@@ -114,15 +120,26 @@ This departs from strict TDD deliberately — see [ADR-008](../../docs/adr/008-d
 
 ## Mutation Gate (per task)
 
-After a task commits, `mutator` runs mutation testing scoped to the changed files — `cargo-mutants` for Rust, Stryker for TypeScript/JavaScript, detected from the workspace root.
+After implementation, `mutator` runs mutation testing scoped to the changed files — `cargo-mutants` for Rust, Stryker for TypeScript/JavaScript, detected from the workspace root.
 
 For every surviving mutant, it designs a precision test that would kill it and returns those to `implementer` to write and make pass. Only when zero mutants survive — or the tool is unavailable, recorded as a gap rather than a block — does the batch move to `reviewer`.
 
 ---
 
+## Defect-Family Review
+
+Reviewer searches for the same syntax or algorithm and for different code expressing the same domain responsibility or failure state. Related instances are grouped by root cause and assessed for missing concepts, states, operations, boundaries, abstractions, invariants, or enforcement.
+
+- Scoped instances return to `implementer` for repair.
+- Duplicated logic is unified when one implementation can own the behavior.
+- Structural gaps route to `scribe:architect` before work resumes.
+- Deferrals require an explicit reason for every affected instance.
+
+---
+
 ## Exit Gate
 
-`exit-gate` runs once, after all tasks complete, with no inherited context from any prior agent. It reads the current code from scratch, assumes the implementation is incomplete, and confirms mutation testing ran before it returns `verdict@1`.
+`exit-gate` runs after all batches have approved reviews. It reads the spec and code independently, validates `implementation-review@1`, and verifies each recorded instance and structural disposition before returning `verdict@1`.
 
 On fail, blockers go back to `implementer` for a targeted fix — three retries, then escalate to a human.
 

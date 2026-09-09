@@ -14,8 +14,9 @@ Inspect the target plugin's manifest, skill dispatch, and existing agent prompts
 3. Author `<backstory>`, `<goal>`, `<judgment>`, and `<output>` in the required order.
 4. Add a single `<load_first>` block only when the agent needs one phase-specific reference.
 5. Cite `shared/schemas/<name>@<version>.json` for every structured output or create that schema first.
-6. Update the source manifest and a skill dispatch only when the new agent must be reachable through that route.
-7. Validate the shared prefix, manifest wiring, and resulting path.
+6. Use one direct, independently actionable rule per paragraph or list item. Remove filler, repeated rationale, and process narration.
+7. Update the source manifest and a skill dispatch only when the new agent must be reachable through that route.
+8. Validate the shared prefix, manifest wiring, and resulting path.
 
 ## Boundaries
 

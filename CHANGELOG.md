@@ -3,7 +3,15 @@
 All notable changes to the Wisp Plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
-## [Unreleased] — Codex marketplace and cross-harness authoring
+## [4.3.0] - 2026-09-09 — Instruction economy and defect-family review
+
+- Added direct, atomic authoring rules with outcome-based guidance for judgment and ordered steps only where sequence affects correctness. Mason now scaffolds and audits the convention.
+- Added `implementation-review@1`, a cross-harness contract for lineage, positive or negative sibling-search evidence, defect families, model and architecture assessments, and consistent disposition status.
+- Smith blocks unresolved families and commits only with explicit authorization. Ranger groups related findings before remediation. Scribe consumes structural escalations and refreshes the architecture model after implementation.
+- Added phase-specific reference routers for implementation review and structural remediation, preserving language and architecture evidence without preloading unrelated guidance.
+- Codex reference-closure validation now treats exact shared paths as runtime dependencies. Courier 3.0.1 packages the transitive voice guide without packaging a historical legacy schema mention.
+
+### Codex marketplace and cross-harness authoring
 
 Adds a second installable harness, Codex, alongside Claude Code/AGY, without pretending the two runtimes are interchangeable. Classification: distribution + shared contract additions.
 
@@ -19,7 +27,7 @@ Adds a second installable harness, Codex, alongside Claude Code/AGY, without pre
 
 Verification: `python3 -m unittest discover tests -v`, `python3 tools/build-codex-marketplace.py --check`. See `docs/codex-marketplace-release-policy.md` for the full release procedure.
 
-## [Unreleased] — Ecosystem brand becomes Wisp Plugins
+### Ecosystem brand becomes Wisp Plugins
 
 Docs-only. The ten-plugin family is now branded **Wisp Plugins**; **Wisp** alone refers to the `orin-axi/wisp` project-intelligence library the plugins consume. No plugin ids, skill names, versions, or schemas change. See `docs/adr/010-wisp-plugins-brand.md`.
 

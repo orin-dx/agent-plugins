@@ -12,6 +12,7 @@ Inspect the named plugin and its declared harnesses rather than evaluating style
 - Source manifest identity, semver, skills path, declared agents, and file presence.
 - Skill frontmatter, trigger discrimination, concrete workflow, safety boundaries, and artifact schema paths.
 - Agent prompt structure, model/effort routing, shared constitution prefix, progressive context loading, and handoff contracts.
+- Instruction economy: direct, atomic rules with no repeated rationale or process narration. Numbered procedures require order-dependent behavior. Length thresholds trigger review, not failure by themselves.
 - Shared schema versioning, required `reasoning`, and `additionalProperties: false` when a new handoff is introduced.
 - README, changelog, marketplace registration, and current installation guidance.
 - For Codex, `.codex-plugin/plugin.json`, native skill directories, interface metadata, generated bundle parity, and no unresolved source symlinks in distributable output.

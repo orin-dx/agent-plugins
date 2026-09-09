@@ -16,7 +16,9 @@ OUTPUT_ROOT = REPOSITORY_ROOT / "dist/codex/plugins"
 DISCOVERY_MANIFEST = REPOSITORY_ROOT / ".agents/plugins/marketplace.json"
 SOURCE_ROOT = REPOSITORY_ROOT / "plugins"
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$")
-SCHEMA_REFERENCE = re.compile(r"shared/schemas/([A-Za-z0-9@._-]+\.json)")
+# Exact shared paths in runtime guidance declare load dependencies. Historical
+# references should name the artifact without an exact path.
+RUNTIME_REFERENCE = re.compile(r"shared/(?:schemas|references)/[A-Za-z0-9@._/-]+\.(?:json|md)")
 
 
 def read_json(path: Path) -> dict[str, object]:
@@ -77,7 +79,7 @@ class CodexNativeSourceTests(unittest.TestCase):
                 self.assertRegex(frontmatter, rf"(?m)^name: {re.escape(skill.name)}$")
                 self.assertRegex(frontmatter, r"(?m)^description: .+\S$")
 
-    def test_each_native_schema_reference_is_declared_for_materialization(self) -> None:
+    def test_each_native_runtime_reference_is_declared_for_materialization(self) -> None:
         catalog = read_json(CATALOG_PATH)
         global_runtime = catalog.get("runtime_files")
         self.assertIsInstance(global_runtime, list)
@@ -91,13 +93,24 @@ class CodexNativeSourceTests(unittest.TestCase):
                 if isinstance(item, str) or isinstance(item, dict)
             }
             expected = {
-                match
+                match.rstrip(".,;:)")
                 for skill in (NATIVE_ROOT / plugin_id / "skills").iterdir()
-                for match in SCHEMA_REFERENCE.findall((skill / "SKILL.md").read_text(encoding="utf-8"))
+                for match in RUNTIME_REFERENCE.findall((skill / "SKILL.md").read_text(encoding="utf-8"))
             }
+            pending = list(expected)
+            while pending:
+                reference = pending.pop()
+                source = REPOSITORY_ROOT / reference
+                if not source.is_file() or not reference.startswith("shared/references/"):
+                    continue
+                for nested in RUNTIME_REFERENCE.findall(source.read_text(encoding="utf-8")):
+                    nested = nested.rstrip(".,;:)")
+                    if nested not in expected:
+                        expected.add(nested)
+                        pending.append(nested)
             if "shared/schemas" in declared_sources:
-                continue
-            actual = {Path(source).name for source in declared_sources if isinstance(source, str) and source.startswith("shared/schemas/")}
+                expected = {reference for reference in expected if not reference.startswith("shared/schemas/")}
+            actual = {source for source in declared_sources if isinstance(source, str)}
             self.assertTrue(expected <= actual, f"{plugin_id} does not materialize {sorted(expected - actual)}")
 
     def test_delegating_skills_select_packaged_role_cards(self) -> None:

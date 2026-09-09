@@ -1,8 +1,8 @@
 ---
 name: scaffold-subagent
 description: >-
-  Trigger when the user wants one new agent added to an existing plugin: "write an agent for X", "add a subagent to this plugin", "create a subagent for this task". Given an existing plugin's directory, a task description, and a model/effort tier, generates a single conformant agent file at plugins/<id>/agents/<role>.md using the 5-part structure (constitution copied verbatim from an existing agent, plus backstory/goal/judgment/output) — skipping plugin.json, SKILL.md, and the symlink, which already exist for the target plugin. Distinct from mason/scaffold-plugin, which builds a whole new plugin from nothing.
-version: 2.0.0
+  Add one conformant agent to an existing plugin. Use when the request names an agent task and tier without requesting a new plugin. Create only the agent file and report required routing; leave unrelated plugin files unchanged.
+version: 2.1.0
 ---
 
 # Mason — Scaffold Subagent

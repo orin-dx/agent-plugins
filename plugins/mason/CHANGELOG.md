@@ -2,6 +2,13 @@
 
 — mason
 
+## [3.1.0] - 2026-09-09
+
+### Added
+- Instruction-economy scaffolding and audits: direct atomic rules, no repeated rationale or process narration, and numbered procedures only when order affects correctness.
+- Length thresholds now trigger evidence-based review rather than automatic failure.
+- Cross-harness guidance now defines exact shared paths as runtime dependencies and requires transitive Codex packaging.
+
 ## [3.0.1] - 2026-09-04
 
 ### Changed
