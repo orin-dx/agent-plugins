@@ -2,7 +2,7 @@
 name: scaffold-plugin
 description: >-
   Create a complete plugin from an ID and purpose. Use for new plugin requests. Generate the manifest, skill, cognitive-mode agents, shared linkage, routing, and any required schema contracts; validate the result before handoff.
-version: 2.1.0
+version: 2.2.0
 ---
 
 # Mason — Scaffold Plugin

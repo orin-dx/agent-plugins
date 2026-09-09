@@ -1,6 +1,6 @@
 # smith — Implementation
 
-**Stage:** Code · **Output:** code, `implementation-review@1`, `verdict@1` · **Version:** 2.3.0
+**Stage:** Code · **Output:** code, `implementation-review@2`, `verdict@3` · **Version:** 2.4.0
 
 Smith executes each plan batch through implementation, mutation, defect-family review, and an independent exit gate. Review finds syntactic and semantic siblings, records their shared cause, and checks for missing domain concepts or architectural constraints. No plan yet? Give it a `spec@1` directly.
 
@@ -41,8 +41,8 @@ Smith never assembles a changeset itself. It hands `criteria_evidence` — exact
 | `recon` | Workspace Recon | haiku / low | Detects language, test runner, build tool. Inventories plan files. Confirms the baseline passes before any code is written. Flags `spec_drift_warning` if the plan's `spec_hash` no longer matches the spec file on disk. |
 | `implementer` | Implementation Executor | sonnet / medium | Designs, implements, and tests one task. Commits only with explicit authorization. Reports contradictions and architecture needs instead of forcing a pass. |
 | `mutator` | Mutation Gate | sonnet / medium | Runs mutation testing on the task's changed files. Designs a precision test for every surviving mutant. |
-| `reviewer` | Pre-Gate Review | sonnet / medium | Produces `implementation-review@1`: issues, related defect instances, shared root cause, semantic-model evidence, architecture evidence, and disposition. |
-| `exit-gate` | Adversarial Verifier | opus / high | Independently verifies criteria, tests, mutation evidence, and every defect-family disposition. Produces `verdict@1`. |
+| `reviewer` | Pre-Gate Review | sonnet / medium | Produces `implementation-review@2`: issues, sibling candidate sites, verification gaps, defect families, and structural assessments. |
+| `exit-gate` | Adversarial Verifier | opus / high | Independently verifies current code, relevant boundaries, sibling candidates, and completed checks. Produces `verdict@3`. |
 
 ---
 
@@ -75,7 +75,7 @@ flowchart LR
     Rev -.->|needs architecture| Arch["scribe/architect"]
     Rev -->|approved| Gate["exit-gate
     opus / high"]
-    Gate --> Done(["verdict@1"])
+    Gate --> Done(["verdict@3"])
 
     class Plan source
     class Recon store
@@ -90,11 +90,17 @@ Each batch runs in a fresh `implementer` context. Mutation survivors return as p
 
 ---
 
-## Output Schema
+## Output Schemas
 
-`verdict@1` — see `shared/schemas/verdict@1.json`. Produced by `exit-gate`: pass or fail, with specific blockers on failure.
+`verdict@3` — see `shared/schemas/verdict@3.json`. Produced by `exit-gate`: a scoped pass or fail with blockers, gaps, and pending checks.
 
-`implementation-review@1` — see `shared/schemas/implementation-review@1.json`. Carries workspace and batch lineage, sibling-search evidence, issues, defect families, and structural assessments.
+`implementation-review@2` — see `shared/schemas/implementation-review@2.json`. Carries lineage, sibling candidates, boundary and input-space evidence, issues, gaps, and structural assessments.
+
+`workspace-manifest@1` — see `shared/schemas/workspace-manifest@1.json`. Records detected languages, tools, capabilities, baseline state, and provenance.
+
+`implementation-result@1` — see `shared/schemas/implementation-result@1.json`. Records one batch outcome, criterion evidence, commands, changed files, gaps, and any spec or architecture escalation.
+
+`mutation-report@2` — see `shared/schemas/mutation-report@2.json`. Records the selected method, commands, cases, survivors, generated-input evidence, precision tests, gaps, and errors.
 
 The reviewer loads `shared/references/implementation-review.md`, which selects the language hazards, architecture smells, and comment standard relevant to the diff.
 
@@ -120,7 +126,7 @@ This departs from strict TDD deliberately — see [ADR-008](../../docs/adr/008-d
 
 ## Mutation Gate (per task)
 
-After implementation, `mutator` runs mutation testing scoped to the changed files — `cargo-mutants` for Rust, Stryker for TypeScript/JavaScript, detected from the workspace root.
+After implementation, `mutator` uses the project-native mutation tool when available. Otherwise it performs a safe deliberate-fault check or records the missing capability. Property, fuzz, race, integration, and boundary checks are selected when they fit the changed risk; generative checks must name their generator and oracle.
 
 For every surviving mutant, it designs a precision test that would kill it and returns those to `implementer` to write and make pass. Only when zero mutants survive — or the tool is unavailable, recorded as a gap rather than a block — does the batch move to `reviewer`.
 
@@ -139,7 +145,7 @@ Reviewer searches for the same syntax or algorithm and for different code expres
 
 ## Exit Gate
 
-`exit-gate` runs after all batches have approved reviews. It reads the spec and code independently, validates `implementation-review@1`, and verifies each recorded instance and structural disposition before returning `verdict@1`.
+`exit-gate` runs after all batches have approved reviews. It reads current code independently, validates `implementation-review@2`, derives its own sibling candidates, and verifies each structural disposition and relevant boundary before returning `verdict@3`.
 
 On fail, blockers go back to `implementer` for a targeted fix — three retries, then escalate to a human.
 
@@ -161,4 +167,4 @@ If you need any of these as real capabilities, they'd need a dedicated agent —
 
 ## Next Stage
 
-Feed `verdict@1` to **[sentinel](../sentinel/)** for standalone gate verification. Hand the accumulated `criteria_evidence` to **[courier](../courier/)** for commit, PR, changeset, and release tooling.
+Feed `verdict@3` to **[sentinel](../sentinel/)** for standalone gate verification. Hand the accumulated `criteria_evidence` to **[courier](../courier/)** for commit, PR, changeset, and release tooling.

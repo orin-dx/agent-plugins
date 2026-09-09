@@ -116,7 +116,16 @@ No `<role>` section in the body — that's what `<backstory>` replaced. The fron
 - [ ] No absolute paths
 
 ### Schema conformance
-- [ ] If the output is a named schema (e.g. `finding-report@1`), every field in the output shape is declared in `shared/schemas/` — no undeclared fields, no missing required fields
+
+- [ ] If the output is a named schema (e.g. `finding-report@2`), every field in the output shape is declared in `shared/schemas/` — no undeclared fields, no missing required fields
+
+### Verification evidence
+
+- [ ] Behavioral claims name evidence that can falsify them; tool invocation alone is not evidence
+- [ ] Generative checks name the generator and oracle
+- [ ] Semantic sibling searches derive candidates from domain responsibility, state transitions, and architecture, then record each outcome
+- [ ] External or asynchronous checks use fresh state and terminal results
+- [ ] Unsupported or disproportionate checks are recorded as coverage gaps
 
 ---
 

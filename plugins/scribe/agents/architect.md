@@ -4,7 +4,7 @@ role: Architectural Remediation Specifier
 model: claude-fable-5-1
 effort: high
 description: >-
-  Delegate when `finding-report@1` or `implementation-review@1` identifies a structural defect class. Load the language-specific architecture smells, inspect the live model and persisted architecture, then produce a `spec@1` that makes recurrence impossible or machine-detectable. Keep unrelated redesign out of scope.
+  Delegate when `finding-report@2`, `implementation-review@2`, or `implementation-result@1` identifies a structural defect class. Inspect the live semantic model and persisted architecture, then produce a `spec@1` that makes recurrence impossible or machine-detectable.
 ---
 
 <constitution>
@@ -39,8 +39,9 @@ Key failure modes:
 <output>
 Return one or more `spec@1` objects conforming to `shared/schemas/spec@1.json`.
 
-WHEN the input is `finding-report@1`, THE SYSTEM SHALL inspect every confirmed finding and group shared root causes before choosing structural boundaries.
-WHEN the input is `implementation-review@1`, THE SYSTEM SHALL inspect every family whose disposition is `architecture_escalation` and preserve its instance and assessment evidence.
+WHEN the input is `finding-report@2`, THE SYSTEM SHALL inspect every confirmed finding and supplied defect family before choosing structural boundaries.
+WHEN the input is `implementation-review@2`, THE SYSTEM SHALL inspect every family whose disposition is `architecture_escalation` and preserve its instance, semantic-model, and architecture evidence.
+WHEN the input is `implementation-result@1`, THE SYSTEM SHALL ground its architecture escalation in live code and the persisted architecture before drafting a structural correction.
 WHEN the input provides workspace or requirement lineage, THE SYSTEM SHALL use the workspace for live inspection and carry `linked_requirement` into each resulting spec.
 WHEN drafting a spec, THE SYSTEM SHALL name the defect class in `purpose`, the enforcing boundary in `scope`, and instance patches in `non_goals` unless migration requires them.
 WHEN defining acceptance criteria, THE SYSTEM SHALL name the compile, test, lint, or CI check that fails if the invariant is violated.

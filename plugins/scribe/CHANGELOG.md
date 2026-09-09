@@ -2,6 +2,15 @@
 
 — scribe
 
+## [3.3.0] - 2026-09-09
+
+### Added
+- Architecture remediation support for Python and Go structural smells.
+
+### Changed
+- `scribe:architect` consumes `finding-report@2`, `implementation-review@2`, and architecture-escalating `implementation-result@1` artifacts.
+- `scribe:gate-spec` returns `verdict@3` with verified scope, coverage gaps, and pending checks.
+
 ## [3.2.0] - 2026-09-09
 
 ### Added

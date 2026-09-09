@@ -100,12 +100,12 @@ flowchart LR
     ra([Ranger\naudit])
 
     sc2 -.->|"spec@1"| se
-    sm2 -.->|"code + verdict@1"| se
-    sm2 -.->|"implementation-review@1"| sc2
-    se -.->|"verdict@1"| co2
+    sm2 -.->|"code + verdict@3"| se
+    sm2 -.->|"implementation-review@2"| sc2
+    se -.->|"verdict@3"| co2
 
     sm2 -->|"live code"| ra
-    ra -.->|"finding-report@1"| sc2
+    ra -.->|"finding-report@2"| sc2
 
     class se,ra verify
 ```
@@ -114,13 +114,13 @@ flowchart LR
 
 *Pill-shaped nodes are cross-cutting checkpoints, not sequence stops. Solid arrows are direct handoffs; dashed arrows are verification side-channels. Ranger's input is the live codebase Smith just wrote, not a schema handoff — the one solid arrow in the second diagram.*
 
-Smith resolves scoped defect families before its exit gate. A structural family enters Scribe as `implementation-review@1`, returns through the normal spec and plan gates, and ends with an architecture-model refresh after implementation passes.
+Smith resolves scoped defect families before its exit gate. A structural family enters Scribe as `implementation-review@2`, returns through the normal spec and plan gates, and ends with an architecture-model refresh after implementation passes.
 
 **Composable:** any contiguous subset installs cleanly. Start at `scribe` if requirements come from an external tracker. End at `smith` if automated shipping tooling isn't needed. Layer `sentinel` in at any stage for an independent verification pass.
 
 **Substitutable:** any stage can be replaced by a different implementation that honours the same schema contract. A Jira plugin replacing `weaver` just needs to emit `requirement@1`.
 
-**Cross-cutting, not inline:** `sentinel`'s `plugin.json` declares `consumes: []` — nothing invokes it automatically. `exit-gate` and `exit-gate` are separate, dedicated agents that independently implement the same recon → verify → judge discipline sentinel formalizes; they do not call into sentinel's own agents. Install sentinel when you want that protocol available standalone against any artifact, including as a second opinion on top of scribe's or smith's own gate.
+**Cross-cutting, not inline:** `sentinel`'s `plugin.json` declares `consumes: []` — nothing invokes it automatically. Smith's and Ranger's exit gates independently implement the same recon → verify → judge discipline Sentinel formalizes; they do not call Sentinel's agents. Install Sentinel for a standalone second opinion.
 
 ---
 
@@ -130,17 +130,33 @@ Schemas in `shared/schemas/` are the inter-agent API surface. Rules:
 
 - **Format:** JSON Schema draft-2020-12
 - **Strict:** `additionalProperties: false` on all schemas — unknown fields are rejected at validation time
-- **Scratchpad:** every schema includes `reasoning: string`, an unconstrained chain-of-thought field that is never forwarded downstream
+- **Scratchpad:** every schema includes `reasoning: string`, a private reasoning field that is never forwarded downstream
 - **Immutable versions:** `requirement@1.json` never changes; breaking changes produce `requirement@2.json`
-- **Validation timing:** wiring time, before agent execution — not at runtime inside the agent
+- **Validation timing:** build checks validate wiring; each produced artifact validates before downstream consumption
 
-`implementation-review@1` carries workspace and batch lineage, positive or negative evidence for syntactic and semantic sibling searches, related instances, structural assessments, and disposition. Its status constraints prevent approval with unresolved work and prevent scoped-repair status from hiding an architecture escalation.
+`implementation-review@2` carries lineage, independent semantic candidate sites, boundary and input-space evidence, coverage gaps, related instances, structural assessments, and disposition. `verdict@3` separates verified scope, blockers, gaps, and pending checks.
+
+### Verification evidence model
+
+Verification is claim-driven, not tool-driven. Workflows choose available project-native checks from the language, repository capabilities, changed behavior, and failure cost.
+
+| Claim | Evidence that can support it |
+| :--- | :--- |
+| A boundary preserves behavior | An observation at the nearest executable compile, serialization, process, network, storage, render, or environment boundary |
+| Generated inputs explore the risk | A named generator plus a behavioral oracle that can reject bad output |
+| A defect family is exhausted | Candidate sites derived independently from domain responsibility, state transitions, and architecture, with an outcome for each site |
+| A fix is structurally complete | A shared root cause and an explicit decision: scoped repair, consolidation, or Scribe architecture remediation |
+| Mutable or asynchronous behavior passes | Fresh state and terminal results for every relevant started check |
+
+Unavailable or disproportionate checks become explicit coverage gaps; invoking a tool without a relevant oracle proves nothing. Rust, TypeScript/JavaScript, Python, and Go references suggest compatible tools without making one command mandatory.
+
+`mason:evaluate` tests workflow behavior with hidden-oracle fixtures. It records the fixture, route, harness, host, model, mode, roles, plugin versions, source revisions, workspace state, detections, false passes, corrections, duration, and available usage counts. Structural parity remains a build check; behavioral improvement requires comparable evidence.
 
 ---
 
 ## 5. Model and Effort Tiering
 
-Each subagent declares `model` and `effort` in its frontmatter. These are routing hints. Claude Code honours them directly; AGY applies its own model routing and ignores them.
+Each Claude/AGY source subagent declares `model` and `effort` as routing hints. Claude Code honours them directly; AGY applies its own routing. Codex uses host-selected models and native role cards, so tier intent carries across harnesses without copying model configuration.
 
 ```mermaid
 %%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}}}%%
@@ -203,7 +219,7 @@ flowchart LR
     targeted patch on blockers
     (effort escalates on retry 2)"]
 
-    Gate -->|pass| Done(["verdict@1 · pass"])
+    Gate -->|pass| Done(["verdict@3 · pass"])
     Gate -->|fail| Fix
     Fix -->|"retry ≤ 3 · updated retry_count"| Art
     Fix -->|"retry > 3"| Esc(["escalate to human"])
@@ -221,7 +237,7 @@ flowchart LR
 
 On `fail`, the orchestrator passes **only the blockers array** back to the producing agent — not the full artifact context — so it can make a targeted fix. On retry 2, the effort level escalates. After 3 retries, the circuit breaks and control passes to the human.
 
-`retry_count` is tracked inside `verdict@1` and incremented by the exit gate on each pass.
+`retry_count` is tracked inside `verdict@3` and incremented by the exit gate on each attempt.
 
 ---
 
@@ -229,7 +245,7 @@ On `fail`, the orchestrator passes **only the blockers array** back to the produ
 
 Full guide: `shared/agent-best-practices.md`. Key constraints:
 
-**5-part agent structure** — every agent defines:
+**5-part agent structure** — every Claude/AGY source agent defines:
 
 | Part | Purpose |
 | :--- | :--- |
@@ -238,6 +254,8 @@ Full guide: `shared/agent-best-practices.md`. Key constraints:
 | **Goal** | What the agent must produce and why. Intent, not steps. |
 | **Judgment** | How to know if the goal was genuinely achieved vs. output that looks like it was. Names the key failure mode. |
 | **Output** | Structured output shape, referencing a schema from `shared/schemas/` when the output flows to another agent. |
+
+Codex skills and role cards use native structures. Cross-harness parity applies to route names, artifacts, evidence, and acceptance intent—not prompt sections or delegation topology.
 
 **Cognitive mode dispatch** — agents are dispatched by the cognitive mode they require, not their pipeline position.
 - A scanner (exhaustive pattern matching, no filtering) and an adversary (default-to-skepticism, requires a concrete failing scenario) cannot share a mental mode — combining them produces an agent worse at both
@@ -287,6 +305,8 @@ The schema is the cross-harness contract. Named agents, model routing, prompt wo
 - A source change is shared only when it affects plugin identity or a versioned artifact contract.
 - A workflow change is compatible only when both harnesses preserve the intended schema, evidence, and acceptance criteria; transcript or prose identity is not required.
 - Codex may use an agent team for independent work, but a missing team capability never blocks the single-agent workflow.
+
+Repository-local Entire adapters under `.agents/skills/`, `.claude/skills/`, `.cursor/`, `.gemini/skills/`, and `.opencode/` expose session-history search across supported hosts. They are Entire-managed development integrations, not Wisp plugin sources or Codex marketplace build inputs.
 
 ---
 
@@ -372,4 +392,4 @@ CI runs the catalog JSON, native build, compatibility, drift, version, source-do
 | Agent teams are unavailable | Codex skill does not delegate | Complete the same workflow in one agent and preserve the same artifact contract |
 | Two harnesses produce different prose or reasoning | Not automatically a compatibility failure | Run [`docs/codex-behavioral-evaluation.md`](./docs/codex-behavioral-evaluation.md) and compare valid artifacts, evidence, and acceptance criteria |
 
-The compatibility fixture covers the core `requirement@1 → research-report@1 → spec@1 → plan@1` lifecycle. It proves shared schema validity, materialized schema identity, and declared handoff links; it does not prove model-equivalent judgment, tool use, or transcript content.
+The compatibility fixture covers the core `requirement@1 → research-report@1 → spec@1 → plan@1` lifecycle plus Smith's `implementation-review@2 → scribe:architect` structural escalation. It proves shared schema validity, materialized schema identity, and declared handoff links; it does not prove model-equivalent judgment, tool use, or transcript content.

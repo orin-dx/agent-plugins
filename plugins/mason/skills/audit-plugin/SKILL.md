@@ -2,7 +2,7 @@
 name: audit-plugin
 description: >-
   Audit an existing plugin against repository authoring, schema, wiring, and packaging rules. Use for plugin conformance or release-readiness checks. Return an evidence-backed pass, fail, or warning for each check without modifying files.
-version: 2.1.0
+version: 2.2.0
 ---
 
 # Mason — Audit Plugin

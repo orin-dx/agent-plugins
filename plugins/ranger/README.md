@@ -1,14 +1,14 @@
 # ranger — Adversarial Bug Hunting
 
-**Stage:** Cross-cutting · **Output:** `finding-report@1` · **Version:** 3.1.0
+**Stage:** Cross-cutting · **Output:** `finding-report@2` · **Version:** 3.2.0
 
-Adversarial bug hunting on live code, for Rust, TypeScript, and JavaScript — language is auto-detected from `Cargo.toml` or `package.json`.
+Adversarial bug hunting on live Rust, TypeScript, JavaScript, Python, and Go code.
 
 - Builds a reachability manifest first, so dead code is never scanned.
 - Sweeps live files against language-specific hazard taxonomies, optionally tracing data flow for intent-capture and error-downgrade candidates.
 - Refutes every candidate before confirming it — a finding survives only when no refutation can be constructed and a concrete failing scenario can be stated.
 - Groups related findings by shared root cause and routes structural families to `scribe:architect`.
-- Produces `finding-report@1`, then uses the exit verifier after remediation.
+- Produces `finding-report@2`, then uses the exit verifier after remediation.
 
 ---
 
@@ -79,11 +79,11 @@ flowchart LR
     (conditional)"]
     scanner --> adv[adversary]
     bt --> adv
-    adv --> out(["finding-report@1"])
+    adv --> out(["finding-report@2"])
     out -. structural family .-> arch[scribe:architect]
     out --> fix[remediation]
     fix --> gate[exit-gate]
-    gate --> verdict(["verdict@2"])
+    gate --> verdict(["verdict@3"])
 
     class ws source
     class recon store
@@ -99,13 +99,15 @@ flowchart LR
 
 `boundary-tracer` is conditional — invoked only when the scanner produces T7 (write-only fields / intent-capture discard) or T10 (error downgrade) candidates.
 
-Related confirmed findings form a possible defect family. When they share a root cause or reveal a missing domain concept or architectural constraint, pass the complete `finding-report@1` to `scribe:architect` before remediation.
+Related confirmed findings form a possible defect family. When they share a root cause or reveal a missing domain concept or architectural constraint, pass `finding-report@2` to `scribe:architect` before remediation.
 
 ---
 
-## Output Schema
+## Output Schemas
 
-`finding-report@1` — see `shared/schemas/finding-report@1.json`
+`finding-report@2` — see `shared/schemas/finding-report@2.json`
+
+The pipeline also uses `workspace-manifest@1` for reachable files, `candidate-assessment@1` for per-candidate judgments, and `verdict@3` after remediation. See their matching files in `shared/schemas/`.
 
 Each finding requires:
 
@@ -136,6 +138,8 @@ Recon inspects the workspace root automatically:
 | :--- | :--- | :--- |
 | `Cargo.toml` | Rust | `shared/references/rust-hazards.md` and/or `rust-hazards-t7-t10.md`, per each agent's scope |
 | `package.json` | TypeScript / JavaScript | `shared/references/typescript-hazards.md` and/or `typescript-hazards-t7-t10.md`, per each agent's scope |
+| `pyproject.toml`, `requirements.txt`, Python files | Python | `shared/references/python-hazards.md` and/or `python-hazards-t7-t10.md` |
+| `go.mod`, Go files | Go | `shared/references/go-hazards.md` and/or `go-hazards-t7-t10.md` |
 
 ---
 
@@ -147,12 +151,18 @@ Recon inspects the workspace root automatically:
 | `shared/references/rust-hazards-t7-t10.md` | Rust taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
 | `shared/references/typescript-hazards.md` | TypeScript taxonomies T1-T6, T8, T9, grep patterns, unhandled promise patterns | scanner (always), adversary (non-T7/T10 candidates) |
 | `shared/references/typescript-hazards-t7-t10.md` | TypeScript taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
+| `shared/references/python-hazards.md` | Python taxonomies outside T7/T10 | scanner, adversary |
+| `shared/references/python-hazards-t7-t10.md` | Python T7/T10 boundary hazards | scanner, boundary-tracer, adversary |
+| `shared/references/go-hazards.md` | Go taxonomies outside T7/T10 | scanner, adversary |
+| `shared/references/go-hazards-t7-t10.md` | Go T7/T10 boundary hazards | scanner, boundary-tracer, adversary |
 | `shared/schemas/candidate@1.json` | Scanner output shape | — |
-| `shared/schemas/finding-report@1.json` | Aggregated adversary output | — |
-| `shared/schemas/verdict@2.json` | Exit-gate verdict shape (extends verdict@1 with flagged_for_review) | — |
+| `shared/schemas/workspace-manifest@1.json` | Reachability and workspace provenance | recon → scanner and gates |
+| `shared/schemas/finding-report@2.json` | Findings plus defect-family evidence | — |
+| `shared/schemas/candidate-assessment@1.json` | Per-candidate confirmed, plausible, or dismissed judgment | adversary → caller |
+| `shared/schemas/verdict@3.json` | Scoped exit verdict with gaps and pending checks | — |
 
 ---
 
 ## Integration
 
-`finding-report@1` feeds structural defect families into **[scribe](../scribe/)**. After remediation, Ranger's exit gate returns `verdict@2` for the caller's shipping decision.
+`finding-report@2` feeds structural defect families into **[scribe](../scribe/)**. After remediation, Ranger's exit gate returns `verdict@3`.

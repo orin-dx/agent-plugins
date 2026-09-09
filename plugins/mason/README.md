@@ -1,8 +1,8 @@
 # mason — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 3.1.0
+**Stage:** Meta · **Output:** plugin artifacts and evaluations · **Version:** 3.2.0
 
-The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
+Mason scaffolds plugins, audits conformance, designs inter-agent schemas, and evaluates workflow behavior with fixed hidden-oracle fixtures.
 
 ---
 
@@ -12,8 +12,9 @@ The tool for building tools. Scaffolds new plugins, audits existing ones for eco
 - You've written a plugin and want to verify it conforms to ecosystem rules
 - You need to design a new JSON schema for a new inter-agent artifact type
 - You want to generate a single conformant subagent `.md` file for an existing plugin
+- You want a repeatable release or regression evaluation with exact plugin provenance
 
-**Invoke with:** `"Create a plugin called X that does Y"`, `"Audit the X plugin for conformance"`, `"Design a schema for an artifact that carries Z"`, `"Write a subagent for task T at opus/high tier"`
+**Invoke with:** `"Create a plugin called X that does Y"`, `"Audit the X plugin for conformance"`, `"Design a schema for an artifact that carries Z"`, `"Write a subagent for task T"`, or `"Evaluate this workflow against fixture F"`.
 
 ---
 
@@ -39,6 +40,7 @@ The tool for building tools. Scaffolds new plugins, audits existing ones for eco
 | `mason/audit-plugin` | Audits an existing plugin directory against all ecosystem conformance rules; returns structured pass/fail/warn per check | `auditor` |
 | `mason/design-schema` | Designs a new JSON Schema (draft 2020-12) for an inter-agent artifact; checks for conflicts with existing schemas | `schema-designer` |
 | `mason/scaffold-subagent` | Generates a single conformant subagent `.md` file for an existing plugin — skips plugin.json/SKILL.md/symlink | `scaffolder` (single-subagent mode) |
+| `mason/evaluate` | Runs an isolated behavioral fixture and records a provenance-complete `harness-evaluation@2` | `evaluation-runner`, `evaluation-adjudicator` |
 
 `audit-plugin` is not bare `audit` — that word is already `ranger`'s plugin-level skill name (code/bug auditing). See `shared/constitution.md`'s Skill Names rule.
 
@@ -51,12 +53,14 @@ The tool for building tools. Scaffolds new plugins, audits existing ones for eco
 | `scaffolder` | Scaffolder | sonnet / medium | Generates a complete plugin directory: `plugin.json`, `SKILL.md`, stub subagents, `shared` symlink. |
 | `auditor` | Conformance Auditor | sonnet / medium | Audits a plugin directory for ecosystem conformance across all required fields, structure rules, and authoring principles. |
 | `schema-designer` | Schema Designer | sonnet / medium | Designs a new JSON Schema for a proposed inter-agent artifact; checks for conflicts with existing schemas. |
+| `evaluation-runner` | Evaluation Runner | haiku / low | Runs public fixture input in isolation without seeing the oracle. |
+| `evaluation-adjudicator` | Evaluation Adjudicator | opus / high | Validates artifacts and seeded detections after the oracle is revealed. |
 
 ---
 
 ## Dispatch
 
-Mason is not a linear pipeline — `scaffold-plugin` and `audit-plugin` are two independent entry points, each dispatching to its own subagent:
+Mason exposes independent authoring, audit, schema, and evaluation routes. The routes with multi-stage or agent-backed flow are:
 
 ```mermaid
 %%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 36, 'rankSpacing': 56}}}%%
@@ -66,12 +70,22 @@ flowchart LR
 
     SP["mason/scaffold-plugin"] --> SC["scaffolder"]
     AP["mason/audit-plugin"] --> AU["auditor"]
+    EV["mason/evaluate"] --> ER["evaluation-runner"] --> EA["evaluation-adjudicator"]
 
-    class SP,AP skill
-    class SC,AU agent
+    class SP,AP,EV skill
+    class SC,AU,ER,EA agent
 ```
 
-Neither path feeds the other — `scaffold-plugin` produces a new plugin directory, `audit-plugin` checks an existing one. `design-schema` and `scaffold-subagent` are narrower, on-demand skills not shown here.
+The paths are independent. `design-schema` and `scaffold-subagent` are narrower, on-demand skills not shown here.
+
+---
+
+## Output Schemas
+
+- `evaluation-run@1` — immutable runner evidence captured before the hidden oracle is revealed; see `shared/schemas/evaluation-run@1.json`
+- `harness-evaluation@2` — adjudicated detections, false passes, corrections, provenance, and comparison data; see `shared/schemas/harness-evaluation@2.json`
+
+Scaffold and audit routes produce or inspect repository files rather than an inter-agent JSON artifact. `design-schema` produces the requested new versioned schema.
 
 ---
 
@@ -89,6 +103,8 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | `<load_first>` correctness | Present whenever an agent's goal implies a lookup it can't do from memory; its named reference file actually resolves |
 | Orchestration completeness | Every status an agent's own output can emit has a routing entry in its plugin's SKILL.md, or is documented as terminal |
 | Instruction economy | Direct, atomic rules; numbered procedures only when order affects correctness; length thresholds trigger review, not automatic failure |
+| Verification evidence | Claimed boundaries, sibling searches, generated inputs, external state, completion, and longitudinal comparisons carry the evidence required by the constitution; unrelated methods are not forced |
+| Cross-harness source | Native identity and skill routes match shared source; exact runtime dependencies are packaged; generated Codex output matches authored files |
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high; whole-system architectural synthesis (bounded to single-invocation-per-artifact tasks, not gates) → claude-fable-5-1/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
 | No authoring-time refs | Neither agent bodies nor `SKILL.md` reference `shared/agent-best-practices.md` at runtime — except `mason`'s own scaffolding skills, whose job is authoring agents per that guide |
@@ -132,4 +148,6 @@ mason enforces these conventions when scaffolding and auditing:
 ## References
 
 - `shared/agent-best-practices.md` — full authoring checklist (mason authors use this; subagent bodies do not reference it at runtime)
+- `shared/harness-authoring.md` — cross-harness identity, contract, workflow, and packaging boundaries
+- `shared/references/behavioral-evaluation.md` — hidden-oracle evaluation and provenance rules
 - `shared/schemas/` — existing schemas to check against when designing a new one

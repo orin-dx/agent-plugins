@@ -2,7 +2,7 @@
 name: gate
 description: >-
   Trigger this skill when the user says "verify this", "check this spec", "check this plan", "check this requirement", "check this PR", "is this done?", "review this for completeness", "does this meet the criteria?", "gate this", or "quality check" — also before stage transitions: starting implementation from a spec, shipping from an implementation, opening a PR from a branch. Applies to any stage artifact: requirements, specs, plans, implementations, PRs. Do not activate for general Q&A, code explanation, or exploratory work with no artifact boundary being crossed. The gate either clears the artifact for the next stage or returns specific, actionable blockers to the producing agent.
-version: 1.2.0
+version: 1.3.0
 ---
 
 # Sentinel Gate Skill
@@ -45,7 +45,7 @@ One skill, one three-agent pipeline, reused against whatever artifact type it's 
 
 The protocol input is: `artifact_type`, `artifact_path`, `criteria` (explicit or derived from linked spec).
 
-The protocol output is a `verdict@1` object: `pass` or `fail`, with `blockers` on failure and a `verdict_summary` for the orchestrator.
+The protocol output is `verdict@3`: a scoped pass or fail with blockers, coverage gaps, pending checks, and a short summary.
 
 **Retry behavior**: Up to 3 retries. On each failure, the specific blockers are returned to the producing agent. At retry 3, escalate to the caller — do not loop indefinitely. Track `retry_count` in the verdict.
 
@@ -54,5 +54,5 @@ The protocol output is a `verdict@1` object: `pass` or `fail`, with `blockers` o
 ---
 
 <framework_references>
-- [Verdict Schema](../../../shared/schemas/verdict@1.json)
+- [Verdict Schema](../../../shared/schemas/verdict@3.json)
 </framework_references>

@@ -33,6 +33,7 @@ Key failure modes:
 - An agent needs external context but lacks a focused `<load_first>` block.
 - An output status has no caller-facing route or terminal disposition.
 - A paragraph or list item hides multiple independent rules or repeats rationale already stated elsewhere.
+- A verifier claims a boundary, sibling search, generated-input coverage, external state, or completion without the evidence fields needed to test that claim.
 </judgment>
 
 <output>
@@ -62,4 +63,6 @@ WHEN the agent being generated needs a shared reference file or a documented wor
 WHEN the agent being generated has an output status that is not a single terminal pass/fail, THE AGENT SHALL draft a routing entry for each status in the plugin's SKILL.md (or, in single-subagent mode, report the needed routing entry in `warnings` for the caller to add) — SHALL NOT leave a status unrouted and undocumented.
 WHEN generating agent or skill instructions, THE AGENT SHALL use one direct, independently actionable rule per paragraph or list item and omit repeated rationale, filler, and process narration.
 WHEN instruction order does not affect correctness, THE AGENT SHALL state outcomes and decision criteria rather than generate a numbered procedure.
+WHEN generating a verification workflow, THE AGENT SHALL add only the evidence rules relevant to its claims: observable boundary or a gap, independent semantic candidate sites, generator and oracle for generated inputs, fresh external state, and terminal results for started work.
+WHEN generating a longitudinal evaluation workflow, THE AGENT SHALL require exact fixture, route, host, model, mode, roles, plugin versions, source revisions, and workspace state.
 </output>

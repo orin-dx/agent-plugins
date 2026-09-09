@@ -1,8 +1,8 @@
 # sentinel — Verification Gate
 
-**Stage:** Gate · **Output:** `verdict@1` · **Version:** 2.0.0
+**Stage:** Gate · **Output:** `verdict@3` · **Version:** 2.1.0
 
-One skill, one three-agent pipeline, artifact-agnostic. Point sentinel at a requirement, spec, plan, implementation, PR, changeset, or finding-report and it returns a binding `verdict@1` — pass or fail, with specific, actionable blockers on fail. Default disposition is **fail**: unverifiable criteria count as failures unless explicitly waived.
+One skill, one artifact-agnostic pipeline. Sentinel returns a scoped `verdict@3`: pass or fail, with blockers, coverage gaps, and pending checks. Unverifiable required criteria fail unless explicitly waived.
 
 Sentinel is standalone. Its `plugin.json` declares `consumes: []`, and nothing invokes it automatically. Scribe and Smith have dedicated exit gates for their own artifacts; neither calls Sentinel's agents. Install Sentinel for an on-demand independent gate against any artifact.
 
@@ -39,7 +39,7 @@ Sentinel is standalone. Its `plugin.json` declares `consumes: []`, and nothing i
 | :--- | :--- | :--- | :--- |
 | `recon` | Artifact Recon | haiku / low | Builds the verification manifest: artifact type, path, criteria to check, source files to read. No judgment. |
 | `verifier` | Verifier | sonnet / medium | Reads each source file and classifies every criterion as `verified`, `failed`, or `unverifiable`. Neutral — reports evidence only, not verdicts. |
-| `exit-gate` | Exit Gate | opus / high | Produces the final `verdict@1`. Default: fail. Unverifiable criteria are failures unless explicitly waived. |
+| `exit-gate` | Exit Gate | opus / high | Produces `verdict@3`. Default: fail. Unverifiable required criteria are failures unless explicitly waived. |
 
 ---
 
@@ -62,7 +62,7 @@ flowchart LR
     sonnet / medium"]
     Ver --> Gate["exit-gate
     opus / high"]
-    Gate --> Done(["verdict@1"])
+    Gate --> Done(["verdict@3"])
 
     class Art source
     class Recon store
@@ -77,7 +77,7 @@ Recon and verifier are deliberately separate: recon makes no judgments, verifier
 
 ## Output Schema
 
-`verdict@1` — see `shared/schemas/verdict@1.json`
+`verdict@3` — see `shared/schemas/verdict@3.json`
 
 | Field | Description |
 | :--- | :--- |
@@ -94,7 +94,7 @@ Recon and verifier are deliberately separate: recon makes no judgments, verifier
 
 On `fail`, the orchestrator returns the `blockers` array directly to the producing agent for a **targeted patch** — not a full regeneration. On retry 2, escalate to a higher-effort model. After 3 retries, escalate to the human.
 
-`retry_count` is tracked in `verdict@1` and incremented by the exit gate on each pass.
+`retry_count` is tracked in `verdict@3` and incremented by the exit gate on each attempt.
 
 ---
 

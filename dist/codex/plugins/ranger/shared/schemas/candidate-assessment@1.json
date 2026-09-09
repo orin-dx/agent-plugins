@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidate-assessment@1",
+  "title": "Candidate Assessment",
+  "description": "One adversarially assessed defect candidate before report aggregation.",
+  "type": "object",
+  "allOf": [
+    {
+      "if": {"properties": {"verdict": {"enum": ["confirmed", "plausible"]}}, "required": ["verdict"]},
+      "then": {"required": ["language", "file", "line", "severity", "description", "trigger_condition", "root_cause"]}
+    },
+    {
+      "if": {"properties": {"verdict": {"const": "dismissed"}}, "required": ["verdict"]},
+      "then": {"required": ["refutation_evidence"]}
+    }
+  ],
+  "required": ["id", "verdict", "reasoning"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "verdict": {"enum": ["confirmed", "plausible", "dismissed"]},
+    "language": {"type": "string", "minLength": 1},
+    "file": {"type": "string", "minLength": 1},
+    "line": {"type": "integer", "minimum": 1},
+    "severity": {"enum": ["critical", "high", "medium", "low"]},
+    "description": {"type": "string", "minLength": 1},
+    "trigger_condition": {"type": "string", "minLength": 1},
+    "root_cause": {"type": "string", "minLength": 1},
+    "remediation_sketch": {"type": "string", "minLength": 1},
+    "family_id": {"type": "string", "minLength": 1},
+    "refutation_evidence": {"type": "string", "minLength": 1},
+    "reasoning": {"type": "string", "description": "Private producer scratchpad; not forwarded downstream."}
+  }
+}

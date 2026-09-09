@@ -23,7 +23,7 @@ Model Context Protocol (MCP) is the cross-platform protocol for exposing tools a
 ```json
 {
   "name": "sentinel_verify",
-  "description": "Verify an artifact against its criteria. Returns a verdict@1 schema.",
+  "description": "Verify an artifact against its criteria. Returns a verdict@3 schema.",
   "inputSchema": {
     "type": "object",
     "required": ["artifact_type", "artifact_path", "criteria"],

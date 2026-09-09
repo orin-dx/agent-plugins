@@ -1,7 +1,7 @@
 {
   "name": "ranger",
-  "version": "3.1.0",
-  "description": "Find evidence-backed, reachable defects across Rust, TypeScript, and JavaScript codebases.",
+  "version": "3.2.0",
+  "description": "Find evidence-backed reachable defects across Rust, TypeScript, JavaScript, Python, and Go codebases.",
   "author": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"
@@ -9,7 +9,7 @@
   "homepage": "https://github.com/orin-dx/agent-plugins",
   "repository": "https://github.com/orin-dx/agent-plugins",
   "license": "MIT",
-  "keywords": ["bug-hunting", "audit", "security", "rust", "typescript"],
+  "keywords": ["bug-hunting", "audit", "security", "rust", "typescript", "python", "go"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Ranger",

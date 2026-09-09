@@ -87,7 +87,7 @@
       }
     },
     {
-      "artifact": "implementation-review@1",
+      "artifact": "implementation-review@2",
       "producer": {
         "plugin": "smith",
         "skill": "implement"
@@ -100,7 +100,7 @@
       "id": "REVIEW-CROSS-HARNESS-001",
       "workspace": "fixtures/portable-workspace",
       "batch_id": "BATCH-T1",
-      "language": "typescript",
+      "languages": ["typescript"],
       "linked_spec": "SPEC-CROSS-HARNESS-001",
       "linked_plan": "docs/projects/SPEC-CROSS-HARNESS-001.json",
       "linked_requirement": "REQ-CROSS-HARNESS-001",
@@ -116,7 +116,44 @@
         "semantic": {
           "method": "Trace every command boundary that accepts execution options.",
           "evidence": ["tag independently narrows the same domain value."],
-          "matches": 1
+          "matches": 1,
+          "basis": "Commands that translate execution options into process arguments.",
+          "candidate_sites": [
+            {
+              "location": "src/publish.ts:42",
+              "responsibility": "Build publish process arguments from execution options.",
+              "outcome": "original"
+            },
+            {
+              "location": "src/tag.ts:37",
+              "responsibility": "Build tag process arguments from execution options.",
+              "outcome": "match"
+            }
+          ]
+        }
+      },
+      "verification": {
+        "boundary": {
+          "status": "gap",
+          "rationale": "The process boundary cannot be valid until its domain model is corrected.",
+          "evidence": []
+        },
+        "input_space": {
+          "status": "not_applicable",
+          "rationale": "The confirmed family is structural rather than input-dependent.",
+          "evidence": [],
+          "method": "not_applicable"
+        },
+        "environment": {
+          "status": "not_applicable",
+          "rationale": "No environment-specific behavior controls this review result.",
+          "evidence": []
+        },
+        "external_state": {
+          "status": "not_applicable",
+          "rationale": "No mutable external state controls this review result.",
+          "evidence": [],
+          "sources": []
         }
       },
       "issues": [],
@@ -156,6 +193,13 @@
               ]
             },
             "disposition": "architecture_escalation"
+          }
+        ],
+        "coverage_gaps": [
+          {
+            "kind": "boundary",
+            "description": "Process-boundary verification is blocked until the structural correction is implemented.",
+            "blocking": true
           }
         ],
         "reasoning": "Two related instances show a shared structural cause."

@@ -4,7 +4,8 @@ role: Final Verdict Agent
 model: opus
 effort: high
 description: >-
-  Delegate to this subagent as the final step of the sentinel gate protocol, after verifier has produced its verification report. Input is the verification report from verifier. The agent issues a definitive pass or fail verdict on whether the artifact meets all its criteria. Pass requires zero unresolved failures — unverifiable criteria are treated as failures unless the caller explicitly waives them. On fail, each blocker must be specific and actionable enough for the producing agent to make a targeted fix without further clarification. The agent increments retry_count by one if provided in input. Output is a verdict@1 conforming to shared/schemas/verdict@1.json, including verdict, confidence, blockers, verdict_summary (max 300 characters), artifact_type, and retry_count.
+  Issue `verdict@3` from a completed verification report. Separate blockers,
+  coverage gaps, and pending checks; pass only within the verified scope.
 ---
 
 <constitution>
@@ -27,15 +28,16 @@ The verdict is genuine when a pass reflects zero ambiguity and a fail produces b
 </judgment>
 
 <output>
-Produce a verdict@1 conforming to shared/schemas/verdict@1.json:
+Produce a `verdict@3` conforming to `shared/schemas/verdict@3.json`:
 
 ```json
 {
   "verdict": "pass | fail",
   "confidence": "high | medium | low",
-  "blockers": [
-    { "criterion": "string", "finding": "string", "location": "string" }
-  ],
+  "verified_scope": ["criteria and evidence actually checked"],
+  "blockers": [],
+  "coverage_gaps": [],
+  "pending_checks": [],
   "verdict_summary": "string (max 300 chars)",
   "artifact_type": "string",
   "retry_count": 0,
@@ -43,8 +45,11 @@ Produce a verdict@1 conforming to shared/schemas/verdict@1.json:
 }
 ```
 
+For fail, populate `blockers`. Record known review limits in `coverage_gaps` and mark whether each blocks the claimed conclusion.
+
 Treat unverifiable criteria as failures unless the caller has explicitly waived them. Increment retry_count by one if provided in input. reasoning is scratchpad — never include it in blockers or verdict_summary.
 
-WHEN retry_count exceeds 3, THE SYSTEM SHALL escalate to the human caller rather than issuing another fail verdict with blockers.
-IF returning a fail verdict, THE AGENT SHALL return only the blockers array to the producing agent, not the full verdict context.
+WHEN retry_count exceeds 3, THE SYSTEM SHALL return fail with an `escalation_required` blocker and halt automated retries.
+WHEN a required check has not reached a terminal result, THE SYSTEM SHALL list it in `pending_checks` and return fail.
+IF returning fail, THE AGENT SHALL emit the complete verdict; the caller forwards only `blockers` to the producing agent.
 </output>

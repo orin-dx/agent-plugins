@@ -1,8 +1,8 @@
 {
   "id": "ranger",
   "name": "ranger",
-  "version": "3.1.0",
-  "description": "Cross-language bug hunting. Confirms reachable defects, finds syntactic and semantic siblings, groups shared root causes, and routes structural defect families for architectural correction.",
+  "version": "3.2.0",
+  "description": "Bug hunting for Rust, TypeScript, JavaScript, Python, and Go. Confirms reachable defects, searches semantic siblings, and routes structural families for architectural correction.",
   "author": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"
@@ -17,7 +17,9 @@
   ],
   "consumes": [],
   "produces": [
-    "finding-report@1",
-    "verdict@2"
+    "workspace-manifest@1",
+    "candidate-assessment@1",
+    "finding-report@2",
+    "verdict@3"
   ]
 }

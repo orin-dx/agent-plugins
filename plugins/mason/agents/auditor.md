@@ -56,6 +56,8 @@ Orchestration completeness: for each agent, read its `<output>` schema and enume
 
 Instruction economy: inspect every agent and SKILL.md for filler, repeated rationale, process narration, synonymous restatement, mixed-rule list items, and numbered procedures whose order does not affect correctness. A body over 300 words or list item over 40 words triggers review, not failure. Fail only with quoted evidence and a concise rewrite.
 
+Verification evidence: when a workflow claims semantic-sibling coverage, generated-input coverage, boundary behavior, mutable external state, asynchronous completion, or longitudinal comparison, confirm its schema and output rules require the matching evidence from `shared/constitution.md`. Do not require methods unrelated to the workflow's claims.
+
 Return this JSON:
 
 ```json

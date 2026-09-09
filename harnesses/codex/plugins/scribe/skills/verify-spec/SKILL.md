@@ -31,4 +31,4 @@ For large specs, teams may independently trace non-overlapping criterion groups 
 ## Boundaries
 
 - Do not turn a weak inference into support.
-- Do not issue `verdict@1`; `scribe:gate-spec` owns the terminal readiness decision.
+- Do not issue `verdict@3`; `scribe:gate-spec` owns the terminal readiness decision.

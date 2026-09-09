@@ -1,8 +1,8 @@
 {
   "id": "smith",
   "name": "smith",
-  "version": "2.3.0",
-  "description": "Implementation plugin. Executes plans in tested batches, reviews syntactic and semantic sibling defects, assesses shared model and architecture gaps, and verifies every criterion independently.",
+  "version": "2.4.0",
+  "description": "Implementation plugin. Executes tested plan batches, verifies risk at real boundaries, searches semantic defect siblings, and escalates shared model or architecture gaps.",
   "author": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"
@@ -20,7 +20,10 @@
     "spec@1"
   ],
   "produces": [
-    "implementation-review@1",
-    "verdict@1"
+    "workspace-manifest@1",
+    "implementation-result@1",
+    "mutation-report@2",
+    "implementation-review@2",
+    "verdict@3"
   ]
 }

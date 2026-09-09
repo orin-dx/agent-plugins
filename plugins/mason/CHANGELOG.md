@@ -2,6 +2,13 @@
 
 — mason
 
+## [3.2.0] - 2026-09-09
+
+### Added
+- `mason:evaluate`, with isolated `evaluation-run@1` execution evidence and independent adjudication, for fixed hidden-oracle behavioral fixtures.
+- `harness-evaluation@2` records exact harness, model, role, plugin version, source revision, workspace state, defect metrics, and available usage data.
+- Scaffolding and audits now generate and check evidence-depth rules only when a workflow makes the corresponding verification claim.
+
 ## [3.1.0] - 2026-09-09
 
 ### Added
