@@ -4,7 +4,7 @@ Changesets are structured records of what changed and why, used to generate rele
 
 ## The changeset@2 Schema
 
-Supersedes `changeset@1` (`shared/schemas/changeset@1.json`, still valid, now legacy) by adding required `consumer_impact` and `semver_impact`. `changeset-analyzer` produces `changeset@2` — see `shared/schemas/changeset@2.json`.
+Supersedes `changeset@1` (still valid, now legacy) by adding required `consumer_impact` and `semver_impact`. `changeset-analyzer` produces `changeset@2` — see `shared/schemas/changeset@2.json`.
 
 ```json
 {

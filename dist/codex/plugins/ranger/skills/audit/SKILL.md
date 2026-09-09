@@ -20,8 +20,11 @@ Ranger reports only defects that survive control-flow and reachability review. P
 2. Load only the matching hazard reference: `shared/references/rust-hazards.md`, `shared/references/rust-hazards-t7-t10.md`, `shared/references/typescript-hazards.md`, or `shared/references/typescript-hazards-t7-t10.md`.
 3. Emit candidates conforming to `shared/schemas/candidate@1.json` from live code only.
 4. For T7 or T10 candidates, trace field survival and record `shared/schemas/field-survival-map@1.json` before adjudicating the candidate.
-5. Trace control flow, inputs, state, and I/O to refute each candidate. A confirmed finding needs a concrete failing scenario. Use plausible only when no refutation exists but external state prevents a reachability conclusion.
-6. Return confirmed and plausible results using `shared/schemas/finding-report@1.json`. After remediation, issue `shared/schemas/verdict@2.json` with sibling-gap and verification evidence.
+5. Trace control flow, inputs, state, and I/O to refute each candidate. A confirmed finding needs a concrete failing scenario. Use plausible only when external state prevents a reachability conclusion.
+6. Aggregate confirmed and plausible results using `shared/schemas/finding-report@1.json`.
+7. Group confirmed findings that share a root cause, domain responsibility, or failure state. Search for both copied syntax and semantic equivalents.
+8. When repeated findings suggest a missing concept, state, operation, boundary, abstraction, invariant, or enforcement mechanism, route the report to `scribe:architect` before remediation.
+9. After remediation, issue `shared/schemas/verdict@2.json`. Verify each finding, syntactic and semantic siblings, compile, and tests.
 
 ## Safety and evidence
 

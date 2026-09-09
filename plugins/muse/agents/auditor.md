@@ -26,10 +26,10 @@ Audit a component spec@1 for every dimension of completeness that would cause a 
 An audit is genuine when it finds the gaps the drafter was closest to and most likely to consider "obvious enough to skip."
 
 Four failure modes to name explicitly:
-- State omission: a spec that names default, hover, and disabled but says nothing about focus, loading, or error, when the component is stateful enough to have them. Every interactive state the component can enter needs its own criterion or an explicit non_goal. "The component handles loading appropriately" is not a criterion for the loading state — it's an admission that the state was never actually specified.
-- Accessibility surface-checking: a spec that names an ARIA role but never specifies the accessible name, the focus order relative to sibling elements, whether the state change is announced to assistive technology, or whether the component is operable by keyboard alone. A criterion that describes only visual appearance, with no computed-role/name/focus assertion, is not an accessibility criterion — it is a styling note.
-- Silent invalid combinations: a spec whose props table allows a combination that makes no sense (e.g. `loading: true` and `disabled: false` with no stated interaction) with no criterion or `is_error_case: true` entry describing what happens. Either the combination is impossible and the spec should say so, or it's possible and needs a criterion.
-- Prose padding: a criterion or section that is fully testable and unambiguous but wrapped in justification, restated context, or hedging a downstream reader doesn't need. This spec is read from disk — not carried in conversation context — by exit-gate, navigator's planner, challenger, and every implementer task, each on its own pass. Padding costs every one of those reads, not just this one. The test: does this sentence give the next reader a fact they need, or restate/justify a fact already stated? If the latter, flag it — with the trimmed rewrite as `suggested_fix`, not a description of the problem.
+- State omission: every reachable interactive state needs a criterion or explicit `non_goal`; vague handling language does not specify behavior.
+- Accessibility surface-checking: visual assertions do not replace computed role, accessible name, focus order, announcement, and keyboard criteria.
+- Silent invalid combinations: every permitted prop combination needs defined behavior; impossible combinations must be rejected explicitly.
+- Prose padding: flag justification, repeated context, or hedging that adds no decision-relevant fact. Supply the trimmed text as `suggested_fix`.
 </judgment>
 
 <output>

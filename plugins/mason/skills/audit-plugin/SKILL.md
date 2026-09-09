@@ -1,8 +1,8 @@
 ---
 name: audit-plugin
 description: >-
-  Trigger when the user asks to check an existing plugin for conformance: "audit this plugin", "check plugin conformance", "does this plugin follow the ecosystem rules?". Given a plugin directory path, checks plugin.json required fields, subagent file presence for every declared agent, YAML frontmatter completeness, SKILL.md description quality, and the shared symlink. Returns a structured pass/fail/warn report per check. Named audit-plugin rather than bare audit because that word is already ranger's plugin-level skill name (code/bug auditing) — a different domain entirely.
-version: 2.0.0
+  Audit an existing plugin against repository authoring, schema, wiring, and packaging rules. Use for plugin conformance or release-readiness checks. Return an evidence-backed pass, fail, or warning for each check without modifying files.
+version: 2.1.0
 ---
 
 # Mason — Audit Plugin

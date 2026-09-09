@@ -16,11 +16,11 @@ flowchart LR
     classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:15px,font-weight:600;
 
     T1["**Tier 1 · Metadata**
-    Frontmatter description · 80–200 words
+    Concise routing description
     Always active — used by model router to match skill or subagent"]
 
     T2["**Tier 2 · Body**
-    SKILL.md or agents/*.md · under 200 words
+    Focused SKILL.md or agent instructions
     Loaded on trigger when a skill activates or agent is dispatched"]
 
     T3["**Tier 3 · References**
@@ -58,7 +58,7 @@ A plugin defaults to one skill directory named after the plugin id. IF the plugi
 
 ## 3. The Lifecycle Pipeline
 
-Ten plugins form a directed pipeline. Each stage produces a typed artifact consumed by the next.
+Ten plugins form a directed pipeline. Structured handoffs use typed artifacts; implementation and shipping also exchange verified workspace state.
 
 **The primary flow** — one direction, no side-taps:
 
@@ -75,7 +75,7 @@ flowchart LR
     mu[Muse\ncomponent spec] -->|"spec@1"| na[Navigator\nplan]
     sc -->|"spec@1"| na
     na -->|"plan@1"| sm[Smith\ncode]
-    sm -->|"changeset@2"| co[Courier\nship]
+    sm -->|"verified code"| co[Courier\nship]
     co -. iterate .-> we
 
     class we,va define
@@ -100,11 +100,11 @@ flowchart LR
     ra([Ranger\naudit])
 
     sc2 -.->|"spec@1"| se
-    sm2 -.->|"changeset@2"| se
+    sm2 -.->|"code + verdict@1"| se
+    sm2 -.->|"implementation-review@1"| sc2
     se -.->|"verdict@1"| co2
 
     sm2 -->|"live code"| ra
-    ra -.->|"finding-report@1"| co2
     ra -.->|"finding-report@1"| sc2
 
     class se,ra verify
@@ -113,6 +113,8 @@ flowchart LR
 ![Define](https://img.shields.io/badge/-Define-6366f1) ![Design](https://img.shields.io/badge/-Design-8b5cf6) ![Build](https://img.shields.io/badge/-Build-3b82f6) ![Verify](https://img.shields.io/badge/-Verify-f59e0b) ![Ship](https://img.shields.io/badge/-Ship-10b981)
 
 *Pill-shaped nodes are cross-cutting checkpoints, not sequence stops. Solid arrows are direct handoffs; dashed arrows are verification side-channels. Ranger's input is the live codebase Smith just wrote, not a schema handoff — the one solid arrow in the second diagram.*
+
+Smith resolves scoped defect families before its exit gate. A structural family enters Scribe as `implementation-review@1`, returns through the normal spec and plan gates, and ends with an architecture-model refresh after implementation passes.
 
 **Composable:** any contiguous subset installs cleanly. Start at `scribe` if requirements come from an external tracker. End at `smith` if automated shipping tooling isn't needed. Layer `sentinel` in at any stage for an independent verification pass.
 
@@ -131,6 +133,8 @@ Schemas in `shared/schemas/` are the inter-agent API surface. Rules:
 - **Scratchpad:** every schema includes `reasoning: string`, an unconstrained chain-of-thought field that is never forwarded downstream
 - **Immutable versions:** `requirement@1.json` never changes; breaking changes produce `requirement@2.json`
 - **Validation timing:** wiring time, before agent execution — not at runtime inside the agent
+
+`implementation-review@1` carries workspace and batch lineage, positive or negative evidence for syntactic and semantic sibling searches, related instances, structural assessments, and disposition. Its status constraints prevent approval with unresolved work and prevent scoped-repair status from hiding an architecture escalation.
 
 ---
 

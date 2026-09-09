@@ -39,6 +39,12 @@ Codex role impact: <role cards and skills changed, or none>
 Verification: <commands and behavioral checks>
 ```
 
+## Runtime reference packaging
+
+An exact `shared/schemas/...` or `shared/references/...` path in Codex runtime guidance declares a load dependency. Add it to the plugin's `runtime_files`; the bundle builder materializes it as a regular file.
+
+The reference-closure check follows exact paths transitively through loaded reference files. Historical prose should name an artifact without its repository path unless the running skill must open that file.
+
 ## Review questions
 
 - Does a consumer still receive a valid versioned artifact from either harness?

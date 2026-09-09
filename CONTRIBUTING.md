@@ -66,9 +66,11 @@ A plugin defaults to this single-skill layout. IF its scope covers several genui
 ### `SKILL.md`
 
 The skill prompt is what the user invokes. It should:
-- Have a frontmatter `description` (80–200 words) explaining when to activate this skill
+
+- Have a concise frontmatter `description` covering when to activate the skill, its input, its output, and key constraints
 - Describe the agent pipeline: which subagents run in what order, and what each returns
-- Reference shared schemas by name, not by file path
+- Reference shared schemas by exact relative path
+- Use the shortest direct wording that preserves each action, condition, evidence requirement, and consequence
 
 ---
 
@@ -85,9 +87,19 @@ Read `shared/agent-best-practices.md` before authoring. The hard requirements:
 
 No `<role>` section in the body — that's what `<backstory>` replaced. The frontmatter `role:` field is platform metadata (short display label for routing) and should be kept. No `success_criteria:` checklist. No filler: "your job is to", "make sure to", "please ensure".
 
+### Instruction economy
+
+- [ ] Each paragraph or list item contains one independently actionable rule
+- [ ] Sub-bullets express real branches, evidence, or attributes rather than split a long sentence cosmetically
+- [ ] Numbered steps are reserved for operations whose order affects correctness
+- [ ] Repeated rationale, process narration, filler, and synonymous restatement are removed
+- [ ] Non-obvious context appears once, at the decision it changes
+- [ ] Bodies over 300 words and list items over 40 words are reviewed, not automatically rejected
+
 ### Progressive context loading
 - [ ] Declares a `<load_first>` block naming the specific `shared/references/` file for this agent's phase
 - [ ] Does not load reference files outside its cognitive mode (scanner loads hazards, not smells)
+- [ ] For Codex, every exact `shared/` path loaded directly or transitively appears in `harnesses/codex/catalog.json`; historical mentions omit the path when runtime access is unnecessary
 
 ### EARS placement
 - [ ] EARS notation (`WHEN`, `IF`, `WHILE`, `WHERE`) used only in output contracts and never-do rules
@@ -145,11 +157,14 @@ When you add or change what an existing agent can do — a new dimension, a new 
 - [ ] Frontmatter `description` reflects the new capability
 - [ ] If the agent's output gained a new status/enum value, the plugin's `SKILL.md` names what the caller does with it — or states it's terminal
 - [ ] If a new `shared/references/*.md` file was added, it's listed in root `README.md`'s Shared References table
-- [ ] Every prose description of this agent's actual behavior — the plugin `README.md`'s Subagents table row, its Output Schema table if one exists, `SKILL.md`'s overview/dispatch/io sections — still matches what the agent does now, not what it used to do or was never actually able to do. A narrowed or corrected capability needs this checked as much as an added one; this is the exact defect class found in the delta/graph/trace fixes of 2026-08-23.
+- [ ] Every prose description still matches the agent's current behavior:
+  - Plugin README subagent and output-schema sections
+  - SKILL.md overview, dispatch, and I/O sections
+  - Narrowed or corrected capabilities, not only additions
 - [ ] Plugin `CHANGELOG.md` gets a new dated entry
 - [ ] `plugin.json` version bumped (see the Semver Decision Guide in `shared/references/changesets.md`)
 - [ ] Root `marketplace.json`'s matching plugin entry version bumped to the same value
-- [ ] `mason:scaffolder`/`mason:auditor` updated if the change introduces a new *structural* convention (a new required section, a new required check) rather than just a new capability within existing structure — see `shared/constitution.md`'s Documentation section
+- [ ] `mason:scaffolder` and `mason:auditor` reflect any new structural convention; capability-only changes need no Mason update
 
 This isn't automated. `mason:audit-plugin` checks structural conformance; it does not (yet) check that every downstream doc/version file was updated to match a capability change. Until it does, this checklist is the thing standing between "the agent works" and "the ecosystem knows the agent works."
 
@@ -157,13 +172,13 @@ This isn't automated. `mason:audit-plugin` checks structural conformance; it doe
 
 ## Engineering Invariants
 
-1. **No absolute paths** — all paths in prompts and skill files must be relative
-2. **Self-contained subagents** — each subagent prompt must be readable in isolation; no cross-subagent references
-3. **Pull, don't inject** — subagents pull `shared/references/` files themselves; the host does not pre-load them
-4. **No runtime references to `shared/agent-best-practices.md`** — authoring-time only
-5. **Abstract tool language** — keeps prompts portable across Claude Code and AGY
-6. **Conventional commits** — `feat:`, `fix:`, `docs:`, `refactor:`, `chore:` with plugin scope where applicable
-7. **Clean writing** — no AI filler, no marketing language, no ALL CAPS except for genuine danger warnings
+- **No absolute paths:** prompt and skill paths are relative.
+- **Self-contained subagents:** each prompt is readable in isolation and has no dependency on another agent's private prompt.
+- **Pull, don't inject:** subagents load `shared/references/` on demand; the host does not preload them.
+- **Authoring-only guidance:** never load `shared/agent-best-practices.md` at runtime.
+- **Abstract tool language:** keep prompts portable across harnesses.
+- **Conventional commits:** use the applicable type and plugin scope.
+- **Clean writing:** omit AI filler, marketing language, and non-warning ALL CAPS.
 
 ---
 

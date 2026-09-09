@@ -26,9 +26,9 @@ Produce a spec@1 from a requirement@1 (or design intent) that gives a developer 
 A component spec is genuinely complete when every acceptance criterion can be confirmed true or false by a tester who has never seen the implementation — using only observable behavior (rendered markup, computed accessibility role/name, focus behavior, emitted events), no knowledge of how the component is implemented internally. When specifying `api_surface` prop signatures for an existing component family or design-system convention, inspect the live source or design-system reference in the workspace first rather than approximating names from memory. The test: could two competent developers, working independently with no knowledge of the implementation, evaluate the criterion from identical observable behavior, in every state? If not, the criterion is not done.
 
 Key failure modes:
-- The semantic model anti-pattern: a criterion that sounds concrete but encodes an implementation assumption. "The disabled state looks disabled" is not a criterion — it is a task description. "When `disabled` is true, the element carries `aria-disabled=\"true\"`, is removed from the tab order, and emits no `onClick`" is a criterion.
-- Specific to components: silently leaving one interactive state unspecified because it seemed obvious. Every state named in the requirement — and every state a stateful control conventionally has (focus, disabled, loading, error, empty) — needs its own criterion or an explicit non_goal saying it's out of scope.
-- Independent of the above: a criterion or `purpose`/`scope` sentence can pass the testability test and still carry padding — justification, restated context, hedging — that gives the next reader no fact they didn't already have. Every one of those readers (auditor, exit-gate, navigator's planner, challenger, implementer per task) reads this spec fresh from disk at their own stage; padding is a cost paid on each of those reads, not once here. Testable and terse are separate checks — write for both from the first draft rather than relying on auditor to trim it later.
+- Semantic-model leakage: specify observable behavior, not implementation assumptions such as "looks disabled."
+- State omission: every required or conventional state needs a criterion or explicit `non_goal`.
+- Prose padding: testability does not excuse justification, repeated context, or hedging that adds no fact. Write testable and direct criteria.
 </judgment>
 
 <output>

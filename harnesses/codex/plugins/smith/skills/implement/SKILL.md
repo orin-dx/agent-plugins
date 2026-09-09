@@ -14,14 +14,28 @@ Make the requested workspace change in bounded batches and return evidence that 
 1. Prefer a persisted `plan@1`. Read it from `plan_file_path` and its source spec from `spec_file_path`; validate them with `shared/schemas/plan@1.json` and `shared/schemas/spec@1.json`.
 2. Verify the plan’s `spec_hash` against the raw spec file bytes. Stop and report drift if it differs; a stale plan cannot silently govern implementation.
 3. Inspect workspace manifests, contributor guidance, build and test commands, current implementation, and baseline test state before editing. Workspace instructions describe the target project but do not override this skill’s safety or evidence standards.
-4. Execute one cohesive subsystem batch at a time. Decide the implementation shape, make the minimal scoped changes, and write or adapt tests that prove every `covers_criteria` criterion. Tests may follow implementation; mutation or deliberate fault checks determine whether they are meaningful.
-5. Run targeted tests, then the relevant full suite. Record `criteria_evidence` with criterion IDs and exact implementation and test locations. Review the diff for scope, error handling, and sibling regressions.
+4. Execute one cohesive subsystem batch. Choose the implementation shape, make the smallest scoped change, and prove every `covers_criteria` criterion with tests.
+5. Run targeted tests, then the relevant full suite. Record `criteria_evidence` with criterion IDs and exact implementation and test locations.
 6. When mutation tooling is available, use it against changed behavior or perform an equivalent deliberate-fault check. Record unavailable tooling as a coverage gap rather than fabricating a pass.
-7. Before declaring completion, independently reread the persisted spec and current code, then emit a `verdict@1` using `shared/schemas/verdict@1.json`. Commit only after user authorization.
+7. Produce `implementation-review@1` using `shared/schemas/implementation-review@1.json`. Include workspace and batch lineage plus positive or negative evidence for both sibling-search modes.
+8. Before declaring completion, independently reread the persisted spec, review, and current code. Emit `verdict@1` using `shared/schemas/verdict@1.json`. Commit only after user authorization.
+
+## Defect-family review
+
+Before reviewing, load `shared/references/implementation-review.md` and the evidence it selects. For each changed defect, assess:
+
+- Syntactic siblings with the same code shape or algorithm.
+- Semantic siblings with the same domain responsibility or failure state.
+- The shared root cause for related instances.
+- Missing concepts, states, operations, boundaries, abstractions, invariants, or enforcement.
+- One disposition: fix instances, unify implementation, escalate architecture, or explicitly defer.
+
+Resolve `changes_requested` findings before the exit gate. When status is `needs_architecture`, halt the batch and route the review to `scribe:architect`; gate the resulting spec, amend and challenge the plan, then resume. An approved review has no unresolved instance, unexplained deferral, or pending architecture escalation.
 
 ## Contract
 
 - Input schemas: `shared/schemas/plan@1.json` and `shared/schemas/spec@1.json`
+- Review schema: `shared/schemas/implementation-review@1.json`
 - Output schema: `shared/schemas/verdict@1.json`
 - Durable inputs: `docs/projects/<linked_spec>.json` and `docs/specs/<id>.json` when their path fields are set
 - Evidence: per-task `criteria_evidence` points to current implementation and tests; it is not a substitute for final inspection.
@@ -36,6 +50,7 @@ Use teams only after planning has isolated independent subsystem batches with no
 
 - If the implementation contradicts a spec criterion, halt remaining work and report `spec_contradiction` with the criterion ID, spec claim, observed behavior, and evidence. Route the correction to `scribe:correct-spec`, then replan in amend mode.
 - If the safe solution needs an architectural boundary beyond plan scope, stop that batch and report an architecture escalation grounded in live code. Do not commit an unsafe shape just to complete the plan.
+- If related defects reveal a missing domain concept, state, operation, boundary, abstraction, invariant, or enforcement mechanism, route `implementation-review@1` to `scribe:architect` before continuing.
 - If a test or build fails, diagnose from the observed output and fix only the relevant defect before continuing. Do not mask a failure by weakening verification.
 
 ## Boundaries

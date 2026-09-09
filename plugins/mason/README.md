@@ -1,6 +1,6 @@
 # mason — Plugin Authoring
 
-**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 3.0.1
+**Stage:** Meta · **Output:** conformant plugin directory · **Version:** 3.1.0
 
 The tool for building tools. Scaffolds new plugins, audits existing ones for ecosystem conformance, and designs inter-agent JSON schema contracts. Output from `scaffolder` is a ready-to-install plugin directory — `plugin.json`, `SKILL.md`, stub subagents, and the `shared` symlink already wired.
 
@@ -84,10 +84,11 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | Manifest fields | `plugin.json` has all required fields: `id`, `name`, `version`, `description`, `author`, `skills`, `agents` — checked by running `scripts/check-versions.sh` and reading this plugin's own result, not re-derived |
 | Skill file | `skills/<id>/SKILL.md` exists with valid YAML frontmatter and a `description` trigger string |
 | Agent files | All agents listed in `plugin.json` have a corresponding `.md` file |
-| Agent descriptions | 80–200 words each; start with "Delegate to this subagent when…" |
+| Agent descriptions | Shortest complete routing text; state trigger, input, output, and key constraints |
 | 5-part body structure | Agent body has: constitution (byte-identical to the rest of the ecosystem), backstory, goal, judgment, output, in that order, with an optional `<load_first>` immediately after constitution — no success_criteria, no role sections, EARS only in constitution/output |
 | `<load_first>` correctness | Present whenever an agent's goal implies a lookup it can't do from memory; its named reference file actually resolves |
 | Orchestration completeness | Every status an agent's own output can emit has a routing entry in its plugin's SKILL.md, or is documented as terminal |
+| Instruction economy | Direct, atomic rules; numbered procedures only when order affects correctness; length thresholds trigger review, not automatic failure |
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high; whole-system architectural synthesis (bounded to single-invocation-per-artifact tasks, not gates) → claude-fable-5-1/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
 | No authoring-time refs | Neither agent bodies nor `SKILL.md` reference `shared/agent-best-practices.md` at runtime — except `mason`'s own scaffolding skills, whose job is authoring agents per that guide |
@@ -121,9 +122,10 @@ If a plugin's scope later grows to cover several genuinely independent, heteroge
 mason enforces these conventions when scaffolding and auditing:
 
 - **Pull over inject** — agents receive a workspace path and a goal; they discover what they need via tools
-- **Goal over procedure** — prompts express the desired outcome, not step-by-step scripts
-- **Minimum viable prompt** — body target under 200 words; role + goal + output shape + a few heuristics
-- **Self-contained** — prompts run identically on Claude Code and AGY; no runtime references to `shared/` in bodies (except `shared/references/*.md` resources)
+- **Goal over procedure** — use decision criteria for judgment; number only order-dependent operations
+- **Minimum viable prompt** — include the mission, evidence, output contract, and necessary constraints; omit padding
+- **Instruction economy** — one direct rule per paragraph or list item; preserve decision-relevant context and remove the rest
+- **Declared context** — runtime references and schemas are explicit, focused, and packaged for each harness
 
 ---
 

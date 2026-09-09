@@ -1,13 +1,13 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "wisp-plugins",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Wisp Plugins marketplace for AGY and Claude Code, published by Orin DX",
   "plugins": [
     {
       "id": "mason",
       "name": "mason",
-      "version": "3.0.1",
+      "version": "3.1.0",
       "path": "./plugins/mason",
       "description": "Meta-plugin for scaffolding and auditing plugins, skills, and subagents. Generates plugin directory structure, validates conformance to ecosystem schemas, and designs shared schema contracts. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent.",
       "supersedes": "agent-plugin-builder"
@@ -15,7 +15,7 @@
     {
       "id": "ranger",
       "name": "ranger",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "path": "./plugins/ranger",
       "description": "Cross-language bug hunting plugin. Finds real bugs in live code through recon (workspace manifest), scanning (hazard taxonomies), adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/.",
       "supersedes": [
@@ -48,7 +48,7 @@
     {
       "id": "scribe",
       "name": "scribe",
-      "version": "3.1.0",
+      "version": "3.2.0",
       "path": "./plugins/scribe",
       "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Checks specs against a persisted whole-system architecture model. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, audit-architecture, gate-spec, correct-spec, architect."
     },
@@ -69,14 +69,14 @@
     {
       "id": "smith",
       "name": "smith",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "path": "./plugins/smith",
       "description": "Implementation plugin. Executes plans by designing the approach, implementing, and writing comprehensive tests proving each acceptance criterion \u2014 verified by mutation testing, not a write-test-first mandate. The plan's code is a baseline implementer may improve on in shape, not scope. Produces committed, tested code verified by the sentinel exit gate."
     },
     {
       "id": "courier",
       "name": "courier",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "path": "./plugins/courier",
       "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, changeset, receive-feedback, post-review, release."
     }

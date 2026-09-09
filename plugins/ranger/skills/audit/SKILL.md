@@ -1,65 +1,53 @@
 ---
 name: audit
 description: >-
-  Trigger this skill when the user asks to perform a bug hunt, code audit, find bugs, security audit, defect scan, vulnerability scan, code review for bugs, or asks "what's wrong with this code." Activate for any codebase language — Rust, TypeScript, or JavaScript. 5-phase pipeline: (1) recon builds a verified module manifest and detects the primary language; (2) scanner reads language-specific hazard taxonomies and emits candidates in live files only; (3) boundary-tracer (conditional) traces field survival for T7/T10 candidates; (4) adversary refutes each candidate by tracing control flow — unrebutted candidates survive as confirmed (concrete failing scenario stated) or plausible (no refutation, but reachability depends on state outside the code); (5) exit-gate re-reads code from scratch, verifies confirmed findings are resolved, checks sibling gaps, confirms compile/tests pass, carries plausible findings forward for human review without blocking on them, and escalates after 3 failed retries. Never reports bugs in dead or unreachable code. Output follows finding-report@1.
-version: 2.2.1
+  Activate for bug hunts, security audits, suspected defects, or post-remediation checks in Rust, TypeScript, or JavaScript. Build a live-code manifest, scan the matching hazard taxonomy, trace boundary fields when required, and try to refute every candidate. Report only reachable confirmed or plausible defects. Group confirmed findings by shared root cause; when repeated defects suggest a missing domain concept or architectural constraint, route the report to `scribe:architect` before remediation. Verify fixes, syntactic siblings, semantic siblings, compilation, and tests before closing.
+version: 2.3.0
 ---
 
-# ranger — Cross-Language Bug-Hunting Skill
+# Ranger — Cross-Language Bug Hunting
 
-## How It Works
+## Modes
 
-One skill, one fixed 5-phase pipeline (recon → scanner → boundary-tracer [conditional] → adversary → exit-gate). What changes is which part of the request drives it:
-
-- **Full sweep** — no category or candidate named: every hazard taxonomy gets scanned.
-- **Targeted scan** — the request names one hazard category (e.g. "unhandled promises"): the same pipeline runs, scoped to that category.
-- **Verify one candidate** — the request hands ranger an already-identified bug: adversary runs directly against it, skipping the sweep.
-- **Post-remediation check** — the request asks whether prior findings are resolved: exit-gate re-reads the code from scratch and confirms.
-
-There is no `ranger/scan` or `ranger/verify` to invoke separately — one skill directory (`skills/audit/`), the request itself determines which phase does the work.
-
----
+- Full sweep: scan every hazard taxonomy.
+- Targeted scan: scan the named category.
+- Candidate verification: send the supplied candidate directly to adversary.
+- Post-remediation check: run exit-gate against prior findings.
 
 ## Pipeline
 
+```text
+workspace → recon → scanner → [boundary-tracer] → adversary → finding-report@1 → exit-gate
 ```
-workspace → recon → scanner → [boundary-tracer?] → adversary → exit-gate → finding-report@1
-```
 
-1. **Recon** — builds verified manifest: live files, dead files, entry points, language.
-2. **Scan** — loads language-specific hazard reference, runs grep patterns against live files only, emits candidate@1 list.
-3. **Boundary Tracer** *(conditional)* — traces field survival for T7 and T10 candidates. Skipped for all other taxonomies.
-4. **Adversary** — reads actual code, traces control flow, and refutes candidates. Batched by crate/module to evaluate multiple candidate signals in one pass, minimizing subagent overhead. Confirms when a concrete failing scenario can be stated; emits plausible when no refutation exists but reachability depends on state outside the code (config, an external caller, environment).
-5. **Exit Gate** — after remediation, re-reads code from scratch, checks all confirmed findings are gone, scans for sibling gaps, verifies compile and tests. Plausible findings pass through to the verdict for human review, never as remediation targets. Escalates to human when retry_count exceeds 3.
+1. `recon` inventories live files, entry points, and language. Dead code leaves the pipeline.
+2. `scanner` loads the matching hazard reference and emits `candidate@1` without judgment.
+3. `boundary-tracer` produces `field-survival-map@1` for T7 and T10 candidates.
+4. `adversary` handles one candidate per invocation. It confirms only a reachable failing scenario; external uncertainty produces `plausible`.
+5. The caller aggregates findings into `finding-report@1` and evaluates the defect-family route below.
+6. After remediation, `exit-gate` verifies findings, related instances, compilation, and tests; it emits `verdict@2`.
 
----
+## Defect-family route
 
-## Dispatch Matrix
+Treat confirmed findings with the same root cause, domain responsibility, or failure state as one possible defect family. Search beyond copied syntax: equivalent behavior may use different names, control flow, or language.
 
-| Agent | Mode | Model / Effort | Loads | Input → Output |
-| :--- | :--- | :--- | :--- | :--- |
-| `recon` | Workspace recon | haiku / low | — | workspace path → live/dead manifest + language |
-| `scanner` | Pattern matching | sonnet / medium | rust-hazards.md (+ rust-hazards-t7-t10.md for a full scan) or the TypeScript equivalents | manifest → candidate@1 list |
-| `boundary-tracer` | Data flow tracing | sonnet / medium | rust-hazards-t7-t10.md or typescript-hazards-t7-t10.md — its entire scope | T7/T10 candidate → field survival map. Conditional. |
-| `adversary` | Adversarial reasoning | opus / high | whichever file has the candidate's one taxonomy — never both | batched candidate@1 list → finding-report@1 entries or dismissals |
-| `exit-gate` | Exit verification | opus / high | — | finding-report@1 → verdict@2 |
+When a family suggests a missing concept, state, operation, boundary, abstraction, invariant, or enforcement mechanism, pass the complete `finding-report@1` to `scribe:architect` before remediation. Scribe inspects the semantic model and architecture, then specifies the smallest enforceable correction. Local or unrelated findings remain ordinary remediation work.
 
----
+## Dispatch
 
-## Language Detection
+| Agent | Mode | Tier | Input → output |
+| :--- | :--- | :--- | :--- |
+| `recon` | Enumeration | haiku / low | workspace → live/dead manifest |
+| `scanner` | Pattern matching | sonnet / medium | manifest → `candidate@1` |
+| `boundary-tracer` | Data-flow tracing | sonnet / medium | T7/T10 candidate → `field-survival-map@1` |
+| `adversary` | Adversarial judgment | opus / high | one candidate → finding or dismissal |
+| `exit-gate` | Binding verification | opus / high | `finding-report@1` → `verdict@2` |
 
-Recon inspects the workspace root:
-- `Cargo.toml` present → language: `rust` → agents load `shared/references/rust-hazards.md` and/or `rust-hazards-t7-t10.md`, per each agent's own scope
-- `package.json` present → language: `typescript` or `javascript` → agents load `shared/references/typescript-hazards.md` and/or `typescript-hazards-t7-t10.md`, per each agent's own scope
+## Contracts
 
----
+- Candidates: `shared/schemas/candidate@1.json`
+- Boundary evidence: `shared/schemas/field-survival-map@1.json`
+- Findings: `shared/schemas/finding-report@1.json`
+- Exit verdict: `shared/schemas/verdict@2.json`
 
-## Dead Code Rule
-
-Ranger ONLY reports bugs in live, reachable code. Any file not traceable from an entry point is dead and excluded from all scanning and adversarial phases. This is enforced by the recon manifest.
-
----
-
-## Output
-
-All confirmed findings conform to the `finding-report@1` schema (`shared/schemas/finding-report@1.json`). The exit-gate verdict conforms to `verdict@2` (`shared/schemas/verdict@2.json`), which extends `verdict@1` with the non-blocking `flagged_for_review` channel.
+Plausible findings pass to `flagged_for_review`; they never become remediation blockers without confirmation.

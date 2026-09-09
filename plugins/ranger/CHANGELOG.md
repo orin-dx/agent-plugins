@@ -2,6 +2,12 @@
 
 — ranger
 
+## [3.1.0] - 2026-09-09
+
+### Added
+- Defect-family routing groups confirmed findings by shared root cause or domain behavior and sends structural families to `scribe:architect` before remediation.
+- Exit verification now searches syntactic and semantic siblings across live modules and requires structural assessment for repeated families.
+
 ## [3.0.0] - 2026-08-27
 
 ### Changed

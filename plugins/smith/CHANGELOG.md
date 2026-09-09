@@ -2,6 +2,21 @@
 
 — smith
 
+## [2.3.0] - 2026-09-09
+
+### Added
+- `implementation-review@1` replaces free-text sibling gaps with related instances, shared root cause, semantic-model evidence, architecture evidence, and an explicit disposition.
+- Reviewer searches syntactic and semantic siblings. Scoped families return for repair or unification; structural families route to `scribe:architect`.
+- A phase-specific review reference preserves language-hazard, architecture-smell, and comment checks through progressive loading.
+- Reviews carry workspace, batch, requirement, spec, and plan lineage plus positive or negative evidence for both sibling searches.
+- Schema rules keep review status consistent with must-fix issues, unresolved instances, and architecture escalations.
+
+### Changed
+- Exit-gate independently verifies every defect-family instance and disposition.
+
+### Fixed
+- Implementer now commits only when the caller records explicit user authorization, matching Smith's orchestration boundary.
+
 ## [2.2.0] - 2026-09-01
 
 ### Changed

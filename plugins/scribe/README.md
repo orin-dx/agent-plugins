@@ -1,12 +1,12 @@
 # scribe — Specification
 
-**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.1.0
+**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.2.0
 
 Turns requirements into unambiguous, testable specs a developer can implement without a single clarifying question — and keeps them that way after implementation starts.
 
 - **Drafts, audits, and gates** specs against that standard; an adversarial exit gate enforces it, default disposition fail
 - **Checks whole-system architectural fit** against a persisted architecture model before a spec reaches the gate — not just internal consistency
-- **Designs structural remediation specs** from ranger's defect-class findings
+- **Designs structural remediation specs** from Ranger findings or Smith implementation reviews
 - **Detects drift** between a gated spec and the live codebase
 - **Revises a gated spec** when implementation reveals it was wrong
 
@@ -23,7 +23,7 @@ Eight independently-triggered skills, not a linear pipeline — pick the one tha
 - You want to audit a spec for vague criteria, missing error cases, or unverifiable claims
 - You want to check whether a spec fits the codebase's actual module boundaries, canonical abstractions, and invariants — not just whether it's internally consistent
 - You need a binding pass/fail gate on a spec before it enters planning
-- ranger has returned a `finding-report@1` and the defect class requires a structural fix, not a patch
+- Ranger returned `finding-report@1` or Smith returned `implementation-review@1` with a structural defect family
 - You want to check whether the live codebase still matches a spec gated weeks or months ago
 - implementer reported that a criterion contradicts observed system behavior and the spec itself needs correcting
 
@@ -56,7 +56,7 @@ Eight independently-triggered skills, not a linear pipeline — pick the one tha
 | `scribe/audit-architecture` | Checks a spec against the workspace's persisted architecture model — boundary violations, competing abstractions, invariant conflicts; builds/refreshes the model on demand | `arch-auditor` |
 | `scribe/gate-spec` | Binding pass/fail verdict before the spec enters planning; writes the passed spec to disk | `exit-gate` |
 | `scribe/correct-spec` | Revises a previously gated spec after implementer reports a criterion contradicts observed system behavior | `drafter` (correction mode) |
-| `scribe/architect` | Produces a structural remediation `spec@1` from a `finding-report@1` — eliminates the defect class, not the instances | `architect` |
+| `scribe/architect` | Produces a structural `spec@1` from `finding-report@1` or `implementation-review@1` | `architect` |
 
 `audit-spec` and `gate-spec` are not bare `audit`/`gate` — those words are already taken by `ranger` and `sentinel`'s own plugin-level skills. See `shared/constitution.md`'s Skill Names rule.
 
@@ -72,7 +72,7 @@ Eight independently-triggered skills, not a linear pipeline — pick the one tha
 | `auditor` | Auditor | sonnet / medium | Adversarially reviews the spec for vague criteria, missing error cases, ambiguous language, incomplete sections, unnecessary prose, and fields that cross into another spec (persisted, serialized, or transmitted) without a round-trip guarantee on the far side. |
 | `arch-auditor` | System Architecture Auditor | claude-fable-5-1 / high | Checks a spec against the workspace's persisted `arch-model@1` for boundary violations, competing abstractions, and invariant conflicts — system scope, not spec scope. Also builds/refreshes the model itself in build mode. |
 | `exit-gate` | Exit Gate | opus / high | Binding pass/fail verdict before the spec enters planning. Default disposition: fail. |
-| `architect` | Architectural Remediator | claude-fable-5-1 / high | Takes a `finding-report@1` from ranger and produces a `spec@1` for the structural fix that eliminates the defect class. Reactive counterpart to `arch-auditor`. |
+| `architect` | Architectural Remediator | claude-fable-5-1 / high | Uses repeated defects, semantic-model evidence, and architecture evidence to specify the smallest enforceable structural correction. |
 
 ---
 
@@ -123,16 +123,17 @@ spec_file_path + criterion_id + contradiction report
   → corrected spec@1 → planner (amend mode) → smith resumes
 ```
 
-**Architectural remediation pipeline (invoked after ranger):**
+**Architectural remediation pipeline:**
 ```
-finding-report@1
+finding-report@1 or implementation-review@1
   → scribe/architect (architect)
-  → scribe/gate-spec (exit-gate)
+  → scribe/verify-spec → scribe/audit-spec → scribe/audit-architecture → scribe/gate-spec
   → spec@1 (architectural)
   → navigator → smith
+  → scribe/audit-architecture (refresh model)
 ```
 
-`scribe/verify-spec` checks draft specs against their source artifacts pre-implementation — it does not detect drift after code exists; that is `scribe/spec-drift`'s job. `scribe/audit-spec` checks a spec on its own terms; `scribe/audit-architecture` checks it against the rest of the system — a spec can pass the first and still fail the second. `scribe/architect` is not part of the standard drafting pipeline: it is invoked when ranger returns a finding report and the root cause is structural.
+`scribe/verify-spec` checks source grounding; `audit-spec` checks internal quality; `audit-architecture` checks system fit. `scribe/architect` loads `architecture-remediation.md` for the persisted-model location and language smells. After Smith verifies the structural change, `audit-architecture` refreshes the model with the new boundary and invariant.
 
 ---
 
@@ -176,4 +177,4 @@ On fail, specific blockers are returned to `scribe/draft-spec` or `scribe/archit
 
 Feed `spec@1` to **[navigator](../navigator/)** (implementation planning) or run it through **[sentinel](../sentinel/)** for standalone verification against an existing implementation.
 
-When **[ranger](../ranger/)** produces a `finding-report@1`, feed it to `scribe/architect` to design the structural remediation before returning to navigator.
+Feed structural `finding-report@1` or `implementation-review@1` artifacts to `scribe/architect` before returning to Navigator.

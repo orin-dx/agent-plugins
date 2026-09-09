@@ -2,6 +2,14 @@
 
 — scribe
 
+## [3.2.0] - 2026-09-09
+
+### Added
+- `scribe:architect` now consumes Smith's `implementation-review@1` as well as Ranger's `finding-report@1`.
+- Architectural remediation loads the persisted model location and language smells through one phase reference, then uses defect-family evidence to choose the smallest enforceable correction.
+- Architect uses review workspace lineage for live inspection and carries requirement lineage into the structural spec.
+- After Smith verifies a structural remediation, `scribe:audit-architecture` refreshes the persisted model with the new boundary and invariant.
+
 ## [3.1.0] - 2026-09-02
 
 ### Added

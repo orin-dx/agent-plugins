@@ -1,8 +1,8 @@
 {
   "id": "ranger",
   "name": "ranger",
-  "version": "3.0.0",
-  "description": "Cross-language bug hunting. Finds real bugs in live code through recon, hazard scanning, adversarial verification, and exit-gate verdict. Language-specific heuristics loaded at runtime from shared/references/. Supersedes bug-hunter-rust and bug-hunter-ts.",
+  "version": "3.1.0",
+  "description": "Cross-language bug hunting. Confirms reachable defects, finds syntactic and semantic siblings, groups shared root causes, and routes structural defect families for architectural correction.",
   "author": {
     "name": "Gabriel Castro",
     "email": "gabe@techworx.dev"

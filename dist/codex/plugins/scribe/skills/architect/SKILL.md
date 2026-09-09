@@ -1,25 +1,25 @@
 ---
 name: architect
-description: Specify a structural correction for a confirmed defect class when local patches cannot make the class impossible. Use after a `finding-report@1` reveals a boundary, type, or abstraction failure.
+description: Specify a structural correction when `finding-report@1` or `implementation-review@1` reveals a recurring defect class, missing domain model, or architectural gap.
 ---
 
 # Specify a structural correction
 
 ## Outcome
 
-Turn a confirmed defect class into a `spec@1` that changes the relevant type, API, or architectural boundary rather than documenting a fragile patch pattern.
+Turn a confirmed defect class into a `spec@1` that makes recurrence impossible or machine-detectable.
 
-## Workflow
+## Decision standard
 
-1. Validate the finding report with `shared/schemas/finding-report@1.json` and inspect cited live code, trigger conditions, and root cause.
-2. Determine whether a structural constraint can prevent recurrence: canonical type, interface boundary, ownership rule, dependency direction, or enforceable invariant.
-3. Draft a `spec@1` using `shared/schemas/spec@1.json`. Write acceptance criteria that prove the defect class is unrepresentable or rejected, including migration and error behavior where needed.
-4. State non-goals so the structural correction does not become an unrelated redesign.
-5. Route the draft through `scribe:verify-spec`, `scribe:audit-spec`, `scribe:audit-architecture`, and `scribe:gate-spec` before it reaches planning.
+Validate the input against `shared/schemas/finding-report@1.json` or `shared/schemas/implementation-review@1.json`. Load `shared/references/architecture-remediation.md`, then the model and language evidence it selects.
+
+Choose the smallest canonical type, domain operation, interface boundary, ownership rule, dependency direction, or invariant that prevents recurrence. Produce one `spec@1` per structural boundary using `shared/schemas/spec@1.json`. Each criterion must be enforceable by compilation, test, lint, or CI and cover required migration or error behavior.
+
+Route completed specs through `scribe:verify-spec`, `scribe:audit-spec`, `scribe:audit-architecture`, and `scribe:gate-spec` in that order. After Navigator and Smith complete the structural change, run `scribe:audit-architecture` in refresh mode.
 
 ## Contract
 
-- Input schema: `shared/schemas/finding-report@1.json`
+- Input schemas: `shared/schemas/finding-report@1.json` and `shared/schemas/implementation-review@1.json`
 - Output schema: `shared/schemas/spec@1.json`
 - Optional model evidence: `shared/schemas/arch-model@1.json`
 - Persistence after a pass: `docs/specs/<id>.json`

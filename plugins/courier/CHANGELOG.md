@@ -2,6 +2,11 @@
 
 — courier
 
+## [3.0.1] - 2026-09-09
+
+### Fixed
+- Codex packaging now includes the voice guide loaded by Courier's runtime changeset guidance.
+
 ## [3.0.0] - 2026-08-27
 
 ### Changed
