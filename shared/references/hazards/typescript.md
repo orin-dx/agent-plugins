@@ -1,6 +1,6 @@
 # TypeScript and JavaScript Hazard Reference
 
-Patterns are leads, not findings. Confirm a reachable bad outcome in the target runtime and account for framework behavior. Use `typescript-hazards-t7-t10.md` for boundary taxonomies T7 and T10.
+Patterns are leads, not findings. Confirm a reachable bad outcome in the target runtime and account for framework behavior. Use `shared/references/hazards/typescript-boundaries.md` for boundary taxonomies T7 and T10.
 
 ## T8 · False-success mutation
 

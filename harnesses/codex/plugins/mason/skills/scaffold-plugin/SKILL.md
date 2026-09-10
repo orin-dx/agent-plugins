@@ -23,6 +23,7 @@ Establish:
 - Which operations require fixed order; express other work through outcomes and decision criteria.
 - Which verification claims need boundary, semantic-candidate, generator/oracle, fresh-state, completion, or evaluation-provenance evidence. Do not add unrelated methods.
 - Which runtime references need outcome, applicability, evidence, refutation, and disposition guidance. Do not universalize one codebase's preference or omit a named language or platform.
+- Which cognitive concern owns each runtime reference. Use the language as the filename only when its evidence is language-specific; keep human indexes out of runtime load paths.
 
 ## Build order
 

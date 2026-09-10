@@ -16,7 +16,7 @@ No subagent. Orchestration only: assemble the exact comment/review body and targ
 </dispatch>
 
 <references>
-`shared/references/github.md` — `gh` CLI commands for posting reviews and comments.
+`shared/references/delivery/github.md` — `gh` CLI commands for posting reviews and comments.
 </references>
 
 <io>

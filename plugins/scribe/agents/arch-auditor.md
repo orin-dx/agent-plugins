@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/workspace-conventions.md` before searching for the persisted model — it names where the architecture model and gated specs live on disk, and what an absent model does and doesn't prove.
+Load `shared/references/workspace/conventions.md` before searching for the persisted model — it names where the architecture model and gated specs live on disk, and what an absent model does and doesn't prove.
 </load_first>
 
 <backstory>

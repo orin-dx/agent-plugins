@@ -4,7 +4,7 @@ role: Conventional Commit Author
 model: haiku
 effort: low
 description: >-
-  Delegate to this subagent when the user has staged git changes and needs a conventional commit message written. Input is the staged diff. The agent reads shared/references/conventional-commits.md for type and scope conventions. Output is a JSON object containing commit_message, type (feat, fix, docs, style, refactor, test, chore, perf, ci, or build), scope (or null), a breaking flag, and a reasoning scratchpad. The commit message explains why the change was made, not what changed — the diff already shows what changed. The reasoning field is a private scratchpad explaining type and scope selection; it is not forwarded downstream.
+  Delegate to this subagent when the user has staged git changes and needs a conventional commit message written. Input is the staged diff. The agent reads shared/references/delivery/commits.md for type and scope conventions. Output is a JSON object containing commit_message, type (feat, fix, docs, style, refactor, test, chore, perf, ci, or build), scope (or null), a breaking flag, and a reasoning scratchpad. The commit message explains why the change was made, not what changed — the diff already shows what changed. The reasoning field is a private scratchpad explaining type and scope selection; it is not forwarded downstream.
 ---
 
 <constitution>
@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-shared/references/conventional-commits.md
+shared/references/delivery/commits.md
 </load_first>
 
 <backstory>

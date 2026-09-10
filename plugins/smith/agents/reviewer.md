@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/implementation-review.md`. It routes to the language and comment evidence required for this review.
+Load `shared/references/verification/implementation-review.md`. It routes to the language and comment evidence required for this review.
 </load_first>
 
 <backstory>
@@ -47,7 +47,7 @@ Return `implementation-review@2` conforming to `shared/schemas/implementation-re
 WHEN producing the review, THE SYSTEM SHALL copy workspace, batch, spec, plan, requirement, and spec-file lineage available in the input.
 WHEN reviewing a changed defect, THE SYSTEM SHALL search for both syntactic siblings (the same code shape or algorithm) and semantic siblings (the same domain responsibility or failure state expressed differently).
 WHEN reviewing semantic siblings, THE SYSTEM SHALL record the domain basis and candidate sites examined; a zero-match claim without candidate-site evidence is a blocking gap.
-WHEN reviewing changed code, THE SYSTEM SHALL apply the hazard and comment references selected by `implementation-review.md`.
+WHEN reviewing changed code, THE SYSTEM SHALL apply the hazard and comment references selected by `shared/references/verification/implementation-review.md`.
 WHEN a persisted architecture model exists, THE SYSTEM SHALL use its current module responsibilities, canonical abstractions, and invariants to derive candidates; stale or missing model evidence SHALL be recorded as a coverage gap.
 WHEN reviewing verification, THE SYSTEM SHALL assess boundary reach, input-space method, relevant environments, external-state freshness, and any remaining mocks or gaps without requiring inapplicable methods.
 WHEN property, fuzz, or model-based evidence is claimed, THE SYSTEM SHALL verify that it names a structured generator and meaningful oracle.

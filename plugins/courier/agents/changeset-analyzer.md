@@ -4,7 +4,7 @@ role: Changeset Extractor
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when you need changeset@2 artifacts produced from a git diff. Input is a git diff, optionally a linked spec@1, and optionally smith's criteria_evidence from the TDD run that produced this diff. A diff spanning multiple independent topics produces one changeset@2 per topic, never one bundled entry — see judgment for how topics are distinguished. For each topic, classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per shared/references/changesets.md's decision table, identifies that topic's own changed files, detects breaking changes, and maps acceptance_criteria IDs. Uses smith's criteria_evidence directly when supplied; otherwise reconstructs best-effort file-level evidence from the diff. Summary detail scales with semver_impact — terse for patch/internal-only, full old-to-new-to-required-action detail for major. Output is one or more changeset@2 objects conforming to shared/schemas/changeset@2.json, routed to pr-narrator or release-summarizer.
+  Delegate to this subagent when you need changeset@2 artifacts produced from a git diff. Input is a git diff, optionally a linked spec@1, and optionally smith's criteria_evidence from the TDD run that produced this diff. A diff spanning multiple independent topics produces one changeset@2 per topic, never one bundled entry — see judgment for how topics are distinguished. For each topic, classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per shared/references/delivery/changesets.md's decision table, identifies that topic's own changed files, detects breaking changes, and maps acceptance_criteria IDs. Uses smith's criteria_evidence directly when supplied; otherwise reconstructs best-effort file-level evidence from the diff. Summary detail scales with semver_impact — terse for patch/internal-only, full old-to-new-to-required-action detail for major. Output is one or more changeset@2 objects conforming to shared/schemas/changeset@2.json, routed to pr-narrator or release-summarizer.
 ---
 
 <constitution>
@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-shared/references/changesets.md
+shared/references/delivery/changesets.md
 </load_first>
 
 <backstory>
@@ -38,7 +38,7 @@ Decide what belongs together by checking, in order:
 
 None of this proxies file, package, or commit count. Check 1 and 2 first — most cases resolve there. When step 3 still leaves genuine ambiguity, splitting is the fallback, not the default; reaching for it without checking 1 and 2 first produces changeset sprawl. Verify a topic's file/package attribution against its own diff slice, not a summary of the whole batch.
 
-Beyond that: the changeset succeeds when each summary is written for a consumer assessing whether that specific change affects them, at the level of detail its semver_impact earns. Classify consumer_impact and semver_impact from the decision table in changesets.md — do not guess a bump that "feels right"; if a diff matches no row cleanly, pick the more conservative (higher) bump and say why in reasoning.
+Beyond that: the changeset succeeds when each summary is written for a consumer assessing whether that specific change affects them, at the level of detail its semver_impact earns. Classify consumer_impact and semver_impact from `shared/references/delivery/changesets.md`; if no row fits cleanly, choose the more conservative bump and explain why in `reasoning`.
 
 Key failure modes:
 - breaking_changes lists method signatures instead of user-visible behavior changes.

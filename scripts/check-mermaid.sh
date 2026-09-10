@@ -53,7 +53,11 @@ while IFS= read -r -d '' file; do
       if ! npx --yes @mermaid-js/mermaid-cli -i "$mmd" -o "$workdir/block_${count}.svg" "${mmdc_args[@]+"${mmdc_args[@]}"}" > "$workdir/log_${count}.txt" 2>&1; then
         fail=$((fail + 1))
         echo "FAIL: $file (block $((block_index + 1)))"
-        grep -A2 '^Error' "$workdir/log_${count}.txt" | head -3 | sed 's/^/    /'
+        diagnostic="$(grep -A2 '^Error' "$workdir/log_${count}.txt" | head -3 || true)"
+        if [[ -z "$diagnostic" ]]; then
+          diagnostic="$(head -5 "$workdir/log_${count}.txt")"
+        fi
+        printf '    %s\n' "${diagnostic//$'\n'/$'\n    '}"
       fi
       block_index=$((block_index + 1))
       continue

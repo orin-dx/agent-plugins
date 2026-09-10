@@ -35,7 +35,7 @@ A tenth plugin, `muse`, is added in the same change: a component-specification p
 | `delta` | `courier` | Shipping | `commit`, `pr`, `changeset`, `receive-feedback`, `post-review`, `release` (unchanged) |
 | `basis` | `mason` | Meta | `scaffold-plugin`, `audit-plugin`, `design-schema`, `scaffold-subagent` (unchanged) |
 
-Each renamed plugin's `plugin.json` `id`/`name` fields, directory, and single-skill directory (where applicable) were updated together, and the plugin's own `version` was bumped to the next major version — the same precedent this repo already set for the `bug-hunter-rust → proof` plugin-ID rename documented in `shared/references/conventional-commits.md` (`feat!:` with `BREAKING CHANGE: plugin ID changed`). Every cross-plugin reference across agent prompts, skill docs, shared references, schemas, and root-level documentation was updated to match.
+Each renamed plugin's `plugin.json` `id`/`name` fields, directory, and single-skill directory (where applicable) were updated together, and the plugin's own `version` was bumped to the next major version — the same precedent this repo already set for the `bug-hunter-rust → proof` plugin-ID rename documented in `shared/references/delivery/commits.md` (`feat!:` with `BREAKING CHANGE: plugin ID changed`). Every cross-plugin reference across agent prompts, skill docs, shared references, schemas, and root-level documentation was updated to match.
 
 ## Consequences
 

@@ -16,7 +16,7 @@ Make the requested workspace change in bounded batches and return a scoped verdi
 1. Prefer a persisted `plan@1`. Read it from `plan_file_path` and its source spec from `spec_file_path`; validate them with `shared/schemas/plan@1.json` and `shared/schemas/spec@1.json`.
 2. Verify the plan’s `spec_hash` against the raw spec file bytes. Stop and report drift if it differs; a stale plan cannot silently govern implementation.
 3. Produce `workspace-manifest@1` from current repository state, every affected language, project-native verification capabilities, baseline tests, and exposed workflow provenance.
-4. Execute one cohesive subsystem batch. Choose the smallest safe implementation and verification methods from the changed risks and `shared/references/verification-evidence.md`.
+4. Execute one cohesive subsystem batch. Choose the smallest safe implementation and verification methods from the changed risks and `shared/references/verification/evidence.md`.
 5. Record `implementation-result@1` with exact criterion locations, commands, observations, boundaries, and environment evidence.
 6. Use available mutation tooling against changed behavior or a safe deliberate-fault check. Record `mutation-report@2`; unavailable evidence is a coverage gap.
 7. Produce `implementation-review@2`. Judge verification fit, sibling completeness, semantic models, and architecture.
@@ -24,7 +24,7 @@ Make the requested workspace change in bounded batches and return a scoped verdi
 
 ## Defect-family review
 
-Before reviewing, load `shared/references/implementation-review.md` and the evidence it selects. For each changed defect, assess:
+Before reviewing, load `shared/references/verification/implementation-review.md` and the evidence it selects. For each changed defect, assess:
 
 - Syntactic siblings with the same code shape or algorithm.
 - Semantic siblings with the same domain responsibility or failure state.

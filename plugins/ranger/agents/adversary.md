@@ -16,10 +16,12 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Check the input candidate@1's `taxonomy` field first, then load only what that one taxonomy needs:
-- taxonomy is T7 or T10: load the matching `*-hazards-t7-t10.md`
-- any other taxonomy: load the matching `*-hazards.md`
-Select Rust, TypeScript/JavaScript, Python, or Go from `workspace-manifest@1.language_files`. Never load two language packs for one candidate.
+Check the input candidate@1's `taxonomy`, then load one file for its language:
+
+- Rust: `shared/references/hazards/rust-boundaries.md` for T7 or T10; otherwise `shared/references/hazards/rust.md`.
+- TypeScript or JavaScript: `shared/references/hazards/typescript-boundaries.md` for T7 or T10; otherwise `shared/references/hazards/typescript.md`.
+- Python: `shared/references/hazards/python-boundaries.md` for T7 or T10; otherwise `shared/references/hazards/python.md`.
+- Go: `shared/references/hazards/go-boundaries.md` for T7 or T10; otherwise `shared/references/hazards/go.md`.
 </load_first>
 
 <backstory>

@@ -1,7 +1,7 @@
 ---
 name: changeset
 description: >-
-  Trigger when the user asks to add a changeset or document a change: "add a changeset", "document this change", "what changed here". Extracts the consumer-facing meaning of a diff: classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per shared/references/changesets.md's decision table, then writes a summary scaled to that classification. A diff spanning multiple independent topics — common on a backlog/catch-up run, not just a single PR — produces one changeset per topic, not one bundled entry. When the change came via smith, pass along implementer's criteria_evidence — changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff.
+  Trigger when the user asks to add a changeset or document a change: "add a changeset", "document this change", "what changed here". Extracts the consumer-facing meaning of a diff: classifies consumer_impact (behavior-change, new-capability, internal-only) and semver_impact (major, minor, patch, none) per shared/references/delivery/changesets.md's decision table, then writes a summary scaled to that classification. A diff spanning multiple independent topics — common on a backlog/catch-up run, not just a single PR — produces one changeset per topic, not one bundled entry. When the change came via smith, pass along implementer's criteria_evidence — changeset-analyzer uses those exact locations instead of reconstructing approximate ones from the diff.
 version: 2.1.0
 ---
 
@@ -18,7 +18,7 @@ A changeset is the changelog entry, written once at authoring time and later agg
 </dispatch>
 
 <references>
-`shared/references/changesets.md` — changeset format, the Consumer Impact Classification table, the Semver Decision Guide, and the voice standard for this artifact.
+`shared/references/delivery/changesets.md` — changeset format, the Consumer Impact Classification table, the Semver Decision Guide, and the voice standard for this artifact.
 </references>
 
 <io>

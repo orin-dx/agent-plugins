@@ -15,7 +15,7 @@ Inspect the named plugin and its declared harnesses rather than evaluating style
 - Skill frontmatter, trigger discrimination, concrete workflow, safety boundaries, and artifact schema paths.
 - Agent prompt structure, model/effort routing, shared constitution prefix, progressive context loading, and handoff contracts.
 - Instruction economy: direct, atomic rules with no repeated rationale or process narration. Numbered procedures require order-dependent behavior. Length thresholds trigger review, not failure by themselves.
-- Runtime reference quality: stated outcome and applicability, evidence and refutation for heuristics, no project preference presented as universal, and complete coverage for every named language or platform.
+- Runtime reference organization and quality: concern-first paths, language filenames only for language-specific evidence, no human index in a runtime route, stated outcome and applicability, evidence and refutation for heuristics, no project preference presented as universal, and complete coverage for every named language or platform.
 - Verification evidence: claimed boundaries, semantic searches, generated inputs, mutable state, asynchronous completion, and longitudinal comparisons require their matching evidence; unrelated methods are optional.
 - Shared schema versioning, required `reasoning`, and `additionalProperties: false` when a new handoff is introduced.
 - README, changelog, marketplace registration, and current installation guidance.

@@ -23,7 +23,7 @@ navigator is one skill, `plan`. Behavior adapts to what's asked, dispatching to 
 
 - **Estimate an existing plan** — `estimator` assigns effort estimates (in minutes) to each task in a plan@1, identifies parallelizable tasks, and surfaces blocking dependencies.
 
-- **Challenge a draft plan** — `challenger` checks coverage, order, specificity, batch size, and error handling. Amended plans receive the same review.
+- **Challenge a draft plan** — `challenger` checks coverage, order, specificity, batch size, error handling, and shared-interface siblings. It loads `shared/references/verification/interface-coverage.md` when a contract or implementation changes. Amended plans receive the same review.
 
 </behavior>
 

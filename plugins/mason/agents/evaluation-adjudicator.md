@@ -17,7 +17,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/behavioral-evaluation.md`, `shared/schemas/evaluation-run@1.json`, `shared/schemas/harness-evaluation@2.json`, and the selected fixture oracle after receiving a valid completed run.
+Load `shared/references/evaluation/behavioral.md`, `shared/schemas/evaluation-run@1.json`, `shared/schemas/harness-evaluation@2.json`, and the selected fixture oracle after receiving a valid completed run.
 </load_first>
 
 <backstory>

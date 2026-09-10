@@ -18,7 +18,7 @@ Turn confirmed defect families into enforceable structural specs. Route every ou
 </dispatch>
 
 <references>
-`shared/schemas/finding-report@2.json`, `shared/schemas/implementation-review@2.json`, `shared/schemas/implementation-result@1.json`, `shared/schemas/spec@1.json`, and `shared/references/architecture-remediation.md`
+`shared/schemas/finding-report@2.json`, `shared/schemas/implementation-review@2.json`, `shared/schemas/implementation-result@1.json`, `shared/schemas/spec@1.json`, and `shared/references/architecture/remediation.md`
 </references>
 
 <io>

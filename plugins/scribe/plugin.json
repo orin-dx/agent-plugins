@@ -1,7 +1,7 @@
 {
   "id": "scribe",
   "name": "scribe",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Specification plugin. Drafts and gates testable specs, checks whole-system architecture, detects drift, and turns Ranger findings or Smith implementation reviews into structural corrections. Skills: draft-spec, verify-spec, spec-drift, audit-spec, audit-architecture, gate-spec, correct-spec, architect.",
   "author": {
     "name": "Gabriel Castro",

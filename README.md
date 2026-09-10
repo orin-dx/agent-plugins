@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
-  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.4.1-success.svg" alt="Marketplace v4.4.1" /></a>
+  <a href="marketplace.json"><img src="https://img.shields.io/badge/Marketplace-v4.4.2-success.svg" alt="Marketplace v4.4.2" /></a>
   <a href="ARCHITECTURE.md"><img src="https://img.shields.io/badge/Docs-Architecture-informational.svg" alt="Architecture" /></a>
 </p>
 
@@ -287,44 +287,20 @@ Structured inter-plugin handoffs are typed. Schemas live in `shared/schemas/` an
 
 ## Shared References
 
-Runtime-pullable guides in `shared/references/`. Agents pull these themselves during task execution — they are not loaded into context at startup. Language reference files are split by concern so each agent loads only its phase slice.
+Shared guides live in `shared/references/`. Paths start with the decision they support; language is the filename only when evidence is language-specific. Runtime instructions load exact files, while maintainers use the index and authoring-only guides directly.
 
-| File | Purpose | Loaded by |
-| :--- | :--- | :--- |
-| `rust-hazards.md` | Rust T1–T6/T8/T9 candidate signals, confirmation, and refutation | scanner, adversary, Smith reviewer |
-| `rust-hazards-t7-t10.md` | Rust taxonomies T7 and T10 | boundary-tracer, scanner, adversary, Smith reviewer |
-| `rust-smells.md` | Rust semantic-model and architecture signals with evidence-led dispositions | architect, Smith reviewer |
-| `rust-tooling.md` | Risk-based Rust verification capabilities and conditional quality checks | mutator, remediator |
-| `rust.md` | Thin index → routes to the files above | — |
-| `typescript-hazards.md` | TypeScript T1–T6/T8/T9 candidate signals, confirmation, and refutation | scanner, adversary, Smith reviewer |
-| `typescript-hazards-t7-t10.md` | TS taxonomies T7 and T10 | boundary-tracer, scanner, adversary, Smith reviewer |
-| `typescript-smells.md` | TypeScript semantic-model and architecture signals with evidence-led dispositions | architect, Smith reviewer |
-| `typescript-tooling.md` | Risk-based TypeScript/JavaScript verification capabilities and conditional quality checks | mutator, remediator |
-| `typescript.md` | Thin index → routes to the files above | — |
-| `python-hazards.md` | Python hazards outside T7/T10 | Ranger scanner and adversary, Smith reviewer |
-| `python-hazards-t7-t10.md` | Python intent-loss and error-downgrade hazards | Ranger boundary tracer, scanner, and adversary; Smith reviewer |
-| `python-smells.md` | Python architectural smells and structural remedies | Scribe architect, Smith reviewer |
-| `python-tooling.md` | Python-native test, mutation, property, and fuzz options | Smith implementer and mutator |
-| `python.md` | Thin index → routes to the Python files above | — |
-| `go-hazards.md` | Go hazards outside T7/T10 | Ranger scanner and adversary, Smith reviewer |
-| `go-hazards-t7-t10.md` | Go intent-loss and error-downgrade hazards | Ranger boundary tracer, scanner, and adversary; Smith reviewer |
-| `go-smells.md` | Go architectural smells and structural remedies | Scribe architect, Smith reviewer |
-| `go-tooling.md` | Go-native test, fuzz, race, and mutation options | Smith implementer and mutator |
-| `go.md` | Thin index → routes to the Go files above | — |
-| `verification-evidence.md` | Risk-to-evidence selection across boundaries, generated inputs, state, and completion | Smith implementation and review |
-| `behavioral-evaluation.md` | Hidden-oracle, provenance-complete workflow evaluation | Mason evaluation |
-| `conventional-commits.md` | Type/scope conventions and scope table | courier |
-| `github.md` | PR template, `gh` CLI commands, labels | courier |
-| `changesets.md` | Changeset vs commit distinction, semver decision guide | courier |
-| `modern-cli-tools.md` | Capability-aware preferences for search, inspection, structured data, Git, and GitHub | — |
-| `interface-implementers.md` | Evidence-led implementer coverage across Rust, TypeScript/JavaScript, Python, and Go | challenger |
-| `boundary-value-shapes.md` | Cross-language state modeling for absent, invalid, stale, or failed boundary values | implementer |
-| `implementation-review.md` | Routes implementation review to language hazards, architecture smells, and comment rules | Smith reviewer |
-| `architecture-remediation.md` | Routes structural remediation to the persisted model and language smells | Scribe architect |
-| `code-comments.md` | Reader-scoped doc and inline comment rules | implementer, Smith reviewer |
-| `workspace-conventions.md` | Persisted spec, plan, and architecture-model locations | recon and coverage auditors |
-| `docs-voice.md` | Audience-aware, succinct, friendly, and radically candid writing guidance | Courier authoring references |
-| `orin-visual-standard.md` | Shared Mermaid palette and diagram conventions | documentation authors |
+| Concern | Supports |
+| :--- | :--- |
+| `hazards/` | Candidate defect signals and boundary tracing |
+| `architecture/` | Semantic models, structural causes, and remediation |
+| `verification/` | Evidence selection, project-native checks, review, and interface coverage |
+| `delivery/` | Changesets, commits, pull requests, and review operations |
+| `authoring/` | Reader-focused prose, comments, and diagrams |
+| `evaluation/` | Hidden-oracle behavioral comparison |
+| `workspace/` | Persisted artifact locations |
+| `tooling/` | Repository tool preferences |
+
+See [`shared/references/README.md`](./shared/references/README.md) for the maintainer map.
 
 ---
 
@@ -342,7 +318,7 @@ agent-plugins/
 │       └── plugins/<id>/         ← Authored native Codex plugins and skills
 ├── shared/
 │   ├── schemas/                  ← Versioned inter-agent JSON schemas
-│   ├── references/               ← Runtime-pullable domain guides (split by concern)
+│   ├── references/               ← Runtime and authoring guides, split by concern
 │   └── agent-best-practices.md  ← Authoring-time principles
 ├── plugins/
     ├── weaver/                    ← Requirement capture

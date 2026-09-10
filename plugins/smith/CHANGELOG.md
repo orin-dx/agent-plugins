@@ -2,6 +2,11 @@
 
 — smith
 
+## [2.4.2] - 2026-09-10
+
+### Changed
+- Implementation, review, mutation, boundary-value, and comment guidance now load through concern-first reference paths in both harnesses.
+
 ## [2.4.1] - 2026-09-09
 
 ### Changed

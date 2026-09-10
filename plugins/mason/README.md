@@ -1,6 +1,6 @@
 # mason — Plugin Authoring
 
-**Stage:** Meta · **Output:** plugin artifacts and evaluations · **Version:** 3.2.1
+**Stage:** Meta · **Output:** plugin artifacts and evaluations · **Version:** 3.2.2
 
 Mason scaffolds plugins, audits conformance, designs inter-agent schemas, and evaluates workflow behavior with fixed hidden-oracle fixtures.
 
@@ -106,7 +106,7 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | Agent files | All agents listed in `plugin.json` have a corresponding `.md` file |
 | Agent descriptions | Shortest complete routing text; state trigger, input, output, and key constraints |
 | 5-part body structure | Agent body has: constitution (byte-identical to the rest of the ecosystem), backstory, goal, judgment, output, in that order, with an optional `<load_first>` immediately after constitution — no success_criteria, no role sections, EARS only in constitution/output |
-| `<load_first>` correctness | Present whenever an agent's goal implies a lookup it can't do from memory; its named reference file actually resolves |
+| `<load_first>` correctness | Present whenever an agent's goal requires a lookup; every named reference resolves and belongs to its cognitive phase |
 | Orchestration completeness | Every status an agent's own output can emit has a routing entry in its plugin's SKILL.md, or is documented as terminal |
 | Instruction economy | Direct, atomic rules; numbered procedures only when order affects correctness; length thresholds trigger review, not automatic failure |
 | Verification evidence | Claimed boundaries, sibling searches, generated inputs, external state, completion, and longitudinal comparisons carry the evidence required by the constitution; unrelated methods are not forced |
@@ -114,7 +114,7 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high; whole-system architectural synthesis (bounded to single-invocation-per-artifact tasks, not gates) → claude-fable-5-1/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
 | No authoring-time refs | Neither agent bodies nor `SKILL.md` reference `shared/agent-best-practices.md` at runtime — except `mason`'s own scaffolding skills, whose job is authoring agents per that guide |
-| Reference file size | Every `shared/references/*.md` file stays at or under 120 lines; files over 800 words prompt a density review |
+| Reference integrity | Reference files stay within the size cap, exact paths resolve, and runtime guides have callers |
 | Reference quality | Runtime references state outcome, applicability, evidence, refutation, and disposition; project preferences are not universalized; claimed language/platform coverage is complete |
 
 ---
@@ -156,5 +156,5 @@ mason enforces these conventions when scaffolding and auditing:
 
 - `shared/agent-best-practices.md` — full authoring checklist (mason authors use this; subagent bodies do not reference it at runtime)
 - `shared/harness-authoring.md` — cross-harness identity, contract, workflow, and packaging boundaries
-- `shared/references/behavioral-evaluation.md` — hidden-oracle evaluation and provenance rules
+- `shared/references/evaluation/behavioral.md` — hidden-oracle evaluation and provenance rules
 - `shared/schemas/` — existing schemas to check against when designing a new one

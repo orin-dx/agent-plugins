@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/workspace-conventions.md` before mapping `internal_sources` — it names where gated specs live on disk so a relevant spec can be included in the agenda by path, without reading its contents.
+Load `shared/references/workspace/conventions.md` before mapping `internal_sources` — it names where gated specs live on disk so a relevant spec can be included in the agenda by path, without reading its contents.
 </load_first>
 
 <backstory>

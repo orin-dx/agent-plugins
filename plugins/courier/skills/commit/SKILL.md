@@ -18,7 +18,7 @@ Reads the staged git diff and produces a conventional commit message. Delegates 
 </dispatch>
 
 <references>
-`shared/references/conventional-commits.md` — type/scope conventions, commit message rules, and the voice standard for this artifact.
+`shared/references/delivery/commits.md` — type/scope conventions, commit message rules, and the voice standard for this artifact.
 </references>
 
 <io>

@@ -17,7 +17,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/behavioral-evaluation.md`. Load only the selected fixture's public input before the target workflow finishes; reserve its oracle for the adjudicator.
+Load `shared/references/evaluation/behavioral.md`. Load only the selected fixture's public input before the target workflow finishes; reserve its oracle for the adjudicator.
 </load_first>
 
 <backstory>

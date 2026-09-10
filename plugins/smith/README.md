@@ -1,6 +1,6 @@
 # smith — Implementation
 
-**Stage:** Code · **Output:** code, `implementation-review@2`, `verdict@3` · **Version:** 2.4.1
+**Stage:** Code · **Output:** code, `implementation-review@2`, `verdict@3` · **Version:** 2.4.2
 
 Smith executes each plan batch through implementation, mutation, defect-family review, and an independent exit gate. Review finds syntactic and semantic siblings, records their shared cause, and checks for missing domain concepts or architectural constraints. No plan yet? Give it a `spec@1` directly.
 
@@ -98,7 +98,7 @@ Each batch runs in a fresh `implementer` context. Mutation survivors return as p
 
 `mutation-report@2` — see `shared/schemas/mutation-report@2.json`. Records the selected method, commands, cases, survivors, generated-input evidence, precision tests, gaps, and errors.
 
-The reviewer loads `shared/references/implementation-review.md`, which selects the language hazards, architecture smells, and comment standard relevant to the diff.
+The reviewer loads `shared/references/verification/implementation-review.md`, which selects the language hazards, architecture smells, and comment standard relevant to the diff.
 
 Each `implementer` batch also returns `criteria_evidence` — one `{criterion_id, test_file, test_line, implementation_file, implementation_line}` entry per criterion the batch proves. The caller accumulates these across the run and hands them to `changeset-analyzer` when shipping, which uses them to populate `changeset@2.criteria_evidence` — see `shared/schemas/changeset@2.json`.
 

@@ -18,7 +18,7 @@ A release is an aggregation of changesets already written correctly at authoring
 </dispatch>
 
 <references>
-`shared/references/changesets.md` — the Semver Decision Guide (now machine-enforced via each changeset's `semver_impact`) and Release Notes Generation format.
+`shared/references/delivery/changesets.md` — the Semver Decision Guide (now machine-enforced via each changeset's `semver_impact`) and Release Notes Generation format.
 </references>
 
 <io>

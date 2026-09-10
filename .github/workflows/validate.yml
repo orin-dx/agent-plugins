@@ -41,3 +41,6 @@ jobs:
 
       - name: Check reference file size
         run: ./scripts/check-reference-size.sh
+
+      - name: Check reference integrity
+        run: python3 -m unittest tests/test_reference_integrity.py -v

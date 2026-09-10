@@ -17,8 +17,8 @@ sharing real instead of aspirational.
 </constitution>
 
 <load_first>
-Read `shared/references/<file>.md` before doing anything else.
-[Only present when the agent uses a shared reference file for its phase.]
+Read `shared/references/<concern>/<file>.md` before doing anything else.
+[Only present when the agent uses shared references for its phase.]
 </load_first>
 
 <backstory>
@@ -57,7 +57,7 @@ A checklist of success criteria is theater — the agent can tick every box and 
 
 ### Why `<constitution>`, not scattered duplication
 
-Before this section existed, rules genuinely universal to every agent — trust boundaries, output economy, reader-scoped writing, abstract tool language — were either copy-pasted with small wording drift into whichever agents happened to need them, or simply absent from agents whose author forgot to add them. Neither is stable: duplication drifts over time, and omission means an agent silently lacks a rule every other agent has. `<constitution>` fixes both by being the one place ecosystem-wide rules live, propagated by editing all 38 files together rather than one at a time. It also happens to be what makes the Static Prompt Prefix Invariant's cache-sharing claim literally true instead of describing an architecture nobody built.
+Before this section existed, universal rules — trust boundaries, output economy, reader-scoped writing, abstract tool language — drifted between copied prompts or were omitted. `<constitution>` keeps them in one byte-identical block propagated across every agent. It also makes the Static Prompt Prefix Invariant's cache-sharing claim real.
 
 ---
 
@@ -67,21 +67,21 @@ Agents load only the context they need for their cognitive phase.
 
 ```
 <load_first>
-Read `shared/references/rust-hazards.md` before doing anything else. It contains
-the taxonomy definitions and grep patterns for this phase. Do not read
-rust-smells.md or rust-tooling.md.
+Read `shared/references/hazards/rust.md` before scanning Rust code. Use its
+candidate signals, confirming evidence, and refutation conditions.
 </load_first>
 ```
 
 **Why this matters:** attention degrades when context contains unused material. Load only the concern and language needed for the current decision. A routing reference may select several focused files when the phase genuinely spans them.
 
-**Reference file split by concern:**
-- `<language>-hazards.md` — scanner and non-boundary adversary work.
-- `<language>-hazards-t7-t10.md` — boundary tracing and T7/T10 adjudication.
-- `<language>-smells.md` — architecture analysis.
-- `<language>-tooling.md` — project-native verification tools.
+**Reference paths start with the decision:**
 
-Current packs cover Rust, TypeScript/JavaScript, Python, and Go. Load one concern and language at a time.
+- `hazards/<language>.md` — scanner and non-boundary adversary work.
+- `hazards/<language>-boundaries.md` — boundary tracing and T7/T10 adjudication.
+- `architecture/<language>.md` — semantic-model and architecture analysis.
+- `verification/<language>.md` — project-native verification capabilities.
+
+Current language packs cover Rust, TypeScript/JavaScript, Python, and Go. Cross-language concerns keep one canonical reference. Load the smallest set needed for the current decision.
 
 ---
 
@@ -266,7 +266,7 @@ The distinction: sonnet can analyze and find evidence; opus is needed when compe
 
 - `shared/agent-best-practices.md` — **authoring-time** only. Never loaded by agents at runtime.
 - `shared/constitution.md` — **authoring-time** only. Agents with a constitution sweep read the *project* constitution (CLAUDE.md, AGENTS.md), not this file.
-- `shared/references/*.md` — **runtime**. Agents load these on demand via `<load_first>`.
+- `shared/references/<concern>/*.md` — **focused guidance**. Runtime agents load exact dependencies via `<load_first>`; authoring-only guides stay out of runtime chains.
 - `shared/schemas/*.json` — **wiring-time**. The host validates schema compatibility before execution; agents reference them in `<output>` sections.
 
 ---

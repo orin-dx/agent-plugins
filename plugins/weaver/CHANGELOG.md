@@ -2,6 +2,11 @@
 
 — weaver
 
+## [3.0.3] - 2026-09-10
+
+### Changed
+- Backlog coverage now loads workspace conventions from the concern-first reference path.
+
 ## [3.0.2] - 2026-09-09
 
 ### Changed

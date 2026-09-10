@@ -30,7 +30,7 @@ Run single-agent and team modes only when supported. Record unavailable modes as
 
 ## Contracts
 
-- Protocol: `shared/references/behavioral-evaluation.md`
+- Protocol: `shared/references/evaluation/behavioral.md`
 - Run evidence: `shared/schemas/evaluation-run@1.json`
 - Output: `shared/schemas/harness-evaluation@2.json`
 - Fixtures: `tests/fixtures/behavioral/`

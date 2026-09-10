@@ -2,6 +2,14 @@
 
 — navigator
 
+## [2.3.2] - 2026-09-10
+
+### Fixed
+- Codex planning now checks shared-interface siblings with the same syntax and architecture evidence as the Claude/AGY challenger.
+
+### Changed
+- Interface coverage now loads from the concern-first verification path and no longer describes semantic discovery as a deterministic grep pass.
+
 ## [2.3.1] - 2026-09-09
 
 ### Changed
