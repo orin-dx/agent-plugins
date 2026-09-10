@@ -3,6 +3,8 @@ name: audit-spec
 description: Adversarially review a spec for ambiguity, untestable criteria, missing error behavior, and scope defects. Use for “audit this spec”, “is this spec complete?”, or before gate-spec.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Audit specification quality
 
 ## Outcome

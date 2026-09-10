@@ -1,82 +1,54 @@
 # Rust Hazard Reference
 
-_Loaded by: scanner (all taxonomies), adversary (when the candidate's taxonomy is not T7 or T10). T7 and T10 live in `rust-hazards-t7-t10.md` — boundary-tracer's exact scope, loaded directly instead of this file. Do not load for smell analysis or fix work — use `rust-smells.md` and `rust-tooling.md` instead._
+Patterns are leads, not findings. Confirm a reachable bad outcome in live code and record evidence that rules out the plausible exception. Use `rust-hazards-t7-t10.md` for boundary taxonomies T7 and T10.
 
----
+## T8 · False-success mutation
 
-## Hazard Taxonomies
+- Signal: a write-like function returns `Ok(())` before the required mutation or acknowledgment occurs.
+- Search: write/update/set/publish functions and early `Ok` returns.
+- Confirm: the caller cannot distinguish required work from a no-op and proceeds with incorrect state.
+- Refute: idempotent success is part of the contract or the caller verifies the resulting state.
 
-Ordered by impact — start here when triaging. T7 and T10 are documented in `rust-hazards-t7-t10.md`.
+## T1 · Discarded input
 
-### 8. False-Success Mutation ← highest impact
-- **Signal:** A function named `update_*`, `write_*`, `set_*`, or `bump_*` returns `Result<(), E>` and has a `return Ok(());` path that was reached without performing any visible mutation.
+- Signal: a meaningful public or trait parameter is renamed with `_`, dropped, or never reaches the behavior it configures.
+- Confirm: a caller supplies a value whose omission changes the outcome.
+- Refute: the signature is imposed by a trait or compatibility boundary and the value is intentionally irrelevant.
 
-```rust
-// ✗ BEFORE — caller receives Ok(()) with no way to know nothing was written
-fn update_version(manifest: &mut Manifest, new: &Version) -> Result<(), Error> {
-    if manifest.version == *new {
-        return Ok(()); // silent no-op; caller assumes disk was updated
-    }
-    manifest.version = new.clone();
-    manifest.write_to_disk()
-}
+## T2 · Silent fallback
 
-// ✓ AFTER — outcome is explicit; caller can act on it
-fn update_version(manifest: &mut Manifest, new: &Version) -> Result<bool, Error> {
-    if manifest.version == *new {
-        return Ok(false); // no-op, signaled
-    }
-    manifest.version = new.clone();
-    manifest.write_to_disk()?;
-    Ok(true) // mutation confirmed
-}
-```
-- **Grep pattern:** `fn (update|write|set|bump)_\w+` — then check the body for `return Ok\(\(\)\);` before any write operation.
-- **Risk:** Caller believes the write succeeded; state is silently wrong going forward.
-- **False positive check:** Does the function document an "already-correct → Ok(())" contract with a caller-side check after? If neither, the silent Ok is a bug.
+- Signal: `unwrap_or*` substitutes a default after parsing, lookup, or I/O failure.
+- Confirm: the default hides a state the caller must distinguish.
+- Refute: the default is the documented domain value and preserves required behavior.
 
-### 1. Discarded Parameters
-- **Signal:** `fn foo(_param: T)` — leading underscore on a parameter.
-- **Grep pattern:** `fn\s+\w+[^{]*\b_[a-zA-Z][a-zA-Z0-9_]*:\s*`
-- **Risk:** User-provided value is silently ignored.
-- **False positive check:** Trait requirement? (`trait Foo { fn bar(&self, _: T) }` is intentional.)
+## T3 · Recoverable panic
 
-### 4. Missing Error Propagation
-- **Signal:** `let _ = result;`, `drop(result)`.
-- **Grep pattern:** `let _\s*=|drop\(\w*result\w*\)`
-- **Risk:** Error is discarded; subsequent code runs on invalid state.
+- Signal: `unwrap`, `expect`, or `panic!` is reachable in reusable code.
+- Confirm: valid external input or a recoverable dependency failure reaches it.
+- Refute: the path is an established invariant, test-only code, or process entrypoint policy.
 
-### 9. Duplicate Diagnostic Codes
-- **Signal:** Two or more error variants share the same `#[diagnostic(code(...))]` annotation.
-- **Grep pattern:** `diagnostic\(code\(` — collect all values, check for duplicates across the file and module.
-- **Risk:** Tooling dispatching on codes can't distinguish the two errors.
-- **False positive check:** None. Duplicate codes are always wrong.
+## T4 · Lost error
 
-### Incomplete Conversion Coverage
-- **Signal:** `from_path`, `from_str`, or `try_from` whose match arms cover fewer variants than the source enum — indicated by `_ => Err(Unknown...)`.
-- **Grep pattern:** `_ => Err(` inside `impl From` / `impl TryFrom` / `from_path` / `from_str` bodies.
-- **Risk:** Unknown variants silently become errors instead of being handled.
+- Signal: a `Result` is assigned to `_`, dropped, or replaced by success.
+- Confirm: failure changes subsequent correctness and no owner observes it.
+- Refute: best-effort behavior is explicit and the discarded failure has no required consequence.
 
-### 2. Silent Unwrap Fallbacks
-- **Signal:** `.unwrap_or(default)`, `.unwrap_or_default()`, `.unwrap_or_else(|| ...)`.
-- **Grep pattern:** `\.unwrap_or\b|\.unwrap_or_default\b|\.unwrap_or_else\b`
-- **Risk:** Error is swallowed; wrong behavior proceeds silently.
-- **False positive check:** Is the default semantically correct for all callers? Is the error logged?
+## T5 · Arithmetic overflow
 
-### 3. Panic in Lib Code
-- **Signal:** `.unwrap()`, `.expect("...")`, `panic!(...)`.
-- **Grep pattern:** `\.unwrap\(\)|\.expect\(|panic!\(`
-- **Risk:** Unrecoverable crash propagates to caller.
-- **False positive check:** Test code and `fn main` are acceptable.
+- Signal: user- or data-controlled integers participate in unchecked arithmetic near a bound.
+- Confirm: a reachable value overflows under the relevant build profile.
+- Refute: types, validation, or domain limits prove the operation safe.
 
-### 5. Integer Overflow in Release
-- **Signal:** Arithmetic on user-controlled integers without checked ops.
-- **Grep pattern:** `\b(usize|u32|u64|i32|i64)\b.*[+\-\*]`
-- **Risk:** Wraps in release mode; panics in debug.
-- **False positive check:** Is overflow impossible or separately handled?
+## T6 · Unsafe contract gap
 
-### 6. Unsafe Boundary Violations
-- **Signal:** `unsafe` blocks outside an explicit FFI/NAPI boundary.
-- **Grep pattern:** `unsafe\s*\{`
-- **Risk:** Memory unsafety, UB.
-- **False positive check:** Is this in an `#[napi]` context or FFI shim?
+- Signal: an `unsafe` block lacks a locally checkable safety contract or relies on an unverified caller invariant.
+- Confirm: a reachable input violates the invariant and can cause undefined behavior.
+- Refute: the contract is enforced at the boundary and covers every operation in the block.
+
+## T9 · Incomplete or ambiguous variants
+
+- Signal: enum conversion uses a catch-all that rejects a valid variant, or diagnostic identifiers collide where consumers require uniqueness.
+- Confirm: a current variant is mishandled or a consumer cannot distinguish outcomes.
+- Refute: the source is intentionally open, the fallback is contractual, or duplicate identifiers are documented aliases.
+
+Search broadly enough to find candidates, then cite the exact caller, input, state transition, and failure for every confirmed result.

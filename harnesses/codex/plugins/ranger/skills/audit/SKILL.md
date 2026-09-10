@@ -3,6 +3,8 @@ name: audit
 description: Find evidence-backed reachable defects in Rust, TypeScript, JavaScript, Python, or Go. Use for bug hunts, security audits, suspected defects, or post-remediation verification; do not use for general code explanation.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Audit live code, not signals
 
 Ranger reports only defects that survive control-flow and reachability review. Pattern matches, dead code, style issues, and unproven hypotheses are not findings.

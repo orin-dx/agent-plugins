@@ -1,6 +1,6 @@
 # navigator — Implementation Planning
 
-**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.3.0
+**Stage:** Plan · **Output:** `plan@1` · **Version:** 2.3.1
 
 Decomposes a `spec@1` into a sequenced, testable implementation plan. Every task in `plan@1` is self-contained: exact file paths, a brief implementation approach, exact implementation code as a concrete baseline, the exact tests proving each criterion, a conventional commit message, and the acceptance criterion IDs it covers. An implementer with no domain knowledge can execute the plan without needing to decide what to build or which criteria it must satisfy — [smith](../smith/) may still adapt the baseline's shape, provided the same files, criteria, and tests are satisfied. When the spec is corrected after implementation reveals it was wrong, planner runs in amend mode — patching only the affected tasks rather than re-decomposing the whole plan.
 

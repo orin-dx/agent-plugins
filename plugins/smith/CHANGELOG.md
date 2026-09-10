@@ -2,6 +2,12 @@
 
 — smith
 
+## [2.4.1] - 2026-09-09
+
+### Changed
+- Language tooling and boundary guidance now selects project-native capabilities by risk and records confirming, refuting, and missing evidence.
+- Rust and TypeScript guidance no longer treats style preferences or predetermined designs as universal requirements; agents also apply the shared radical-candor rule.
+
 ## [2.4.0] - 2026-09-09
 
 ### Added

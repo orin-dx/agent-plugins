@@ -1,12 +1,19 @@
 ## Summary
-- What changed (1-3 bullets, user-facing language)
-- Why it was needed
 
-## Test Plan
-- [ ] How to verify the change works
-- [ ] Edge cases to check
-- [ ] Regression check
+<!-- State the outcome and why it matters. Add an important behavioral or architectural decision only when it helps review. -->
+
+-
+
+## Verification
+
+<!-- Record checks already run and their observed results. For an unrun check, state why and what remains unverified. -->
+
+- [ ] `command or inspection` — observed result
+
+## Risk and follow-up
+
+<!-- Remove this section when there are no migrations, compatibility risks, limitations, rollout steps, or intentional deferrals. -->
 
 ## Related
-Closes #<issue>
-Spec: <link to spec doc, if any>
+
+<!-- Remove this section when there is no issue, requirement, spec, plan, or changeset to link. -->

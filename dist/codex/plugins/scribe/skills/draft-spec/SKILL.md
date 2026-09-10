@@ -3,6 +3,8 @@ name: draft-spec
 description: Draft a testable specification from a requirement and optional research evidence. Use for “draft a spec”, “spec this out”, or “write a spec for this requirement”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Draft a specification
 
 ## Outcome

@@ -1,13 +1,13 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "wisp-plugins",
-  "version": "4.4.0",
+  "version": "4.4.1",
   "description": "Wisp Plugins marketplace for AGY and Claude Code, published by Orin DX",
   "plugins": [
     {
       "id": "mason",
       "name": "mason",
-      "version": "3.2.0",
+      "version": "3.2.1",
       "path": "./plugins/mason",
       "description": "Build, audit, and behaviorally evaluate plugins; design shared schemas and scaffold conformant agents. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent, evaluate.",
       "supersedes": "agent-plugin-builder"
@@ -15,7 +15,7 @@
     {
       "id": "ranger",
       "name": "ranger",
-      "version": "3.2.0",
+      "version": "3.2.1",
       "path": "./plugins/ranger",
       "description": "Bug hunting for Rust, TypeScript, JavaScript, Python, and Go. Confirms reachable defects, searches semantic siblings, and routes structural families for architectural correction.",
       "supersedes": [
@@ -26,7 +26,7 @@
     {
       "id": "sentinel",
       "name": "sentinel",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "path": "./plugins/sentinel",
       "description": "Cross-cutting verification gate. Confirms that any stage artifact meets its criteria before the next stage begins. One skill, one recon-verify-judge pipeline, reused unchanged against any artifact type.",
       "supersedes": "verify-first"
@@ -34,49 +34,49 @@
     {
       "id": "weaver",
       "name": "weaver",
-      "version": "3.0.1",
+      "version": "3.0.2",
       "path": "./plugins/weaver",
       "description": "Need definition plugin. Captures and structures requirements before implementation begins. Integrates with GitHub Issues by default; extensible to Linear, Jira, or any issue tracker that produces the requirement@1 schema. Skills: capture-need, clarify-requirement, prioritize-backlog, connect-requirement, audit-backlog."
     },
     {
       "id": "vanguard",
       "name": "vanguard",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "path": "./plugins/vanguard",
       "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Produces research-report@1 for consumption by scribe (spec)."
     },
     {
       "id": "scribe",
       "name": "scribe",
-      "version": "3.3.0",
+      "version": "3.3.1",
       "path": "./plugins/scribe",
       "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Checks specs against a persisted whole-system architecture model. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, audit-architecture, gate-spec, correct-spec, architect."
     },
     {
       "id": "muse",
       "name": "muse",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "path": "./plugins/muse",
       "description": "Component specification plugin. Turns UI/design intent into unambiguous, testable component specs \u2014 props, variants, per-state behavior, and accessibility criteria as testable propositions, gated before planning. Audits the spec, not the implementation \u2014 see ranger's accessibility hazard taxonomy for code-level scanning."
     },
     {
       "id": "navigator",
       "name": "navigator",
-      "version": "2.3.0",
+      "version": "2.3.1",
       "path": "./plugins/navigator",
       "description": "Planning plugin. Decomposes specs into sequenced, bite-sized implementation plans with an implementation approach, exact code as a baseline, and the tests proving each criterion \u2014 no write-test-first mandate. Tasks are sized to compilation boundaries, not a clock-time estimate. No TBDs. A developer with zero domain context can execute the plan mechanically."
     },
     {
       "id": "smith",
       "name": "smith",
-      "version": "2.4.0",
+      "version": "2.4.1",
       "path": "./plugins/smith",
       "description": "Implementation plugin. Executes tested plan batches, verifies risk at real boundaries, searches semantic defect siblings, and escalates shared model or architecture gaps."
     },
     {
       "id": "courier",
       "name": "courier",
-      "version": "3.0.1",
+      "version": "3.0.2",
       "path": "./plugins/courier",
       "description": "Shipping plugin. Shepherds completed code through commit, PR creation, review response, and changeset documentation. Skills: commit, pr, changeset, receive-feedback, post-review, release."
     }

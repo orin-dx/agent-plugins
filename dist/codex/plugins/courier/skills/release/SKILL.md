@@ -3,6 +3,8 @@ name: release
 description: Aggregate approved changesets into a release artifact. Use when the user asks to cut a release, calculate a version bump, or generate release notes from changesets.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Aggregate release evidence
 
 Release notes are an aggregation of already-classified changesets, not a second interpretation of the diff. Validate inputs before computing the release.

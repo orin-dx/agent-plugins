@@ -1,7 +1,7 @@
 {
   "id": "ranger",
   "name": "ranger",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Bug hunting for Rust, TypeScript, JavaScript, Python, and Go. Confirms reachable defects, searches semantic siblings, and routes structural families for architectural correction.",
   "author": {
     "name": "Gabriel Castro",

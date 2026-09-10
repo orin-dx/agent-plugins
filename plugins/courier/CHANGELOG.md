@@ -2,6 +2,12 @@
 
 — courier
 
+## [3.0.2] - 2026-09-09
+
+### Changed
+- `courier/pr` 2.0.1 now reports observed verification and unresolved gaps, omits empty sections, and separates independent topics.
+- Agents state material concerns directly with evidence, consequence, and calibrated confidence.
+
 ## [3.0.1] - 2026-09-09
 
 ### Fixed

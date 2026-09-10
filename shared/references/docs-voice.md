@@ -1,37 +1,53 @@
-# Documentation Voice Reference
+# Documentation Voice
 
-Canonical voice standard for this repo: commit messages, PR bodies, changesets, release notes, and prose docs (READMEs, `mason`-scaffolded plugin docs). Succinct, engineering-focused, scannable. No AI slop.
+Write for the person who must use, review, or maintain the artifact. Be succinct, friendly, direct, and technically honest.
 
-Agents load only the subset embedded in their own task reference file (`conventional-commits.md`, `github.md`, `changesets.md`) — see each for the operational rules. This file is the full standard, for humans and for `mason` when scaffolding new docs.
+## Choose the reader
 
-Doc comments and inline code comments are a separate reader profile (a caller or a maintainer reading one line, not someone reading prose) — see `code-comments.md` for that operational subset instead.
+| Artifact | Lead with | Include when relevant |
+| :--- | :--- | :--- |
+| User guide or README | What the user can do and when to use it | Prerequisites, examples, limits, recovery |
+| Contributor or architecture doc | System responsibility and decision | Boundaries, invariants, tradeoffs, evidence |
+| PR or review | Outcome and approval-relevant risk | Verification, gaps, migration, follow-up |
+| Changeset or release note | Observable consumer impact | Old behavior, new behavior, required action |
+| Reference | Decision the guidance supports | Applicability, evidence, refutation, disposition |
 
-## Rules
+Use the reader's language. User-facing docs describe tasks and outcomes before internal agents, schemas, or implementation details. Contributor docs may use precise engineering terms when those terms help the reader act.
 
-1. Lead with the conclusion. Answer before justification (inverted pyramid) — readers scan ~20-28% of page text, they don't read top to bottom.
-2. Active voice, present tense, second person for instructions.
-3. One idea per sentence. A sentence that keeps running is usually doing two jobs — stating something and hedging it, or the *what* and the *why* — split it instead of trimming words to make it fit.
-4. Bullets or tables over paragraphs whenever the content is enumerable.
-5. Separate *what changed* (factual, reference-like) from *why* (one sentence, no more) — don't blend them into one block.
-6. State the mechanism, not the adjective. Numbers and behavior over "robust" / "powerful" / "seamless."
-7. Cut hedge and filler qualifiers: "essentially," "basically," "in order to," "it's worth noting that."
-8. Self-edit pass: after drafting, re-read once checking rule 5 (what/why blending) and the banned-word list specifically before output. Banned-word avoidance alone misses ~20% of slop without this pass.
+## Voice
 
-## Banned words and phrases
+- Lead with the outcome. Add context only when it changes understanding or action.
+- Use active voice, present tense, and second person for instructions.
+- Prefer familiar, concrete words. Define unavoidable domain terms once.
+- Keep one main idea per sentence and one actionable rule per list item.
+- Be friendly without ceremony: respectful, calm, and helpful; no praise, apology, or enthusiasm added as padding.
+- Practice radical candor: state the concern, evidence, consequence, and confidence. Label blockers plainly. Do not manufacture praise, hide impact behind soft language, or imply certainty the evidence does not support.
+- State mechanisms, behavior, and observed results instead of promotional adjectives.
+- Let length follow the reader's need. Preserve non-obvious rationale, constraints, migration steps, and risks.
 
-*delve, leverage, seamless, robust, elevate, foster, unlock, empower, testament, pivotal, showcase, tapestry, landscape, underscore, meticulous, game-changer, cutting-edge, unprecedented, transformative, utilize (use "use"), dive into, supercharge, empowers, elevate*
+## Structure
 
-Banned structures: "It isn't just X, it's Y." Rhetorical-question hooks. Triplets of adjectives as padding.
+- Use the smallest form that makes the relationship clear: prose for one connected idea, bullets for short parallel items, tables for repeated fields, and diagrams for structure or flow.
+- Split a bullet when it contains independently actionable rules. Convert it to prose when its explanation is more important than enumeration.
+- Use numbered steps only when order affects correctness.
+- State a rationale once, next to the decision it changes.
+- Link to authoritative detail instead of copying it.
 
-## Review-feedback vocabulary
+## Cut
 
-When a change involves triaging or drafting comments on someone else's work (not narrating your own diff), prefix intent so it reads unambiguously before tone does. Two equivalent vocabularies — pick one per context and stay consistent within it:
+- Conversational preambles, scene-setting, and process narration.
+- Restatements of a title, signature, diff, table, or preceding sentence.
+- Synonymous claims that add emphasis but no information.
+- Hedge phrases such as “essentially,” “basically,” “in order to,” and “it is worth noting.”
+- Empty quality claims such as “robust,” “seamless,” “powerful,” or “comprehensive” without the mechanism or evidence that earns them.
+- Rhetorical hooks, inflated contrasts, and adjective clusters.
 
-- **Conventional Comments**: `praise:` `nitpick:` `suggestion:` `issue:` `question:` `thought:` — optionally decorated `(non-blocking)`.
-- **Google code review style**: `Nit:` `Optional:` / `Consider:` `FYI:` for anything that isn't a blocking request.
+Words are warning signs, not a substitute for judgment. Keep a word when it is the clearest accurate term; remove it when it stands in for evidence.
 
-Always include at least one positive comment when reviewing someone else's work, not only problems. State the problem and let the author decide the fix when more than one valid fix exists — don't dictate unless there's exactly one correct answer.
+## Self-check
 
-## Source
-
-Distilled from: Google Developer Documentation Style Guide, Microsoft Writing Style Guide, Diátaxis, Keep a Changelog, Federal Plain Language Guidelines, NN/g F-pattern reading research, Conventional Comments (conventionalcomments.org), Google's code review developer guide.
+- Can the intended reader find the outcome first?
+- Does each sentence change what the reader knows or does?
+- Are material concerns direct, evidenced, and calibrated?
+- Can any paragraph, bullet, heading, or example be removed without loss?
+- Does user-facing text explain user impact before internal machinery?

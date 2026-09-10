@@ -3,6 +3,8 @@ name: evaluate
 description: Evaluate a plugin workflow against a fixed hidden-oracle fixture. Use for release gates, regression checks, Claude/Codex comparisons, or longitudinal plugin analysis.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Evaluate plugin behavior
 
 Use `shared/references/behavioral-evaluation.md` and return `shared/schemas/harness-evaluation@2.json`.

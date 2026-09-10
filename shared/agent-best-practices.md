@@ -304,6 +304,8 @@ Section 16 is about how *agent prompts* are written. This is about what agents w
 
 Every such artifact has exactly one reader with exactly one need. Before writing a line, name both: who reads this, and what do they need to walk away knowing. Content that doesn't serve that need is noise — a restated signature, a narrated alternative ("instead of X we..."), a process log of how the author got here. That kind of content belongs in conversation or a PR body's rationale, not baked into the artifact itself.
 
+Radical candor is evidence without evasive language. State the material concern, the evidence, the consequence, and the confidence. Mark blockers as blockers. Do not manufacture praise to balance criticism, soften a finding until its impact is unclear, or overstate certainty. Friendly writing respects the reader; it does not conceal the result.
+
 This is a scoping discipline, not a brevity target. A doc comment covering a genuinely non-obvious invariant, or a PR body explaining a breaking change's migration path, earns its length — cutting it to hit a word count would just make the reader go find the answer elsewhere. The discipline cuts padding, not substance. `courier/changeset` already applies this per-artifact: a patch-level changeset is one line, a major-version changeset gets full old-behavior-to-new-behavior detail — same principle, scaled to what that changeset's reader needs to decide.
 
 | Artifact | Reader | What they need |
@@ -331,3 +333,22 @@ This is a scoping discipline, not a brevity target. A doc comment covering a gen
 ```
 
 **The test**: if deleting a sentence costs the reader nothing they'd act on, delete it. If deleting it leaves a caller guessing about a constraint, a reviewer unsure whether to approve, or a maintainer confused about why a workaround exists — keep it, at whatever length that takes.
+
+---
+
+## 18. Runtime Reference Design
+
+A runtime reference should improve a decision the model could not make reliably from general capability alone. Open with the outcome and applicability, then provide the evidence that distinguishes a real issue from a plausible-looking match.
+
+Use this compact shape when it fits:
+
+- **Outcome:** what decision or behavior the reference supports.
+- **Apply when:** the condition that makes the guidance relevant.
+- **Signals:** candidate evidence, not automatic findings.
+- **Refutation:** valid cases that dismiss or narrow the signal.
+- **Disposition:** fix, test further, escalate, defer, or record a coverage gap.
+- **Examples or commands:** only when they improve discrimination.
+
+Reserve fixed sequences for protocols, destructive operations, and other cases where reordering changes correctness. Prefer decision criteria for investigation, design, and writing. A language preference becomes a requirement only when the target repository, public contract, safety boundary, or observed failure makes it one.
+
+Keep domain lessons at the level that transfers. A recurring missing responsibility is reusable guidance; a trait name from one codebase is not. When the ecosystem claims support for several languages, express the shared outcome once and add only the language-specific evidence needed to reach it.

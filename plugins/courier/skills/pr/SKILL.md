@@ -2,7 +2,7 @@
 name: pr
 description: >-
   Trigger when the user asks to open a PR or write a PR description: "open a PR", "create a pull request", "write the PR description". Given a diff, a linked spec, and a linked requirement, produces a PR title and body a reviewer with zero context can act on, then opens the PR via `gh pr create` after user confirmation.
-version: 2.0.0
+version: 2.0.1
 ---
 
 # Courier — PR
@@ -18,7 +18,7 @@ Produces a PR title and body from a diff plus optional linked spec/requirement, 
 </dispatch>
 
 <references>
-`shared/references/github.md` — PR template, label conventions, `gh` commands, and the voice standard for this artifact (summary bullets first, test plan as a checklist).
+`shared/references/github.md` — outcome-led PR structure, observed verification, risk disclosure, review voice, labels, and `gh` commands.
 </references>
 
 <io>

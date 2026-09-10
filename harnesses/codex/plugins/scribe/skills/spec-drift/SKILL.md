@@ -3,6 +3,8 @@ name: spec-drift
 description: Compare a persisted specification with current implementation and tests to find covered, uncovered, and drifted criteria. Use for “check spec drift” or “does the code still match this spec?”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Detect specification drift
 
 ## Outcome

@@ -3,6 +3,8 @@ name: correct-spec
 description: Correct a persisted specification when implementation evidence proves a criterion contradicts the live system. Use after a `spec_contradiction`, not for ordinary implementation difficulty.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Correct a contradictory specification
 
 ## Outcome

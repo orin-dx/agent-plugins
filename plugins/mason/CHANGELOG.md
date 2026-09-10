@@ -2,6 +2,12 @@
 
 — mason
 
+## [3.2.1] - 2026-09-09
+
+### Changed
+- Scaffolding and audits now assess runtime references by outcome, applicability, confirming and refuting evidence, and disposition.
+- Cross-language claims must cover each named language or disclose the gap; agents also apply the shared radical-candor rule.
+
 ## [3.2.0] - 2026-09-09
 
 ### Added

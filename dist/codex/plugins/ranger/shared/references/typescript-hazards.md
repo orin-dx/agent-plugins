@@ -1,94 +1,59 @@
-# TypeScript Hazard Reference
+# TypeScript and JavaScript Hazard Reference
 
-_Loaded by: scanner (all taxonomies), adversary (when the candidate's taxonomy is not T7 or T10). T7 and T10 live in `typescript-hazards-t7-t10.md` — boundary-tracer's exact scope, loaded directly instead of this file. Do not load for smell analysis or fix work — use `typescript-smells.md` and `typescript-tooling.md` instead._
+Patterns are leads, not findings. Confirm a reachable bad outcome in the target runtime and account for framework behavior. Use `typescript-hazards-t7-t10.md` for boundary taxonomies T7 and T10.
 
----
+## T8 · False-success mutation
 
-## Hazard Taxonomies
+- Signal: a write-like async function resolves before required work or acknowledgment occurs.
+- Confirm: the caller proceeds as though state changed when it did not.
+- Refute: idempotent no-op is contractual or the caller verifies resulting state.
 
-Ordered by impact — start here when triaging. T7 and T10 are documented in `typescript-hazards-t7-t10.md`.
+## T1 · Type assertion bypass
 
-### T8. False-Success Async ← highest impact
-- **Signal:** An async function named `update*`, `write*`, `save*`, `sync*`, or `set*` returns `Promise<void>` and has a bare `return` (no value) reached before any `await` of a write or mutation.
+- Signal: `as any`, `as unknown as T`, or an unchecked assertion appears at a dynamic boundary.
+- Confirm: a reachable value violates the asserted shape before validation.
+- Refute: a local adapter validates the same invariant or the assertion bridges a proven library limitation.
 
-```typescript
-// ✗ BEFORE — caller receives a resolved promise with no way to know nothing was written
-async function updateConfig(path: string, next: Config): Promise<void> {
-  const current = await readConfig(path)
-  if (deepEqual(current, next)) {
-    return // silent no-op; caller assumes disk was updated
-  }
-  await writeConfig(path, next)
-}
+## T2 · Unowned promise failure
 
-// ✓ AFTER — outcome is explicit; caller can log, retry, or branch
-async function updateConfig(path: string, next: Config): Promise<boolean> {
-  const current = await readConfig(path)
-  if (deepEqual(current, next)) {
-    return false // no-op, signaled
-  }
-  await writeConfig(path, next)
-  return true // write confirmed
-}
-```
-- **Grep pattern:** `async.*function.*(update|write|save|sync|set)` — then check the body for `return;` before any `await` of a side-effecting call.
-- **Risk:** Caller believes the write succeeded; state is silently wrong.
-- **False positive check:** Is the early return an explicitly documented "already-correct" guard with a caller-side check after?
+- Signal: async work starts without awaiting, returning, retaining, or observing rejection.
+- Confirm: no framework or caller owns completion and failure.
+- Refute: the runtime explicitly owns the handler or a deliberate fire-and-forget path reports failure elsewhere.
 
-### T9. Discriminated Union Incomplete Coverage ← highest impact
-- **Signal:** A `switch` or if-chain on a `.kind`, `.type`, or `.tag` field that handles some variants explicitly and falls through to a `default` that returns a wrong value or throws a generic error — without `assertNever`.
-- **Grep pattern:** `switch.*\.kind|switch.*\.type|switch.*\.tag` — check `default` branch for `assertNever`.
-- **Risk:** A new variant added to the union silently hits the wrong code path at runtime with no compile-time warning.
-- **False positive check:** Is the `default` branch an intentional catch-all with a documented contract?
+## T3 · Dynamic type propagation
 
-### T1. Type Assertion Bypass
-- **Signal:** `as unknown as T`, `as any`, `(<T>value)`.
-- **Grep pattern:** `as\s+unknown\s+as|as\s+any\b|<[A-Z]\w*>\w`
-- **Risk:** Runtime type mismatch — TypeScript's safety is bypassed.
-- **False positive check:** Is this in a test utility, a known-safe coercion, or a migration shim with a comment?
+- Signal: `any` or unchecked parsed data escapes a boundary into domain code.
+- Confirm: downstream operations trust a property or variant that runtime data may not contain.
+- Refute: validation, generated types, or a narrow adapter establishes the shape first.
 
-### T4. Non-Null Assertion Abuse
-- **Signal:** `value!.property`.
-- **Grep pattern:** `[a-zA-Z0-9_)\]]\!\.`
-- **Risk:** Crashes at runtime when value is null or undefined.
-- **False positive check:** Is the value guaranteed non-null by surrounding logic?
+## T4 · Unchecked nullish state
 
-### T2. Unhandled Promise Rejection
-- **Signal:** Floating `async` calls without `await` or `.catch()`.
-- **Grep pattern:** `\.then\([^)]+\)(?!\s*\.catch)`, async calls without `await` assignment.
-- **Risk:** Rejection is silently swallowed; subsequent code runs in wrong state.
+- Signal: non-null assertions or a partially guarded property chain dereference a value that can still be nullish.
+- Confirm: construct a reachable state where the asserted segment is absent.
+- Refute: control flow, schema validation, or framework lifecycle guarantees presence.
 
-### T3. `any` Propagation
-- **Signal:** `any` in function signatures, especially return types.
-- **Grep pattern:** `:\s*any\b`, `Promise<any>`, `Array<any>`
-- **Risk:** Type errors escape to runtime; one `any` infects downstream inferred types through function composition.
+## T5 · Prototype-key mutation
 
-### T5. Prototype Pollution
-- **Signal:** Dynamic property assignment on objects from external input.
-- **Grep pattern:** `\[.*\]\s*=` where the key originates from user input.
-- **Risk:** Attacker sets `__proto__`, `constructor`, or `prototype` properties.
+- Signal: an external key controls assignment into an ordinary object.
+- Confirm: `__proto__`, `constructor`, or `prototype` can reach a mutation with security or correctness impact.
+- Refute: keys are allow-listed or storage uses a safe representation.
 
-### T6. Missing Async Error Boundary
-- **Signal:** `async` route or event handlers without try/catch.
-- **Grep pattern:** `async\s+function\s+\w+\s*\([^)]*\)\s*\{(?![\s\S]*try)`
-- **Risk:** Uncaught promise rejection crashes the process or silently fails.
+## T6 · Missing async error owner
 
-### Optional Chain False Safety
-- **Signal:** `a?.b.c` — the `?.` stops protecting after `b`. If `b` resolves but `c` is undefined on it, this throws.
-- **Grep pattern:** `\?\.[a-zA-Z_]+\.[a-zA-Z_]+` (a `.` after the first property following `?.` without a second `?.`).
-- **Risk:** Developers read `?.` as "whole chain is safe" — it isn't past the first dereference.
+- Signal: an async route, event, or callback can reject with no local or framework error boundary.
+- Confirm: trace a failure to an unhandled rejection or false-success response.
+- Refute: the host contract captures and reports returned rejections.
 
-### Shallow Spread on Nested State
-- **Signal:** `{ ...state, items: state.items }` — the inner `items` array is still the same reference. Mutations to it after the spread affect both objects.
-- **Risk:** Particularly dangerous in reducers and immutable state patterns.
-- **Search:** Spread assignments where the RHS of any field is a reference-typed property of the spread source.
+## T9 · Incomplete closed variants
 
-### JSON Clone Footgun
-- **Signal:** `JSON.parse(JSON.stringify(x))` as a deep-clone.
-- **Grep pattern:** `JSON\.parse\(JSON\.stringify\(`
-- **Risk:** Drops `Date` objects (serialized to strings), `undefined` values (dropped), `Map`/`Set`/`BigInt` (thrown or dropped). Use `structuredClone` instead.
+- Signal: a closed union gains a variant while a switch or branch silently falls back.
+- Confirm: the new or existing variant reaches an incorrect default behavior.
+- Refute: the input set is intentionally open and the fallback is the documented behavior.
 
-### Async TOCTOU
-- **Signal:** A value is read, then an `await` occurs, then the original pre-await value is used — but the value may have changed during the await (mutable module singleton, React ref, cache entry).
-- **Risk:** Stale reads after async suspension produce subtle race conditions invisible to the type system.
-- **Search:** Variables read before an `await` and used again after it, where the variable is a shared reference (not a local copy).
+## Additional leads
+
+- Shallow copies of nested mutable state when later mutation is reachable.
+- JSON-based cloning when required values include types or properties it cannot preserve.
+- Shared state read before `await` and trusted afterward despite concurrent mutation.
+
+For each, prove the required value shape, runtime support, ownership model, and failing outcome before reporting a defect.

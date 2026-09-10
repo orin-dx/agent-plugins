@@ -3,6 +3,8 @@ name: research
 description: Investigate a technical or product question before committing to a design. Use for “research this”, “what are the options?”, “what does the codebase do?”, “is there a way to…?”, or “what are the risks?”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Research before commitment
 
 ## Outcome

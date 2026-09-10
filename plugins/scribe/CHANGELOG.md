@@ -2,6 +2,12 @@
 
 — scribe
 
+## [3.3.1] - 2026-09-09
+
+### Changed
+- Architecture-smell guidance now starts from live responsibilities and invariants, tests competing explanations, and leaves implementation shape open unless evidence constrains it.
+- Agents state structural concerns directly with evidence, consequence, and calibrated confidence.
+
 ## [3.3.0] - 2026-09-09
 
 ### Added

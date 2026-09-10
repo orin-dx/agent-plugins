@@ -3,6 +3,8 @@ name: scaffold-subagent
 description: Add one conformant Claude-style agent prompt to an existing source plugin. Use when the user asks to add an agent without changing the plugin's unrelated routes.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Add one agent without breaking the static contract
 
 Inspect the target plugin's manifest, skill dispatch, and existing agent prompts first. This skill changes the source-plugin agent surface; it does not assume that the same prompt belongs in the Codex adaptation.
@@ -14,7 +16,7 @@ Inspect the target plugin's manifest, skill dispatch, and existing agent prompts
 3. Author `<backstory>`, `<goal>`, `<judgment>`, and `<output>` in the required order.
 4. Add a single `<load_first>` block only when the agent needs one phase-specific reference.
 5. Cite `shared/schemas/<name>@<version>.json` for every structured output or create that schema first.
-6. Use one direct, independently actionable rule per paragraph or list item. Remove filler, repeated rationale, and process narration.
+6. Use one direct, independently actionable rule per paragraph or list item. Remove filler, repeated rationale, process narration, softened blockers, and confidence unsupported by evidence.
 7. Update the source manifest and a skill dispatch only when the new agent must be reachable through that route.
 8. Validate the shared prefix, manifest wiring, and resulting path.
 

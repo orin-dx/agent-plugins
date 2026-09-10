@@ -3,6 +3,8 @@ name: changeset
 description: Classify verified changes and produce one changeset per independent consumer-facing topic. Use when the user asks to add a changeset, document a change, or determine release impact.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Record release intent at authoring time
 
 Read the actual diff and any available implementation evidence before writing a changeset. A changeset is the durable consumer-facing statement that release aggregation consumes later; do not re-derive its intent from a vague summary.

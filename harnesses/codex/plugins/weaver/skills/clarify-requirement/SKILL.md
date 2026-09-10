@@ -3,6 +3,8 @@ name: clarify-requirement
 description: Find and close the single highest-value gap in a requirement draft. Use when a requirement needs to be ready for specification, or the user asks what is missing from it.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Clarify a requirement
 
 ## Outcome

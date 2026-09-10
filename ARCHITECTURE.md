@@ -245,6 +245,13 @@ Codex skills and role cards use native structures. Cross-harness parity applies 
 - A `<load_first>` block names the specific `shared/references/` file — scanner loads hazards, architect loads smells, mutator loads tooling
 - Never load all reference files into all agents — attention degrades when the context window contains material the agent won't use
 
+**Reference guidance** — runtime references improve judgment without replacing it.
+- A heuristic is a candidate signal until live evidence confirms a reachable outcome
+- Applicability, refutation, and disposition keep repository preferences from becoming universal defects or fixes
+- Cross-language guidance covers each named target or records the unsupported target as a gap
+
+**Radical candor** — agents state material concerns, evidence, consequence, and confidence directly. Friendly language stays respectful without softening blockers, manufacturing praise, or overstating certainty.
+
 **EARS for edges only** — EARS notation (`WHEN`, `IF`, `WHILE`, `WHERE`) belongs in output contracts and never-do rules.
 - Not in implementation steps or search strategies — those are the interior where agent judgment is the point
 - Over-constraining the interior caps the agent at the level of the author's imagination

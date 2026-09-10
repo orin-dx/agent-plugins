@@ -1,6 +1,6 @@
 # smith — Implementation
 
-**Stage:** Code · **Output:** code, `implementation-review@2`, `verdict@3` · **Version:** 2.4.0
+**Stage:** Code · **Output:** code, `implementation-review@2`, `verdict@3` · **Version:** 2.4.1
 
 Smith executes each plan batch through implementation, mutation, defect-family review, and an independent exit gate. Review finds syntactic and semantic siblings, records their shared cause, and checks for missing domain concepts or architectural constraints. No plan yet? Give it a `spec@1` directly.
 

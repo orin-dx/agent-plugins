@@ -1,6 +1,6 @@
 # TypeScript Reference Index
 
-This file is an index. Agents must load only the file that matches their phase — do not load all three.
+Load only the file for the current phase.
 
 | File | Load when... |
 |---|---|

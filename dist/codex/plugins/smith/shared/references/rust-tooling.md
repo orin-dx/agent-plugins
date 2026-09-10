@@ -1,44 +1,32 @@
-# Rust Tooling Reference
+# Rust Verification Tooling
 
-_Loaded by: mutator, remediator. Contains test commands, build checks, and the non-negotiables that every fix must satisfy. Do not load for scanning or smell analysis._
+## Outcome
 
----
+Choose the smallest project-native checks that can falsify the changed behavior. Tool names alone are not evidence.
 
-## Workspace Test Discovery & Execution
+## Discover capabilities
 
-Before running tests, check for project task runners to respect repo-specific workflows:
+Inspect `Cargo.toml`, workspace configuration, task runners, CI, and existing tests before choosing commands. Prefer configured tasks; otherwise use targeted Cargo commands and then consider the applicable workspace suite.
 
-```bash
-# Check for task runners
-ls justfile Makefile moonrepo.yml .moon/ 2>/dev/null
-```
+| Changed risk | Useful capability when available | Evidence to record |
+| :--- | :--- | :--- |
+| Local behavior | `cargo test` or configured `cargo nextest` target | Test target and observed result |
+| Type, feature, or crate boundary | `cargo check` under relevant features or targets | Configuration exercised |
+| Weak assertions | `cargo-mutants` or a safe deliberate fault | Wrong behavior rejected by the test |
+| Combinatorial or stateful input | `proptest` or an existing fuzz target | Generator, oracle, and minimized failure |
+| FFI or NAPI boundary | Project integration test or boundary harness | Boundary crossed and mocked segment |
+| Packaging or generated files | Project build/package task | Produced artifact inspected |
 
-- Prefer the configured task runner.
-- Otherwise use `cargo nextest` when configured or `cargo test` with the narrowest useful package or target.
-- Use `cargo-mutants` when available and relevant to changed behavior.
-- Use `proptest` or an existing fuzz target for combinatorial inputs when a structured generator and meaningful invariant are available.
-- Run the applicable workspace suite before completion.
+## Candidate quality checks
 
----
+Apply these only when the repository contract or changed risk makes them relevant:
 
-## NAPI Boundary Rules
+- Panic paths: determine whether `unwrap`, `expect`, or `panic!` is reachable from recoverable input before treating it as a defect.
+- Unsafe code: verify the safety contract and boundary ownership; location alone is not proof of unsoundness.
+- Output ordering: require deterministic maps or sets only when output is user-visible, serialized, snapshot-tested, or contractually ordered.
+- String construction: investigate allocation only when measurement or a hot path makes it material.
+- UTF-8 slicing: reject byte indexing when the index can split a character boundary.
+- Public documentation: follow the repository's lint and public API policy rather than inventing one.
+- Plan or config fields: trace values to the execution boundary when changed behavior depends on them.
 
-_Applies only to crates with `napi` or `napi-derive` in `Cargo.toml`. Skip for CLI tools and pure Rust libraries._
-
-- Every `#[napi]` export must have `#[napi(catch_unwind)]`.
-- No `unsafe` outside the NAPI boundary.
-- Return `napi::Result<T>`, not bare `T`.
-
----
-
-## Non-Negotiables
-
-Every fix must satisfy these before the green pass is claimed:
-
-- No `unwrap()`/`expect()` in lib code (tests may use `expect` with a message).
-- No `unsafe` outside an explicit FFI/NAPI boundary.
-- `BTreeMap`/`BTreeSet` for output maps and error payloads — never `HashMap`/`HashSet` in user-visible or test-comparable output.
-- `String::with_capacity` for strings built in loops.
-- String truncation uses `floor_char_boundary`, never byte-index slicing.
-- Every `pub` item has a doc comment.
-- Plan/config struct fields must survive to the execution call site — confirm each field reaches the subprocess or downstream function.
+Record unsupported checks as coverage gaps. Do not install optional tooling without authorization.

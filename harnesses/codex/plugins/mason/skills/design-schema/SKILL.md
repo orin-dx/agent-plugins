@@ -3,6 +3,8 @@ name: design-schema
 description: Design a versioned shared JSON Schema for an inter-agent handoff. Use when a workflow needs a durable producer-consumer contract or an existing contract must evolve.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Design the boundary before the prompt
 
 Model the artifact's consumers, producers, durable evidence, and failure modes before deciding on fields. A schema exists to make handoffs stable across models and harnesses, not to serialize every thought.

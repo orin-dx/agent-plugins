@@ -2,6 +2,11 @@
 
 — vanguard
 
+## [2.0.1] - 2026-09-09
+
+### Changed
+- Agents now report material concerns directly with evidence, consequence, and calibrated confidence.
+
 ## [2.0.0] - 2026-08-27
 
 ### Changed

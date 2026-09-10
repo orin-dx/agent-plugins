@@ -2,6 +2,11 @@
 
 — sentinel
 
+## [2.1.1] - 2026-09-09
+
+### Changed
+- Agents now report blockers and material concerns directly with evidence, consequence, and calibrated confidence.
+
 ## [2.1.0] - 2026-09-09
 
 ### Changed
