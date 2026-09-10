@@ -65,28 +65,24 @@ Courier does not critique code quality or spec conformance — that's the built-
 ## Pipeline
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
-flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:14px,font-weight:600;
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
+flowchart TD
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    diff[git diff] --> chg["courier/changeset"]
-    chg -->|"changeset@2"| pr["courier/pr"]
-    chg -->|"changeset@2"| rel["courier/release"]
-    pr --> prOut(["PR opened"])
-    rel --> relOut(["release-artifact@2"])
+    Diff["Git diff"] --> Changeset["<b>changeset</b><br/>changeset-analyzer"] --> CS(["changeset@2"])
+    CS --> PR["<b>pr</b><br/>pr-narrator"] --> PROut(["PR opened"])
+    CS --> Release["<b>release</b><br/>release-summarizer"] --> RelOut(["release-artifact@2"])
 
-    comments[PR comments] --> recv["courier/receive-feedback"]
-    recv -->|"response plan"| fix[fix code]
-    fix --> post["courier/post-review"]
-    post --> reply(["posted reply"])
+    Staged["Staged diff"] --> Commit["<b>commit</b><br/>commit-analyzer"] --> CommitOut(["conventional commit"])
 
-    class diff,comments source
-    class chg,pr,rel engine
-    class recv,post router
-    class prOut,relOut,reply output
+    Comments["PR comments"] --> Receive["<b>receive-feedback</b><br/>review-preprocessor"]
+    Receive -->|"review package"| Draft["Caller drafts response"] --> Post["<b>post-review</b><br/>confirmed delivery"] --> Reply(["posted reply"])
+
+    class Diff,Staged,Comments source
+    class Changeset,PR,Release,Commit,Receive,Draft,Post engine
+    class CS,PROut,RelOut,CommitOut,Reply output
 ```
 
 `fix code` is the one step courier doesn't do — a human or `smith` closes that gap before `courier/post-review` picks back up.

@@ -61,26 +61,23 @@ Muse specs the component, not the code that implements it — for code-level acc
 ## Pipeline
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 36, 'rankSpacing': 56}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    Req["requirement@1
-    or design intent"] --> Draft["muse/component
-    drafter"]
-    Draft --> Audit["muse/component
-    auditor"]
-    Audit --> Gate["muse/component
-    exit-gate"]
-    Gate -->|pass| Spec(["spec@1"])
-    Gate -->|fail| Draft
+    Req["<b>Design intent</b><br/><code>requirement@1</code> or free text"] --> Draft["<b>Drafter</b><br/>component spec"]
+    Draft --> Audit["<b>Auditor</b><br/>design review"]
+    Audit --> Gate{{"<b>Exit gate</b><br/>binding verdict"}}
+    Gate -->|"pass"| Spec(["spec@1"])
+    Gate -.->|"targeted blockers"| Draft
 
-    class Req source;
-    class Draft,Audit engine;
-    class Gate engine;
-    class Spec output;
+    class Req source
+    class Draft,Audit engine
+    class Gate router
+    class Spec output
 ```
 
 Drafter/auditor review loops are capped at 2 iterations before reaching the exit gate. On fail, specific blockers are returned to `drafter` for a targeted retry. Maximum 3 retries before escalation to a human.

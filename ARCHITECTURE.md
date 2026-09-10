@@ -9,26 +9,18 @@ System design for plugin authoring, lifecycle contracts, generated Codex distrib
 Context is loaded on demand. Every agent's context window contains only what its current task requires.
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:15px,font-weight:600;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:15px,font-weight:600;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
 
-    T1["**Tier 1 · Metadata**
-    Concise routing description
-    Always active — used by model router to match skill or subagent"]
+    T1["<b>Tier 1 · Metadata</b><br/>Always-on routing description"]
+    T2["<b>Tier 2 · Instructions</b><br/>Loaded when a skill or agent activates"]
+    T3[("<b>Tier 3 · References</b><br/>Schemas and guidance loaded on demand")]
 
-    T2["**Tier 2 · Body**
-    Focused SKILL.md or agent instructions
-    Loaded on trigger when a skill activates or agent is dispatched"]
-
-    T3["**Tier 3 · References**
-    shared/references/*.md · shared/schemas/*.json
-    Pulled on demand by the agent during task execution"]
-
-    T1 -->|on skill activation| T2
-    T2 -->|on demand| T3
+    T1 -->|"activate"| T2
+    T2 -->|"load when needed"| T3
 
     class T1 source
     class T2 engine
@@ -63,41 +55,41 @@ Ten plugins form a directed pipeline. Structured handoffs use typed artifacts; i
 **The primary flow** — one direction, no side-taps:
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 44, 'rankSpacing': 68}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef define fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:16px,font-weight:600;
-    classDef design fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:16px,font-weight:600;
-    classDef build fill:#eff6ff,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a8a,rx:10,ry:10,font-size:16px,font-weight:600;
-    classDef ship fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    we[Weaver\nneed] -->|"requirement@1"| va[Vanguard\nresearch]
-    va -->|"research-report@1"| sc[Scribe\nspec]
-    mu[Muse\ncomponent spec] -->|"spec@1"| na[Navigator\nplan]
+    we["<b>Weaver</b><br/>capture need"] -->|"requirement@1"| va["<b>Vanguard</b><br/>research"]
+    va -->|"research-report@1"| sc["<b>Scribe</b><br/>specify"]
+    mu["<b>Muse</b><br/>component spec"] -->|"spec@1"| na["<b>Navigator</b><br/>plan"]
     sc -->|"spec@1"| na
-    na -->|"plan@1"| sm[Smith\ncode]
-    sm -->|"verified code"| co[Courier\nship]
-    co -. iterate .-> we
+    na -->|"plan@1"| sm["<b>Smith</b><br/>implement"]
+    sm -->|"verified change"| co["<b>Courier</b><br/>ship"]
+    co -.->|"next need"| we
 
-    class we,va define
-    class sc,mu design
-    class na,sm build
-    class co ship
+    class we,mu source
+    class va,sc,sm engine
+    class na router
+    class co output
 ```
 
 **Verification** — Sentinel and Ranger attach to the flow above but aren't stops in its sequence; the muted dashed boxes below are the same personas shown only as attachment points:
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef anchor fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px,color:#64748b,rx:10,ry:10,font-size:13px,stroke-dasharray:4 3;
-    classDef verify fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
 
-    sc2[Scribe]:::anchor
-    sm2[Smith]:::anchor
-    co2[Courier]:::anchor
+    sc2["Scribe"]:::store
+    sm2["Smith"]:::store
+    co2["Courier"]:::store
 
-    se([Sentinel\ngate])
-    ra([Ranger\naudit])
+    se{{"<b>Sentinel</b><br/>independent gate"}}
+    ra{{"<b>Ranger</b><br/>defect audit"}}
 
     sc2 -.->|"spec@1"| se
     sm2 -.->|"code + verdict@3"| se
@@ -107,7 +99,7 @@ flowchart LR
     sm2 -->|"live code"| ra
     ra -.->|"finding-report@2"| sc2
 
-    class se,ra verify
+    class se,ra router
 ```
 
 ![Define](https://img.shields.io/badge/-Define-6366f1) ![Design](https://img.shields.io/badge/-Design-8b5cf6) ![Build](https://img.shields.io/badge/-Build-3b82f6) ![Verify](https://img.shields.io/badge/-Verify-f59e0b) ![Ship](https://img.shields.io/badge/-Ship-10b981)
@@ -159,26 +151,18 @@ Unavailable or disproportionate checks become explicit coverage gaps; invoking a
 Each Claude/AGY source subagent declares `model` and `effort` as routing hints. Claude Code honours them directly; AGY applies its own routing. Codex uses host-selected models and native role cards, so tier intent carries across harnesses without copying model configuration.
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:15px,font-weight:600;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:15px,font-weight:600;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
 
-    H["**haiku · low**
-    Mechanical — deterministic enumeration
-    Manifest building, file inventory, commit message writing"]
+    H["<b>haiku · low</b><br/>deterministic enumeration"]
+    S["<b>sonnet · medium</b><br/>analysis and execution"]
+    O{{"<b>opus · high</b><br/>binding judgment"}}
 
-    S["**sonnet · medium**
-    Analysis — multi-step reasoning
-    Scanning, drafting, planning, implementing, reviewing"]
-
-    O["**opus · high**
-    Judgment — weighing competing evidence
-    Adversarial review, exit gates, final verdicts"]
-
-    H -. "escalate only when judgment required" .-> S
-    S -. "escalate only when binding verdict required" .-> O
+    H -.->|"judgment needed"| S
+    S -.->|"binding verdict needed"| O
 
     class H store
     class S engine
@@ -194,35 +178,30 @@ Use the lowest tier that produces correct output. Opus is reserved for decisions
 `sentinel` is a reusable, artifact-agnostic verification gate. Any artifact type — spec, plan, changeset, finding report — can be run through it.
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:1.5px,color:#881337,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
+    classDef alert fill:#fff1f2,stroke:#f43f5e,stroke-width:1.5px,color:#881337,rx:10px,ry:10px,font-weight:600;
 
-    Art[artifact + criteria]
+    Art["<b>Artifact</b><br/>criteria + current state"]
 
     subgraph check [Verification Chain]
         direction LR
-        Recon["recon
-        haiku / low"] --> Ver["verifier
-        sonnet / medium"] --> Gate["exit-gate
-        opus / high"]
+        Recon["<b>Recon</b><br/>haiku · low"] --> Ver["<b>Verifier</b><br/>sonnet · medium"] --> Gate{{"<b>Exit gate</b><br/>opus · high"}}
     end
 
     Art --> Recon
 
-    Fix["producing agent
-    targeted patch on blockers
-    (effort escalates on retry 2)"]
+    Fix["<b>Producing agent</b><br/>targeted blocker patch"]
 
-    Gate -->|pass| Done(["verdict@3 · pass"])
-    Gate -->|fail| Fix
-    Fix -->|"retry ≤ 3 · updated retry_count"| Art
-    Fix -->|"retry > 3"| Esc(["escalate to human"])
+    Gate -->|"pass"| Done(["verdict@3 · pass"])
+    Gate -->|"fail"| Fix
+    Fix -.->|"retry ≤ 3"| Art
+    Fix -.->|"retry > 3"| Esc(["human escalation"])
 
     class Art source
     class Recon store
@@ -279,14 +258,25 @@ Codex skills and role cards use native structures. Cross-harness parity applies 
 The repository has one lifecycle contract and harness-specific execution packages. Claude Code and AGY consume the authored plugins directly; Codex consumes a generated, materialized marketplace. No custom server framework is required.
 
 ```mermaid
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    ClaudeSource["Claude source\nmanifest · skills · agents"] --> Claude["Claude Code + AGY\nsource marketplace"]
-    SharedManifest["Shared plugin manifest\nID · version · contracts"] --> Build["Codex marketplace generator"]
-    CodexSource["Native Codex source\nmanifest · skills · resources"] --> Build
-    Catalog["Codex catalog\norder · runtime files"] --> Build
-    Schemas["Shared schemas\nversioned JSON contracts"] --> Claude
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
+
+    ClaudeSource["<b>Claude source</b><br/>manifest · skills · agents"] --> Claude(["Claude Code + AGY<br/>source marketplace"])
+    SharedManifest[("<b>Shared manifest</b><br/>ID · version · contracts")] --> Build["<b>Codex generator</b><br/>validate + materialize"]
+    CodexSource["<b>Native Codex source</b><br/>manifest · skills · resources"] --> Build
+    Catalog[("<b>Codex catalog</b><br/>order · runtime files")] --> Build
+    Schemas[("<b>Shared schemas</b><br/>versioned contracts")] --> Claude
     Schemas --> Build
-    Build --> Codex["Codex\ngenerated marketplace"]
+    Build --> Codex(["Codex<br/>generated marketplace"])
+
+    class ClaudeSource,CodexSource source
+    class SharedManifest,Catalog,Schemas store
+    class Build engine
+    class Claude,Codex output
 ```
 
 | Concern | Claude Code and AGY | Codex |
@@ -315,17 +305,30 @@ Repository-local Entire adapters under `.agents/skills/`, `.claude/skills/`, `.c
 `dist/codex` is a reproducible build artifact, not a second authored plugin tree. The generator packages native Codex sources without rewriting them, while rejecting ID, version, author, and skill-set drift from the shared plugin contract.
 
 ```mermaid
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    Manifest["plugins/id/plugin.json\nidentity · version · contracts"] --> Builder["build-codex-marketplace.py"]
-    ClaudeSkills["plugins/id/skills\nrequired skill inventory"] --> Builder
-    Native["harnesses/codex/plugins/id\nauthored manifest · skills · resources"] --> Builder
-    Catalog["harnesses/codex/catalog.json\nmarketplace order · runtime files"] --> Builder
-    Schemas["shared/schemas\nversioned JSON contracts"] --> Builder
-    Builder --> Temp["temporary regular-file bundle"]
-    Temp --> Check["--check\nexact tree and byte comparison"]
-    Temp --> Publish["atomic replace"]
-    Publish --> Discovery[".agents/plugins/marketplace.json\nGit discovery manifest"]
-    Discovery --> Bundle["dist/codex\ninstallable Codex bundle"]
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
+
+    Manifest[("<b>Shared manifest</b><br/><code>plugins/id/plugin.json</code>")] --> Builder["<b>Marketplace builder</b><br/><code>build-codex-marketplace.py</code>"]
+    ClaudeSkills[("<b>Skill inventory</b><br/><code>plugins/id/skills</code>")] --> Builder
+    Native["<b>Native Codex source</b><br/>manifest · skills · resources"] --> Builder
+    Catalog[("<b>Codex catalog</b><br/>order · runtime files")] --> Builder
+    Schemas[("<b>Shared schemas</b><br/>versioned contracts")] --> Builder
+    Builder --> Temp[("temporary regular-file bundle")]
+    Temp --> Check{{"<b>Check mode</b><br/>tree + byte comparison"}}
+    Temp --> Publish["<b>Publish mode</b><br/>atomic replace"]
+    Publish --> Discovery[("<b>Discovery manifest</b><br/><code>.agents/plugins/marketplace.json</code>")]
+    Discovery --> Bundle(["<b>Codex bundle</b><br/><code>dist/codex</code>"])
+
+    class Native source
+    class Manifest,ClaudeSkills,Catalog,Schemas,Temp,Discovery store
+    class Builder,Publish engine
+    class Check router
+    class Bundle output
 ```
 
 | Input | Authoritative for | Generator behavior |

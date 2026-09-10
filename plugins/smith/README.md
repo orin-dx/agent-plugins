@@ -49,32 +49,28 @@ Smith never assembles a changeset itself. It hands `criteria_evidence` — exact
 ## Pipeline
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    Plan["plan@1
-    (or spec@1 direct)"] --> Recon["recon
-    haiku / low"]
+    Plan["<b>Implementation scope</b><br/><code>plan@1</code> or direct <code>spec@1</code>"] --> Recon["<b>Recon</b><br/>baseline + capabilities"]
 
-    subgraph loop [" per task, × N "]
+    subgraph loop ["Per subsystem batch · × N"]
         direction LR
-        Impl["implementer
-        sonnet / medium"] --> Mut["mutator
-        sonnet / medium"]
-        Mut -.->|precision tests| Impl
-        Mut --> Rev["reviewer
-        sonnet / medium"]
+        Impl["<b>Implementer</b><br/>smallest safe change"] --> Mut["<b>Mutator</b><br/>discrimination evidence"]
+        Mut -.->|"precision tests"| Impl
+        Mut --> Rev{{"<b>Reviewer</b><br/>families + system fit"}}
     end
 
     Recon --> Impl
-    Rev -.->|needs architecture| Arch["scribe/architect"]
-    Rev -->|approved| Gate["exit-gate
-    opus / high"]
+    Rev -.->|"changes requested"| Impl
+    Rev -.->|"needs architecture"| Arch["scribe:architect"]
+    Arch -.->|"gated plan amendment"| Plan
+    Rev -->|"all batches approved"| Gate{{"<b>Exit gate</b><br/>complete changeset"}}
     Gate --> Done(["verdict@3"])
 
     class Plan source
@@ -104,11 +100,11 @@ Each batch runs in a fresh `implementer` context. Mutation survivors return as p
 
 The reviewer loads `shared/references/implementation-review.md`, which selects the language hazards, architecture smells, and comment standard relevant to the diff.
 
-Each `implementer` task also returns `criteria_evidence` — one `{criterion_id, test_file, test_line, implementation_file, implementation_line}` entry per criterion the task proves. The caller accumulates these across the run and hands them to `changeset-analyzer` when shipping, which uses them to populate `changeset@2.criteria_evidence` — see `shared/schemas/changeset@2.json`.
+Each `implementer` batch also returns `criteria_evidence` — one `{criterion_id, test_file, test_line, implementation_file, implementation_line}` entry per criterion the batch proves. The caller accumulates these across the run and hands them to `changeset-analyzer` when shipping, which uses them to populate `changeset@2.criteria_evidence` — see `shared/schemas/changeset@2.json`.
 
 ---
 
-## Implementation Cycle (per task)
+## Implementation Cycle (per subsystem batch)
 
 No shortcuts, but no mandated write-order either — tests are validated by the mutation gate below, not by which came first:
 
@@ -124,7 +120,7 @@ This departs from strict TDD deliberately — see [ADR-008](../../docs/adr/008-d
 
 ---
 
-## Mutation Gate (per task)
+## Mutation Gate (per subsystem batch)
 
 After implementation, `mutator` uses the project-native mutation tool when available. Otherwise it performs a safe deliberate-fault check or records the missing capability. Property, fuzz, race, integration, and boundary checks are selected when they fit the changed risk; generative checks must name their generator and oracle.
 

@@ -62,27 +62,23 @@ Five independently-triggered skills, not a linear pipeline — pick the one that
 ## Pipeline
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart TD
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    FT[free text] --> CN["weaver/capture-need
-    intake"]
-    CN --> CR["weaver/clarify-requirement
-    clarifier, × N"]
+    FT["Free-text need"] --> CN["<b>Capture</b><br/>intake"]
+    CN --> CR["<b>Clarify</b><br/>highest-value gap · × N"]
     CR --> REQ[("requirement@1")]
 
-    REQ --> CO["weaver/connect-requirement
-    duplicate check"]
-    REQ --> PB["weaver/prioritize-backlog
-    rank vs backlog"]
-    REQ --> AB["weaver/audit-backlog
-    whole-backlog health"]
+    REQ --> CO{{"<b>Connect</b><br/>overlap check"}}
+    REQ --> PB["<b>Prioritize</b><br/>rank backlog"]
+    REQ --> AB{{"<b>Audit</b><br/>backlog health"}}
 
-    class CN source
+    class FT source
+    class CN engine
     class CR,PB engine
     class REQ output
     class CO,AB router

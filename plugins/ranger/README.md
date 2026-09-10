@@ -65,24 +65,23 @@ Unlike `courier` or `scribe`, ranger has exactly one skill directory (`skills/au
 ## Pipeline
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
-    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:14px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    ws[workspace] --> recon[recon]
-    recon --> scanner[scanner]
-    scanner -->|T7 / T10 candidates| bt["boundary-tracer
-    (conditional)"]
-    scanner --> adv[adversary]
+    ws["Workspace"] --> recon["<b>Recon</b><br/>inventory + capabilities"]
+    recon --> scanner["<b>Scanner</b><br/>hazard candidates"]
+    scanner -->|"T7 / T10"| bt["<b>Boundary tracer</b><br/>field survival"]
+    scanner --> adv{{"<b>Adversary</b><br/>reachable failure"}}
     bt --> adv
     adv --> out(["finding-report@2"])
-    out -. structural family .-> arch[scribe:architect]
-    out --> fix[remediation]
-    fix --> gate[exit-gate]
+    out -.->|"structural family"| arch["scribe:architect"]
+    out --> fix["Remediate confirmed findings"]
+    fix --> gate{{"<b>Exit gate</b><br/>independent sibling search"}}
     gate --> verdict(["verdict@3"])
 
     class ws source

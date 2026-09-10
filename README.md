@@ -25,41 +25,41 @@ Ten plugins, each a specialist persona covering one stage of the development lif
 **The primary flow** — one direction, no side-taps:
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 44, 'rankSpacing': 68}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef define fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10,ry:10,font-size:16px,font-weight:600;
-    classDef design fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:16px,font-weight:600;
-    classDef build fill:#eff6ff,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a8a,rx:10,ry:10,font-size:16px,font-weight:600;
-    classDef ship fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10,ry:10,font-size:16px,font-weight:600;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    we[Weaver\nneed] -->|"requirement@1"| va[Vanguard\nresearch]
-    va -->|"research-report@1"| sc[Scribe\nspec]
-    mu[Muse\ncomponent spec] -->|"spec@1"| na[Navigator\nplan]
+    we["<b>Weaver</b><br/>capture need"] -->|"requirement@1"| va["<b>Vanguard</b><br/>research"]
+    va -->|"research-report@1"| sc["<b>Scribe</b><br/>specify"]
+    mu["<b>Muse</b><br/>component spec"] -->|"spec@1"| na["<b>Navigator</b><br/>plan"]
     sc -->|"spec@1"| na
-    na -->|"plan@1"| sm[Smith\ncode]
-    sm -->|"verified code"| co[Courier\nship]
-    co -. iterate .-> we
+    na -->|"plan@1"| sm["<b>Smith</b><br/>implement"]
+    sm -->|"verified change"| co["<b>Courier</b><br/>ship"]
+    co -.->|"next need"| we
 
-    class we,va define
-    class sc,mu design
-    class na,sm build
-    class co ship
+    class we,mu source
+    class va,sc,sm engine
+    class na router
+    class co output
 ```
 
 **Verification** — Sentinel and Ranger attach to the flow above but aren't stops in its sequence; the muted dashed boxes below are the same personas shown only as attachment points:
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 60}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef anchor fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px,color:#64748b,rx:10,ry:10,font-size:13px,stroke-dasharray:4 3;
-    classDef verify fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10,ry:10,font-size:15px,font-weight:600;
+    classDef store fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
 
-    sc2[Scribe]:::anchor
-    sm2[Smith]:::anchor
-    co2[Courier]:::anchor
+    sc2["Scribe"]:::store
+    sm2["Smith"]:::store
+    co2["Courier"]:::store
 
-    se([Sentinel\ngate])
-    ra([Ranger\naudit])
+    se{{"<b>Sentinel</b><br/>independent gate"}}
+    ra{{"<b>Ranger</b><br/>defect audit"}}
 
     sc2 -.->|"spec@1"| se
     sm2 -.->|"code + verdict@3"| se
@@ -69,7 +69,7 @@ flowchart LR
     sm2 -->|"live code"| ra
     ra -.->|"finding-report@2"| sc2
 
-    class se,ra verify
+    class se,ra router
 ```
 
 ![Define](https://img.shields.io/badge/-Define-6366f1) ![Design](https://img.shields.io/badge/-Design-8b5cf6) ![Build](https://img.shields.io/badge/-Build-3b82f6) ![Verify](https://img.shields.io/badge/-Verify-f59e0b) ![Ship](https://img.shields.io/badge/-Ship-10b981) ![Meta](https://img.shields.io/badge/-Meta-64748b)

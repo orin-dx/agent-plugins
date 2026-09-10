@@ -63,20 +63,26 @@ Mason scaffolds plugins, audits conformance, designs inter-agent schemas, and ev
 Mason exposes independent authoring, audit, schema, and evaluation routes. The routes with multi-stage or agent-backed flow are:
 
 ```mermaid
-%%{init: {'flowchart': {'curve': 'basis', 'nodeSpacing': 36, 'rankSpacing': 56}}}%%
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 56}, 'themeVariables': {'fontFamily': 'Inter, ui-sans-serif, system-ui, sans-serif', 'fontSize': '14px', 'lineColor': '#94a3b8', 'edgeLabelBackground': '#ffffff'}}}%%
 flowchart LR
-    classDef skill fill:#f8fafc,stroke:#64748b,stroke-width:1.5px,color:#0f172a,rx:10,ry:10,font-size:14px,font-weight:600;
-    classDef agent fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10,ry:10,font-size:13px,font-weight:500;
+    classDef source fill:#eef2ff,stroke:#6366f1,stroke-width:1.5px,color:#1e1b4b,rx:10px,ry:10px,font-weight:600;
+    classDef engine fill:#f5f3ff,stroke:#8b5cf6,stroke-width:1.5px,color:#4c1d95,rx:10px,ry:10px;
+    classDef router fill:#fffbeb,stroke:#f59e0b,stroke-width:1.5px,color:#78350f,rx:10px,ry:10px,font-weight:600;
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#064e3b,rx:10px,ry:10px,font-weight:600;
 
-    SP["mason/scaffold-plugin"] --> SC["scaffolder"]
-    AP["mason/audit-plugin"] --> AU["auditor"]
-    EV["mason/evaluate"] --> ER["evaluation-runner"] --> EA["evaluation-adjudicator"]
+    SP["scaffold-plugin"] --> SC["<b>Scaffolder</b><br/>complete plugin"]
+    SS["scaffold-subagent"] --> SC
+    AP["audit-plugin"] --> AU["<b>Auditor</b><br/>conformance"]
+    DS["design-schema"] --> SD["<b>Schema designer</b><br/>versioned contract"]
+    EV["evaluate"] --> ER["<b>Evaluation runner</b><br/>oracle hidden"] --> EA{{"<b>Evaluation adjudicator</b><br/>oracle revealed"}} --> Report(["harness-evaluation@2"])
 
-    class SP,AP,EV skill
-    class SC,AU,ER,EA agent
+    class SP,SS,AP,DS,EV source
+    class SC,AU,SD,ER engine
+    class EA router
+    class Report output
 ```
 
-The paths are independent. `design-schema` and `scaffold-subagent` are narrower, on-demand skills not shown here.
+The paths are independent. `scaffold-plugin` and `scaffold-subagent` share the scaffolder in different modes.
 
 ---
 
