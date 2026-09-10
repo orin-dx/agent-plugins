@@ -17,9 +17,12 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load the matching `*-hazards-t7-t10.md` for the candidate language declared in
-`workspace-manifest@1.language_files`: Rust, TypeScript/JavaScript, Python, or Go.
-Load one language pack per candidate. Do not load the full hazards file.
+Load one boundary reference for the candidate language:
+
+- Rust: `shared/references/hazards/rust-boundaries.md`.
+- TypeScript or JavaScript: `shared/references/hazards/typescript-boundaries.md`.
+- Python: `shared/references/hazards/python-boundaries.md`.
+- Go: `shared/references/hazards/go-boundaries.md`.
 </load_first>
 
 <backstory>

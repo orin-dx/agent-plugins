@@ -1,7 +1,7 @@
 {
   "id": "mason",
   "name": "mason",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Build, audit, and behaviorally evaluate plugins; design shared schemas and scaffold conformant agents. Skills: scaffold-plugin, audit-plugin, design-schema, scaffold-subagent, evaluate.",
   "author": {
     "name": "Gabriel Castro",

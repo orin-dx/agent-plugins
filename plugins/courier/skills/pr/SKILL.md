@@ -18,7 +18,7 @@ Produces a PR title and body from a diff plus optional linked spec/requirement, 
 </dispatch>
 
 <references>
-`shared/references/github.md` — outcome-led PR structure, observed verification, risk disclosure, review voice, labels, and `gh` commands.
+`shared/references/delivery/github.md` — outcome-led PR structure, observed verification, risk disclosure, review voice, labels, and `gh` commands.
 </references>
 
 <io>

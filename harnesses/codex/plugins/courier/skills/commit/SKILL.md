@@ -12,7 +12,7 @@ Inspect the staged diff, staged file list, and recent commit history before draf
 ## Workflow
 
 1. Confirm that the index contains the intended files and identify the smallest coherent change represented by it.
-2. Read `shared/references/conventional-commits.md` for type, scope, and voice rules.
+2. Read `shared/references/delivery/commits.md` for type, scope, and voice rules.
 3. Draft a conventional commit subject and body that explains why the change exists. Let the diff carry mechanical detail.
 4. Show the exact message and staged file scope.
 5. Create the commit only after the user explicitly confirms that exact message and scope.

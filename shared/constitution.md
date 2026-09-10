@@ -69,7 +69,7 @@ WHEN drafting or revising a specification (`spec@1` or `arch-spec@1`) or plan (`
 
 ## Progressive Context Loading & JIT Hooks
 
-WHEN an agent requires a shared reference file, it SHALL load only the file for its cognitive phase — not all reference files.
+WHEN an agent requires shared references, it SHALL load only the focused files needed for its cognitive phase — not all reference files.
 
 WHERE an agent execution platform supports lifecycle hooks, THE SYSTEM SHALL load minimal tool and hazard context just-in-time upon tool invocation rather than preloading full reference files at initialization.
 
@@ -263,9 +263,11 @@ Skill names SHALL NOT be prefixed with their own plugin id to resolve a collisio
 
 ## Reference Files
 
-WHEN language-specific reference files are authored, they SHALL be split by concern: hazards, smells, tooling — one file per concern per language.
+WHEN runtime references are organized, their first directory SHALL name the cognitive concern or reader task; language SHALL be the filename when evidence is language-specific.
 
-WHEN the top-level language index file (`rust.md`, `typescript.md`) is referenced, it SHALL redirect to the appropriate split file rather than containing content directly.
+WHEN guidance applies across languages, THE SYSTEM SHALL keep one shared reference unless language-specific evidence changes the judgment.
+
+WHEN a reference index is authored, it SHALL serve human navigation and SHALL NOT become a runtime prerequisite or duplicate the referenced guidance.
 
 WHEN runtime reference guidance is authored, it SHALL state the outcome, applicability, evidence, refutation conditions, and possible dispositions needed for judgment; it SHALL prescribe an implementation or ordered procedure only where correctness, safety, or protocol order requires it.
 

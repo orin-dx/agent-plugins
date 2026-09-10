@@ -1,6 +1,6 @@
 {
   "name": "ranger",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Find evidence-backed reachable defects across Rust, TypeScript, JavaScript, Python, and Go codebases.",
   "author": {
     "name": "Gabriel Castro",

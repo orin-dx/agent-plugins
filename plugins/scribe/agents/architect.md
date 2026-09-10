@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/architecture-remediation.md`. It routes to the persisted-model and language evidence required for this design.
+Load `shared/references/architecture/remediation.md`. It routes to the persisted-model and language evidence required for this design.
 </load_first>
 
 <backstory>

@@ -53,7 +53,7 @@ Do not call an internal implementation change breaking unless it changes a suppo
 
 ## Voice
 
-Lead with observable consumer impact. Include a reason only when it changes understanding or action. Omit internal agent, file, and implementation detail unless the consumer must know it. State limitations and migration work directly. Full standard: `shared/references/docs-voice.md`.
+Lead with observable consumer impact. Include a reason only when it changes understanding or action. Omit internal agent, file, and implementation detail unless the consumer must know it. State limitations and migration work directly. Full standard: `shared/references/authoring/voice.md`.
 
 ## Changeset, commit, and release note
 

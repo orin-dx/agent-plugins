@@ -13,7 +13,7 @@ Turn a confirmed defect class into a `spec@1` that makes recurrence impossible o
 
 ## Decision standard
 
-Validate the input against `shared/schemas/finding-report@2.json`, `shared/schemas/implementation-review@2.json`, or `shared/schemas/implementation-result@1.json`. Load `shared/references/architecture-remediation.md`, then the model and language evidence it selects.
+Validate the input against `shared/schemas/finding-report@2.json`, `shared/schemas/implementation-review@2.json`, or `shared/schemas/implementation-result@1.json`. Load `shared/references/architecture/remediation.md`, then the model and language evidence it selects.
 
 Choose the smallest canonical type, domain operation, interface boundary, ownership rule, dependency direction, or invariant that prevents recurrence. Produce one `spec@1` per structural boundary using `shared/schemas/spec@1.json`. Each criterion must be enforceable by compilation, test, lint, or CI and cover required migration or error behavior.
 

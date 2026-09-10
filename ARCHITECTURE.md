@@ -241,8 +241,9 @@ Codex skills and role cards use native structures. Cross-harness parity applies 
 - Modes: enumeration (haiku/low), tracing/analysis/repair (sonnet/medium), adversarial judgment (opus/high)
 - A plugin with distinct scanning, tracing, adversarial, and repair phases has a dedicated agent per mode
 
-**Progressive context loading** — each agent loads only the reference file for its cognitive phase.
-- A `<load_first>` block names the specific `shared/references/` file — scanner loads hazards, architect loads smells, mutator loads tooling
+**Progressive context loading** — each agent loads only the focused references needed for its cognitive concern.
+
+- A `<load_first>` block names each exact path it may load. The first directory identifies the concern; a language filename narrows language-specific evidence.
 - Never load all reference files into all agents — attention degrades when the context window contains material the agent won't use
 
 **Reference guidance** — runtime references improve judgment without replacing it.
@@ -368,7 +369,7 @@ dist/codex/
     ├── skills/<skill>/SKILL.md             # Authored native Codex workflow
     ├── agent-roles/*.md                    # Packaged cognitive-mode delegation cards
     ├── shared/schemas/*.json               # Materialized contracts needed by this plugin
-    └── shared/references/*.md              # Materialized only when a native skill declares it
+    └── shared/references/<concern>/*.md    # Materialized only when a native skill declares it
 ```
 
 The generated bundle intentionally omits Claude agent files. A Codex skill owns its workflow, uses shared JSON contracts, and may request a team only when that runtime capability exists. It selects a packaged role card before delegation; the role card guides cognitive mode and ownership but is not a TOML runtime configuration. This prevents a host-specific Claude agent topology from becoming a false Codex runtime contract.
@@ -383,13 +384,15 @@ Validation is layered so each check owns a distinct failure class.
 | Source wiring | `shared/scripts/validate-wiring.sh` | Missing schema files or producer/consumer declarations with no source |
 | Source documentation | `scripts/check-skills-doc.sh` | Documented skills without a matching source directory |
 | Version consistency | `scripts/check-versions.sh` | Plugin version disagreement across manifest, README, changelog, and marketplace |
+| Reference size | `scripts/check-reference-size.sh` | Mixed-concern runtime guidance that exceeds the context cap |
+| Reference integrity | `tests/test_reference_integrity.py` | Non-concern paths, broken exact paths, or runtime references with no caller |
 | Native build behavior | `tests/test_build_codex_marketplace.py` | Native manifest/skill rewriting, source/native skill drift, version drift, stale output retention, unsafe runtime collisions, and symlink output |
 | Native source contract | `tests/test_codex_native_sources.py` | Missing native sources, invalid required manifest or skill metadata, source/native skill inventory drift, or rewritten release files |
 | Cross-harness compatibility | `tests/test_cross_harness_artifacts.py` | Changed portable contract bytes or missing lifecycle producer/consumer links |
 | Release drift | `tools/build-codex-marketplace.py --check` | Generated root discovery or `dist/codex` artifacts that differ from source inputs |
 | Diagram syntax | `scripts/check-mermaid.sh` | Markdown diagrams that cannot render |
 
-CI runs the catalog JSON, native build, compatibility, drift, version, source-documentation, reference-size, and Mermaid checks. The release payload and its native-source, catalog, and schema change belong in the same review; a generated-only change is not a valid release.
+CI runs the catalog JSON, native build, compatibility, drift, version, source-documentation, reference-integrity, and Mermaid checks. The release payload and its native-source, catalog, and schema change belong in the same review; a generated-only change is not a valid release.
 
 ## 12. Failure Containment and Compatibility Boundaries
 

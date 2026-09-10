@@ -1,6 +1,6 @@
 # courier — Ship Tooling
 
-**Stage:** Ship · **Output:** `release-artifact@2` · **Version:** 3.0.2
+**Stage:** Ship · **Output:** `release-artifact@2` · **Version:** 3.0.3
 
 Handles everything after implementation: commit messages, PR descriptions, changeset extraction, review triage, posting a review, and release notes. Courier is not a linear pipeline — six independently-triggered skills, each dispatching to the subagent that matches the task. It reads the staged diff, linked spec, and linked requirement at runtime to produce meaningful, context-aware output, not mechanical templates.
 
@@ -53,9 +53,9 @@ Courier does not critique code quality or spec conformance — that's the built-
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
 | `commit-analyzer` | Commit Author | haiku / low | Reads staged diff and produces a conventional commit message explaining why, not what. |
-| `changeset-analyzer` | Changeset Extractor | sonnet / medium | Classifies `consumer_impact` and `semver_impact` from a git diff per the decision table in `changesets.md`, then produces a `changeset@2` whose summary detail scales with that classification. |
+| `changeset-analyzer` | Changeset Extractor | sonnet / medium | Classifies `consumer_impact` and `semver_impact` from a git diff per `shared/references/delivery/changesets.md`, then produces a `changeset@2` whose summary detail scales with that classification. |
 | `pr-narrator` | PR Author | sonnet / medium | Writes a PR title and body from the reviewer's perspective — zero prior context assumed. |
-| `review-preprocessor` | Review Package Assembler | haiku / low | Bundles the diff, linked spec, test results, and open questions into a structured review package. Does not categorize comments — that's the caller's call, made with `shared/references/github.md`'s vocabulary. |
+| `review-preprocessor` | Review Package Assembler | haiku / low | Bundles the diff, linked spec, test results, and open questions into a structured review package. Does not categorize comments — that's the caller's call, made with `shared/references/delivery/github.md`'s vocabulary. |
 | `release-summarizer` | Release Author | sonnet / medium | Aggregates `changeset@2` entries into a `release-artifact@2`, computing the version as `max(semver_impact)` and filtering `internal-only` entries. |
 
 `courier/post-review` has no subagent — posting is mechanical execution of already-drafted content, gated by user confirmation, not a judgment task.
@@ -100,10 +100,10 @@ flowchart TD
 
 Agents read these at runtime — they are not injected at startup:
 
-- `shared/references/conventional-commits.md` — type/scope conventions, commit message rules, voice
-- `shared/references/github.md` — PR template, label conventions, review-comment vocabulary, voice
-- `shared/references/changesets.md` — changeset format, consumer/semver classification tables, voice
-- `shared/references/docs-voice.md` — the full voice standard these three embed a subset of
+- `shared/references/delivery/commits.md` — type/scope conventions, commit message rules, voice
+- `shared/references/delivery/github.md` — PR template, label conventions, review-comment vocabulary, voice
+- `shared/references/delivery/changesets.md` — changeset format, consumer/semver classification tables, voice
+- `shared/references/authoring/voice.md` — the full voice standard these three embed a subset of
 
 ---
 

@@ -2,6 +2,11 @@
 
 — sentinel
 
+## [2.1.2] - 2026-09-10
+
+### Fixed
+- The gate skill's verdict-schema link now resolves from its nested skill directory.
+
 ## [2.1.1] - 2026-09-09
 
 ### Changed

@@ -2,6 +2,11 @@
 
 — scribe
 
+## [3.3.2] - 2026-09-10
+
+### Changed
+- Architecture and workspace guidance now load through concern-first reference paths in both harnesses.
+
 ## [3.3.1] - 2026-09-09
 
 ### Changed

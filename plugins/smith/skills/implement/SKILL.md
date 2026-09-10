@@ -20,7 +20,7 @@ The caller aggregates `criteria_evidence` for exit-gate and later passes it with
 </io>
 
 <implementation_cycle>
-For each subsystem batch, read persisted criteria, implement the smallest safe solution, and choose verification from `shared/references/verification-evidence.md` plus capabilities in `workspace-manifest@1`. Record exact commands, observations, boundaries, and criterion locations in `implementation-result@1`. Commit only with explicit authorization.
+For each subsystem batch, read persisted criteria, implement the smallest safe solution, and choose verification from `shared/references/verification/evidence.md` plus capabilities in `workspace-manifest@1`. Record exact commands, observations, boundaries, and criterion locations in `implementation-result@1`. Commit only with explicit authorization.
 </implementation_cycle>
 
 <mutation_gate>

@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-Load `shared/references/workspace-conventions.md` before checking scope-overlap or boundary-round-trip — it names where other gated specs live on disk and what an empty search there does and doesn't prove.
+Load `shared/references/workspace/conventions.md` before checking scope-overlap or boundary-round-trip — it names where other gated specs live on disk and what an empty search there does and doesn't prove.
 </load_first>
 
 <backstory>

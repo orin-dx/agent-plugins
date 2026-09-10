@@ -1,6 +1,6 @@
 # Rust Hazard Reference
 
-Patterns are leads, not findings. Confirm a reachable bad outcome in live code and record evidence that rules out the plausible exception. Use `rust-hazards-t7-t10.md` for boundary taxonomies T7 and T10.
+Patterns are leads, not findings. Confirm a reachable bad outcome in live code and record evidence that rules out the plausible exception. Use `shared/references/hazards/rust-boundaries.md` for boundary taxonomies T7 and T10.
 
 ## T8 · False-success mutation
 

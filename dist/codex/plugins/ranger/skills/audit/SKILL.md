@@ -19,7 +19,7 @@ Ranger reports only defects that survive control-flow and reachability review. P
 ## Evidence pipeline
 
 1. Build `shared/schemas/workspace-manifest@1.json` from repository evidence. Record live files, entry points, languages, available checks, workspace state, and exact Ranger version/source revision when known.
-2. Load only the matching Rust, TypeScript/JavaScript, Python, or Go hazard reference. Use the narrow T7/T10 pack only for those taxonomies.
+2. Load only the matching Rust, TypeScript/JavaScript, Python, or Go hazard references. Use the boundary reference only for T7 and T10.
 3. Emit candidates conforming to `shared/schemas/candidate@1.json` from live code only.
 4. For T7 or T10 candidates, trace field survival and record `shared/schemas/field-survival-map@1.json` before adjudicating the candidate.
 5. Trace control flow, inputs, state, and I/O to refute each candidate. Record `shared/schemas/candidate-assessment@1.json`; confirmation needs a concrete failing scenario, while plausible requires unobserved external state.

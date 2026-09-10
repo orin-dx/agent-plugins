@@ -1,7 +1,7 @@
 {
   "id": "smith",
   "name": "smith",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Implementation plugin. Executes tested plan batches, verifies risk at real boundaries, searches semantic defect siblings, and escalates shared model or architecture gaps.",
   "author": {
     "name": "Gabriel Castro",

@@ -2,6 +2,13 @@
 
 — ranger
 
+## [3.2.2] - 2026-09-10
+
+### Changed
+- Runtime hazard paths now use the concern-first reference tree.
+- Scanner documentation now describes candidate-signal enumeration without assuming every reference supplies a literal grep command.
+- Adversary and boundary-tracer name every selectable hazard reference exactly.
+
 ## [3.2.1] - 2026-09-09
 
 ### Changed

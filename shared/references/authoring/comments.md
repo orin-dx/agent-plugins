@@ -1,6 +1,6 @@
 # Code Comment Reference
 
-Operational subset of the Reader-Scoped Writing rule (`constitution.md`) for doc comments (`///`, `/**`, docstrings) and inline comments, in any language. Companion to `docs-voice.md`, which covers commit messages, PR bodies, changesets, and prose docs — this file covers comments written inside code.
+Operational subset of the Reader-Scoped Writing rule (`shared/constitution.md`) for doc comments (`///`, `/**`, docstrings) and inline comments in any language. The companion voice guide covers commit messages, PR bodies, changesets, and prose docs; this file covers comments inside code.
 
 ## Name the reader before writing
 

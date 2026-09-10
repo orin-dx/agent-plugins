@@ -7,7 +7,7 @@ State material concerns, evidence, consequence, and confidence directly. Do not 
 
 # Evaluate plugin behavior
 
-Use `shared/references/behavioral-evaluation.md` and return `shared/schemas/harness-evaluation@2.json`.
+Use `shared/references/evaluation/behavioral.md` and return `shared/schemas/harness-evaluation@2.json`.
 
 ## Method
 

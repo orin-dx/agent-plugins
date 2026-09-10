@@ -12,7 +12,7 @@ Read the actual diff and any available implementation evidence before writing a 
 ## Workflow
 
 1. Inspect the diff and group files by independent product or API topic.
-2. Read `shared/references/changesets.md` before choosing `consumer_impact` or `semver_impact`.
+2. Read `shared/references/delivery/changesets.md` before choosing `consumer_impact` or `semver_impact`.
 3. For each topic, connect changed behavior to the linked requirement, spec, plan, or exact criteria evidence when available.
 4. Produce one object per topic conforming to `shared/schemas/changeset@2.json`.
 5. Validate required fields, especially `files_changed` and `acceptance_criteria_met`, against observed evidence.

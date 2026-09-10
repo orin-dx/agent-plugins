@@ -12,7 +12,7 @@ All hard rules for plugin and agent authoring live in one place:
 - [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution, explained with examples. Authoring-time only — never loaded by agents at runtime.
 - [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, Red-to-Green verification standards.
 - [**`shared/harness-authoring.md`**](./shared/harness-authoring.md): Cross-harness change classification, native workflow boundaries, and required counterpart review.
-- [**`shared/references/modern-cli-tools.md`**](./shared/references/modern-cli-tools.md): Capability-aware preferences for modern CLI tools, with repository-native commands and safe fallbacks taking priority.
+- [**`shared/references/tooling/cli.md`**](./shared/references/tooling/cli.md): Capability-aware preferences for modern CLI tools, with repository-native commands and safe fallbacks taking priority.
 
 ---
 
@@ -44,12 +44,12 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 1. **Use `mason`** — run `scaffolder` to generate the full directory structure and stubs.
 2. **5-part agent structure** — every agent body: `<constitution>` (copied byte-for-byte from an existing agent), `<backstory>`, `<goal>`, `<judgment>`, `<output>`. No `<role>` body sections. No `success_criteria` checklists.
 3. **EARS in output only** — WHEN/IF/WHILE/WHERE notation belongs only in `<output>` contracts and never-do rules.
-4. **Progressive context loading** — one `<load_first>` block per agent, naming only the reference file for its cognitive phase.
+4. **Progressive context loading** — one `<load_first>` block per agent, naming only the focused references needed for its cognitive phase.
 5. **Schema-first handoffs** — define `shared/schemas/<name>@<version>.json` before writing the agent that produces it.
 6. **Abstract tool language** — "use your file reading tool", never `view_file`, `read_file`, or `Bash tool`.
 7. **Instruction economy** — keep one actionable rule per item, remove repeated rationale, and number only order-dependent work.
 8. **Radical candor** — state material concerns, evidence, consequence, and confidence directly; do not soften blockers, manufacture praise, or overstate certainty.
-9. **Reference quality** — runtime guidance states outcome, applicability, evidence, refutation, and disposition; it does not universalize one project's preferences.
+9. **Reference routing and quality** — organize by cognitive concern, use language filenames only for language-specific evidence, and state outcome, applicability, evidence, refutation, and disposition.
 10. **Verification evidence** — match checks to risk; require generators and oracles, independently derived semantic candidates, fresh state, terminal results, and explicit gaps when relevant.
 11. **Cross-harness review** — preserve identity, skill routes, artifact contracts, evidence, and acceptance intent in Claude/AGY and Codex sources; native wording and delegation may differ.
 12. **Manifest registration** — add an entry to root `marketplace.json` and validate: `jq . marketplace.json`.

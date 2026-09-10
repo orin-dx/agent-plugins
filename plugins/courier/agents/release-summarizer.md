@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-shared/references/changesets.md
+shared/references/delivery/changesets.md
 </load_first>
 
 <backstory>

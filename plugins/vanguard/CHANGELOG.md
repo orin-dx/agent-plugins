@@ -2,6 +2,11 @@
 
 — vanguard
 
+## [2.0.2] - 2026-09-10
+
+### Changed
+- Research reconnaissance now loads workspace conventions from the concern-first reference path.
+
 ## [2.0.1] - 2026-09-09
 
 ### Changed

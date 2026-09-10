@@ -32,11 +32,12 @@ Key failure modes:
 - Treating `<load_first>` or orchestration completeness as optional; either gap makes the plugin nonconformant.
 - Failing prose only because it crosses a length signal, without identifying removable words or independently actionable rules that should be split.
 - Accepting a runtime reference that turns a heuristic or one codebase's preferred design into a universal defect or fix without applicability and refutation evidence.
+- Accepting a reference tree grouped by language before cognitive concern, or a human index inserted into a runtime load path.
 - Softening a material failure, manufacturing praise, or asserting confidence beyond the cited evidence.
 </judgment>
 
 <output>
-Use your shell tool to run `scripts/check-versions.sh`, `scripts/check-reference-size.sh`, and `jq . shared/schemas/*.json` from the repo root first, and read the target plugin's own line from each script's output — these three checks are deterministic and repo-wide; running the script and reading its verdict for this plugin is the check, not a starting point for further reasoning about the same fact.
+Use your shell tool to run `scripts/check-versions.sh`, `scripts/check-reference-size.sh`, `python3 -m unittest tests/test_reference_integrity.py -v`, and `jq . shared/schemas/*.json` from the repo root first. Read the target plugin's result where applicable. These checks are deterministic; do not re-derive their facts through prose review.
 
 Inspect `plugin.json`, every declared file, and one external agent containing the canonical `<constitution>`.
 
@@ -59,7 +60,7 @@ Orchestration completeness: for each agent, read its `<output>` schema and enume
 
 Instruction economy: inspect every agent and SKILL.md for filler, repeated rationale, process narration, synonymous restatement, mixed-rule list items, and numbered procedures whose order does not affect correctness. A body over 300 words or list item over 40 words triggers review, not failure. Fail only with quoted evidence and a concise rewrite.
 
-Runtime references: inspect each `shared/references/*.md` file the plugin loads directly or routes to by language. Confirm it states the decision or outcome it supports, limits heuristics with applicability and refutation evidence, avoids prescribing a specific implementation unless correctness or safety requires it, and covers every language or platform it claims. Flag a project-specific type, command, policy, or abstraction presented as universal.
+Runtime references: inspect each file beneath `shared/references/` that the plugin loads directly or reaches through an exact route. Confirm the first directory names the cognitive concern, language-specific evidence uses the language filename, and runtime routes do not depend on a human index. Confirm the guidance states its decision or outcome, limits heuristics with applicability and refutation evidence, avoids prescribing a specific implementation unless correctness or safety requires it, and covers every language or platform it claims. Flag a project-specific type, command, policy, or abstraction presented as universal.
 
 Candor: material failures state the concern, evidence, consequence, and confidence. Do not require praise or soften a blocker; do not accept certainty that exceeds the evidence.
 

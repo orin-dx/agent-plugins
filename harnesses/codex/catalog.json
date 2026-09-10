@@ -19,14 +19,14 @@
         "shared/schemas/release-artifact@2.json",
         "shared/schemas/requirement@1.json",
         "shared/schemas/spec@1.json",
-        "shared/references/changesets.md",
-        "shared/references/conventional-commits.md",
-        "shared/references/docs-voice.md"
+        "shared/references/delivery/changesets.md",
+        "shared/references/delivery/commits.md",
+        "shared/references/authoring/voice.md"
       ]
     },
     {
       "id": "mason",
-      "runtime_files": ["shared/schemas", "shared/harness-authoring.md", "shared/references/behavioral-evaluation.md"]
+      "runtime_files": ["shared/schemas", "shared/harness-authoring.md", "shared/references/evaluation/behavioral.md"]
     },
     {
       "id": "muse",
@@ -34,7 +34,7 @@
     },
     {
       "id": "navigator",
-      "runtime_files": ["shared/schemas/plan@1.json", "shared/schemas/spec@1.json"]
+      "runtime_files": ["shared/schemas/plan@1.json", "shared/schemas/spec@1.json", "shared/references/verification/interface-coverage.md"]
     },
     {
       "id": "ranger",
@@ -45,19 +45,19 @@
         "shared/schemas/finding-report@2.json",
         "shared/schemas/verdict@3.json",
         "shared/schemas/workspace-manifest@1.json",
-        "shared/references/go-hazards.md",
-        "shared/references/go-hazards-t7-t10.md",
-        "shared/references/python-hazards.md",
-        "shared/references/python-hazards-t7-t10.md",
-        "shared/references/rust-hazards.md",
-        "shared/references/rust-hazards-t7-t10.md",
-        "shared/references/typescript-hazards.md",
-        "shared/references/typescript-hazards-t7-t10.md"
+        "shared/references/hazards/go.md",
+        "shared/references/hazards/go-boundaries.md",
+        "shared/references/hazards/python.md",
+        "shared/references/hazards/python-boundaries.md",
+        "shared/references/hazards/rust.md",
+        "shared/references/hazards/rust-boundaries.md",
+        "shared/references/hazards/typescript.md",
+        "shared/references/hazards/typescript-boundaries.md"
       ]
     },
     {
       "id": "scribe",
-      "runtime_files": ["shared/schemas/arch-audit@1.json", "shared/schemas/arch-model@1.json", "shared/schemas/finding-report@2.json", "shared/schemas/implementation-result@1.json", "shared/schemas/implementation-review@2.json", "shared/schemas/plan@1.json", "shared/schemas/requirement@1.json", "shared/schemas/research-report@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@3.json", "shared/references/architecture-remediation.md", "shared/references/go-smells.md", "shared/references/python-smells.md", "shared/references/rust-smells.md", "shared/references/typescript-smells.md", "shared/references/workspace-conventions.md"]
+      "runtime_files": ["shared/schemas/arch-audit@1.json", "shared/schemas/arch-model@1.json", "shared/schemas/finding-report@2.json", "shared/schemas/implementation-result@1.json", "shared/schemas/implementation-review@2.json", "shared/schemas/plan@1.json", "shared/schemas/requirement@1.json", "shared/schemas/research-report@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@3.json", "shared/references/architecture/remediation.md", "shared/references/architecture/go.md", "shared/references/architecture/python.md", "shared/references/architecture/rust.md", "shared/references/architecture/typescript.md", "shared/references/workspace/conventions.md"]
     },
     {
       "id": "sentinel",
@@ -65,7 +65,7 @@
     },
     {
       "id": "smith",
-      "runtime_files": ["shared/schemas/implementation-result@1.json", "shared/schemas/implementation-review@2.json", "shared/schemas/mutation-report@2.json", "shared/schemas/plan@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@3.json", "shared/schemas/workspace-manifest@1.json", "shared/references/code-comments.md", "shared/references/go-hazards.md", "shared/references/go-hazards-t7-t10.md", "shared/references/go-smells.md", "shared/references/go-tooling.md", "shared/references/implementation-review.md", "shared/references/python-hazards.md", "shared/references/python-hazards-t7-t10.md", "shared/references/python-smells.md", "shared/references/python-tooling.md", "shared/references/rust-hazards.md", "shared/references/rust-hazards-t7-t10.md", "shared/references/rust-smells.md", "shared/references/rust-tooling.md", "shared/references/typescript-hazards.md", "shared/references/typescript-hazards-t7-t10.md", "shared/references/typescript-smells.md", "shared/references/typescript-tooling.md", "shared/references/verification-evidence.md"]
+      "runtime_files": ["shared/schemas/implementation-result@1.json", "shared/schemas/implementation-review@2.json", "shared/schemas/mutation-report@2.json", "shared/schemas/plan@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@3.json", "shared/schemas/workspace-manifest@1.json", "shared/references/authoring/comments.md", "shared/references/hazards/go.md", "shared/references/hazards/go-boundaries.md", "shared/references/architecture/go.md", "shared/references/verification/go.md", "shared/references/verification/implementation-review.md", "shared/references/hazards/python.md", "shared/references/hazards/python-boundaries.md", "shared/references/architecture/python.md", "shared/references/verification/python.md", "shared/references/hazards/rust.md", "shared/references/hazards/rust-boundaries.md", "shared/references/architecture/rust.md", "shared/references/verification/rust.md", "shared/references/hazards/typescript.md", "shared/references/hazards/typescript-boundaries.md", "shared/references/architecture/typescript.md", "shared/references/verification/typescript.md", "shared/references/verification/evidence.md"]
     },
     {
       "id": "vanguard",

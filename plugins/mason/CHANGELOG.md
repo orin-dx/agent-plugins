@@ -2,6 +2,12 @@
 
 — mason
 
+## [3.2.2] - 2026-09-10
+
+### Changed
+- Scaffolding and audits now require concern-first reference paths and keep human indexes out of runtime load chains.
+- Reference conformance now includes exact paths, local Markdown links, retired pointer forms, immutable-path replacements, and runtime callers.
+
 ## [3.2.1] - 2026-09-09
 
 ### Changed

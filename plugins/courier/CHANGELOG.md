@@ -2,6 +2,12 @@
 
 — courier
 
+## [3.0.3] - 2026-09-10
+
+### Changed
+- Commit, PR, review, changeset, release, and voice guidance now load through concern-first reference paths in both harnesses.
+- Changeset documentation now names the exact delivery reference instead of a bare filename.
+
 ## [3.0.2] - 2026-09-09
 
 ### Changed

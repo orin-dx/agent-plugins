@@ -43,7 +43,7 @@ Don't describe what the code does (the diff shows that). Write what a reviewer n
 
 ## Voice
 
-Use active voice and imperative mood. Name the technical outcome in the subject and explain only the non-obvious reason in the body. Remove adjectives that stand in for mechanism or evidence. Full standard: `shared/references/docs-voice.md`.
+Use active voice and imperative mood. Name the technical outcome in the subject and explain only the non-obvious reason in the body. Remove adjectives that stand in for mechanism or evidence. Full standard: `shared/references/authoring/voice.md`.
 
 ## Scope Conventions (this repo)
 

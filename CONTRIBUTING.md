@@ -98,8 +98,10 @@ No `<role>` section in the body — that's what `<backstory>` replaced. The fron
 - [ ] Material concerns state evidence, consequence, and confidence directly; blockers are not softened and praise is not manufactured
 
 ### Progressive context loading
-- [ ] Declares a `<load_first>` block naming the specific `shared/references/` file for this agent's phase
+- [ ] Declares one `<load_first>` block naming only the focused `shared/references/` files needed for this agent's phase
 - [ ] Does not load reference files outside its cognitive mode (scanner loads hazards, not smells)
+- [ ] Places references under the cognitive concern; uses language filenames only for language-specific evidence
+- [ ] Keeps human indexes out of runtime load chains
 - [ ] For Codex, every exact `shared/` path loaded directly or transitively appears in `harnesses/codex/catalog.json`; historical mentions omit the path when runtime access is unnecessary
 
 ### EARS placement
@@ -175,14 +177,14 @@ When you add or change what an existing agent can do — a new dimension, a new 
 
 - [ ] Frontmatter `description` reflects the new capability
 - [ ] If the agent's output gained a new status/enum value, the plugin's `SKILL.md` names what the caller does with it — or states it's terminal
-- [ ] If a new `shared/references/*.md` file was added, it's listed in root `README.md`'s Shared References table
+- [ ] New references live under the reader's concern, have a real caller, and update `shared/references/README.md` when they introduce a concern
 - [ ] If runtime reference behavior changed, every consuming Claude/AGY and Codex route was reviewed and affected plugin versions were updated
 - [ ] Every prose description still matches the agent's current behavior:
   - Plugin README subagent and output-schema sections
   - SKILL.md overview, dispatch, and I/O sections
   - Narrowed or corrected capabilities, not only additions
 - [ ] Plugin `CHANGELOG.md` gets a new dated entry
-- [ ] `plugin.json` version bumped (see the Semver Decision Guide in `shared/references/changesets.md`)
+- [ ] `plugin.json` version bumped (see `shared/references/delivery/changesets.md`)
 - [ ] Root `marketplace.json`'s matching plugin entry version bumped to the same value
 - [ ] `mason:scaffolder` and `mason:auditor` reflect any new structural convention; capability-only changes need no Mason update
 
@@ -199,6 +201,7 @@ This isn't automated. `mason:audit-plugin` checks structural conformance; it doe
 - **Abstract tool language:** keep prompts portable across harnesses.
 - **Conventional commits:** use the applicable type and plugin scope.
 - **Clean writing:** omit AI filler, marketing language, and non-warning ALL CAPS.
+- **Diagrams:** follow `shared/references/authoring/diagrams.md` when Mermaid materially clarifies a relationship.
 
 ---
 

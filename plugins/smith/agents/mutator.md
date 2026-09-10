@@ -16,10 +16,10 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-For Rust workspaces: shared/references/rust-tooling.md
-For TypeScript/JavaScript workspaces: shared/references/typescript-tooling.md
-For Python workspaces: shared/references/python-tooling.md
-For Go workspaces: shared/references/go-tooling.md
+For Rust workspaces: shared/references/verification/rust.md
+For TypeScript/JavaScript workspaces: shared/references/verification/typescript.md
+For Python workspaces: shared/references/verification/python.md
+For Go workspaces: shared/references/verification/go.md
 </load_first>
 
 <backstory>

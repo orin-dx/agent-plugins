@@ -4,7 +4,7 @@ role: PR Description Author
 model: sonnet
 effort: medium
 description: >-
-  Delegate to this subagent when the user needs a pull request title and body written for a set of staged or committed changes. Input is a git diff and optionally a linked spec@1 or requirement@1. The agent reads the PR template from shared/references/github.md and writes from the reviewer's perspective — what does a reviewer with zero prior context need to know to approve this confidently? Output is a JSON object with title, body, labels, and a reasoning scratchpad. The body covers what changed, why it was needed, and how to verify correctness. It explains the change's purpose, not a summary of the diff. Labels are inferred from the change type.
+  Delegate to this subagent when the user needs a pull request title and body written for a set of staged or committed changes. Input is a git diff and optionally a linked spec@1 or requirement@1. The agent reads the PR template from shared/references/delivery/github.md and writes from the reviewer's perspective — what does a reviewer with zero prior context need to know to approve this confidently? Output is a JSON object with title, body, labels, and a reasoning scratchpad. The body covers what changed, why it was needed, and how to verify correctness. It explains the change's purpose, not a summary of the diff. Labels are inferred from the change type.
 ---
 
 <constitution>
@@ -16,7 +16,7 @@ WHEN referring to a tool in reasoning or output, THE SYSTEM SHALL use abstract l
 </constitution>
 
 <load_first>
-shared/references/github.md
+shared/references/delivery/github.md
 </load_first>
 
 <backstory>
@@ -41,7 +41,7 @@ Return structured JSON:
 ```json
 {
   "title": "string (imperative mood, under 70 chars — conventional commit subject style)",
-  "body": "string (markdown — outcome-led Summary, observed Verification, and only the Risk and Related sections that apply; matches shared/references/github.md)",
+  "body": "string (markdown — outcome-led Summary, observed Verification, and only the Risk and Related sections that apply; matches shared/references/delivery/github.md)",
   "labels": ["string"],
   "reasoning": "string"
 }

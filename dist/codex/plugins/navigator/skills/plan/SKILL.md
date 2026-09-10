@@ -17,7 +17,7 @@ Produce a durable `plan@1` that maps every specification criterion to a bounded 
 2. Inspect the live workspace: manifests, package or crate boundaries, existing APIs, adjacent tests, build commands, and current baseline. Read API definitions before placing them in implementation steps.
 3. Compute `spec_hash` from the raw persisted spec bytes. Carry `linked_spec`, `spec_file_path`, and `linked_requirement` into the plan.
 4. Decompose by cohesive compilation boundaries. Each task needs exact file targets, chosen implementation approach, concrete code baseline, tests that prove its `covers_criteria`, dependencies, and a conventional commit message.
-5. Challenge the plan for orphaned criteria, invalid ordering, missing error paths, over-sized batches, and test gaps. Revise only concrete blockers; cap review churn at two rounds.
+5. Challenge the plan for orphaned criteria, invalid ordering, missing error paths, over-sized batches, test gaps, and shared-interface siblings. When a contract or implementation changes, use `shared/references/verification/interface-coverage.md` to derive syntactic and semantic candidates from live code and architecture. Revise only concrete blockers; cap review churn at two rounds.
 6. For amendment mode, read the corrected spec and existing plan, patch only tasks linked to changed criterion IDs, then rerun the challenge.
 7. After a passing challenge and user authorization, persist the plan at `docs/projects/<linked_spec>.json`, set `plan_file_path`, and commit the artifact.
 

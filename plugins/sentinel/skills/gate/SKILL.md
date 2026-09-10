@@ -54,5 +54,5 @@ The protocol output is `verdict@3`: a scoped pass or fail with blockers, coverag
 ---
 
 <framework_references>
-- [Verdict Schema](../../../shared/schemas/verdict@3.json)
+- [Verdict Schema](../../../../shared/schemas/verdict@3.json)
 </framework_references>

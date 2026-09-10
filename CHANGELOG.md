@@ -3,6 +3,16 @@
 All notable changes to the Wisp Plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [4.4.2] - 2026-09-10 — Concern-first reference routing
+
+- Reorganized shared references by cognitive concern, with language as the filename only for language-specific evidence. Removed four redundant language indexes.
+- Updated Claude/AGY and Codex runtime paths, catalogs, authoring docs, and generated packaging inputs together.
+- Added CI coverage for broken exact paths, local Markdown links, retired pointer forms, immutable-path replacements, and runtime references with no caller.
+- Mermaid validation now reports renderer and network failures when no parser error is present.
+- Corrected Navigator's Codex workflow to apply the same syntax-and-architecture interface coverage as its Claude/AGY challenger.
+- Replaced stale claims about grep-only scanning and deterministic implementer discovery with the evidence-led behavior the references require; Ranger now names every selectable hazard path exactly.
+- Corrected Sentinel's verdict-schema link and clarified that one `<load_first>` block may select the smallest relevant set of focused references.
+
 ## [4.4.1] - 2026-09-09 — Direct, evidence-led guidance
 
 - Added a shared radical-candor rule: report material concerns with evidence, consequence, and calibrated confidence; do not soften blockers or manufacture praise.

@@ -1,6 +1,6 @@
 # scribe — Specification
 
-**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.3.1
+**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.3.2
 
 Turns requirements into unambiguous, testable specs a developer can implement without a single clarifying question — and keeps them that way after implementation starts.
 
@@ -127,7 +127,7 @@ finding-report@2, implementation-review@2, or architecture-escalating implementa
   → scribe/audit-architecture (refresh model)
 ```
 
-`scribe/verify-spec` checks source grounding; `audit-spec` checks internal quality; `audit-architecture` checks system fit. `scribe/architect` loads `architecture-remediation.md` for the persisted-model location and language smells. After Smith verifies the structural change, `audit-architecture` refreshes the model with the new boundary and invariant.
+`scribe/verify-spec` checks source grounding; `audit-spec` checks internal quality; `audit-architecture` checks system fit. `scribe/architect` loads `shared/references/architecture/remediation.md` for the persisted-model location and language evidence. After Smith verifies the structural change, `audit-architecture` refreshes the model with the new boundary and invariant.
 
 ---
 

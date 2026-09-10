@@ -207,7 +207,7 @@ Notice `ac-1` directly addresses the T7 risk `vanguard` found: the spec requires
 **`ranger` runs independently of the main pipeline — typically before a release.**
 
 - `recon` (haiku/low) — builds the workspace manifest: live files, dead files, language detection
-- `scanner` (sonnet/medium) — runs hazard taxonomy T1–T10 grep patterns against all live files
+- `scanner` (sonnet/medium) — searches hazard-taxonomy candidate signals across all live files without adjudicating them
 
 For this codebase, the scanner surfaces a T7 candidate: an `AccessConfig` struct whose `private_registry` field is captured from user config but never reaches the publish command.
 

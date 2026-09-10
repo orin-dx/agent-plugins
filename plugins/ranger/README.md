@@ -1,6 +1,6 @@
 # ranger — Adversarial Bug Hunting
 
-**Stage:** Cross-cutting · **Output:** `finding-report@2` · **Version:** 3.2.1
+**Stage:** Cross-cutting · **Output:** `finding-report@2` · **Version:** 3.2.2
 
 Adversarial bug hunting on live Rust, TypeScript, JavaScript, Python, and Go code.
 
@@ -55,7 +55,7 @@ Unlike `courier` or `scribe`, ranger has exactly one skill directory (`skills/au
 | Subagent | Role | Tier | Description |
 | :--- | :--- | :--- | :--- |
 | `recon` | Workspace Recon | haiku / low | Traces imports from entry points to build a verified live/dead file manifest. All downstream agents operate only on live files. |
-| `scanner` | Hazard Scanner | sonnet / medium | Loads language-specific hazard taxonomies, runs grep patterns against live files, emits every match as a candidate@1 entry. No filtering — exhaustiveness is the goal. |
+| `scanner` | Hazard Scanner | sonnet / medium | Loads language-specific hazard taxonomies, searches candidate signals across live files, and emits every match as a candidate@1 entry. It does not adjudicate candidates. |
 | `boundary-tracer` | Data Flow Tracer | sonnet / medium | Conditional. Invoked for T7 and T10 candidates only. Traces each field of the flagged struct or type from construction site to execution boundary and produces a field survival map for the adversary. |
 | `adversary` | Adversarial Verifier | opus / high | Invoked once per candidate. Tries hard to refute before confirming. Runs a one-time constitution sweep for Invisible Invariants. Confirms only when a concrete failing scenario can be stated. |
 | `exit-gate` | Exit Verifier | opus / high | Re-reads current code, checks syntactic and semantic siblings, verifies structural assessment, compilation, and tests. |
@@ -135,10 +135,10 @@ Recon inspects the workspace root automatically:
 
 | File found | Language | Hazard reference loaded |
 | :--- | :--- | :--- |
-| `Cargo.toml` | Rust | `shared/references/rust-hazards.md` and/or `rust-hazards-t7-t10.md`, per each agent's scope |
-| `package.json` | TypeScript / JavaScript | `shared/references/typescript-hazards.md` and/or `typescript-hazards-t7-t10.md`, per each agent's scope |
-| `pyproject.toml`, `requirements.txt`, Python files | Python | `shared/references/python-hazards.md` and/or `python-hazards-t7-t10.md` |
-| `go.mod`, Go files | Go | `shared/references/go-hazards.md` and/or `go-hazards-t7-t10.md` |
+| `Cargo.toml` | Rust | `shared/references/hazards/rust.md` and/or `shared/references/hazards/rust-boundaries.md`, per agent scope |
+| `package.json` | TypeScript / JavaScript | `shared/references/hazards/typescript.md` and/or `shared/references/hazards/typescript-boundaries.md`, per agent scope |
+| `pyproject.toml`, `requirements.txt`, Python files | Python | `shared/references/hazards/python.md` and/or `shared/references/hazards/python-boundaries.md` |
+| `go.mod`, Go files | Go | `shared/references/hazards/go.md` and/or `shared/references/hazards/go-boundaries.md` |
 
 ---
 
@@ -146,14 +146,14 @@ Recon inspects the workspace root automatically:
 
 | File | Contents | Loaded by |
 | :--- | :--- | :--- |
-| `shared/references/rust-hazards.md` | Rust taxonomies T1-T6, T8, T9, grep patterns, NAPI boundary rules | scanner (always), adversary (non-T7/T10 candidates) |
-| `shared/references/rust-hazards-t7-t10.md` | Rust taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
-| `shared/references/typescript-hazards.md` | TypeScript taxonomies T1-T6, T8, T9, grep patterns, unhandled promise patterns | scanner (always), adversary (non-T7/T10 candidates) |
-| `shared/references/typescript-hazards-t7-t10.md` | TypeScript taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
-| `shared/references/python-hazards.md` | Python taxonomies outside T7/T10 | scanner, adversary |
-| `shared/references/python-hazards-t7-t10.md` | Python T7/T10 boundary hazards | scanner, boundary-tracer, adversary |
-| `shared/references/go-hazards.md` | Go taxonomies outside T7/T10 | scanner, adversary |
-| `shared/references/go-hazards-t7-t10.md` | Go T7/T10 boundary hazards | scanner, boundary-tracer, adversary |
+| `shared/references/hazards/rust.md` | Rust T1-T6, T8, and T9 candidate, confirmation, and refutation evidence | scanner (always), adversary (non-T7/T10 candidates) |
+| `shared/references/hazards/rust-boundaries.md` | Rust taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
+| `shared/references/hazards/typescript.md` | TypeScript/JavaScript T1-T6, T8, and T9 candidate, confirmation, and refutation evidence | scanner (always), adversary (non-T7/T10 candidates) |
+| `shared/references/hazards/typescript-boundaries.md` | TypeScript taxonomies T7 and T10 — boundary-tracer's entire scope | boundary-tracer (always), scanner (full scans), adversary (T7/T10 candidates) |
+| `shared/references/hazards/python.md` | Python taxonomies outside T7/T10 | scanner, adversary |
+| `shared/references/hazards/python-boundaries.md` | Python T7/T10 boundary hazards | scanner, boundary-tracer, adversary |
+| `shared/references/hazards/go.md` | Go taxonomies outside T7/T10 | scanner, adversary |
+| `shared/references/hazards/go-boundaries.md` | Go T7/T10 boundary hazards | scanner, boundary-tracer, adversary |
 | `shared/schemas/candidate@1.json` | Scanner output shape | — |
 | `shared/schemas/workspace-manifest@1.json` | Reachability and workspace provenance | recon → scanner and gates |
 | `shared/schemas/finding-report@2.json` | Findings plus defect-family evidence | — |
