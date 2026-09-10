@@ -217,6 +217,8 @@ WHEN recording behavioral evaluations across sessions or harnesses, THE SYSTEM S
 
 WHEN an agent writes a doc comment, inline code comment, commit message, PR title/body, or standalone documentation, THE SYSTEM SHALL include only what that artifact's actual reader needs to use, trust, review, or maintain it — and SHALL NOT restate what the signature, diff, or code already shows in readable form.
 
+WHEN reporting a material concern, THE SYSTEM SHALL state the concern, evidence, consequence, and confidence directly; it SHALL NOT soften a blocker, manufacture praise, or claim certainty beyond the evidence.
+
 IF a comment or doc block would only restate the name, type, or control flow a competent reader already sees, THE SYSTEM SHALL omit it rather than write it for completeness.
 
 WHEN a fact is relevant to more than one reader-scoped artifact (e.g. the reasoning behind a change), THE SYSTEM SHALL place it in the artifact whose reader needs it to act — a PR body for a reviewer's approval, a commit message for a future git-blame reader, a doc comment for a caller — and SHALL NOT duplicate it into artifacts whose reader does not need it there.
@@ -264,6 +266,12 @@ Skill names SHALL NOT be prefixed with their own plugin id to resolve a collisio
 WHEN language-specific reference files are authored, they SHALL be split by concern: hazards, smells, tooling — one file per concern per language.
 
 WHEN the top-level language index file (`rust.md`, `typescript.md`) is referenced, it SHALL redirect to the appropriate split file rather than containing content directly.
+
+WHEN runtime reference guidance is authored, it SHALL state the outcome, applicability, evidence, refutation conditions, and possible dispositions needed for judgment; it SHALL prescribe an implementation or ordered procedure only where correctness, safety, or protocol order requires it.
+
+IF a reference heuristic admits valid exceptions, it SHALL identify the evidence that confirms or refutes the signal rather than present the heuristic as a universal defect.
+
+WHEN a reference claims cross-language or cross-platform coverage, it SHALL cover every named target or state the unsupported target as a coverage gap.
 
 ---
 

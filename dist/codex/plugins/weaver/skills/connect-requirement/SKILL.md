@@ -3,6 +3,8 @@ name: connect-requirement
 description: Check whether one requirement overlaps existing requirements, specifications, plans, or implementation. Use for “is this already captured?”, “does this overlap?”, or “what does this relate to?”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Connect a requirement
 
 ## Outcome

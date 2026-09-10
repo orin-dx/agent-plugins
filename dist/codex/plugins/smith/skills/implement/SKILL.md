@@ -3,6 +3,8 @@ name: implement
 description: Execute an approved plan or specification with targeted implementation, tests, evidence, review, and independent verification. Use for “implement this”, “execute the plan”, “build this feature”, “write the code”, or “refactor without changing behavior”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Implement with evidence
 
 ## Outcome

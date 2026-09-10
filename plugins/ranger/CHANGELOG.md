@@ -2,6 +2,12 @@
 
 — ranger
 
+## [3.2.1] - 2026-09-09
+
+### Changed
+- Hazard references now distinguish candidate signals from confirmation and refutation across Rust, TypeScript/JavaScript, Python, and Go.
+- Agents apply the shared radical-candor rule; style preferences no longer masquerade as verified defects.
+
 ## [3.2.0] - 2026-09-09
 
 ### Added

@@ -3,6 +3,8 @@ name: gate-spec
 description: Issue the binding pass or fail decision for a specification before planning begins. Use for “gate this spec”, “is this ready to plan?”, or “check this spec before implementation”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Gate a specification
 
 ## Outcome

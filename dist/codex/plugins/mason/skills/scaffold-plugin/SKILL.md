@@ -3,6 +3,8 @@ name: scaffold-plugin
 description: Create a complete plugin skeleton for a new workflow. Use when the user asks to build or scaffold a plugin; derive structure from the repository constitution and validate the result before handoff.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Scaffold an ecosystem-conformant plugin
 
 Start by turning the requested purpose into explicit skills, cognitive modes, artifact boundaries, and release surface. Do not create a folder full of placeholders that leaves the next author to rediscover the contract.
@@ -20,6 +22,7 @@ Establish:
 - The shortest direct wording that preserves each action, condition, evidence requirement, and consequence.
 - Which operations require fixed order; express other work through outcomes and decision criteria.
 - Which verification claims need boundary, semantic-candidate, generator/oracle, fresh-state, completion, or evaluation-provenance evidence. Do not add unrelated methods.
+- Which runtime references need outcome, applicability, evidence, refutation, and disposition guidance. Do not universalize one codebase's preference or omit a named language or platform.
 
 ## Build order
 

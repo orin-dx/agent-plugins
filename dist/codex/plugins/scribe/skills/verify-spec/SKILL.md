@@ -3,6 +3,8 @@ name: verify-spec
 description: Verify that each draft specification criterion is grounded in its requirement and research evidence. Use for “does this match the requirement?”, “is this grounded?”, or before an audit or gate.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Verify specification grounding
 
 ## Outcome

@@ -3,6 +3,8 @@ name: capture-need
 description: Turn a raw product need, issue, or user complaint into a traceable requirement draft without inventing missing facts. Use when the user says “we need…”, “users are asking…”, or asks to capture a need before writing a spec.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Capture a need
 
 ## Outcome

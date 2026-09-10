@@ -9,3 +9,5 @@
 - Architectural rules exist only in prose and have no compile, test, lint, or CI enforcement.
 
 Use these signals to decide whether instances need a local repair, one canonical model or operation, or an architecture escalation.
+
+Read the live call graph, concurrency ownership, wire contract, and architecture model before deciding. Dismiss or narrow a signal when variation is contractual, one boundary already owns it, or interface openness is intentional.

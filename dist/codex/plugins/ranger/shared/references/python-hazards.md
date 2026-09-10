@@ -43,3 +43,5 @@ Patterns are leads, not findings. Scan live application modules and confirm a re
 
 - Signal: a coroutine or task is created without awaiting, retaining, or observing its failure.
 - Search: `rg -n 'create_task\(|ensure_future\(|asyncio\.gather\('`
+
+Refute a candidate when the framework or caller owns completion, fallback behavior is contractual, validation proves the value shape, or the ignored input cannot affect the outcome. Cite that evidence rather than dismissing from naming alone.

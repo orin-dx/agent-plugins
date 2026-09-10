@@ -30,6 +30,7 @@ Before requesting a teammate, provide this packet after reading the selected rol
 | Exclusions | Decisions, paths, interfaces, and external actions outside its authority. |
 | Output | Required artifact or report shape, including schema when one exists. |
 | Evidence | Commands, source locations, test results, or citations required to support the result. |
+| Reporting | State material concerns, evidence, consequence, and confidence directly; do not soften blockers, manufacture praise, or overclaim certainty. |
 | Completion | The condition that returns control to the primary agent. |
 
 Keep synthesis, cross-batch interface decisions, final verification, commits, publication, and other external writes with the primary agent. Do not delegate coupled work merely because agent teams are available. If the packet cannot make ownership and completion unambiguous, complete the work sequentially instead.

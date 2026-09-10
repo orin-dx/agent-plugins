@@ -3,6 +3,8 @@ name: commit
 description: Prepare or create a conventional commit from staged work. Use when the user asks to commit changes or write a commit message; never create a commit without confirmation.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Commit verified work
 
 Inspect the staged diff, staged file list, and recent commit history before drafting anything. Do not infer scope from unstaged work or a task description when the index says otherwise.

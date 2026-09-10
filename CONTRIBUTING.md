@@ -95,6 +95,7 @@ No `<role>` section in the body — that's what `<backstory>` replaced. The fron
 - [ ] Repeated rationale, process narration, filler, and synonymous restatement are removed
 - [ ] Non-obvious context appears once, at the decision it changes
 - [ ] Bodies over 300 words and list items over 40 words are reviewed, not automatically rejected
+- [ ] Material concerns state evidence, consequence, and confidence directly; blockers are not softened and praise is not manufactured
 
 ### Progressive context loading
 - [ ] Declares a `<load_first>` block naming the specific `shared/references/` file for this agent's phase
@@ -126,6 +127,15 @@ No `<role>` section in the body — that's what `<backstory>` replaced. The fron
 - [ ] Semantic sibling searches derive candidates from domain responsibility, state transitions, and architecture, then record each outcome
 - [ ] External or asynchronous checks use fresh state and terminal results
 - [ ] Unsupported or disproportionate checks are recorded as coverage gaps
+
+### Runtime reference quality
+
+- [ ] States the outcome and condition that make the reference useful
+- [ ] Treats heuristics as candidate signals and names evidence that confirms or refutes them
+- [ ] Prescribes implementation or order only when correctness, safety, or protocol sequence requires it
+- [ ] Derives abstractions from live architecture instead of importing project-specific names
+- [ ] Covers every language or platform it claims, or states the missing target as a coverage gap
+- [ ] Uses word and line thresholds as review signals rather than proof of poor quality
 
 ---
 
@@ -166,6 +176,7 @@ When you add or change what an existing agent can do — a new dimension, a new 
 - [ ] Frontmatter `description` reflects the new capability
 - [ ] If the agent's output gained a new status/enum value, the plugin's `SKILL.md` names what the caller does with it — or states it's terminal
 - [ ] If a new `shared/references/*.md` file was added, it's listed in root `README.md`'s Shared References table
+- [ ] If runtime reference behavior changed, every consuming Claude/AGY and Codex route was reviewed and affected plugin versions were updated
 - [ ] Every prose description still matches the agent's current behavior:
   - Plugin README subagent and output-schema sections
   - SKILL.md overview, dispatch, and I/O sections
@@ -213,9 +224,7 @@ jq . plugins/*/plugin.json > /dev/null
 # Check every skill a README documents actually has a skills/ directory
 ./scripts/check-skills-doc.sh
 
-# Check every shared/references/ file stays at or under the 120-line cap —
-# a reference loaded via <load_first> is a fixed tax on every agent
-# invocation that loads it.
+# Enforce the 120-line cap and report dense references for prose review.
 ./scripts/check-reference-size.sh
 
 # Check schema files parse correctly

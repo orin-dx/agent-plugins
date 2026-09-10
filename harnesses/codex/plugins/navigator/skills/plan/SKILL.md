@@ -3,6 +3,8 @@ name: plan
 description: Turn an approved persisted specification into an executable implementation plan, amend a plan after a spec correction, estimate a plan, or adversarially challenge one. Use for “write a plan”, “break this spec into tasks”, “estimate this plan”, or “challenge this plan”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Plan implementation
 
 ## Outcome

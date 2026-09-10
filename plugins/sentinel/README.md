@@ -1,6 +1,6 @@
 # sentinel — Verification Gate
 
-**Stage:** Gate · **Output:** `verdict@3` · **Version:** 2.1.0
+**Stage:** Gate · **Output:** `verdict@3` · **Version:** 2.1.1
 
 One skill, one artifact-agnostic pipeline. Sentinel returns a scoped `verdict@3`: pass or fail, with blockers, coverage gaps, and pending checks. Unverifiable required criteria fail unless explicitly waived.
 

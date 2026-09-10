@@ -3,6 +3,15 @@
 All notable changes to the Wisp Plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [4.4.1] - 2026-09-09 — Direct, evidence-led guidance
+
+- Added a shared radical-candor rule: report material concerns with evidence, consequence, and calibrated confidence; do not soften blockers or manufacture praise.
+- Reframed runtime references around outcomes, applicability, confirming and refuting evidence, and explicit dispositions. Ordered procedures remain only where sequence affects correctness.
+- Reworked Rust and TypeScript hazard, architecture, and tooling references to avoid universal style rules and predetermined designs; aligned Python and Go packs with the same evidence standard.
+- Updated Courier's PR guidance and GitHub template to report observed verification, disclose gaps, and omit empty ceremony.
+- Updated Mason to scaffold and audit reference quality, cross-language claims, and candid evidence.
+- Added a non-blocking density warning for references over 800 words while retaining the 120-line hard cap.
+
 ## [4.4.0] - 2026-09-09 — Evidence-depth and behavioral evaluation
 
 - Added risk-matched verification rules for real execution boundaries, structured-input generators and oracles, fresh external state, and terminal asynchronous results. Mutation, property, fuzz, race, integration, and boundary tools remain project-native options rather than mandatory rituals.

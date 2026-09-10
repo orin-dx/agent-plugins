@@ -3,6 +3,8 @@ name: audit-architecture
 description: Check a spec against a persisted workspace architecture model, or build or refresh that model. Use for “does this fit the architecture?”, “audit against the arch model”, or “map this codebase architecture”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Audit architectural fit
 
 ## Outcome

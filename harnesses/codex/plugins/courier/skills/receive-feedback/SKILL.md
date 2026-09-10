@@ -3,6 +3,8 @@ name: receive-feedback
 description: Assemble a neutral evidence package for incoming PR feedback. Use when the user asks to understand, triage, or respond to review comments on their own pull request.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Prepare review-response context
 
 This skill organizes evidence for the author; it does not decide whether a reviewer is right. Keep review comments, repository facts, and unresolved questions distinct.

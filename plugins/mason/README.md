@@ -1,6 +1,6 @@
 # mason — Plugin Authoring
 
-**Stage:** Meta · **Output:** plugin artifacts and evaluations · **Version:** 3.2.0
+**Stage:** Meta · **Output:** plugin artifacts and evaluations · **Version:** 3.2.1
 
 Mason scaffolds plugins, audits conformance, designs inter-agent schemas, and evaluates workflow behavior with fixed hidden-oracle fixtures.
 
@@ -114,7 +114,8 @@ The auditor checks all of the following. A plugin that fails any check is not ec
 | Model/effort tiering | Mechanical → haiku/low; Analysis → sonnet/medium; Judgment → opus/high; whole-system architectural synthesis (bounded to single-invocation-per-artifact tasks, not gates) → claude-fable-5-1/high |
 | `shared` symlink | Points to `../../shared` — never copied or embedded |
 | No authoring-time refs | Neither agent bodies nor `SKILL.md` reference `shared/agent-best-practices.md` at runtime — except `mason`'s own scaffolding skills, whose job is authoring agents per that guide |
-| Reference file size | Every `shared/references/*.md` file stays at or under 120 lines — checked via `scripts/check-reference-size.sh`, not re-derived |
+| Reference file size | Every `shared/references/*.md` file stays at or under 120 lines; files over 800 words prompt a density review |
+| Reference quality | Runtime references state outcome, applicability, evidence, refutation, and disposition; project preferences are not universalized; claimed language/platform coverage is complete |
 
 ---
 

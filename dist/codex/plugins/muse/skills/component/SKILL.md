@@ -3,6 +3,8 @@ name: component
 description: Turn UI intent into an implementation-ready component specification. Use when the user asks to specify, audit, or gate a component design before planning or implementation.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Specify observable component behavior
 
 Convert the supplied design intent into a component contract that an implementer and a tester can independently use. Inspect existing repository components, tokens, conventions, and accessibility patterns before inventing new APIs.

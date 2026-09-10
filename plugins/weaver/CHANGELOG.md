@@ -2,6 +2,11 @@
 
 — weaver
 
+## [3.0.2] - 2026-09-09
+
+### Changed
+- Agents now report requirement gaps and material concerns directly with evidence, consequence, and calibrated confidence.
+
 ## [3.0.1] - 2026-09-02
 
 ### Changed

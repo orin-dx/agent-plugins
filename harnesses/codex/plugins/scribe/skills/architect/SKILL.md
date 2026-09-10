@@ -3,6 +3,8 @@ name: architect
 description: Specify a structural correction when `finding-report@2`, `implementation-review@2`, or `implementation-result@1` reveals a recurring defect class, missing domain model, or architectural gap.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Specify a structural correction
 
 ## Outcome

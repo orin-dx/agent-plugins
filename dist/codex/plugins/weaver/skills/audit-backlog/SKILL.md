@@ -3,6 +3,8 @@ name: audit-backlog
 description: Audit the health of a backlog of open requirements against specifications, plans, and implemented evidence. Use for “audit the backlog”, “what is missing coverage?”, or “what should we clean up?”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Audit the backlog
 
 ## Outcome

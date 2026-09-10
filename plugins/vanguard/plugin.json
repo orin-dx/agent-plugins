@@ -1,7 +1,7 @@
 {
   "id": "vanguard",
   "name": "vanguard",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Research plugin. Investigates questions and requirements to build a documented evidence base before committing to a solution direction. Distinguishes confirmed findings from assumptions. Produces research-report@1 for consumption by scribe (spec).",
   "author": {
     "name": "Gabriel Castro",

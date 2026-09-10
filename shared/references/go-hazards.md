@@ -43,3 +43,5 @@ Patterns are leads, not findings. Scan live packages and confirm a reachable bad
 
 - Signal: `go` starts work without cancellation, joining, bounded lifetime, or error collection.
 - Search: `rg -n '\bgo [A-Za-z_(]|errgroup\.Go|context\.Background\('`
+
+Refute a candidate when the caller or framework owns lifetime and failure, fallback behavior is contractual, validation proves the state safe, or the ignored value cannot affect the outcome. Cite the ownership or contract directly.

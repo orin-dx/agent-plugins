@@ -3,6 +3,8 @@ name: post-review
 description: Deliver already-drafted PR comments or reviews. Use when the user asks to post a prepared reply, submit review comments, or resolve a named thread; never author or post content without confirmation.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Deliver approved review content
 
 This skill performs a visible external action only. It does not critique code, determine whether feedback is correct, or rewrite the user's prepared response.

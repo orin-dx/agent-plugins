@@ -3,6 +3,8 @@ name: gate
 description: Independently verify an artifact against its criteria before it crosses a lifecycle boundary. Use for requirements, specs, plans, implementations, PRs, and explicit readiness checks.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Gate a lifecycle artifact with evidence
 
 Sentinel judges an existing artifact; it does not author a replacement. Begin by identifying what the artifact claims, where it is persisted, and which criteria actually govern it.

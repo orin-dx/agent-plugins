@@ -2,6 +2,12 @@
 
 — navigator
 
+## [2.3.1] - 2026-09-09
+
+### Changed
+- Agents now report material concerns directly with evidence, consequence, and calibrated confidence.
+- Implementer discovery guidance now covers Rust, TypeScript/JavaScript, Python, and Go without assuming a language-specific abstraction.
+
 ## [2.3.0] - 2026-09-02
 
 ### Added

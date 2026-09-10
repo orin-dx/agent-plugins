@@ -3,6 +3,8 @@ name: prioritize-backlog
 description: Rank a set of requirements into an actionable order using impact, urgency, dependencies, and evidence. Use for “what should we do first?”, “rank the backlog”, or “what is most urgent?”.
 ---
 
+State material concerns, evidence, consequence, and confidence directly. Do not soften blockers, manufacture praise, or claim certainty beyond the evidence.
+
 # Prioritize the backlog
 
 ## Outcome

@@ -1,37 +1,32 @@
-# TypeScript Tooling Reference
+# TypeScript and JavaScript Verification Tooling
 
-_Loaded by: mutator, remediator. Contains test runner detection, test commands, and the non-negotiables every fix must satisfy. Do not load for scanning or smell analysis._
+## Outcome
 
----
+Choose project-native checks that can falsify the changed behavior across the runtime, type, bundle, or process boundary involved.
 
-## Workspace Test Discovery & Execution
+## Discover capabilities
 
-Before running tests, check `package.json` scripts and workspace task runners:
+Inspect `package.json` scripts, workspace configuration, lockfiles, task runners, CI, and existing tests. Prefer configured commands over guessed runner invocations.
 
-```bash
-# Check package scripts and task runner configs
-jq '.scripts' package.json 2>/dev/null
-ls vitest.config.* jest.config.* bun.test.* moonrepo.yml turbo.json 2>/dev/null
-```
+| Changed risk | Useful capability when available | Evidence to record |
+| :--- | :--- | :--- |
+| Local behavior | Configured Vitest, Jest, Bun, or Node test target | Test target and observed result |
+| Type boundary | Configured type-check command | Project and configuration exercised |
+| Weak assertions | Stryker or a safe deliberate fault | Wrong behavior rejected by the test |
+| Combinatorial or stateful input | `fast-check` or configured generator | Arbitrary, oracle, and minimized failure |
+| Bundle or package boundary | Configured build/package task | Produced artifact or import path inspected |
+| Process or network boundary | Integration harness | Boundary crossed and mocked segment |
 
-- Prefer configured package scripts or task runners.
-- Otherwise target the relevant Vitest, Jest, Bun, or Node test file.
-- Use the configured type-check command for changed type boundaries.
-- Use Stryker when available and relevant to changed behavior.
-- Use `fast-check` or another configured generator for combinatorial inputs when a structured arbitrary and meaningful invariant are available.
-- Exercise compiled, bundled, or process boundaries when the change depends on them.
-- Run the applicable workspace suite before completion.
+## Candidate quality checks
 
----
+Apply these only when the repository contract or changed risk makes them relevant:
 
-## Non-Negotiables
+- Dynamic values: prevent `any` from escaping an unvalidated boundary; a local, justified escape hatch is not automatically a defect.
+- Promises: ensure started async work has an owner for completion and failure; framework-managed handlers may provide that owner.
+- Logging: follow the application's logging contract. `console` use is not inherently wrong in CLIs, scripts, or configured runtimes.
+- Mutability: use `readonly` where mutation would violate ownership, not as a universal shape requirement.
+- Cloning: choose behavior that preserves the required value types and target runtime; neither JSON cloning nor `structuredClone` is universally interchangeable.
+- Variant handling: require exhaustive handling when the set is closed and silent fallback would be wrong.
+- Exported documentation: follow repository policy and document non-obvious contracts rather than restating signatures.
 
-Every fix must satisfy these before the green pass is claimed:
-
-- No `any` in new code without an inline comment explaining why.
-- No unhandled promise rejections — every `async` call is either `await`ed, `.catch()`ed, or explicitly `void`-ed with a comment.
-- All exported functions have JSDoc or TSDoc.
-- No `console.log` in library code — use a structured logger or remove.
-- Config and options interfaces must be `readonly`.
-- No `JSON.parse(JSON.stringify(x))` — use `structuredClone`.
-- Discriminated union switches must have an `assertNever` default.
+Record unsupported checks as coverage gaps. Do not add dependencies or install optional tooling without authorization.
