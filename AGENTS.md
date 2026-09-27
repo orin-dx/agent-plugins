@@ -55,3 +55,19 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 11. **Cross-harness review** — preserve identity, skill routes, artifact contracts, evidence, and acceptance intent in Claude/AGY and Codex sources; native wording and delegation may differ.
 12. **Manifest registration** — add an entry to root `marketplace.json` and validate: `jq . marketplace.json`.
 13. **Legal attribution** — set `"author": "Gabriel Castro (Orin DX)"` in `plugin.json`.
+
+---
+
+## 4. Validation
+
+```bash
+jq . marketplace.json plugins/*/plugin.json harnesses/codex/catalog.json
+python3 -m unittest discover -s tests
+./scripts/check-versions.sh
+./scripts/check-skills-doc.sh
+./scripts/check-reference-size.sh
+python3 tools/build-codex-marketplace.py --check
+./scripts/check-mermaid.sh
+```
+
+Run the relevant subset while editing and the full set before release. Generated Codex files in `.agents/plugins/` and `dist/codex/` must match their authored sources; never edit them directly.
