@@ -12,6 +12,7 @@ All hard rules for plugin and agent authoring live in one place:
 - [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution, explained with examples. Authoring-time only — never loaded by agents at runtime.
 - [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, Red-to-Green verification standards.
 - [**`shared/harness-authoring.md`**](./shared/harness-authoring.md): Cross-harness change classification, native workflow boundaries, and required counterpart review.
+- [**`docs/adr/README.md`**](./docs/adr/README.md): Index of accepted architectural decisions, each with a guardrail. Read the record before changing what its guardrail names; [`shared/references/architecture/decision-records.md`](./shared/references/architecture/decision-records.md) says when and how to write one.
 - [**`shared/references/tooling/cli.md`**](./shared/references/tooling/cli.md): Capability-aware preferences for modern CLI tools, with repository-native commands and safe fallbacks taking priority.
 
 ---

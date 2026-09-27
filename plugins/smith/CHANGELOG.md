@@ -2,6 +2,11 @@
 
 — smith
 
+## [2.4.3] - 2026-09-27
+
+### Changed
+- Comment guidance sends a structural alternative not taken to a decision record; any other alternative still goes in the PR body.
+
 ## [2.4.2] - 2026-09-10
 
 ### Changed

@@ -2,6 +2,11 @@
 
 — ranger
 
+## [3.2.3] - 2026-09-27
+
+### Changed
+- The adversary constitution sweep now follows `CLAUDE.md`/`AGENTS.md`'s `@` imports and reads the nearest nested instruction file for the analyzed paths, still extracting only stated invariants.
+
 ## [3.2.2] - 2026-09-10
 
 ### Changed

@@ -2,6 +2,11 @@
 
 — scribe
 
+## [3.3.3] - 2026-09-27
+
+### Changed
+- `scribe:architect` now loads decision-record guidance when an accepted record governs the area or the fix rejects a plausible alternative.
+
 ## [3.3.2] - 2026-09-10
 
 ### Changed

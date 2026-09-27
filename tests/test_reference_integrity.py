@@ -178,6 +178,35 @@ class ReferenceIntegrityTests(unittest.TestCase):
                 missing.append(reference)
         self.assertEqual(missing, [])
 
+    def test_adr_index_matches_records(self) -> None:
+        index = REPOSITORY_ROOT / "docs/adr/README.md"
+        rows: dict[str, list[str]] = {}
+        problems: list[str] = []
+        for line in index.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("| ["):
+                continue
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            if len(cells) != 5 or not cells[4].startswith("Do not "):
+                problems.append(f"malformed row: {line[:40]}")
+                continue
+            rows[cells[0][1:4]] = cells
+        records = {record.name[:3]: record for record in index.parent.glob("[0-9][0-9][0-9]-*.md")}
+        self.assertEqual(sorted(rows), sorted(records))
+        for number, record in records.items():
+            _, status, _, relation, _ = rows[number]
+            meta = [
+                line
+                for line in record.read_text(encoding="utf-8").splitlines()
+                if re.match(r"\*\*(Status|Supersedes|Extended by):\*\*", line)
+            ]
+            superseded = any("superseded" in line.lower() for line in meta if line.startswith("**Status:"))
+            if status not in {"Accepted", "Partially superseded", "Superseded"} or superseded == (status == "Accepted"):
+                problems.append(f"{number}: index status {status!r} disagrees with the record")
+            for other in re.findall(r"ADR-(\d{3})", " ".join(meta)):
+                if other not in rows or other not in relation:
+                    problems.append(f"{number}: Relation omits or misnames {other}")
+        self.assertEqual(problems, [])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,8 @@
 # Claude Code Guidelines (`CLAUDE.md`)
 
-Claude Code follows [`AGENTS.md`](./AGENTS.md), the shared repository guide for every harness. Read [`shared/constitution.md`](./shared/constitution.md) first and last. Use [`shared/agent-best-practices.md`](./shared/agent-best-practices.md) only while authoring prompts; runtime agents must not load it.
+@AGENTS.md
+
+The import above loads [`AGENTS.md`](./AGENTS.md), the shared repository guide for every harness. Claude Code reads only `CLAUDE.md` when both files exist, so this import is what brings `AGENTS.md` in. Read [`shared/constitution.md`](./shared/constitution.md) first and last. Use [`shared/agent-best-practices.md`](./shared/agent-best-practices.md) only while authoring prompts; runtime agents must not load it.
 
 ## Claude Marketplace
 
