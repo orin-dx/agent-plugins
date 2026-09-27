@@ -10,6 +10,7 @@ Write for the person who must use, review, or maintain the artifact. Be succinct
 | Contributor or architecture doc | System responsibility and decision | Boundaries, invariants, tradeoffs, evidence |
 | PR or review | Outcome and approval-relevant risk | Verification, gaps, migration, follow-up |
 | Changeset or release note | Observable consumer impact | Old behavior, new behavior, required action |
+| Decision record | The decision and the alternative rejected | Context, the causal because, consequences, enforcement, supersession |
 | Reference | Decision the guidance supports | Applicability, evidence, refutation, disposition |
 
 Use the reader's language. User-facing docs describe tasks and outcomes before internal agents, schemas, or implementation details. Contributor docs may use precise engineering terms when those terms help the reader act.

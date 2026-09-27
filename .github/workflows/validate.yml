@@ -11,36 +11,40 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate plugin manifests
-        run: |
-          jq . marketplace.json > /dev/null
-          jq . .claude-plugin/marketplace.json > /dev/null
-          jq . plugins/*/plugin.json > /dev/null
-          jq . shared/schemas/*.json > /dev/null
-          jq . harnesses/codex/catalog.json > /dev/null
-          jq . .agents/plugins/marketplace.json > /dev/null
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
 
-      - name: Validate Codex marketplace
-        run: |
-          python3 -m unittest tests/test_build_codex_marketplace.py -v
-          python3 -m unittest tests/test_cross_harness_artifacts.py -v
-          python3 -m unittest tests/test_codex_native_sources.py -v
-          python3 -m unittest tests/test_codex_behavioral_evaluation.py -v
-          python3 -m unittest tests/test_authoring_integrity_hook.py -v
-          python3 -m unittest tests/test_brand_identity.py -v
-          python3 tools/build-codex-marketplace.py --check
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - uses: extractions/setup-just@v4
+
+      - name: Install pinned tooling dependencies
+        run: just install
+
+      - name: Validate plugin manifests
+        run: just manifests
+
+      - name: Run test suite
+        run: just test
 
       - name: Check version consistency
-        run: ./scripts/check-versions.sh
+        run: just versions
 
       - name: Check skill doc accuracy
-        run: ./scripts/check-skills-doc.sh
-
-      - name: Check Mermaid diagrams render
-        run: ./scripts/check-mermaid.sh
+        run: just skills-doc
 
       - name: Check reference file size
-        run: ./scripts/check-reference-size.sh
+        run: just reference-size
 
-      - name: Check reference integrity
-        run: python3 -m unittest tests/test_reference_integrity.py -v
+      - name: Confirm generated Codex marketplace is current
+        run: just marketplace-check
+
+      - name: Check Mermaid diagram syntax
+        run: just mermaid
+
+      # just fmt-check is not yet in `just check`: the repo isn't formatted
+      # with oxfmt yet. Add this step back once that lands.

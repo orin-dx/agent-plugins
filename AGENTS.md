@@ -12,6 +12,7 @@ All hard rules for plugin and agent authoring live in one place:
 - [**`shared/agent-best-practices.md`**](./shared/agent-best-practices.md): Principles behind the constitution, explained with examples. Authoring-time only — never loaded by agents at runtime.
 - [**`shared/debugging-laws.md`**](./shared/debugging-laws.md): Core proof laws, read-only investigation rules, Red-to-Green verification standards.
 - [**`shared/harness-authoring.md`**](./shared/harness-authoring.md): Cross-harness change classification, native workflow boundaries, and required counterpart review.
+- [**`docs/adr/README.md`**](./docs/adr/README.md): Index of accepted architectural decisions, each with a guardrail. Read the record before changing what its guardrail names; [`shared/references/architecture/decision-records.md`](./shared/references/architecture/decision-records.md) says when and how to write one.
 - [**`shared/references/tooling/cli.md`**](./shared/references/tooling/cli.md): Capability-aware preferences for modern CLI tools, with repository-native commands and safe fallbacks taking priority.
 
 ---
@@ -54,3 +55,13 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 11. **Cross-harness review** — preserve identity, skill routes, artifact contracts, evidence, and acceptance intent in Claude/AGY and Codex sources; native wording and delegation may differ.
 12. **Manifest registration** — add an entry to root `marketplace.json` and validate: `jq . marketplace.json`.
 13. **Legal attribution** — set `"author": "Gabriel Castro (Orin DX)"` in `plugin.json`.
+
+---
+
+## 4. Validation
+
+```bash
+just check
+```
+
+`just --list` shows each check as its own recipe (`just manifests`, `just test`, `just versions`, `just skills-doc`, `just reference-size`, `just marketplace-check`, `just mermaid`) for running a subset while editing; run the full set before release. `just fmt`/`just fmt-check` format with `oxfmt`; not yet part of `just check` until the repo has a baseline format pass. Generated Codex files in `.agents/plugins/` and `dist/codex/` must match their authored sources; never edit them directly — run `just marketplace-sync` after a Codex source change.

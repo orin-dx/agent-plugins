@@ -7,6 +7,7 @@ Use this reference only when an artifact path was not supplied.
 | Gated specification | `docs/specs/<id>.json` | `scribe/gate-spec` | Pass verdict; file committed |
 | Approved plan | `docs/projects/<linked_spec>.json` | `navigator/plan` | Challenger pass; file committed |
 | Architecture model | `docs/architecture/model.json` | `scribe/audit-architecture` | Build or refresh; same file updated and committed |
+| Decision records | `docs/adr/README.md` and linked records | Repository maintainers | Accepted record committed; later change creates a superseding record |
 
 Read a supplied `spec_file_path` or `plan_file_path` instead of reconstructing the path. An uncommitted artifact is not durable pipeline state.
 

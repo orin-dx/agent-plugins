@@ -1,7 +1,7 @@
 {
   "$schema": "https://antigravity.google/schemas/marketplace.json",
   "name": "wisp-plugins",
-  "version": "4.4.2",
+  "version": "4.4.3",
   "description": "Wisp Plugins marketplace for AGY and Claude Code, published by Orin DX",
   "plugins": [
     {
@@ -15,7 +15,7 @@
     {
       "id": "ranger",
       "name": "ranger",
-      "version": "3.2.2",
+      "version": "3.2.3",
       "path": "./plugins/ranger",
       "description": "Bug hunting for Rust, TypeScript, JavaScript, Python, and Go. Confirms reachable defects, searches semantic siblings, and routes structural families for architectural correction.",
       "supersedes": [
@@ -48,7 +48,7 @@
     {
       "id": "scribe",
       "name": "scribe",
-      "version": "3.3.2",
+      "version": "3.3.3",
       "path": "./plugins/scribe",
       "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Checks specs against a persisted whole-system architecture model. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, audit-architecture, gate-spec, correct-spec, architect."
     },
@@ -69,7 +69,7 @@
     {
       "id": "smith",
       "name": "smith",
-      "version": "2.4.2",
+      "version": "2.4.3",
       "path": "./plugins/smith",
       "description": "Implementation plugin. Executes tested plan batches, verifies risk at real boundaries, searches semantic defect siblings, and escalates shared model or architecture gaps."
     },

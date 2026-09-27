@@ -1,0 +1,17 @@
+{
+  "name": "wisp-plugins-docs-tools",
+  "private": true,
+  "description": "Pinned tooling for Wisp Plugins documentation checks.",
+  "scripts": {
+    "check:mermaid": "node scripts/check-mermaid.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "mermaid": "11.17.0",
+    "oxfmt": "^0.70.0"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

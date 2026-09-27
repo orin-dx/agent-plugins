@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "proseWrap": "never",
+  "ignorePatterns": [
+    "dist/**",
+    ".agents/**",
+    "plugins/*/agents/**",
+    "shared/agent-best-practices.md",
+    "shared/schemas/**",
+    "**/shared/schemas/**"
+  ]
+}

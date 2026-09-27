@@ -79,6 +79,7 @@ The skill prompt is what the user invokes. It should:
 Read `shared/agent-best-practices.md` before authoring. The hard requirements:
 
 ### 5-part structure (frontmatter + body)
+
 - [ ] **Constitution** — copied byte-for-byte from an existing agent, never authored fresh. See `shared/constitution.md`'s Static Prompt Prefix Invariant.
 - [ ] **Backstory** — 2–4 sentences. What has this agent been burned by? What does it value? Guides judgment without constraining method.
 - [ ] **Goal** — what the agent must produce and why. Intent, not steps.
@@ -98,6 +99,7 @@ No `<role>` section in the body — that's what `<backstory>` replaced. The fron
 - [ ] Material concerns state evidence, consequence, and confidence directly; blockers are not softened and praise is not manufactured
 
 ### Progressive context loading
+
 - [ ] Declares one `<load_first>` block naming only the focused `shared/references/` files needed for this agent's phase
 - [ ] Does not load reference files outside its cognitive mode (scanner loads hazards, not smells)
 - [ ] Places references under the cognitive concern; uses language filenames only for language-specific evidence
@@ -105,15 +107,18 @@ No `<role>` section in the body — that's what `<backstory>` replaced. The fron
 - [ ] For Codex, every exact `shared/` path loaded directly or transitively appears in `harnesses/codex/catalog.json`; historical mentions omit the path when runtime access is unnecessary
 
 ### EARS placement
+
 - [ ] EARS notation (`WHEN`, `IF`, `WHILE`, `WHERE`) used only in output contracts and never-do rules
 - [ ] No EARS in implementation steps, search strategies, or reasoning guidance
 
 ### Model and effort
+
 - [ ] `haiku` / `low` — deterministic enumeration only (manifest building, file inventory)
 - [ ] `sonnet` / `medium` — analysis (scanning, drafting, planning, tracing)
 - [ ] `opus` / `high` — judgment (adversarial reasoning, exit gates, final verdicts)
 
 ### Tool language
+
 - [ ] Uses abstract tool language: "use your file reading tool", "use your search tool"
 - [ ] No tool-specific calls (`view_file`, `read_file`, `grep_search`, etc.)
 - [ ] No absolute paths
@@ -211,29 +216,15 @@ This isn't automated. `mason:audit-plugin` checks structural conformance; it doe
 git clone https://github.com/orin-dx/agent-plugins.git
 cd agent-plugins
 
-# Validate all plugin manifests
-jq . marketplace.json > /dev/null
-jq . plugins/*/plugin.json > /dev/null
+# Install pinned documentation-check dependencies (just and pnpm must be on PATH)
+just install
 
-# Render every Mermaid diagram in the repo and report any that fail to parse.
-# A syntax error in a diagram is invisible to every check above it — it's
-# still valid markdown, jq never touches it, and it reads fine as source.
-# Only an actual render catches it. Needs Node (npx); no repo dependency.
-./scripts/check-mermaid.sh
-
-# Check that plugin.json/README/CHANGELOG/marketplace.json versions agree
-./scripts/check-versions.sh
-
-# Check every skill a README documents actually has a skills/ directory
-./scripts/check-skills-doc.sh
-
-# Enforce the 120-line cap and report dense references for prose review.
-./scripts/check-reference-size.sh
-
-# Check schema files parse correctly
-jq . shared/schemas/*.json > /dev/null
+# Run every check
+just check
 ```
+
+`just --list` shows each check as its own recipe (`just versions`, `just mermaid`, and so on) for running a subset while editing; a Mermaid syntax error is invisible to every other check — it's still valid markdown, `jq` never touches it, and it reads fine as source, so `just mermaid` is worth running on its own after touching a diagram. `just fmt` formats the repo in place with `oxfmt`; `just fmt-check` only verifies. Neither is part of `just check` yet — the repo doesn't have a baseline format pass, so `fmt-check` would fail on unrelated files today.
 
 Before a `git commit`, the repository-local Claude and Codex hook checks immutable schema versions and Codex generated-output freshness. See [`docs/repository-hooks.md`](./docs/repository-hooks.md).
 
-All of the above run automatically in CI (`.github/workflows/validate.yml`) on every PR and every push to `main`.
+`just check` runs automatically in CI (`.github/workflows/validate.yml`) on every PR and every push to `main`.
