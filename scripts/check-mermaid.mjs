@@ -1,5 +1,5 @@
-import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
+import { join, relative } from "node:path";
 import { JSDOM } from "jsdom";
 
 const dom = new JSDOM("<!doctype html><html><body></body></html>");
@@ -7,20 +7,26 @@ globalThis.window = dom.window;
 globalThis.document = dom.window.document;
 const { default: mermaid } = await import("mermaid");
 
-const files = execFileSync("rg", [
-  "--files",
-  "--hidden",
-  "-g",
-  "*.md",
-  "-g",
-  "!.git/**",
-  "-g",
-  "!node_modules/**",
-  "-g",
-  "!target/**",
-], {
-  encoding: "utf8",
-}).trim().split("\n").filter(Boolean).sort();
+// No external `rg` dependency: CI runners are not guaranteed to have ripgrep
+// installed, and this script otherwise has no other native-tool requirement.
+const excludedDirs = new Set([".git", "node_modules", "target"]);
+
+async function findMarkdownFiles(root) {
+  const found = [];
+  async function walk(dir) {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        if (!excludedDirs.has(entry.name)) await walk(join(dir, entry.name));
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        found.push(relative(root, join(dir, entry.name)));
+      }
+    }
+  }
+  await walk(root);
+  return found.sort();
+}
+
+const files = await findMarkdownFiles(process.cwd());
 
 const openingFence = /^ {0,3}```mermaid[ \t]*$/i;
 const closingFence = /^ {0,3}```[ \t]*$/;
