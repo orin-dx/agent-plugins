@@ -61,13 +61,7 @@ Agents are organized by **cognitive mode** (enumeration, tracing, adversarial, s
 ## 4. Validation
 
 ```bash
-jq . marketplace.json plugins/*/plugin.json harnesses/codex/catalog.json
-python3 -m unittest discover -s tests
-./scripts/check-versions.sh
-./scripts/check-skills-doc.sh
-./scripts/check-reference-size.sh
-python3 tools/build-codex-marketplace.py --check
-./scripts/check-mermaid.sh
+just check
 ```
 
-Run the relevant subset while editing and the full set before release. Generated Codex files in `.agents/plugins/` and `dist/codex/` must match their authored sources; never edit them directly.
+`just --list` shows each check as its own recipe (`just manifests`, `just test`, `just versions`, `just skills-doc`, `just reference-size`, `just marketplace-check`, `just mermaid`) for running a subset while editing; run the full set before release. `just fmt`/`just fmt-check` format with `oxfmt`; not yet part of `just check` until the repo has a baseline format pass. Generated Codex files in `.agents/plugins/` and `dist/codex/` must match their authored sources; never edit them directly — run `just marketplace-sync` after a Codex source change.

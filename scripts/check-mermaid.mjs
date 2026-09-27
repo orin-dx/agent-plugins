@@ -78,7 +78,9 @@ for (const [index, block] of blocks.entries()) {
 }
 
 if (failures > 0) {
-  console.error(`FAILED: ${failures} of ${blocks.length} mermaid block(s) did not parse. Fix and re-run.`);
+  console.error(
+    `FAILED: ${failures} of ${blocks.length} mermaid block(s) did not parse. Fix and re-run.`,
+  );
   process.exitCode = 1;
 } else {
   console.log(`OK: ${blocks.length} mermaid block(s) parse successfully.`);
