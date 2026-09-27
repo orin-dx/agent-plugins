@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.11.4-nightly.202609260624.c369a70d2",
+  "checkpoint_id": "01M3GBMDF3WDG8ASHYT4105H1H",
+  "strategy": "manual-commit",
+  "branch": "docs/decision-records",
+  "checkpoints_count": 5,
+  "files_touched": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "dist/codex/plugins/courier/shared/references/authoring/voice.md",
+    "dist/codex/plugins/scribe/shared/references/architecture/remediation.md",
+    "dist/codex/plugins/scribe/shared/references/workspace/conventions.md",
+    "dist/codex/plugins/smith/shared/references/authoring/comments.md",
+    "docs/adr/README.md",
+    "harnesses/codex/catalog.json",
+    "plugins/muse/CHANGELOG.md",
+    "plugins/muse/agents/auditor.md",
+    "plugins/muse/agents/drafter.md",
+    "plugins/ranger/CHANGELOG.md",
+    "plugins/ranger/agents/adversary.md",
+    "plugins/scribe/CHANGELOG.md",
+    "plugins/scribe/agents/auditor.md",
+    "plugins/scribe/agents/drafter.md",
+    "shared/references/architecture/decision-records.md",
+    "shared/references/architecture/remediation.md",
+    "shared/references/authoring/comments.md",
+    "shared/references/authoring/voice.md",
+    "shared/references/workspace/conventions.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 82,
+    "cache_creation_tokens": 257785,
+    "cache_read_tokens": 3626301,
+    "output_tokens": 29915,
+    "api_call_count": 39
+  }
+}
