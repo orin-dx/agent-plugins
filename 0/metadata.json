@@ -1,0 +1,105 @@
+{
+  "cli_version": "0.11.4-nightly.202609260624.c369a70d2",
+  "checkpoint_id": "01M3GBJNEYXH8EFQ8K85MKHT4S",
+  "session_id": "620278b2-b3ff-49a1-b314-97faec4c6c66",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-27T02:37:18.467281Z",
+  "branch": "docs/decision-records",
+  "checkpoints_count": 5,
+  "save_step_count": 5,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "9424079daaae",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 76,
+    "cache_creation_tokens": 123926,
+    "cache_read_tokens": 3364817,
+    "output_tokens": 28236,
+    "api_call_count": 36,
+    "subagent_tokens": {
+      "input_tokens": 44,
+      "cache_creation_tokens": 49359,
+      "cache_read_tokens": 159406,
+      "output_tokens": 1015,
+      "api_call_count": 5
+    }
+  },
+  "session_metrics": {
+    "turn_count": 5
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 15,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        "shared/references/verification/evidence.md": 8
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 8,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 8,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 8,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 135,
+      "user_lines_removed": 14,
+      "agent_lines_added": 80,
+      "agent_lines_removed": 5,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 7,
+        "dist/codex/plugins/courier/shared/references/authoring/voice.md": 21,
+        "dist/codex/plugins/scribe/shared/references/architecture/decision-records.md": 46,
+        "dist/codex/plugins/scribe/shared/references/architecture/remediation.md": 1,
+        "dist/codex/plugins/scribe/shared/references/workspace/conventions.md": 1,
+        "dist/codex/plugins/smith/shared/references/authoring/comments.md": 2,
+        "dist/codex/plugins/smith/shared/references/verification/evidence.md": 8,
+        "docs/adr/README.md": 12,
+        "plugins/muse/CHANGELOG.md": 1,
+        "plugins/muse/agents/auditor.md": 4,
+        "plugins/muse/agents/drafter.md": 4,
+        "plugins/ranger/CHANGELOG.md": 1,
+        "plugins/scribe/CHANGELOG.md": 1,
+        "plugins/scribe/agents/auditor.md": 1,
+        "plugins/scribe/agents/drafter.md": 4,
+        "shared/references/authoring/voice.md": 20,
+        "shared/references/workspace/conventions.md": 1
+      },
+      "user_removed_per_file": {
+        "dist/codex/plugins/smith/shared/references/authoring/comments.md": 2,
+        "docs/adr/README.md": 12
+      }
+    }
+  ]
+}
