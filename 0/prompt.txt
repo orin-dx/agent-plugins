@@ -387,3 +387,9 @@ Why are we leaving things open and uncommited? SHouldn't it be in the PR?
 ---
 
 Anything left?
+
+---
+
+Why should we not include evidence, the model, oxfmt like we setup?
+
+We should be using just and pnpm (not npm so we should include the lock and cleanup npm stuff, including the CI workflows)
