@@ -19,7 +19,7 @@ RETIRED_REFERENCE_NAME = re.compile(
     r"(?:\*|rust|typescript|python|go)-hazards(?:-t7-t10)?\.md|(?<!/)changesets\.md"
 )
 TEXT_SUFFIXES = {".json", ".md", ".py", ".sh", ".yaml", ".yml"}
-EXCLUDED_PARTS = {".git", ".agents", "dist"}
+EXCLUDED_PARTS = {".git", ".agents", "dist", "node_modules"}
 AUTHORING_ONLY = {
     "shared/references/README.md",
     "shared/references/authoring/diagrams.md",

@@ -211,14 +211,16 @@ This isn't automated. `mason:audit-plugin` checks structural conformance; it doe
 git clone https://github.com/orin-dx/agent-plugins.git
 cd agent-plugins
 
+# Install pinned documentation-check dependencies
+npm ci
+
 # Validate all plugin manifests
 jq . marketplace.json > /dev/null
 jq . plugins/*/plugin.json > /dev/null
 
-# Render every Mermaid diagram in the repo and report any that fail to parse.
+# Parse every Mermaid diagram in the repo and report any syntax failures.
 # A syntax error in a diagram is invisible to every check above it — it's
 # still valid markdown, jq never touches it, and it reads fine as source.
-# Only an actual render catches it. Needs Node (npx); no repo dependency.
 ./scripts/check-mermaid.sh
 
 # Check that plugin.json/README/CHANGELOG/marketplace.json versions agree

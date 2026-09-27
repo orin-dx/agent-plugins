@@ -36,7 +36,10 @@ jobs:
       - name: Check skill doc accuracy
         run: ./scripts/check-skills-doc.sh
 
-      - name: Check Mermaid diagrams render
+      - name: Install documentation-check dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Check Mermaid diagram syntax
         run: ./scripts/check-mermaid.sh
 
       - name: Check reference file size
