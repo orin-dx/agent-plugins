@@ -69,7 +69,7 @@
     {
       "id": "smith",
       "name": "smith",
-      "version": "2.4.3",
+      "version": "2.4.4",
       "path": "./plugins/smith",
       "description": "Implementation plugin. Executes tested plan batches, verifies risk at real boundaries, searches semantic defect siblings, and escalates shared model or architecture gaps."
     },
