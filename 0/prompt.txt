@@ -1,0 +1,5 @@
+What kind of guidance can we give claude to better enhance our wisp plugins for quality workflows?
+
+We also want to make sure we're guiding agents to stay succinct and to the point. Avoiding word salada, wordy prose and writing world class docs, comments, user-facing docs, sites, eng-facing docs, guidance, adrs, etc
+
+YOu might have to research what we can do to help guide agents to write as if it had the exprience of a content designer, a language expert, etc
