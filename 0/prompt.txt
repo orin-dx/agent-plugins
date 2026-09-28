@@ -1,0 +1,86 @@
+Claude said this:
+
+The brief holds up against the files in most places, and I found four differences from it. I haven't edited anything. The docs check on the AGENTS.md behaviour is still running, so I've marked that item unverified.
+
+Where the brief matches the repo
+
+- Uncommitted change: only shared/references/verification/evidence.md is modified, with 8 added lines.
+- CLAUDE.md: it links to AGENTS.md with a plain link and has no @ import.
+- No ADR guidance exists: nothing under plugins/ or shared/ teaches how to write an ADR.
+- comments.md line 15: it does say a narrated alternative "belongs in the PR body".
+- arch-model@1 invariants: they have name, rule, rationale and enforced_by, and no link to a decision.
+- ranger/agents/adversary.md line 45: it reads only CLAUDE.md or AGENTS.md at the workspace root.
+- Reference limits: the cap is 120 lines, with a warning over 800 words.
+- scribe/agents/architect.md: it loads only remediation.md.
+- Codex catalog: scribe's runtime_files already lists remediation.md.
+
+Where the brief differs
+
+1. There are 10 ADRs, not 7.
+   - ADR-008, ADR-009 and ADR-010 exist.
+   - ADR-010 already uses "Supersedes:", and ADR-001 uses "Extended by:".
+   - There is no docs/adr/README.md index, so the "route to an ADR index" idea has nothing to point at yet.
+   - The existing ADRs use Context, Decision and Consequences with no "Options considered" section. Rejected alternatives sit inline in the Context prose, as in ADR-001. The new reference's form therefore adds a section the repo's own ADRs don't have. Either update the existing ADRs later or tell writers that the alternatives may go inside Context.
+2. The Codex adversary has nothing to change.
+   - The constitution-sweep phrase appears only in plugins/ranger/agents/adversary.md.
+   - The Codex ranger skill (harnesses/codex/plugins/ranger/skills/audit/SKILL.md) has no such sweep.
+   - So task 4 is Claude/AGY only. The change record's "Codex role impact" would be "none", after confirming that ranger has no Codex agent role card.
+3. The Codex marketplace check already fails before any edit.
+   - python3 tools/build-codex-marketplace.py --check reports that the generated Codex marketplace is out of date. The other six validators pass, and the unit tests show 44 OK.
+   - The likely cause is the uncommitted evidence.md change, because the text "Language-service evidence" appears nowhere under dist/.
+   - Regenerating dist/codex would therefore also copy that change into smith's bundle, which the brief says to leave alone. You'll need to decide whether to regenerate or wait until you commit evidence.md.
+4. The adversary sweep has a trust constraint the brief doesn't mention.
+   - shared/constitution.md (Trust Boundaries) treats workspace CLAUDE.md and AGENTS.md as untrusted data and allows only invariant extraction.
+   - Following @ imports and nested AGENTS.md files extends that read surface. The injection guard stays, and the wording should limit the added reads to invariants only.
+
+Constraints on the new decision-records.md
+
+- tests/test_reference_integrity.py requires every reference to be cited by a runtime caller, and another reference file counts as a caller. A bullet in remediation.md is therefore enough to pass the test.
+- remediation.md is loaded only by scribe:architect, so the record would reach only that agent.
+- To add it to scribe's Codex runtime_files (harnesses/codex/catalog.json line 60), the path has to appear in a Codex skill's text.
+- I found no natural place for it in audit-architecture. That skill's agent loads only workspace/conventions.md, which lists persisted artifact paths. That is the better home for docs/adr/ as a persisted location, once it exists.
+- Vanguard's recon also loads only conventions.md. Adding docs/adr/ there would let research-phase agents find prior decisions without loading the writing guide.
+
+Recommendation
+
+- Loading: route the writing guide through remediation.md for scribe:architect, since that agent produces structural decisions. Add docs/adr/ to conventions.md so audit-architecture and vanguard can find existing decisions. Only the architect needs the writing guide.
+- docs/adr/README.md: creating one is out of the brief's stated scope. I'd add it as a one-line-per-ADR index with guardrails, since the routing idea depends on it.
+- Task 5: not started, as instructed.
+
+Still open
+
+- Docs check pending: the subagent is reading https://code.claude.com/docs/en/memory. Until it returns, the @AGENTS.md behaviour and the "since v2.1.277" claim are unconfirmed. This machine runs Claude Code 2.1.283, which is past that version.
+- Not checked: I haven't read the .agents/plugins build path or the schema-design skill for anything else that names ADRs.
+
+Decisions for you:
+- Do you want me to proceed with tasks 1 to 4 on a new branch?
+- On the failing --check baseline, do you prefer regenerating dist/codex now (which sweeps in the evidence.md change) or waiting until you commit that change?
+- Should I add the docs/adr/README.md index?
+
+✻ Waiting for 1 background agent to finish
+
+› Message from @ad669546e501ed343 (ctrl+o to expand)
+
+The docs check is back and confirms the AGENTS.md claim, wr for task 1 and task 4.
+
+- Precedence: when both files exist in the working directoCLAUDE.md only. Reading AGENTS.md directly needs v2.1.277or later.
+- Recommended pattern: put @AGENTS.md at the top of CLAUDEstructions below it. That is what task 1 proposes, so therepo's CLAUDE.md should follow it.
+- Older versions: before v2.1.277 they read CLAUDE.md onlyedrock or telemetry-off, did so until v2.1.281. KeepingCLAUDE.md and importing AGENTS.md from it covers all of those cases.
+- Nested AGENTS.md: it loads on demand only when that subdE.md, .claude/CLAUDE.md or CLAUDE.local.md. This is anuance for task 4. Whether the adversary sweep should check a nested AGENTS.md depends on how the analyzed workspace is laid out, since a nested CLAUDE.md would shadow it. The sweep should read  is nearest to the paths under analysis.
+- Wording: the subagent noted that the docs don't use the phrase "since v2.1.277". The version requirement itself is stated, so the brief's claim is confirmed. If the repo text cites the date "202y that date from the docs.
+
+Nothing else changes in my earlier report. The open decisi
+- Do you want me to proceed with tasks 1 to 4 on a new branch?
+- Should I regenerate dist/codex now, which would carry yo change into smith's bundle, or wait until you commit it?
+- Should I add the docs/adr/README.md index?
+
+✻ Worked for 7s · done 4:06 PM
+
+⏺ Agent "Verify AGENTS.md import behavior" finished · 38s
+
+The docs-check subagent has finished, and I've already relayed its report above. No new information came with the notification.
+
+I'm holding for your answers on the three decisions from my last message:
+- Proceed with tasks 1 to 4 on a new branch?
+- Regenerate dist/codex now, or wait until your evidence.md change is committed?
+- Add the docs/adr/README.md index?
