@@ -57,7 +57,7 @@
     },
     {
       "id": "scribe",
-      "runtime_files": ["shared/schemas/arch-audit@1.json", "shared/schemas/arch-model@1.json", "shared/schemas/finding-report@2.json", "shared/schemas/implementation-result@1.json", "shared/schemas/implementation-review@2.json", "shared/schemas/plan@1.json", "shared/schemas/requirement@1.json", "shared/schemas/research-report@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@3.json", "shared/references/architecture/remediation.md", "shared/references/architecture/decision-records.md", "shared/references/architecture/go.md", "shared/references/architecture/python.md", "shared/references/architecture/rust.md", "shared/references/architecture/typescript.md", "shared/references/workspace/conventions.md"]
+      "runtime_files": ["shared/schemas/arch-audit@1.json", "shared/schemas/arch-model@2.json", "shared/schemas/finding-report@2.json", "shared/schemas/implementation-result@1.json", "shared/schemas/implementation-review@2.json", "shared/schemas/plan@1.json", "shared/schemas/requirement@1.json", "shared/schemas/research-report@1.json", "shared/schemas/spec@1.json", "shared/schemas/verdict@3.json", "shared/references/architecture/remediation.md", "shared/references/architecture/decision-records.md", "shared/references/architecture/go.md", "shared/references/architecture/python.md", "shared/references/architecture/rust.md", "shared/references/architecture/typescript.md", "shared/references/workspace/conventions.md"]
     },
     {
       "id": "sentinel",

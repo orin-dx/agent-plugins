@@ -2,6 +2,11 @@
 
 — scribe
 
+## [3.4.0] - 2026-09-27
+
+### Added
+- `arch-model@2`: invariants may carry an optional `decision_ref` naming the accepted decision record that governs them (`docs/adr/README.md`). `arch-model@1` remains valid for any workspace still on it; `arch-auditor` and `audit-architecture` now build and check against `@2`.
+
 ## [3.3.3] - 2026-09-27
 
 ### Changed
