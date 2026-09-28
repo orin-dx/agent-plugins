@@ -1,0 +1,99 @@
+Some context for you to think about, do more research in the context of our wisp plugins repo?
+
+
+
+<pasted_content id="d134">
+# Brief: apply ADR and agent-memory learnings to Wisp Plugins
+
+Repo: `~/Projects/agent-plugins` (`orin-dx/agent-plugins`, titled "Wisp Plugins"). Branch `main`. Work on a new branch, and commit or push only if the owner asks.
+
+## Why this task exists
+While adding a TypeScript 7 semantic backend to `oxc-react-codegen`, we researched what an ADR is for and how it changes for agents. Every claim below was checked against a source or a file. Verify against the files yourself before editing, and mark anything you cannot verify.
+
+Research results:
+- **Purpose:** an ADR preserves the motivation behind an architectural decision, so nobody blindly accepts or blindly reverses it (Nygard). One decision per record, one or two pages, immutable. A superseded record stays and is marked.
+- **Agents change the failure mode, not the goal.** An agent with no memory reads the code and silently reverses the decision. What it needs is the rejected alternative and the reason. Records must reach it before it edits, so route from the instruction file to an ADR index. Instruction files are context, not enforcement, so anything checkable should be a test, lint or hook. Keep the active set small.
+- **Boundary:**
+  - ADR: architecture, model, direction, decisions, rejected alternatives.
+  - `AGENTS.md`: rules for every session (commands, invariants, style, routing).
+  - Spec: required behavior.
+  - Docs: how it works today.
+  - Agent memory: personal preferences and corrections, per repo, not committed.
+  - Commit message: why one change was made.
+  - Decisions do not belong in memory. It is unshared and goes stale.
+- **AGENTS.md in Claude Code:** since v2.1.277 (2026-09-18) Claude reads `AGENTS.md` only when no `CLAUDE.md` exists in the working directory or above. If both exist, it reads `CLAUDE.md` only, unless `CLAUDE.md` imports it with `@AGENTS.md`.
+
+Sources:
+- https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
+- https://adr.github.io/ and https://adr.github.io/madr/
+- https://code.claude.com/docs/en/memory
+- https://www.oreilly.com/radar/architectural-guardrails-for-ai-generated-code/
+- https://www.braingrid.ai/blog/architecture-decision-records-for-ai-coding-agents
+
+## Read first, in this order
+`AGENTS.md`, `CLAUDE.md`, `shared/constitution.md` (first and last), `shared/harness-authoring.md`, `shared/references/authoring/voice.md`, `shared/references/authoring/comments.md`.
+
+## Repo facts (verified 2026-09-26)
+- **Uncommitted change to leave alone:** `shared/references/verification/evidence.md` has 8 added lines (language-service evidence). It is not part of this task. Do not revert, stage or edit it.
+- **`CLAUDE.md`** points at `AGENTS.md` with a plain link, not an `@` import.
+- **No ADR guidance:** nothing under `plugins/` or `shared/` teaches how to write an ADR. `docs/adr/` holds the repo's own 7 ADRs, in Nygard style.
+- **`shared/references/authoring/comments.md`** line 15 sends a "narrated alternative not taken" to the PR body.
+- **`arch-model@1` invariants** have `rule`, `rationale` and `enforced_by`. They have no link to a decision.
+- **`plugins/ranger/agents/adversary.md`** line 45, the constitution sweep, says "check for CLAUDE.md or AGENTS.md at the workspace root". The Codex counterpart has no such phrase, so read it before deciding.
+- **Reference limits:** `scripts/check-reference-size.sh` fails a reference over 120 lines and warns over 800 words.
+- **Routing:** references load through an agent's `<load_first>`. For example, `scribe/agents/architect.md` loads only `shared/references/architecture/remediation.md`, a router that lists the rest.
+- **Schemas are immutable** (ADR-004). A change means `<name>@<n+1>.json`, with every producer and consumer updated.
+- **Downstream copy:** `~/Projects/wisp/schemas/` holds byte-for-byte copies of five schemas, including `arch-model@1`, pinned by SHA in `schemas/PROVENANCE.md`.
+- **Generated files:** never edit `.agents/plugins/` or `dist/codex/`. Run `python3 tools/build-codex-marketplace.py --check`.
+- **Versions:** `plugin.json`, the README, `CHANGELOG.md` and the root `marketplace.json` entry must agree (`./scripts/check-versions.sh`). Add a dated CHANGELOG entry for a behavior change.
+
+## Tasks
+1. **`CLAUDE.md`:** add an `@AGENTS.md` import and reword "Claude Code follows AGENTS.md". Keep the Claude-only sections. Do not delete the file, because older Claude Code versions read only `CLAUDE.md`.
+2. **New `shared/references/architecture/decision-records.md`** (under 120 lines, aim for about 40):
+   - The two-gate test: architectural, and expensive to reverse or not obvious from code.
+   - The boundary table above.
+   - The form: title, status, context, decision, options considered (rejected, with the "because"), consequences.
+   - An optional "Enforced by" line only when a check exists, and a one-line "do not X without a new ADR" guardrail for the index.
+   - Prose rule: keep the causal "because", cut everything else.
+   - Follow AGENTS.md checklist item 9 (outcome, applicability, evidence, refutation, disposition).
+   - Decide which agents load it. Start with a bullet in `remediation.md`, and check `scribe:audit-architecture` and `vanguard`. If Codex runtime guidance names the path, add it to `runtime_files`.
+   - Also add a "Decision record" row to `voice.md`'s reader table.
+3. **`comments.md` line 15:** split by case. A structural choice belongs in an ADR, anything else in the PR body. Frame it under the constitution's Reader-Scoped Writing rule, because PR bodies are not loaded by later agents.
+4. **`ranger/agents/adversary.md` line 45:** read both files when both exist, follow `@` imports, and check the nearest nested `AGENTS.md` for the paths under analysis. Keep the injection guard below it. Review the Codex counterpart per `harness-authoring.md`.
+5. **Do not start without the owner's decision:** `arch-model@2` with an optional `decision_ref` on invariants. It also needs a new provenance record in wisp.
+
+## Constraints
+- **Change record:** for any cross-harness source change, put this in the PR description:
+  ```text
+  Classification:
+  Counterpart reviewed:
+  Intent preserved:
+  Intentional divergence:
+  Codex role impact:
+  Verification:
+- Validation before finishing: jq . marketplace.json plugins/*/plugin.json harnesses/codex/catalog.json, python3 -m unittest discover -s tests, ./scripts/check-versions.sh, ./scripts/check-skills-doc.sh, ./scripts/check-reference-size.sh, python3 tools/build-codex-marketplace.py --check, ./scripts/check-mermaid.sh.
+- Style:
+  - Succinct: lead with the outcome, one idea per sentence, no filler.
+  - No hard-wrapping of markdown or PR bodies: one paragraph per line.
+  - No "leverage, utilize, robust, seamless, essentially, basically, in order to, it's worth noting".
+  - No emojis.
+  - Comments say only the non-obvious why, with no history.
+- Commits:
+  - Subject in the imperative, no line wrapping, at most a one- or two-sentence body that gives the why.
+  - No Claude attribution: no Co-Authored-By, no Claude-Session trailers, no session links in PRs.
+  - Keep Entire-Checkpoint: trailers, which the owner's hooks add.
+
+Out of scope: ~/Projects/wisp (design repo, separate task)
+
+- Make decision a first-class artifact. It is already a governing-artifact kind, but there is no schema, and decisions live in one log, docs/04-decisions-and-open-questions.md. Add status, supersedes, governs paths and a guardrail.
+- State that agent memory is out of scope or non-authoritative.
+- Add a precedence rule for conflicting artifacts.
+- CONTRIBUTING.md and CI reference an AGENTS.md and a just docs-lint recipe that don't exist.
+- The README and docs/01–04 are hard-wrapped, against its own rule.
+
+Unverified
+
+- Which agents should load the new reference.
+- Whether Codex counterparts need changes.
+- Whether the repo's checks flag the new file. Run them all.
+</pasted_content id="d134">
