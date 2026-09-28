@@ -1,0 +1,1 @@
+Can we dig deeper into this and think through this entire Orin Architecture?
