@@ -1,0 +1,1 @@
+Some of these ADR validation checks should go into wisp right?
