@@ -1,0 +1,1 @@
+Agents have a habit of wrapping everything at 80, our repos generally prefer 120 char but you should respect the repo configs and guidance but following it consistently (or default to 120 where necessary, NEVER in MD, never in things like PR descriptions, commit details). Be logical here
