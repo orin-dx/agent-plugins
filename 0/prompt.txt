@@ -1,0 +1,3 @@
+Can you read through this: https://danluu.com/agentic-testing/ and understand the methodology and issues outlined?
+
+Then review our callisto sessions from codex and claude looking for places where we did better than luu outline and where we failed just as much. Can we see if we're doing better with our plugins?
