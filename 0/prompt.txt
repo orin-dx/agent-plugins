@@ -1,0 +1,3 @@
+Claude has mode some changes, let's do an adversarial analysis and report what you found. Are we still following best practices? Are we guiding and adjusting appropriately based on the learnings we set out with?
+
+Is there a better way to tackle some of these things? More agents, sub-agents? References? Something else that we're not using? What has moved in the space of claude and codex plugins in the last few weeks that should help guide us?
