@@ -1,0 +1,38 @@
+What claude said of your work. What do you think? Any learnings from it?
+
+Codex's changes are mostly good, and I found three problems in them. All the checks pass now, including build-codex-marketplace.py --check, which was red before because Codex regenerated dist/codex.
+
+What Codex added that I missed
+
+- ADR index: docs/adr/README.md now has Status, Governs and Relation columns. That matches your note that decisions should carry status, supersession and governed paths.
+- conventions.md row: it now lists docs/adr/README.md and linked records as a persisted artifact, so audit-architecture and vanguard can find decisions. I had left that out because it touches four plugins.
+- voice.md guidance: it added a content-design pass and a formatting section, which is the guidance the brief said was described below.
+- voice.md loading: the scribe and muse drafters and auditors now load voice.md conditionally.
+
+Problems in Codex's changes
+
+1. Released changelog entries were rewritten.
+   - The ranger, scribe and muse notes were added under 3.2.2, 3.3.2 and 1.0.1. Those are dated 2026-09-10 and merged in 83e8739.
+   - I couldn't bump versions earlier because it broke a test unless dist/codex was regenerated. Codex got around that by editing released history.
+   - Now that dist is regenerated, the notes should move to new patch versions (ranger 3.2.3, scribe 3.3.3, muse 1.0.2) with manifests bumped to match.
+2. Two behavior changes have no changelog entry.
+   - Smith's comments.md guidance changed. Courier's voice.md now carries the new content-design pass, and courier loads that file.
+   - Both need patch entries too.
+3. dist now includes your uncommitted evidence.md change. dist/codex/plugins/smith/shared/references/verification/evidence.md carries those 8 lines, so a commit of dist before evidence.md would ship them. Commit evidence.md first or in the same change.
+
+Smaller issues
+
+- voice.md repeats itself. The new content-design pass repeats rules already in the Voice, Structure and Cut sections, such as leading with the outcome, one idea per sentence, and deleting sentences that add nothing. The no-hard-wrap sentence also repeats the constitution's Documentation rule. The parts that add something are naming the reader's task first, putting conditions before instructions, the word-salad test, and extending no-wrap to ADRs, PR bodies and commit bodies. The 120-column source-code target isn't sourced anywhere in the repo, and it sits oddly in a prose-voice file.
+- Codex parity: the Codex scribe and muse skills don't load voice.md, so that guidance is Claude-only for them. That is consistent with harness-authoring.md (native wording may differ), but the change record should say so explicitly.
+
+What I fixed
+
+- I renamed the ADR index's "Supersedes" column to "Relation". Its cells said "Extends 001" and "Partially superseded by 010", which is not what "Supersedes" means. Empty cells now read "None".
+
+What I have not done
+
+Each of these edits dist/codex or shared references that dist copies, so I'm holding them:
+1. Move the three changelog notes to new versions, add the smith and courier entries, bump the manifests and Codex manifests, and regenerate dist.
+2. Trim voice.md to the parts that add something.
+
+Do you want both? I'd do the bump and the voice.md trim together, since both need one dist regeneration.
