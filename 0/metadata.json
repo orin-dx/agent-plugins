@@ -1,0 +1,53 @@
+{
+  "cli_version": "0.11.4-nightly.202609260624.c369a70d2",
+  "checkpoint_id": "01M3JVVFJTXP567P1N62X6FDJ6",
+  "session_id": "620278b2-b3ff-49a1-b314-97faec4c6c66",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-28T02:00:13.903058Z",
+  "branch": "docs/changelog-cleanup",
+  "checkpoints_count": 3,
+  "save_step_count": 1,
+  "files_touched": [
+    "plugins/courier/CHANGELOG.md",
+    "plugins/mason/CHANGELOG.md",
+    "plugins/muse/CHANGELOG.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "b60e162aecf2",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 696,
+    "cache_creation_tokens": 1325488,
+    "cache_read_tokens": 100519083,
+    "output_tokens": 275398,
+    "api_call_count": 346
+  },
+  "session_metrics": {
+    "turn_count": 38
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-28T02:00:13.765499Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 117,
+    "human_modified": 35,
+    "human_removed": 0,
+    "total_committed": 117,
+    "total_lines_changed": 273,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 5,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 5
+      }
+    }
+  ]
+}
