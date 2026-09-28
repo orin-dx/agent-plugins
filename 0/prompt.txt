@@ -1,0 +1,1 @@
+This doesn't make sense at all, how is this supposed to work if you can't run with my shell that is auth'd?
