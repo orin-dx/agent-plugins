@@ -1,0 +1,1 @@
+It stands out to me that we should prefer executable guardrails. I think we do need to start working on the wisp part that will help us move deterministic work out of the agentic loop right? Monokl will also help reduce the need to parse code over and over and thur reduce the context we need into smaller packets
