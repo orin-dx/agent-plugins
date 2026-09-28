@@ -1,0 +1,3 @@
+<send_user_message_question_reply>
+[{"answer":"Confirm exact message and files","question":"Confirm PR #2 commit? Files: `.github/workflows/ci.yml`, `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `justfile`. Subject: `ci: scope checks to tracked documentation`. Body: `The tracked branch has no Rust workspace or Moon configuration, so CI must not claim to verify code before that source lands.`","questionItemId":"[\"request_user_input_async\",\"REDACTED\",0]"}]
+</send_user_message_question_reply>
