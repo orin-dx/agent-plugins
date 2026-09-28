@@ -1,0 +1,3 @@
+We should switch to just agents as claude suppports it now, also. We should never wrap I think, right?
+
+Let's verify as you said
