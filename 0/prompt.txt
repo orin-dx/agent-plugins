@@ -1,0 +1,1 @@
+Let's make sure we're not overly prescriptive and also consider that we also write TS a lot and our plugins might be used against python and go codebases too
