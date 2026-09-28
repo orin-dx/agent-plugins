@@ -1,0 +1,1 @@
+should we use just and have a formatter setup for the repo? Normally I use oxfmt, would that be good for JSON and MD?
