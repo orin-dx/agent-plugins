@@ -1,0 +1,1 @@
+Should we organize the references a bit? The folder is getting pretty large. What pattern should we organize around?
