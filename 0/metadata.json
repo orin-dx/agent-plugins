@@ -1,0 +1,100 @@
+{
+  "cli_version": "0.11.4-nightly.202609260624.c369a70d2",
+  "checkpoint_id": "01M3JWMAH66Q9H01JSPA5SFHCX",
+  "session_id": "620278b2-b3ff-49a1-b314-97faec4c6c66",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-28T02:14:19.626605Z",
+  "branch": "docs/ecosystem-changelog-catchup",
+  "checkpoints_count": 2,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "f7f897ff90ba",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 760,
+    "cache_creation_tokens": 1356354,
+    "cache_read_tokens": 117864819,
+    "output_tokens": 293393,
+    "api_call_count": 378
+  },
+  "session_metrics": {
+    "turn_count": 40
+  },
+  "summary": {
+    "intent": "Apply ADR/agent-memory research to the Wisp Plugins repo: verify a detailed brief's claims against the actual repo, then implement decision-record tooling (CLAUDE.md/AGENTS.md linking, a new decision-records reference, ADR index, comment/adversary guidance updates), followed by a scribe schema migration (arch-model@2), changelog cleanup across all plugins, and root ecosystem changelog/version catch-up.",
+    "outcome": "Verified the brief against repo files (found 4 discrepancies), implemented tasks 1-4 plus an ADR index on branch docs/decision-records per owner's final decisions, then delegated/executed a follow-up arch-model@2 schema migration (PR #13) with full Codex/AGY parity, stacked a 10-plugin changelog cleanup into that PR, and separately caught up a stale root CHANGELOG.md/marketplace.json version with a new check-versions.sh drift check (PR pending as docs/ecosystem-changelog-catchup).",
+    "learnings": {
+      "repo": [
+        "CLAUDE.md previously linked AGENTS.md with a plain markdown link, not an @import; Claude Code reads CLAUDE.md only when both files exist unless @AGENTS.md import is used (confirmed via docs, requires Claude Code v2.1.277+)",
+        "docs/adr/ had 10 ADRs (not 7 as the brief assumed), using Context/Decision/Consequences with rejected alternatives inline in Context rather than a separate 'Options considered' section",
+        "tests/test_reference_integrity.py requires every shared reference to be cited by a runtime caller (another reference file counts); Codex needs the path in a skill's runtime_files in harnesses/codex/catalog.json",
+        "shared/references/architecture/remediation.md is the only load path into scribe:architect; workspace/conventions.md is shared by scribe(arch-auditor/auditor), vanguard and weaver so editing it means releasing all four",
+        "python3 tools/build-codex-marketplace.py --check regenerates dist/codex wholesale from shared/schemas (copies entire directory), so unrelated uncommitted changes (e.g. evidence.md) get swept in if regenerated",
+        "scripts/check-versions.sh only checks per-plugin version agreement (plugin.json/README/CHANGELOG/marketplace entry) — it never checked the root marketplace.json top-level version against root CHANGELOG.md/README badge, allowing silent drift (fixed by adding a check)",
+        "arch-model@1 schema is immutable per ADR-004; arch-model@2 is a strict superset (invariants gain optional decision_ref) — verified empirically with jsonschema that @1 docs validate against @2 unchanged and @1 rejects @2-shaped docs via additionalProperties:false",
+        "arch-model/arch-audit/arch-auditor/audit-architecture concepts are entirely internal to the scribe plugin — no other plugin references them, so schema migrations there have zero cross-plugin blast radius",
+        "AGY has no independent source tree; it installs directly from plugins/<id>/ and root marketplace.json, so Claude Code edits to those paths cover AGY automatically",
+        "shared/constitution.md's Trust Boundaries treats workspace CLAUDE.md/AGENTS.md as untrusted data, permitting only invariant extraction — relevant when extending adversary.md's read surface to @imports and nested files",
+        "5+ plugin CHANGELOGs (ranger, smith, scribe, navigator, courier, mason, weaver, sentinel, vanguard) had a near-identical ~580-char duplicated BREAKING-rename paragraph that should have linked ADR-007 instead of restating it"
+      ],
+      "code": [
+        {
+          "path": "shared/references/architecture/decision-records.md",
+          "line": 1,
+          "end_line": 46,
+          "finding": "New 46-line reference created covering the two-gate test, boundary table, ADR form, Enforced-by/guardrail lines, and disposition outcomes; records written before this form may keep alternatives inline in Context"
+        },
+        {
+          "path": "plugins/ranger/agents/adversary.md",
+          "line": 45,
+          "end_line": 45,
+          "finding": "Constitution sweep updated to read CLAUDE.md and AGENTS.md when either exists, follow @imports, and check the nearest nested instruction file, while still extracting only stated invariants (trust boundary preserved)"
+        },
+        {
+          "path": "shared/schemas/arch-model@1.json",
+          "line": 1,
+          "end_line": 1,
+          "finding": "Frozen per ADR-004; arch-model@2.json added as new file with optional decision_ref field on invariants rather than mutating @1"
+        },
+        {
+          "path": "scripts/check-versions.sh",
+          "line": 1,
+          "end_line": 1,
+          "finding": "Extended with a new check comparing marketplace.json's top-level version against root CHANGELOG.md and README badge; verified it fails on the pre-fix stale state and passes after the fix"
+        }
+      ],
+      "workflow": null
+    },
+    "friction": [
+      "Shell heredoc/echo lines starting with '===' or '---' at column zero got misinterpreted, requiring quoting workarounds",
+      "git stash push/pop while switching branches temporarily reverted a script file being tested, invalidating a before/after drift-check test until isolated via file copies instead",
+      "Accidentally did the arch-model@2 work directly on local main then pushed main's HEAD to a differently-named remote branch, which silently repointed local main's upstream tracking away from origin/main — required manual branch surgery (reset main to origin/main, rename/retrack the actual feature branch) to fix",
+      "No jsonschema/ajv validator was available locally; had to spin up a throwaway Python venv to empirically verify schema forward-compatibility rather than reason about it abstractly",
+      "User had to explicitly call out wordiness twice in the session (general prose trim request, then again for changelog entries specifically) before it was fully addressed",
+      "A subagent's handback report was echoed back to the assistant by another tool (Codex/gpt luna paste) creating confusion about whether new information had arrived, requiring the assistant to recognize it was just a repeat of its own earlier output"
+    ],
+    "open_items": [
+      "arch-model@2 downstream Wisp work (~/Projects/wisp) is explicitly deferred pending owner's decision: needs new Contract::ArchModelV2 Rust enum variant, new embedded schema constant, new validation match arm in crates/wisp-schema, plus a decision on whether @1 support is retained or dropped, and a new PROVENANCE.md entry",
+      "docs/adr/README.md guardrail wording for ADR-005, ADR-007 and ADR-009 was the assistant's inference from those records and flagged for owner review",
+      "'Concise content-design and formatting guidance' task item was interpreted narrowly (voice.md row + prose rule) since the brief didn't specify further guidance — owner may want more",
+      "docs/adr/ was not added to workspace/conventions.md (would let audit-architecture and vanguard discover records) because that file is shared by four agents and editing it triggers a wider release — left as a follow-up",
+      "PR #13 (arch-model@2 + stacked changelog cleanup) still open, awaiting review/merge",
+      "PR docs/ecosystem-changelog-catchup (root CHANGELOG/marketplace version fix + new drift check) pushed but not yet opened as a PR / merged",
+      "Version bumps for ranger/scribe/smith from tasks 1-4 work were drafted then reverted because dist/codex wasn't regenerated (evidence.md left intentionally uncommitted) — draft CHANGELOG notes for ranger 3.2.3 and smith 2.4.3 were preserved in the report but not applied"
+    ]
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 5,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.local.json": 5
+      }
+    }
+  ]
+}
