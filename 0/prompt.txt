@@ -1,0 +1,1 @@
+We can leverage tools and commands if available and where it makes sense for the language guide things like mutation and prop testing
