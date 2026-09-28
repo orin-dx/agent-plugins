@@ -1,0 +1,2 @@
+You might have to keep in mind what versions were available of our plugins at the time of the session too, lots has changed. We might be able to
+  see improvement over time.
