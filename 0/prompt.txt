@@ -1,0 +1,1 @@
+Are we losing some calls to the reference files in all of this? Is this a problem?
