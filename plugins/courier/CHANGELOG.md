@@ -22,40 +22,39 @@
 ## [3.0.0] - 2026-08-27
 
 ### Changed
-- **BREAKING**: Plugin ID renamed from `delta` to `courier` as part of the ecosystem-wide Wisp persona-naming rename — abstract math-noun plugin ids became hard to recall as the ecosystem grew past 9 plugins. This is the shipping plugin; no single-skill rename applies; skill names commit, pr, changeset, receive-feedback, post-review, and release are unchanged. See `docs/adr/007-wisp-persona-naming.md` for the full rationale and old→new mapping. `plugin.json` `id`/`name` updated; every cross-plugin reference across the ecosystem updated to match.
+- **BREAKING**: Plugin ID renamed `delta` → `courier`. Skill names unchanged. See [ADR-007](../../docs/adr/007-wisp-persona-naming.md).
 
 ## [2.1.3] - 2026-08-23
 
 ### Fixed
-- `receive-feedback` (SKILL.md description/overview/dispatch/io) and `README.md` (When to Use, Skills table, Subagents table) all claimed `review-preprocessor` categorizes incoming comments as must-fix/suggestion/question. It never did — its own `<judgment>` explicitly forbids making that call, and its output schema has no such field. Narrowed all six claims to what the agent actually does: assemble a review package; the caller applies `shared/references/github.md`'s vocabulary by hand.
+- `receive-feedback` and `README.md` claimed `review-preprocessor` categorizes incoming comments as must-fix/suggestion/question. It never did — its `<judgment>` forbids that call. Narrowed all claims to what it actually does: assemble a review package; the caller applies `shared/references/github.md`'s vocabulary by hand.
 
 ## [2.1.2] - 2026-08-22
 
 ### Changed
-- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006. `changeset-analyzer`'s and `changeset`'s frontmatter descriptions tightened; no routing or output behavior changed.
+- All agents now carry a `<constitution>` section — see root CHANGELOG and ADR-006.
 
 ## [2.1.1] - 2026-08-21
 
 ### Changed
-- `changeset-analyzer`'s topic-splitting judgment now checks `linked_spec`/`linked_plan`/`linked_requirement` first, then explicitly stated shared scope, falling back to diff-inferred shared cause only when neither applies — splitting on ambiguity alone is a rare fallback, not the default. Prompted by concern that the 2.1.0 split-by-topic change could over-fragment a deliberately-scoped effort (e.g. a themed feature batch or a testing push) into many tiny changesets. `shared/references/changesets.md` updated to match.
+- `changeset-analyzer`'s topic-splitting now checks a linked spec/plan/requirement first, then explicit stated scope, falling back to diff-inferred cause only when neither applies — splitting on ambiguity alone is a rare fallback, not the default. Prevents the 2.1.0 split-by-topic change from over-fragmenting a deliberately-scoped effort.
 
 ## [2.1.0] - 2026-08-21
 
 ### Added
-- `changeset-analyzer` now checks whether a diff contains multiple independent topics before classifying anything, and emits one `changeset@2` per topic instead of one bundled entry — the normal single-PR case still produces exactly one changeset, unchanged. Prompted by a real incident in a sibling repo (`callisto`) where a large backlog/catch-up diff got bundled into one changeset spanning unrelated tracks, with package attribution guessed from a written summary instead of verified per-topic against the actual diff. `changeset-analyzer`'s output contract changes from a single object to an array of one-or-more; `delta/changeset`'s `<io>` section updated to match.
+- `changeset-analyzer` now checks for multiple independent topics in a diff and emits one `changeset@2` per topic instead of one bundled entry; a normal single-PR diff still produces exactly one. Prompted by a real incident (sibling repo `callisto`) where a backlog/catch-up diff got bundled into one changeset spanning unrelated tracks. Output contract changes from a single object to an array of one-or-more.
 
 ## [2.0.0] - 2026-08-20
 
 ### Breaking
-- Single `ship` skill replaced by six targeted skills: `commit`, `pr`, `changeset`, `receive-feedback`, `post-review`, `release`. The old `delta/review` and `delta/receive` alias pair is gone — `receive-feedback` is now the one name for triaging incoming feedback. Anything invoking `/delta:ship` or `/delta:review` must switch to the new names.
-- A follow-up pass renamed `receive` → `receive-feedback`: bare "receive" didn't say what, and this plugin already has a `post-review` right next to it for symmetry.
-- `changeset-analyzer` and `release-summarizer` now produce and consume `changeset@2`/`release-artifact@2` instead of `@1`. `changeset@1`/`release-artifact@1` are unchanged and remain valid per this repo's schema-immutability rule — new consumers should target `@2`.
+- Single `ship` skill replaced by six targeted skills: `commit`, `pr`, `changeset`, `receive-feedback`, `post-review`, `release`. `/delta:ship` and `/delta:review` must switch to the new names.
+- `changeset-analyzer`/`release-summarizer` now produce/consume `changeset@2`/`release-artifact@2`. `@1` remain valid and unchanged; new consumers should target `@2`.
 ### Added
-- `post-review` skill: mechanical, no new subagent. Posts an already-drafted review or reply via `gh pr review`/`gh pr comment`, gated by explicit confirmation. Drafting critique of someone else's PR stays out of scope for delta — that's the built-in `code-review` skill's job.
-- `consumer_impact` and `semver_impact` fields on `changeset@2`, set by `changeset-analyzer` at authoring time instead of guessed later at release time. Changeset summary detail now scales with `semver_impact`.
-- `docs-voice.md` reference — the repo's voice standard (banned words, sentence-length ceiling, inverted pyramid, Conventional Comments/Google review-label vocabulary), embedded into `conventional-commits.md`, `github.md`, and `changesets.md`.
+- `post-review` skill: posts an already-drafted review via `gh pr review`/`gh pr comment`, gated by explicit confirmation. Drafting critique of someone else's PR stays out of scope — that's `code-review`'s job.
+- `consumer_impact`/`semver_impact` fields on `changeset@2`, set by `changeset-analyzer` at authoring time instead of guessed later. Summary detail scales with `semver_impact`.
+- `docs-voice.md` reference — banned words, sentence-length ceiling, review-label vocabulary — embedded into the commit/PR/changeset references.
 ### Changed
-- `release-artifact@2.changesets[]` no longer redeclares a separate `type` field — it consumes `changeset@2.consumer_impact`/`semver_impact` directly. `release-summarizer` computes the release version as `max(semver_impact)` instead of re-deriving type from prose.
+- `release-artifact@2.changesets[]` consumes `consumer_impact`/`semver_impact` directly instead of redeclaring a `type` field; release version computed as `max(semver_impact)`.
 
 ## [1.3.0] - 2026-08-17
 
@@ -70,10 +69,10 @@
 
 ## [1.1.0] - 2026-08-11
 ### Added
-- `criteria_evidence` field in `changeset@1` schema — per-criterion evidence trail (test file/line, implementation file/line); `changeset-analyzer` now accepts implementer's aggregated criteria_evidence as optional input and uses it directly instead of re-deriving locations from the diff
-- `linked_requirement` field in `changeset@1` schema — propagated from the linked spec@1 or plan@1 when available
+- `criteria_evidence` field in `changeset@1` — per-criterion evidence trail; `changeset-analyzer` accepts implementer's aggregated evidence directly instead of re-deriving it
+- `linked_requirement` field in `changeset@1` — propagated from the linked spec/plan when available
 ### Changed
-- `changeset-analyzer` falls back to file-level (no line number) evidence when reconstructing from a diff alone rather than fabricating a line number it cannot verify
+- `changeset-analyzer` falls back to file-level evidence rather than fabricating an unverifiable line number
 
 ## [1.0.1] - 2026-08-05
 ### Fixed
