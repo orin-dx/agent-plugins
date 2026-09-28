@@ -1,0 +1,1 @@
+Let's make the PR as long as all documentation is up-to-date and valid (check, don't assume), changelogs are appropriate, succinct and user friendly, and version bumps are correct.
