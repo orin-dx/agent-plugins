@@ -1,0 +1,1 @@
+Let's update readme, architecture, changelogs, etc for the top-level and plugins. Make sure codex and claude are in sync
