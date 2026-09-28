@@ -1,0 +1,5 @@
+Can we start to bring everything together? Thinking through the interactions between the tools? Etc?
+
+How should we adjust the content in the repos? The plans, docs, specs? Don't do a cursive run through it. Think through happy path, corner cases, error cases, how the contracts between tools work, where handoffs work, how we store information.
+
+Let's start light with an MVP that adds value. Don't boil the ocean, prove value first. Prove integration, then iterate and improve. Let's not overthink and overengineer but let's think like architects and principal engineers.
