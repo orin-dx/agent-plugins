@@ -1,0 +1,1 @@
+Also, looking through our agent and skill docs we seem to have wordy prose in bullets which seems to be against our best practices no? Should some of these be broken up in sub-bullets? Is there a better way to organize things for better agent understanding?
