@@ -2,6 +2,11 @@
 
 — smith
 
+## [2.4.4] - 2026-09-27
+
+### Added
+- Language-service evidence guidance: LSP diagnostics count as supporting boundary evidence only with a recorded backend identity/version, negotiated capability, and content-version match; the repository's compiler/type-checker/test remains the terminal check.
+
 ## [2.4.3] - 2026-09-27
 
 ### Changed
