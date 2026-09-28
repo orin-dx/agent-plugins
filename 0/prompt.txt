@@ -1,0 +1,20 @@
+<pasted_content id="d134">
+Proceed with the non-schema work on a new branch.
+
+1. Implement tasks 1–4.
+2. Add the minimal docs/adr/README.md index because the new routing guidance depends on an ADR index.
+3. Do not start arch-model@2 or downstream Wisp provenance work. That remains pending my explicit decision.
+4. Do not regenerate dist/codex while shared/references/verification/evidence.md remains an intentional uncommitted change. Treat the resulting build-check failure as a documented baseline.
+5. Do not edit, stage, revert, or include evidence.md or any unrelated __pycache__ files.
+6. Review Codex counterparts, but change them only if lifecycle intent or artifact contracts require it. Otherwise record Codex role impact as none.
+7. Add the concise content-design and formatting guidance described below, using the existing reader-scoped writing rules rather than creating a broad style manifesto.
+8. Do not commit or push.
+
+Use these decisions as final for this task; do not ask me to choose them again.
+
+I would also add:
+
+If a requirement appears ambiguous, make the smallest repository-consistent interpretation, record it in the final report, and continue. Ask only if proceeding would modify arch-model@2, downstream Wisp, the intentional evidence.md change, or generated distribution files.
+
+That prevents Claude from treating already-resolved implementation choices as unanswered design questions
+</pasted_content id="d134">
