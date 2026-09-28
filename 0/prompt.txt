@@ -1,0 +1,3 @@
+FYI we're doing some changes to agent-plugins (aka wisp plugins) that will require us to adjust some of our specs here: https://github.com/orin-dx/agent-plugins/pull/13
+
+Read through it, understand it deeply, consider what we need to adjust, report back
