@@ -1,0 +1,1 @@
+The change is a forward superset so it should be safe but wisp should account for both without breaking. We might not need to support v1 per se but not blow up on it, safety first
