@@ -38,37 +38,38 @@
 ## [3.0.0] - 2026-08-27
 
 ### Changed
-- **BREAKING**: Plugin ID renamed from `proof` to `ranger` as part of the ecosystem-wide Wisp persona-naming rename — abstract math-noun plugin ids became hard to recall as the ecosystem grew past 9 plugins. This is the bug hunting plugin; its skill also renamed from `proof/proof` to `ranger/audit`. See `docs/adr/007-wisp-persona-naming.md` for the full rationale and old→new mapping. `plugin.json` `id`/`name` updated; every cross-plugin reference across the ecosystem updated to match.
+- **BREAKING**: Plugin ID renamed `proof` → `ranger`; skill `proof/proof` → `ranger/audit`. See [ADR-007](../../docs/adr/007-wisp-persona-naming.md).
 
 ## [2.2.4] - 2026-08-23
 
 ### Fixed
-- `exit-gate`'s output never actually conformed to `verdict@1.json`: it used `"verdict": "approved|blocked"` against the schema's `"pass|fail"` enum, and a blocker shape (`{type,description,file,line}`) with none of its four keys legal under the schema's `{criterion,finding,location}` (`additionalProperties: false`) — a strict validator rejected every verdict this agent ever produced. This predates this session; `axiom`, `canon`, and `lambda`'s exit-gates already used the schema correctly, so `proof` was the outlier. The `flagged_for_review` field added in `2.2.3` compounded this with a third schema violation, since `verdict@1.json` has no such property. Rather than mutate the shared `verdict@1.json` (schema versions are immutable per `shared/constitution.md`), added `shared/schemas/verdict@2.json` — `verdict@1` plus an optional `flagged_for_review` array — and rewrote `exit-gate`'s output to conform to it literally: `pass|fail`, `{criterion,finding,location}` blockers, and a schema-legal `flagged_for_review` shape. `axiom`, `canon`, and `lambda` are unaffected — they keep using `verdict@1` unchanged. Found by an adversarial re-read of this session's own changes.
+- `exit-gate`'s output never conformed to `verdict@1.json`: wrong enum values (`approved|blocked` vs the schema's `pass|fail`) and an illegal blocker shape — every verdict this agent produced was schema-invalid. `axiom`, `canon`, and `lambda` already used the schema correctly. Since schema versions are immutable, added `verdict@2.json` (`verdict@1` plus an optional `flagged_for_review` array) and rewrote `exit-gate`'s output to conform; the other three plugins are unaffected.
 
 ## [2.2.3] - 2026-08-23
 
 ### Added
-- **`adversary`**: genuine `plausible` verdict path — `finding-report@1` has promised this value since it was defined, but adversary was strictly binary (confirm-with-scenario or refute) and could never emit it. Now emits `plausible` when no refutation can be constructed but reachability depends on state outside the code (config, an external caller, environment) rather than stretching thin evidence into `confirmed`.
-- **`exit-gate`**: `flagged_for_review` in the verdict output — carries `plausible` findings forward for human judgment without treating them as remediation targets or blockers.
+- **`adversary`**: genuine `plausible` verdict path — previously strictly binary (confirm-with-scenario or refute), now emits `plausible` when reachability depends on state outside the code rather than stretching thin evidence into `confirmed`.
+- **`exit-gate`**: `flagged_for_review` in the verdict output — carries `plausible` findings forward for human judgment.
 
 ### Fixed
-- `README.md`'s Output Schema table documented only `verdict: confirmed`; corrected to cover both verdict values.
+- `README.md`'s Output Schema table documented only `verdict: confirmed`; corrected to cover both values.
 
 ## [2.2.2] - 2026-08-22
 
 ### Changed
-- **Hazard reference split**: T7 and T10 — `boundary-tracer`'s entire scope — extracted into `rust-hazards-t7-t10.md`/`typescript-hazards-t7-t10.md`, both now under 120 lines (were 150/167, over the reference-file cap). `boundary-tracer` loads only the split file instead of the full ten-taxonomy set. `adversary` now branches on the candidate's `taxonomy` field to load only the matching file instead of the full set on every call — real savings on the agent invoked once per candidate, at the opus tier. `scanner` and `reviewer` (lambda) load both files where they need the complete set; behavior and taxonomy coverage are unchanged. Also removed a dead "Workspace Discovery" section neither file's consuming agent ever referenced — recon already provides the same information via its manifest.
+- **Hazard reference split**: T7/T10 content extracted into dedicated `*-hazards-t7-t10.md` files, both now under the 120-line cap. `boundary-tracer` and `adversary` load only the relevant file per candidate instead of the full set; `scanner`/`reviewer` still load both where needed. Also removed a dead, unreferenced Workspace Discovery section — `recon`'s manifest already covers it.
 
 ### Fixed
-- `skills/proof/SKILL.md`'s dispatch matrix mistagged `adversary` as `sonnet/medium`; its frontmatter has always been `opus/high`. Corrected the doc.
+- `skills/proof/SKILL.md`'s dispatch matrix mistagged `adversary` as `sonnet/medium`; frontmatter has always been `opus/high`.
 
 ## [2.2.1] - 2026-08-21
 
 ### Fixed
-- `SKILL.md` and `README.md` both documented a "Sub-skills" table (`proof/scan`, `proof/focus`, `proof/verify`, `proof/remediations`) styled like independently-invokable skills — the way `delta/commit` or `canon/draft-spec` genuinely are. proof has exactly one skill directory; none of those four were real. Replaced with an honest description of the one fixed pipeline adapting to what the request contains.
-- `README.md`'s version line said `2.0.0` while `plugin.json` said `2.2.0` — out of sync since at least the 2.1.0 release. Both now match.
+- `SKILL.md`/`README.md` documented a fictional four-skill "Sub-skills" table; `proof` has exactly one skill directory. Replaced with an honest description of the one adaptive pipeline.
+- `README.md`'s version line said `2.0.0` while `plugin.json` said `2.2.0`. Synced.
+
 ### Changed
-- `README.md`'s pipeline diagram upgraded from a plain-text arrow chain to a styled Mermaid flowchart using the palette in `shared/references/orin-visual-standard.md`.
+- `README.md`'s pipeline diagram is now a styled Mermaid flowchart.
 
 ## [2.2.0] - 2026-08-17
 

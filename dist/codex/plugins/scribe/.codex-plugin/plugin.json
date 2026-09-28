@@ -1,6 +1,6 @@
 {
   "name": "scribe",
-  "version": "3.3.3",
+  "version": "3.4.0",
   "description": "Draft, verify, audit, gate, correct, and maintain testable specifications.",
   "author": {
     "name": "Gabriel Castro",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "arch-model@1",
+  "$id": "arch-model@2",
   "title": "Architecture Model",
   "description": "A persisted, workspace-wide map of module boundaries, canonical abstractions, and architectural invariants. One per workspace, updated in place rather than versioned by id. Built and maintained by scribe:arch-auditor in build/refresh mode; checked against by scribe:arch-auditor in check mode before a spec enters planning.",
   "type": "object",
@@ -51,7 +51,8 @@
           "name": { "type": "string" },
           "rule": { "type": "string", "description": "The rigid architectural property that must hold" },
           "rationale": { "type": "string" },
-          "enforced_by": { "type": "string", "description": "The test, type check, or lint that fails if this invariant is violated, if one exists" }
+          "enforced_by": { "type": "string", "description": "The test, type check, or lint that fails if this invariant is violated, if one exists" },
+          "decision_ref": { "type": "string", "description": "Path to the decision record that governs this invariant, e.g. docs/adr/004-schema-driven-handoffs.md. Absent means no accepted record exists yet for it — that is expected for most invariants, not a gap to fill retroactively." }
         }
       },
       "description": "System-wide invariants — cumulative across every structural fix scribe:architect has ever produced, plus any the build pass surfaced directly."

@@ -9,21 +9,21 @@ State material concerns, evidence, consequence, and confidence directly. Do not 
 
 ## Outcome
 
-Build a durable `arch-model@1` when needed, or return an `arch-audit@1` that finds boundary violations, competing abstractions, and invariant conflicts in a draft spec.
+Build a durable `arch-model@2` when needed, or return an `arch-audit@1` that finds boundary violations, competing abstractions, and invariant conflicts in a draft spec.
 
 ## Workflow
 
 1. For build or refresh mode, inspect workspace module roots, dependency direction, canonical types, public interfaces, tests, and enforced invariants. Do not infer a boundary from directory names alone.
-2. Validate and persist a complete model at `docs/architecture/model.json` only with user authorization, using `shared/schemas/arch-model@1.json`.
+2. Validate and persist a complete model at `docs/architecture/model.json` only with user authorization, using `shared/schemas/arch-model@2.json`. Cite an invariant's governing decision record as `decision_ref` when `docs/adr/README.md` names one; leave it absent otherwise.
 3. For check mode, validate the draft spec with `shared/schemas/spec@1.json` and load the persisted model. Refresh only if the model is absent or cannot cover the affected subsystem.
 4. Compare the spec to module dependency direction, canonical representations, and invariants. Classify missing model coverage as a gap, not a failing design defect by itself.
 5. Emit `arch-audit@1` with concrete corrective language. Route a failing audit back to drafting before gate-spec.
 
 ## Contract
 
-- Input schemas: `shared/schemas/spec@1.json`, `shared/schemas/arch-model@1.json`
+- Input schemas: `shared/schemas/spec@1.json`, `shared/schemas/arch-model@2.json`
 - Check output schema: `shared/schemas/arch-audit@1.json`
-- Build output schema: `shared/schemas/arch-model@1.json`
+- Build output schema: `shared/schemas/arch-model@2.json`
 - Durable model path: `docs/architecture/model.json`
 
 ## Teams and fallback

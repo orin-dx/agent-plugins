@@ -48,7 +48,7 @@
     {
       "id": "scribe",
       "name": "scribe",
-      "version": "3.3.3",
+      "version": "3.4.0",
       "path": "./plugins/scribe",
       "description": "Specification plugin. Turns requirements and research reports into unambiguous, testable specs. Checks specs against a persisted whole-system architecture model. Detects spec drift against actual code. Skills: draft-spec, verify-spec, spec-drift, audit-spec, audit-architecture, gate-spec, correct-spec, architect."
     },

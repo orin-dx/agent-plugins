@@ -278,7 +278,7 @@ Structured inter-plugin handoffs are typed. Schemas live in `shared/schemas/` an
 | `evaluation-run@1` | mason evaluation runner | mason evaluation adjudicator |
 | `harness-evaluation@2` | mason | release reviewers and longitudinal analysis |
 | `arch-audit@1` | scribe | architecture-gate callers and humans |
-| `arch-model@1` | scribe | scribe architecture checks and remediation |
+| `arch-model@2` | scribe | scribe architecture checks and remediation |
 | `release-artifact@2` | courier | humans |
 
 `verdict@1` remains Muse's component-spec gate contract. Other current gates use `verdict@3`; immutable schema versions are not rewritten in place.

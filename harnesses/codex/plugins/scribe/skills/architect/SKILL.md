@@ -23,7 +23,7 @@ Route completed specs through `scribe:verify-spec`, `scribe:audit-spec`, `scribe
 
 - Input schemas: `shared/schemas/finding-report@2.json`, `shared/schemas/implementation-review@2.json`, and `shared/schemas/implementation-result@1.json`
 - Output schema: `shared/schemas/spec@1.json`
-- Optional model evidence: `shared/schemas/arch-model@1.json`
+- Optional model evidence: `shared/schemas/arch-model@2.json`
 - Persistence after a pass: `docs/specs/<id>.json`
 
 ## Teams and fallback

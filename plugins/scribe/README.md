@@ -1,6 +1,6 @@
 # scribe — Specification
 
-**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.3.3
+**Stage:** Spec · **Output:** `spec@1` · **Version:** 3.4.0
 
 Turns requirements into unambiguous, testable specs a developer can implement without a single clarifying question — and keeps them that way after implementation starts.
 
@@ -70,7 +70,7 @@ Eight independently-triggered skills, not a linear pipeline — pick the one tha
 | `verifier` | Draft Verifier | sonnet / medium | Checks that acceptance criteria are grounded in the source artifacts (pre-implementation only). Neutral — collects evidence only. |
 | `drift-checker` | Drift Detector | opus / high | On-demand, post-implementation: reads the spec from disk and the code from the workspace, classifies each criterion as covered, uncovered, or drifted. When a prior changeset's `criteria_evidence` is available, uses its pointers as a starting point but always independently re-verifies each one. |
 | `auditor` | Auditor | sonnet / medium | Adversarially reviews the spec for vague criteria, missing error cases, ambiguous language, incomplete sections, unnecessary prose, and fields that cross into another spec (persisted, serialized, or transmitted) without a round-trip guarantee on the far side. |
-| `arch-auditor` | System Architecture Auditor | claude-fable-5-1 / high | Checks a spec against the workspace's persisted `arch-model@1` for boundary violations, competing abstractions, and invariant conflicts — system scope, not spec scope. Also builds/refreshes the model itself in build mode. |
+| `arch-auditor` | System Architecture Auditor | claude-fable-5-1 / high | Checks a spec against the workspace's persisted `arch-model@2` for boundary violations, competing abstractions, and invariant conflicts — system scope, not spec scope. Also builds/refreshes the model itself in build mode. |
 | `exit-gate` | Exit Gate | opus / high | Binding pass/fail verdict before the spec enters planning. Default disposition: fail. |
 | `architect` | Architectural Remediator | claude-fable-5-1 / high | Uses repeated defects, semantic-model evidence, and architecture evidence to specify the smallest enforceable structural correction. |
 
@@ -150,7 +150,7 @@ finding-report@2, implementation-review@2, or architecture-escalating implementa
 
 **`arch-audit@1`** — produced by `scribe/audit-architecture` (check mode); see `shared/schemas/arch-audit@1.json`
 
-**`arch-model@1`** — the persisted architecture model, produced by `scribe/audit-architecture` (build mode) and written to `docs/architecture/model.json`; see `shared/schemas/arch-model@1.json`
+**`arch-model@2`** — the persisted architecture model, produced by `scribe/audit-architecture` (build mode) and written to `docs/architecture/model.json`; see `shared/schemas/arch-model@2.json`. Each invariant may cite a `decision_ref` — the path to the decision record that governs it — when one exists.
 
 ---
 
