@@ -1,0 +1,1 @@
+The current changes should be related to looking for sibling defects and making sure that we consider semantic models and the architecture when looking at defects. If we found multiple considering patterns and what in the model and architecture could be missing that leaves room for these defects
