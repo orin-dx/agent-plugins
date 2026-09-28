@@ -1,0 +1,9 @@
+see:
+
+gh auth status
+github.com
+  ✓ Logged in to github.com account castrog (keyring)
+  - Active account: true
+  - Git operations protocol: ssh
+  - Token: gho_************************************
+  - Token scopes: 'admin:public_key', 'delete_repo', 'gist', 'read:org', 'repo'
