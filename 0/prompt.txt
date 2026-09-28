@@ -1,0 +1,1 @@
+You can use gh cli for git actions please
