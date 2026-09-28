@@ -3,6 +3,24 @@
 All notable changes to the Wisp Plugins ecosystem are documented here.
 Individual plugin changelogs live in `plugins/<plugin-id>/CHANGELOG.md`.
 
+## [4.4.5] - 2026-09-27 — Architecture model decision links
+
+- Added `arch-model@2`: invariants may cite a `decision_ref` naming the governing decision record. `arch-model@1` unchanged; an existing persisted model needs no migration.
+- Trimmed all 10 plugin CHANGELOGs for scannability — no behavior change.
+
+## [4.4.4] - 2026-09-27 — Language-service evidence
+
+- Restored Smith's language-service evidence guidance (LSP diagnostics count as supporting boundary evidence only with recorded backend identity/version and capability match), lost during the prior release and recovered from session history.
+
+## [4.4.3] - 2026-09-27 — Decision records and AGENTS.md consolidation
+
+- Added a decision-record convention (`shared/references/architecture/decision-records.md`) and a `docs/adr/` index with a guardrail per record, checked by a new reference-integrity test.
+- Removed `CLAUDE.md`; `AGENTS.md` is now the sole source of truth for every harness.
+- Ranger's adversary sweep follows `CLAUDE.md`/`AGENTS.md`'s `@` imports and the nearest nested instruction file.
+- Comment guidance routes a structural alternative not taken to a decision record instead of the PR body.
+- Switched repository tooling from `npm` to `pnpm`/`just`, and added `oxfmt`; CI updated to match.
+- Fixed `check-mermaid`'s hard dependency on a locally-installed `rg`, which failed unconditionally in CI.
+
 ## [4.4.2] - 2026-09-10 — Concern-first reference routing
 
 - Reorganized shared references by cognitive concern, with language as the filename only for language-specific evidence. Removed four redundant language indexes.
