@@ -397,3 +397,7 @@ We should be using just and pnpm (not npm so we should include the lock and clea
 ---
 
 I'm going to start on wisp, any work left here?
+
+---
+
+This seems to need to go in a quick PR with chanset and any relevant updates right?
