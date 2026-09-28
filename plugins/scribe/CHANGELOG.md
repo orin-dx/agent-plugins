@@ -5,7 +5,7 @@
 ## [3.4.0] - 2026-09-27
 
 ### Added
-- `arch-model@2`: invariants may carry an optional `decision_ref` naming the accepted decision record that governs them (`docs/adr/README.md`). `arch-model@1` remains valid for any workspace still on it; `arch-auditor` and `audit-architecture` now build and check against `@2`. No migration step for an existing persisted model: `@2` only adds an optional field, so a `docs/architecture/model.json` built under `@1` already validates against `@2` unchanged, and `decision_ref` fields accrue on the model's next refresh pass rather than needing a backfill.
+- `arch-model@2`: invariants may cite a `decision_ref` (`docs/adr/`). `arch-auditor`/`audit-architecture` build and check against `@2`. No migration: `@1` models validate unchanged; `decision_ref` accrues on refresh.
 
 ## [3.3.3] - 2026-09-27
 
