@@ -1,0 +1,1 @@
+What do we need to do to fix the check-mermaid? Is there a better tool to leverage vs hand-rolling one?
