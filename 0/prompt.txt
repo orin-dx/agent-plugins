@@ -1,0 +1,3 @@
+Google plushed a book on agentic design patterns: https://github.com/nevzat/Agentic-Design-Patterns-by-AntonioGulli/blob/main/Agentic_Design_Patterns_Complete.pdf
+
+What can we learn from these?
