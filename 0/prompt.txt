@@ -1,0 +1,1 @@
+Sounds pretty good to me. Fire away on that work, update docs and specs as necessary. Record any ADRs needed following our new plugin guidance
