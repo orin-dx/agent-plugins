@@ -1,0 +1,1 @@
+What should we adopt for the MVP? Let's not be lazy here and make sure we're creating a world class foundation that we wont' have to re-write soon
