@@ -1,6 +1,9 @@
-<div align="center">
-  <img src="./assets/logo.svg" alt="Wisp Plugins" width="400px" />
-</div>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/hero-dark.png">
+    <img src="assets/brand/hero-light.png" alt="Wisp Plugins, an Orin DX tool" width="360">
+  </picture>
+</p>
 
 <p align="center">
   <i>Ten cooperating plugins covering the full development lifecycle, connected by shared JSON schemas and a common verification gate.</i>
@@ -20,7 +23,7 @@
 
 ## Wisp Plugins — the Lifecycle Ecosystem
 
-Ten plugins, each a specialist persona covering one stage of the development lifecycle — together they're **Wisp Plugins**, the agent-side companions to the [Wisp](https://github.com/orin-axi/wisp) project-intelligence library. Lifecycle handoffs use typed artifacts where applicable. The plugins are composable: install only the personas your workflow needs.
+Ten plugins, each a specialist persona covering one stage of the development lifecycle — together they're **Wisp Plugins**, the agent-side companions to the [Wisp](https://github.com/orin-dx/wisp) project-intelligence library. Lifecycle handoffs use typed artifacts where applicable. The plugins are composable: install only the personas your workflow needs.
 
 **The primary flow** — one direction, no side-taps:
 
